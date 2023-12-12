@@ -1,0 +1,46 @@
+<div class="container-Dialog">
+  <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+    <h3 class="title-Dialog m-0">
+      {{data!['title']|translate}}
+
+    </h3>
+    <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+      <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+      <i class="pi pi-times-circle"></i>
+    </button>
+  </header>
+  <div class="body-dialog p-15 f-s-16">
+    <form [formGroup]="addBranchGroupForm">
+      <div class="section1 d-flex justify-content-between">
+        <div class="col">
+          <label class="title">{{data!['setAsNecessary']|translate}}</label>
+          <p-inputSwitch formControlName="IsNecessary"></p-inputSwitch>
+        </div>
+
+
+      </div>
+      <div class="sectionFive mb-3">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['titleName']|translate"></label>
+        <div class="content-password">
+          <input type="text" pInputText formControlName="name" [placeholder]="data!['placeholdeName']|translate"
+            class="w-100" />
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts" *ngIf="getControl('name')?.errors">
+          <div class="alert alert-danger" *ngIf="getControl('name')?.hasError('required') && getControl('name')?.dirty">
+            {{data!['validationtitleName']|translate}}
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+    </form>
+  </div>
+  <footer class="footer-dialog p-15 d-flex justify-content-end">
+    <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+      (click)="request()">{{submitted ?
+      (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+  </footer>
+</div>
+<div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>

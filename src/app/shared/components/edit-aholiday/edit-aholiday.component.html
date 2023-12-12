@@ -1,0 +1,115 @@
+<div class="container-Dialog">
+  <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+    <h3 class="title-Dialog m-0">
+      {{data!['title']|translate}}
+
+    </h3>
+    <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+      <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+      <i class="pi pi-times-circle"></i>
+    </button>
+  </header>
+  <div class="body-dialog p-15 f-s-16">
+    <form [formGroup]="addBranchGroupForm">
+      <div class="sectionField mb-3">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['titleHolidayName']|translate"></label>
+        <div class="content-password">
+          <input type="text" pInputText formControlName="holidayName"
+            [placeholder]="data!['placeholdeHolidayName']|translate" class="w-100" />
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts" *ngIf="getControl('holidayName')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('holidayName')?.hasError('required') && getControl('holidayName')?.dirty">
+            {{data!['validationtitleHolidayName']|translate}}
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+
+
+      <div class="sectionThree mb-3">
+        <label class="title" [innerHTML]="data!['titleCalendarFirst']|translate"></label>
+        <div class="content-password">
+          <div class="content-pCalendar-default" dir="ltr">
+            <p-calendar formControlName="calendarFirst" appendTo="body"
+              [placeholder]="data!['placeholderCalendarFirst']|translate" [showIcon]="true"></p-calendar>
+          </div>
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts" *ngIf="getControl('calendarFirst')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('calendarFirst')?.hasError('required') && getControl('calendarFirst')?.dirty">
+            {{data!['validationCalendarFirst']|translate}}
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+
+      <div class="sectionThree mb-3">
+        <label class="title" [innerHTML]="data!['titleCalendarSecond']|translate"></label>
+        <div class="content-password">
+          <div class="content-pCalendar-default" dir="ltr">
+            <p-calendar formControlName="calendarSecond" appendTo="body"
+              [placeholder]="data!['placeholderCalendarSecond']|translate" [showIcon]="true"></p-calendar>
+          </div>
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts" *ngIf="getControl('calendarSecond')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('calendarSecond')?.hasError('required') && getControl('calendarSecond')?.dirty">
+            {{data!['validationCalendarSecond']|translate}}
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+
+
+      <div class="sectionFive mb-3">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['titleNotes']|translate"></label>
+        <div class="content-password">
+          <input type="text" pInputText formControlName="notes" [placeholder]="data!['placeholdeNotes']|translate"
+            class="w-100" />
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts" *ngIf="getControl('notes')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('notes')?.hasError('required') && getControl('notes')?.dirty">
+            {{data!['validationtitleNotes']|translate}}
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+    </form>
+
+    <!-- <form [formGroup]="addBranchGroupForm">
+            <ng-container *ngIf="data?.subTitle">
+                <div class="mb-3" [innerHTML]="data!['subTitle']!|translate"></div>
+            </ng-container>
+            <div class="li-input col-12" *ngFor="let input of data?.addBranchesInputsProps">
+                <label for="" class="label-input mb-2" [innerHTML]="input['LabelMessage']|translate"></label>
+                <div class="content-password">
+
+
+                    <input [formControlName]="input.name" pInputText class="w-100" [type]="input.inputType" required
+                        [name]="input.name" />
+                </div>
+                <div class="container-alerts" *ngIf="getControl(input.name)?.errors">
+                    <div class="alert alert-danger"
+                        *ngIf="getControl(input.name)?.hasError('required') && getControl(input.name)?.dirty">
+                        {{input['message']|translate}}
+                    </div>
+                </div>
+            </div>
+        </form> -->
+
+  </div>
+  <footer class="footer-dialog p-15 d-flex justify-content-end">
+
+    <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+      (click)="request()">{{submitted ?
+      (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+    <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
+      (click)="close()">{{data!['titleClose']|translate}}</button>
+  </footer>
+</div>

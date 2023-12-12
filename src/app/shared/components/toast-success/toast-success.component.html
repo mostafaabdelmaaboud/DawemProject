@@ -1,0 +1,45 @@
+<div class="container-Dialog">
+
+  <div class="body-dialog p-15 f-s-16">
+    <div class="big-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="179" height="158" viewBox="0 0 179 158" fill="none">
+        <circle cx="94.8364" cy="81.0063" r="37.6101" fill="#3085FE" />
+        <path d="M132.446 81.0061C132.446 101.778 115.608 118.616 94.8364 118.616" stroke="#A3D139" stroke-width="4"
+          stroke-linecap="round" stroke-linejoin="round" />
+        <path
+          d="M116.535 70.8803L90.7861 96.6287L76.61 82.4526L82.1069 76.9557L90.7861 85.635L111.038 65.3834L116.535 70.8803Z"
+          fill="white" />
+        <path
+          d="M146.912 33.5557C152.454 33.6911 163.54 30.4691 163.54 16.4982C163.54 2.52735 172.513 1.47141 177 2.6898"
+          stroke="#3085FE" stroke-width="3" stroke-linecap="round" />
+        <path d="M141.704 131.346C145.429 132.414 152.958 137.034 153.277 146.968" stroke="#10B981" stroke-width="3"
+          stroke-linecap="round" />
+        <path
+          d="M2 112.536C5.19792 112.536 8.34936 112.662 11.2171 110.976C16.0248 108.15 20.3325 103.388 23.0917 98.5702C24.0923 96.823 27.2826 90.8755 24.6728 89.0113C23.01 87.8236 20.3754 89.0828 19.2737 90.4519C17.5908 92.5434 15.8868 95.7263 16.6162 98.5194C17.2099 100.793 20.6345 102.109 22.5535 102.858C26.4502 104.38 30.942 104.827 35 105.824"
+          stroke="#A3D139" stroke-width="3" stroke-linecap="round" />
+        <circle cx="34.9496" cy="55.8364" r="4.33962" fill="#3085FE" />
+        <circle cx="83.8427" cy="6.9434" r="6.9434" fill="#3085FE" />
+        <circle cx="163.981" cy="74.9307" r="6.65409" fill="#A3D139" />
+        <circle cx="100.623" cy="15.6225" r="4.62893" fill="#10B981" />
+        <circle cx="115.956" cy="153.622" r="4.33962" fill="#3085FE" />
+        <circle cx="48.5471" cy="138.289" r="4.62893" fill="#10B981" />
+        <ellipse cx="99.7548" cy="146.39" rx="3.76101" ry="3.4717" fill="#10B981" />
+      </svg>
+    </div>
+    <div class="container-desc">
+      <label class="title">
+        {{data!['title'] | translate}}
+      </label>
+      <p class="pt-2 m-0">
+        {{data!['message'] | translate}}
+      </p>
+    </div>
+
+  </div>
+  <footer class="footer-dialog p-15 d-flex justify-content-end">
+
+    <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+      (click)="request()">{{submitted ?
+      (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+  </footer>
+</div>

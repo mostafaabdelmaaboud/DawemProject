@@ -1,0 +1,80 @@
+{
+  "login": {
+    "welcomeAgain": "welcome  again",
+    "LogInToContinue": "Log in to continue",
+    "email": "email",
+    "EmailIsRequired": "Email is required",
+    "EmailIsIncorrect": "Email is incorrect",
+    "password": "password",
+    "PasswordRequired": "Password required",
+    "TheMinimumNumberOfCharactersIsFive": "The minimum number of characters is five",
+    "signIn": "sign in",
+    "Copyrights": "Copyright 2023 Daum Company - All rights reserved",
+    "WeNeedHelp": "We need help",
+    "loading": "loading"
+  },
+  "dialogs": {
+    "loading": "loading..."
+  },
+  "primeng": {
+    "dayNames": [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ],
+    "dayNamesShort": [
+      "Sun",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat"
+    ],
+    "dayNamesMin": [
+      "Su",
+      "Mo",
+      "Tu",
+      "We",
+      "Th",
+      "Fr",
+      "Sa"
+    ],
+    "monthNames": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "monthNamesShort": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "am": "صباحًا",
+    "pm": "مساءً",
+    "today": "Today",
+    "weekHeader": "Wk"
+  }
+}

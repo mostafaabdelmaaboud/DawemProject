@@ -1,0 +1,100 @@
+<div class="container-Dialog">
+  <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+    <h3 class="title-Dialog m-0">
+      {{data!['title']|translate}}
+
+    </h3>
+    <button class="icon-close iconCloseFilteration iconCloseDialog" type="button" (click)="close()">
+      <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+      <i class="pi pi-times-circle"></i>
+    </button>
+  </header>
+  <div class="body-dialog p-15 f-s-16">
+    <form [formGroup]="addBranchGroupForm">
+
+      <div class="sectionTwo mb-3">
+        <label class="title" [innerHTML]="data!['titleDropdownFirst']|translate"></label>
+        <div class="content-password">
+          <p-dropdown appendTo="body" formControlName="dropdownFirst" [options]="listFirst"
+            [placeholder]="data!['placeholderDropdownFirst']|translate" optionLabel="name"></p-dropdown>
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts" *ngIf="getControl('dropdownFirst')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('dropdownFirst')?.hasError('required') && getControl('dropdownFirst')?.dirty">
+            {{data!['validationtitleDropdownFirst']|translate}}
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+      <div class="sectionThree mb-3">
+        <label class="title" [innerHTML]="data!['titleCalendarFirst']|translate"></label>
+        <div class="content-password">
+          <div class="content-pCalendar-default" dir="ltr">
+            <p-calendar appendTo="body" formControlName="calendarFirst" selectionMode="range" [readonlyInput]="true"
+              [placeholder]="data!['placeholderCalendarFirst']|translate" [showIcon]="true"></p-calendar>
+          </div>
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts" *ngIf="getControl('calendarFirst')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('calendarFirst')?.hasError('required') && getControl('calendarFirst')?.dirty">
+            {{data!['validationCalendarFirst']|translate}}
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+      <div class="sectionThree mb-3">
+        <label class="title" [innerHTML]="data!['titleCalendarSecond']|translate"></label>
+        <div class="content-password">
+          <div class="content-pCalendar-default" dir="ltr">
+            <p-calendar appendTo="body" formControlName="calendarSecond" [timeOnly]="true" hourFormat="12"
+              [inline]="false" [placeholder]="data!['placeholderCalendarSecond']|translate" [showIcon]="true"
+              icon="pi pi-clock">></p-calendar>
+          </div>
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts" *ngIf="getControl('calendarSecond')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('calendarSecond')?.hasError('required') && getControl('calendarSecond')?.dirty">
+            {{data!['validationCalendarSecond']|translate}}
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+      <div class="sectionThree mb-3">
+        <label class="title" [innerHTML]="data!['titleCalendarThird']|translate"></label>
+        <div class="content-password">
+          <div class="content-pCalendar-default" dir="ltr">
+            <p-calendar appendTo="body" formControlName="calendarThird" [timeOnly]="true" hourFormat="12"
+              [inline]="false" [placeholder]="data!['placeholderCalendarThird']|translate" [showIcon]="true"
+              icon="pi pi-clock">></p-calendar>
+          </div>
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts" *ngIf="getControl('calendarThird')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('calendarThird')?.hasError('required') && getControl('calendarThird')?.dirty">
+            {{data!['validationCalendarThird']|translate}}
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+      <div class="sectionFive">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['titleNotes']|translate"></label>
+        <div class="content-password">
+          <input type="text" pInputText formControlName="notes" [placeholder]="data!['placeholdeNotes']|translate"
+            class="w-100" />
+        </div>
+
+      </div>
+    </form>
+  </div>
+  <footer class="footer-dialog p-15 d-flex justify-content-end">
+    <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+      (click)="request()">{{submitted ?
+      (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+    <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
+      (click)="close()">{{data!['titleClose']|translate}}</button>
+  </footer>
+</div>

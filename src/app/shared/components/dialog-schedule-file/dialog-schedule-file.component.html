@@ -1,0 +1,39 @@
+<div class="container-Dialog">
+  <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+    <h3 class="title-Dialog m-0">
+      {{data!['title']|translate}}
+    </h3>
+    <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+      <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+      <i class="pi pi-times-circle"></i>
+    </button>
+  </header>
+  <div class="body-dialog p-15 f-s-16">
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">اسم الجدول</label>
+      <div class="content-password">
+        {{info?.name ? info?.name : "لا يوجد"}}
+      </div>
+
+    </div>
+    <ng-container *ngFor="let day of info?.scheduleDays">
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">{{day?.weekDayName}}</label>
+        <div class="content-password">
+          {{day?.shiftName ? day?.shiftName : "لا يوجد"}}
+
+        </div>
+
+      </div>
+    </ng-container>
+
+
+
+
+  </div>
+
+</div>
+
+<div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>

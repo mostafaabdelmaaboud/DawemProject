@@ -1,0 +1,155 @@
+<div class="container-Dialog">
+  <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+    <h3 class="title-Dialog m-0">
+      {{data!['title']|translate}}
+
+    </h3>
+    <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+      <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+      <i class="pi pi-times-circle"></i>
+    </button>
+  </header>
+  <div class="body-dialog p-15 f-s-16">
+    <form [formGroup]="addBranchGroupForm">
+      <div class="section1 mb-3">
+        <label class="title">{{data!['setAsActive']|translate}}</label>
+        <p-inputSwitch formControlName="isActive"></p-inputSwitch>
+      </div>
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12">
+            <ng-container *ngIf="editGroups">
+              <div class="field-disabled mb-3 readOnly">
+                <label for="" class="label-input mb-2" [innerHTML]="data!['titleFieldDisabled']|translate"></label>
+                <div class="content-password">
+                  <input type="text" pInputText formControlName="fieldDisabled" [readOnly]="true"
+                    [placeholder]="data!['placeholdeieldDisabled']|translate" class="w-100" />
+                </div>
+              </div>
+            </ng-container>
+
+
+            <div class="sectionFive mb-3">
+              <label for="" class="label-input mb-2" [innerHTML]="data!['titleGroupName']|translate"></label>
+              <div class="content-password">
+                <input type="text" pInputText formControlName="groupName"
+                  [placeholder]="data!['placeholdeGroupName']|translate" class="w-100" />
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('groupName')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('groupName')?.hasError('required') && getControl('groupName')?.dirty">
+                  {{data!['ValidationGroupName']|translate}}
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+            <div class="sectionTwo mb-3">
+              <label class="title">{{data!['groupEmployees']|translate}} <span class="color-red">*</span></label>
+              <div class="content-password">
+                <p-multiSelect [options]="listGroupEmployees" [filter]="false" appendTo="body"
+                  formControlName="groupEmployees" [placeholder]="data!['placeholdeGroupEmployees']|translate"
+                  optionLabel="name">
+                  <ng-template pTemplate="header">
+                    <span class="p-input-icon-left input-search-dropdown">
+
+                      <i class="pi pi-search"
+                        (click)="searchDropdown(searchgroupEmployees.value, 'groupEmployees')"></i>
+                      <input type="text" placeholder="بحث" pInputText #searchgroupEmployees />
+                    </span>
+                  </ng-template>
+                  <ng-template let-option pTemplate="item">
+                    {{ option.name }}
+                  </ng-template>
+                </p-multiSelect>
+
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('groupEmployees')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('groupEmployees')?.hasError('required') && getControl('groupEmployees')?.dirty">
+                  {{data!['ValidationGroupEmployees']|translate}}
+
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+            <div class="sectionTwo mb-3">
+              <label class="title">{{data!['groupManager']|translate}} <span class="color-red">*</span></label>
+              <div class="content-password">
+                <p-dropdown appendTo="body" formControlName="groupManager" appendTo="body" [options]="listGroupManager"
+                  [placeholder]="data!['placeholdeGroupManager']|translate" optionLabel="name">
+                  <ng-template pTemplate="header">
+                    <span class="p-input-icon-left input-search-dropdown">
+
+                      <i class="pi pi-search" (click)="searchDropdown(searchgroupManager.value, 'groupManager')"></i>
+                      <input type="text" placeholder="بحث" pInputText #searchgroupManager />
+                    </span>
+                  </ng-template>
+                  <ng-template let-option pTemplate="item">
+                    {{ option.name }}
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('groupManager')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('groupManager')?.hasError('required') && getControl('groupManager')?.dirty">
+                  {{data!['ValidationGroupManager']|translate}}
+
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+            <div class="sectionTwo mb-3">
+              <label class="title">{{data!['deputyDirector']|translate}} <span class="color-red">*</span></label>
+              <div class="content-password">
+                <p-multiSelect [options]="listDeputyDirector" appendTo="body" [filter]="false"
+                  formControlName="deputyDirector" [placeholder]="data!['placeholdeDeputyDirector']|translate"
+                  optionLabel="name">
+                  <ng-template pTemplate="header">
+                    <span class="p-input-icon-left input-search-dropdown">
+
+                      <i class="pi pi-search"
+                        (click)="searchDropdown(searchdeputyDirectorr.value, 'deputyDirector')"></i>
+                      <input type="text" placeholder="بحث" pInputText #searchdeputyDirectorr />
+                    </span>
+                  </ng-template>
+                  <ng-template let-option pTemplate="item">
+                    {{ option.name }}
+                  </ng-template>
+                </p-multiSelect>
+
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('deputyDirector')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('deputyDirector')?.hasError('required') && getControl('deputyDirector')?.dirty">
+                  {{data!['ValidationDeputyDirector']|translate}}
+
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+          </div>
+          <!-- <div class="col-5">
+            <p-tree [value]="treeDepartment" (onNodeSelect)="nodeSelect($event)" selectionMode="single">
+            </p-tree>
+          </div> -->
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <footer class="footer-dialog p-15 d-flex justify-content-end">
+    <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+      (click)="request()">{{submitted
+      ?
+      (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+    <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
+      (click)="close()">{{data!['titleClose']|translate}}</button>
+  </footer>
+</div>
+<div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>

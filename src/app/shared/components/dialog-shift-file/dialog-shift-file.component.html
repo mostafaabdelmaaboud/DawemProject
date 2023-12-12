@@ -1,0 +1,58 @@
+<div class="container-Dialog">
+  <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+    <h3 class="title-Dialog m-0">
+      {{data!['title']|translate}}
+    </h3>
+    <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+      <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+      <i class="pi pi-times-circle"></i>
+    </button>
+  </header>
+  <div class="body-dialog p-15 f-s-16">
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">اسم الوردية</label>
+      <div class="content-password">
+        {{info?.name ? info?.name : "لا يوجد"}}
+      </div>
+
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">نوع الوردية</label>
+      <div class="content-password">
+        <ng-container *ngIf="info?.timePeriod === 0">
+          صباحي
+        </ng-container>
+        <ng-container *ngIf="info?.timePeriod === 1">
+          مسائي
+        </ng-container>
+
+      </div>
+
+    </div>
+    <div class="section1 d-flex line-bellow">
+      <div class="col">
+        <label class="title">وقت الدخول</label>
+        <span class="d-clock">{{info?.checkInTime ? info?.checkInTime : "لا يوجد"}}</span>
+      </div>
+      <div class="col">
+        <label class="title">وقت الخروج</label>
+        <span class="d-block">{{info?.checkOutTime ? info?.checkOutTime : "لا يوجد"}}</span>
+      </div>
+
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">الدقائق المسموحة</label>
+      <div class="content-password">
+        {{info?.allowedMinutes ? info?.allowedMinutes : "لا يوجد"}}
+      </div>
+
+    </div>
+
+
+  </div>
+
+</div>
+
+<div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>

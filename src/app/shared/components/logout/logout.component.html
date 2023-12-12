@@ -1,0 +1,22 @@
+<div class="container-Dialog">
+
+  <div class="body-dialog p-15 f-s-16">
+
+    <div class="container-desc">
+      <label class="title">
+        {{data!['title'] | translate}}
+      </label>
+
+    </div>
+
+
+  </div>
+  <footer class="footer-dialog p-15 d-flex justify-content-end">
+    <button class="background-red w-100 color-white mr-2 b-r-4 button-action ml-2 mr-2 f-s-16"
+      (click)="request()">{{submitted ?
+      (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+    <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
+      (click)="close()">{{data!['titleClose']|translate}}</button>
+
+  </footer>
+</div>

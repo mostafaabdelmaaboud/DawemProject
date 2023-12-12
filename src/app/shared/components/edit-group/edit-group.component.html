@@ -1,0 +1,191 @@
+<div class="container-Dialog">
+  <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+    <h3 class="title-Dialog m-0">
+      {{data!['title']|translate}}
+
+    </h3>
+    <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+      <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+      <i class="pi pi-times-circle"></i>
+    </button>
+  </header>
+  <div class="body-dialog p-15 f-s-16">
+    <form [formGroup]="addBranchGroupForm">
+      <div class="field-disabled mb-3 readOnly">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['titleFieldDisabled']|translate"></label>
+        <div class="content-password">
+          <input type="text" pInputText formControlName="fieldDisabled" [readOnly]="true"
+            [placeholder]="data!['placeholdeieldDisabled']|translate" class="w-100" />
+        </div>
+      </div>
+      <div class="sectionFive mb-3">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['titleTableName']|translate"></label>
+        <div class="content-password">
+          <input type="text" pInputText formControlName="tableName"
+            [placeholder]="data!['placeholdetableName']|translate" class="w-100" />
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts" *ngIf="getControl('tableName')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('tableName')?.hasError('required') && getControl('tableName')?.dirty">
+            {{data!['ValidationTableName']|translate}}
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+      <div class="col-12">
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <div class="sectionTwo mb-3">
+              <label class="title" [innerHTML]="data!['Titlesaturday']|translate"></label>
+              <div class="content-password">
+                <p-dropdown appendTo="body" formControlName="saturday" [options]="list"
+                  [placeholder]="data!['Placeholdersaturday']|translate" optionLabel="name"></p-dropdown>
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts" *ngIf="getControl('saturday')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('saturday')?.hasError('required') && getControl('saturday')?.dirty">
+                  {{data!['validationSaturday']|translate}}
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+          </div>
+          <div class="col-lg-6 col-12">
+            <div class="sectionTwo mb-3">
+              <label class="title" [innerHTML]="data!['TitleSunday']|translate"></label>
+              <div class="content-password">
+                <p-dropdown appendTo="body" [options]="listTwo" formControlName="sunday"
+                  [placeholder]="data!['PlaceholderSunday']|translate" optionLabel="name"></p-dropdown>
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts" *ngIf="getControl('sunday')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('sunday')?.hasError('required') && getControl('sunday')?.dirty">
+                  {{data!['ValidationSunday']|translate}}
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+          </div>
+          <div class="col-lg-6 col-12">
+            <div class="sectionTwo mb-3">
+              <label class="title" [innerHTML]="data!['TitleMonday']|translate"></label>
+              <div class="content-password">
+                <p-dropdown appendTo="body" formControlName="monday" [options]="list"
+                  [placeholder]="data!['PlaceholderMonday']|translate" optionLabel="name"></p-dropdown>
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts" *ngIf="getControl('monday')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('monday')?.hasError('required') && getControl('monday')?.dirty">
+                  {{data!['validationMonday']|translate}}
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+          </div>
+          <div class="col-lg-6 col-12">
+            <div class="sectionTwo mb-3">
+              <label class="title" [innerHTML]="data!['TitleTuesday']|translate"></label>
+              <div class="content-password">
+                <p-dropdown appendTo="body" [options]="listTwo" formControlName="tuesday"
+                  [placeholder]="data!['PlaceholderTuesday']|translate" optionLabel="name"></p-dropdown>
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts" *ngIf="getControl('tuesday')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('tuesday')?.hasError('required') && getControl('tuesday')?.dirty">
+                  {{data!['ValidationTuesday']|translate}}
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+          </div>
+          <div class="col-lg-6 col-12">
+            <div class="sectionTwo mb-3">
+              <label class="title" [innerHTML]="data!['TitleWednesday']|translate"></label>
+              <div class="content-password">
+                <p-dropdown appendTo="body" [options]="listTwo" formControlName="wednesday"
+                  [placeholder]="data!['PlaceholderWednesday']|translate" optionLabel="name"></p-dropdown>
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts" *ngIf="getControl('wednesday')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('wednesday')?.hasError('required') && getControl('wednesday')?.dirty">
+                  {{data!['ValidationWednesday']|translate}}
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+          </div>
+          <div class="col-lg-6 col-12">
+            <div class="sectionTwo mb-3">
+              <label class="title" [innerHTML]="data!['TitleThursday']|translate"></label>
+              <div class="content-password">
+                <p-dropdown appendTo="body" [options]="listTwo" formControlName="thursday"
+                  [placeholder]="data!['PlaceholderThursday']|translate" optionLabel="name"></p-dropdown>
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts" *ngIf="getControl('thursday')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('thursday')?.hasError('required') && getControl('thursday')?.dirty">
+                  {{data!['ValidationThursday']|translate}}
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+          </div>
+          <div class="col-lg-6 col-12">
+            <div class="sectionTwo mb-3">
+              <label class="title" [innerHTML]="data!['TitleFriday']|translate"></label>
+              <div class="content-password">
+                <p-dropdown appendTo="body" [options]="listTwo" formControlName="friday"
+                  [placeholder]="data!['PlaceholderFriday']|translate" optionLabel="name"></p-dropdown>
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts" *ngIf="getControl('friday')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('friday')?.hasError('required') && getControl('friday')?.dirty">
+                  {{data!['ValidationFriday']|translate}}
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- <form [formGroup]="addBranchGroupForm">
+            <ng-container *ngIf="data?.subTitle">
+                <div class="mb-3" [innerHTML]="data!['subTitle']!|translate"></div>
+            </ng-container>
+            <div class="li-input col-12" *ngFor="let input of data?.addBranchesInputsProps">
+                <label for="" class="label-input mb-2" [innerHTML]="input['LabelMessage']|translate"></label>
+                <div class="content-password">
+
+
+                    <input [formControlName]="input.name" pInputText class="w-100" [type]="input.inputType" required
+                        [name]="input.name" />
+                </div>
+                <div class="container-alerts" *ngIf="getControl(input.name)?.errors">
+                    <div class="alert alert-danger"
+                        *ngIf="getControl(input.name)?.hasError('required') && getControl(input.name)?.dirty">
+                        {{input['message']|translate}}
+                    </div>
+                </div>
+            </div>
+        </form> -->
+
+  </div>
+  <footer class="footer-dialog p-15 d-flex justify-content-end">
+    <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+      (click)="request()">{{submitted
+      ?
+      (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+    <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
+      (click)="close()">{{data!['titleClose']|translate}}</button>
+  </footer>
+</div>

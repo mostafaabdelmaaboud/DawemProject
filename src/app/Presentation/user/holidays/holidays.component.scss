@@ -1,0 +1,10 @@
+@media (max-width:520px) {
+
+  :host ::ng-deep .table-basic #tableHolidays .p-datatable-tfoot>tr>td {
+    display: block !important;
+  }
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead>tr>th:last-of-type {
+  width: 15%;
+}

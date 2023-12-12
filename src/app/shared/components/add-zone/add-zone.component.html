@@ -1,0 +1,223 @@
+<div class="container-Dialog">
+  <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+    <h3 class="title-Dialog m-0">
+      {{data!['title']|translate}}
+
+    </h3>
+    <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+      <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+      <i class="pi pi-times-circle"></i>
+    </button>
+  </header>
+  <div class="body-dialog p-15 f-s-16">
+    <form [formGroup]="addBranchGroupForm">
+      <div class="section1 mb-3">
+        <label class="title">{{data!['setAsNecessary']|translate}}</label>
+        <p-inputSwitch formControlName="isActive"></p-inputSwitch>
+      </div>
+
+      <ng-container *ngIf="editEmployee">
+        <div class="field-disabled mb-3 readOnly">
+          <label for="" class="label-input mb-2" [innerHTML]="data!['titleFieldDisabled']|translate"></label>
+          <div class="content-password">
+            <input type="text" pInputText formControlName="fieldDisabled" [readOnly]="true"
+              [placeholder]="data!['placeholdeieldDisabled']|translate" class="w-100" />
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="sectionField mb-3">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['fieldFirst']|translate"></label>
+        <div class="content-password">
+          <input type="text" pInputText formControlName="name" [placeholder]="data!['placeholdefieldFirst']|translate"
+            class="w-100" />
+        </div>
+        <div class="container-alerts mt-2" *ngIf="getControl('name')?.errors">
+          <div class="alert alert-danger" *ngIf="getControl('name')?.hasError('required') && getControl('name')?.dirty">
+            {{data!['validationtitlefieldFirst']|translate}}
+          </div>
+        </div>
+      </div>
+
+      <div class="sectionField mb-3">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['radiusNumber']|translate"></label>
+        <div class="content-password">
+          <input type="number" pInputText formControlName="employeeNumber"
+            [placeholder]="data!['placeholdeRadius']|translate" class="w-100" />
+        </div>
+        <div class="container-alerts mt-2" *ngIf="getControl('employeeNumber')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('employeeNumber')?.hasError('required') && getControl('employeeNumber')?.dirty">
+            {{data!['validationtitleRadius']|translate}}
+          </div>
+        </div>
+      </div>
+      <!-- <div class="sectionTwo mb-3">
+        <label class="title" [innerHTML]="data!['titleDropdownFirst']|translate"></label>
+        <div class="content-password">
+          <p-dropdown appendTo="body" formControlName="JobTitleId" [options]="jobTitleFirst"
+            [placeholder]="data!['placeholderDropdownFirst']|translate" optionLabel="name">
+
+            <ng-template pTemplate="header">
+              <span class="p-input-icon-left input-search-dropdown">
+
+                <i class="pi pi-search" (click)="searchDropdown(searchJobTotle.value, 'JobTitleId')"></i>
+                <input type="text" placeholder="بحث" pInputText #searchJobTotle />
+              </span>
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+              {{ option.name }}
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <div class="container-alerts mt-2" *ngIf="getControl('JobTitleId')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('JobTitleId')?.hasError('required') && getControl('JobTitleId')?.dirty">
+            {{data!['validationtitleDropdownFirst']|translate}}
+          </div>
+        </div>
+      </div>
+      <div class="sectionTwo mb-3">
+        <label class="title" [innerHTML]="data!['directManager']|translate"></label>
+        <div class="content-password">
+          <p-dropdown appendTo="body" formControlName="directManager" [options]="listDirectManager"
+            [placeholder]="data!['placeholdeDirectManager']|translate" optionLabel="name">
+            <ng-template pTemplate="header">
+              <span class="p-input-icon-left input-search-dropdown">
+
+                <i class="pi pi-search" (click)="searchDropdown(searchdirectManager.value, 'directManager')"></i>
+                <input type="text" placeholder="بحث" pInputText #searchdirectManager />
+              </span>
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+              {{ option.name }}
+            </ng-template>
+
+          </p-dropdown>
+        </div>
+        <div class="container-alerts mt-2" *ngIf="getControl('directManager')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('directManager')?.hasError('required') && getControl('directManager')?.dirty">
+            {{data!['validationtitleDirectManager']|translate}}
+          </div>
+        </div>
+      </div> -->
+      <!--
+      <div class="sectionField mb-3">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['email']|translate"></label>
+        <div class="content-password">
+          <input type="text" pInputText formControlName="email" [placeholder]="data!['placeholdeEmail']|translate"
+            class="w-100" />
+        </div>
+        <div class="container-alerts mt-2" *ngIf="getControl('email')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('email')?.hasError('required') && getControl('email')?.dirty">
+            {{data!['validationtitleEmail']|translate}}
+          </div>
+          <div class="alert alert-danger"
+            *ngIf="getControl('email')?.hasError('pattern') && !getControl('email')?.hasError('required')y">
+            {{data!['validationtitleEmailPattern']|translate}}
+          </div>
+        </div>
+      </div>
+      <div class="sectionField mb-3">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['mobileNumber']|translate"></label>
+        <div class="content-password">
+          <input type="text" pInputText formControlName="mobileNumber"
+            [placeholder]="data!['placeholdeMobileNumber']|translate" class="w-100" />
+        </div>
+        <div class="container-alerts mt-2" *ngIf="getControl('mobileNumber')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('mobileNumber')?.hasError('required') && getControl('mobileNumber')?.dirty">
+            {{data!['validationtitleMobileNumber']|translate}}
+          </div>
+        </div>
+      </div>
+      <div class="sectionField mb-3">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['address']|translate"></label>
+        <div class="content-password">
+          <input type="text" pInputText formControlName="address" [placeholder]="data!['placeholdeAddress']|translate"
+            class="w-100" />
+        </div>
+        <div class="container-alerts mt-2" *ngIf="getControl('address')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('address')?.hasError('required') && getControl('address')?.dirty">
+            {{data!['validationtitleAddress']|translate}}
+          </div>
+        </div>
+      </div>
+      <div class="sectionTwo mb-3">
+        <label class="title" [innerHTML]="data!['titleDropdownSecond']|translate"></label>
+        <div class="content-password">
+          <p-dropdown appendTo="body" formControlName="DepartmentId" [options]="sectionList"
+            [placeholder]="data!['placeholderDropdown']|translate" optionLabel="name">
+            <ng-template pTemplate="header">
+              <span class="p-input-icon-left input-search-dropdown">
+
+                <i class="pi pi-search" (click)="searchDropdown(searchDepartmentId.value, 'DepartmentId')"></i>
+                <input type="text" placeholder="بحث" pInputText #searchDepartmentId />
+              </span>
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+              {{ option.name }}
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <div class="container-alerts mt-2" *ngIf="getControl('DepartmentId')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('DepartmentId')?.hasError('required') && getControl('DepartmentId')?.dirty">
+            {{data!['validationtitleDropdownSecond']|translate}}
+          </div>
+        </div>
+      </div>
+      <div class="sectionTwo mb-3">
+        <label class="title" [innerHTML]="data!['titleWorkSchedule']|translate"></label>
+        <div class="content-password">
+          <p-dropdown appendTo="body" formControlName="ScheduleId" [options]="workScheduleList"
+            [placeholder]="data!['placeholderWorkSchedule']|translate" optionLabel="name">
+            <ng-template pTemplate="header">
+              <span class="p-input-icon-left input-search-dropdown">
+
+                <i class="pi pi-search" (click)="searchDropdown(searchScheduleId.value, 'ScheduleId')"></i>
+                <input type="text" placeholder="بحث" pInputText #searchScheduleId />
+              </span>
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+              {{ option.name }}
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <div class="container-alerts mt-2" *ngIf="getControl('ScheduleId')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('ScheduleId')?.hasError('required') && getControl('ScheduleId')?.dirty">
+            {{data!['validationtitleWorkSchedule']|translate}}
+          </div>
+        </div>
+      </div>
+      <div class="sectionFive mb-3">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['titleNotes']|translate"></label>
+        <div class="content-password">
+          <input type="number" pInputText formControlName="AnnualVacationBalance"
+            [placeholder]="data!['placeholdeNotes']|translate" class="w-100" />
+        </div>
+        <div class="container-alerts mt-2" *ngIf="getControl('AnnualVacationBalance')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('AnnualVacationBalance')?.hasError('required') && getControl('AnnualVacationBalance')?.dirty">
+            {{data!['validationtitleNotes']|translate}}
+          </div>
+        </div>
+      </div> -->
+    </form>
+  </div>
+  <footer class="footer-dialog p-15 d-flex justify-content-end">
+
+    <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+      (click)="request()">{{submitted ?
+      (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+    <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
+      (click)="close()">{{data!['titleClose']|translate}}</button>
+  </footer>
+</div>
+<div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>

@@ -1,0 +1,365 @@
+<div class="header-comp d-flex align-items-center">
+  <span class="title-head">
+    ملخص الدوام
+  </span>
+  <div class="field-calendar-header">
+    <p-calendar [(ngModel)]="date" [showIcon]="true" dateFormat="yy MM"></p-calendar>
+
+  </div>
+</div>
+<div class="cards-dashboard">
+  <div class="row">
+    <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
+      <div class="custom-card-dashboard">
+        <span class="title-card-dashboard Success-700">إجمالي حضور اليوم</span>
+        <div class="body-card-dashboard d-flex align-items-center justify-content-between">
+          <span class="number-card-dashboard">318</span>
+          <span class="icon-card-dashboard">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
+              <g opacity="0.2">
+                <path opacity="0.4"
+                  d="M42.6661 5.97837L39.9994 5.97837C32.4569 5.97837 28.6869 5.97898 26.3438 8.32212C24.0006 10.6653 24.0006 14.4365 24.0006 21.979L24.0006 43.3123C24.0006 50.8548 24.0006 54.626 26.3438 56.9692C28.6863 59.3117 32.455 59.3117 39.9936 59.3117L39.9994 59.3117L42.6661 59.3117C50.2085 59.3117 53.9798 59.3117 56.3229 56.9686C58.6661 54.6254 58.6661 50.8542 58.6661 43.3117L58.6661 21.9784L58.6661 21.9783C58.6661 14.4359 58.6661 10.6647 56.3229 8.32152C53.9798 5.97837 50.2086 5.97837 42.6661 5.97837Z"
+                  fill="#059669" />
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M3.33594 32.6424C3.33594 31.5379 4.23137 30.6424 5.33594 30.6424L37.2628 30.6424L32.0344 26.1609C31.1957 25.4421 31.0986 24.1795 31.8174 23.3408C32.5363 22.5022 33.7989 22.4051 34.6375 23.1239L43.9709 31.1239C44.4141 31.5039 44.6693 32.0586 44.6693 32.6424C44.6693 33.2263 44.4141 33.781 43.9709 34.1609L34.6375 42.1609C33.7989 42.8798 32.5363 42.7827 31.8174 41.944C31.0986 41.1053 31.1957 39.8427 32.0344 39.1239L37.2628 34.6424L5.33594 34.6424C4.23137 34.6424 3.33594 33.747 3.33594 32.6424Z"
+                  fill="#059669" />
+              </g>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
+      <div class="custom-card-dashboard">
+        <span class="title-card-dashboard Primary-700">إجمالي اجازات اليوم</span>
+        <div class="body-card-dashboard d-flex align-items-center justify-content-between">
+          <span class="number-card-dashboard">12</span>
+          <span class="icon-card-dashboard">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
+              <g opacity="0.2">
+                <path
+                  d="M41.3334 20.645C41.3334 25.7997 37.1547 29.9784 32.0001 29.9784C26.8454 29.9784 22.6667 25.7997 22.6667 20.645C22.6667 15.4904 26.8454 11.3117 32.0001 11.3117C37.1547 11.3117 41.3334 15.4904 41.3334 20.645Z"
+                  fill="#2364C0" />
+                <path opacity="0.4"
+                  d="M52.0001 20.645C52.0001 24.3269 49.0153 27.3117 45.3334 27.3117C41.6515 27.3117 38.6667 24.3269 38.6667 20.645C38.6667 16.9631 41.6515 13.9783 45.3334 13.9783C49.0153 13.9783 52.0001 16.9631 52.0001 20.645Z"
+                  fill="#2364C0" />
+                <path opacity="0.4"
+                  d="M11.9999 20.645C11.9999 24.3269 14.9847 27.3117 18.6666 27.3117C22.3485 27.3117 25.3333 24.3269 25.3333 20.645C25.3333 16.9631 22.3485 13.9783 18.6666 13.9783C14.9847 13.9783 11.9999 16.9631 11.9999 20.645Z"
+                  fill="#2364C0" />
+                <path
+                  d="M48 44.645C48 49.7997 40.8366 53.9784 32 53.9784C23.1634 53.9784 16 49.7997 16 44.645C16 39.4904 23.1634 35.3117 32 35.3117C40.8366 35.3117 48 39.4904 48 44.645Z"
+                  fill="#2364C0" />
+                <path opacity="0.4"
+                  d="M58.6666 44.645C58.6666 48.3269 53.891 51.3117 47.9999 51.3117C42.1089 51.3117 37.3333 48.3269 37.3333 44.645C37.3333 40.9631 42.1089 37.9783 47.9999 37.9783C53.891 37.9783 58.6666 40.9631 58.6666 44.645Z"
+                  fill="#2364C0" />
+                <path opacity="0.4"
+                  d="M5.33342 44.645C5.33342 48.3269 10.109 51.3117 16.0001 51.3117C21.8911 51.3117 26.6667 48.3269 26.6667 44.645C26.6667 40.9631 21.8911 37.9783 16.0001 37.9783C10.109 37.9783 5.33342 40.9631 5.33342 44.645Z"
+                  fill="#2364C0" />
+              </g>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
+      <div class="custom-card-dashboard">
+        <span class="title-card-dashboard Error-700">إجمالي غياب اليوم</span>
+        <div class="body-card-dashboard d-flex align-items-center justify-content-between">
+          <span class="number-card-dashboard">8</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
+            <g opacity="0.2">
+              <path opacity="0.5"
+                d="M32 59.3117C45.2548 59.3117 56 48.5665 56 35.3117C56 22.0569 45.2548 11.3117 32 11.3117C18.7452 11.3117 8 22.0569 8 35.3117C8 48.5665 18.7452 59.3117 32 59.3117Z"
+                fill="#D21C1C" />
+              <path
+                d="M24.0001 29.3117C22.8955 29.3117 22.0001 28.4163 22.0001 27.3117C22.0001 26.2071 22.8955 25.3117 24.0001 25.3117H40.0001C40.809 25.3117 41.5383 25.799 41.8478 26.5463C42.1574 27.2937 41.9863 28.1539 41.4143 28.7259L28.8285 41.3117H40.0001C41.1046 41.3117 42.0001 42.2071 42.0001 43.3117C42.0001 44.4163 41.1046 45.3117 40.0001 45.3117H24.0001C23.1911 45.3117 22.4619 44.8244 22.1523 44.0771C21.8427 43.3297 22.0138 42.4695 22.5858 41.8975L35.1716 29.3117H24.0001Z"
+                fill="#D21C1C" />
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M21.9747 6.88462C22.5442 7.78743 22.2672 8.97673 21.3558 9.54098L10.9775 15.9667C10.0662 16.5309 8.86563 16.2565 8.29604 15.3536C7.72645 14.4508 8.0035 13.2615 8.91485 12.6973L19.2932 6.2716C20.2045 5.70735 21.4051 5.9818 21.9747 6.88462Z"
+                fill="#D21C1C" />
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M42.0254 6.88461C42.595 5.9818 43.7955 5.70735 44.7069 6.2716L55.0852 12.6973C55.9965 13.2615 56.2735 14.4508 55.704 15.3536C55.1344 16.2565 53.9338 16.5309 53.0225 15.9667L42.6442 9.54098C41.7329 8.97672 41.4558 7.78743 42.0254 6.88461Z"
+                fill="#D21C1C" />
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
+      <div class="custom-card-dashboard">
+        <span class="title-card-dashboard Warning-700 ">إجمالي تأخيرات اليوم</span>
+        <div class="body-card-dashboard d-flex align-items-center justify-content-between">
+          <span class="number-card-dashboard">13</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
+            <g opacity="0.2">
+              <path opacity="0.4"
+                d="M31.9999 58.8117C46.7275 58.8117 58.6666 46.8726 58.6666 32.145C58.6666 17.4174 46.7275 5.47833 31.9999 5.47833C17.2723 5.47833 5.33325 17.4174 5.33325 32.145C5.33325 46.8726 17.2723 58.8117 31.9999 58.8117Z"
+                fill="#F59E0B" />
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M32 19.4783C33.1046 19.4783 34 20.3738 34 21.4783V31.3166L40.0809 37.3975C40.8619 38.1785 40.8619 39.4448 40.0809 40.2259C39.2998 41.0069 38.0335 41.0069 37.2525 40.2259L30.5858 33.5592C30.2107 33.1841 30 32.6754 30 32.145V21.4783C30 20.3738 30.8954 19.4783 32 19.4783Z"
+                fill="#F59E0B" />
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+
+
+
+  </div>
+
+
+</div>
+<div class="table-basic">
+  <!-- <div class="header-table-basic">
+    <span class="title-table-basic">سجل الطلبات</span>
+    <div class="actions-table-basic">
+
+    </div>
+  </div> -->
+  <p-table #dt1 [value]="department" id="tableEmployment" [responsiveLayout]="opened ? 'stack' : 'scroll'"
+    [responsive]="true" [paginator]="false" [rows]="itemsPerPage" [first]="page" [rows]="10"
+    [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
+              'orderNumber',
+              'employeeName.name',
+              'typeOfRequest',
+              'date',
+              'time' ]">
+    <ng-template pTemplate="caption">
+      <div class="custom-header-table d-flex justify-content-between align-items-center">
+        <h2 class="title-table m-0">
+          الحضور والانصراف
+          <!-- <span class="subTitlte ml-2">(30 FLS )</span> -->
+        </h2>
+        <div class="custom-filteration d-flex align-items-center">
+          <!-- <span class="p-input-icon-left ml-auto">
+            <i class="pi pi-search" (click)="searchKeyword(search.value)"></i>
+            <input pInputText type="text" #search (input)="dt1.filterGlobal(search.value, 'contains')"
+              placeholder="Search..." />
+          </span> -->
+          <button (click)="op.toggle($event)" class="btn btn-outline-primary action-button-t d-flex align-items-center">
+            <i class="pi pi-filter-fill"></i>
+
+            <span>تصفية النتائج</span>
+          </button>
+          <div class="container-filteration">
+            <p-overlayPanel #op>
+              <header class="header-filter d-flex justify-content-center align-items-center p-15 position-relative">
+                <h3 class="title-filteration m-0">
+                  تصفية النتائج
+
+                </h3>
+                <button class="icon-close iconCloseDialog iconCloseFilteration" type="button" (click)="op.hide()">
+                  <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+                  <i class="pi pi-times-circle"></i>
+                </button>
+              </header>
+              <form [formGroup]="filterForm" class="formFilteration">
+
+
+                <div class="section1 d-flex justify-content-between">
+                  <div class="col">
+                    <label class="title mb-2 d-block">اظهار الغياب فقط</label>
+                    <p-inputSwitch formControlName="setAsNecessary"></p-inputSwitch>
+                  </div>
+                  <div class="col">
+                    <label class="title mb-2 d-block">اظهار التأخيرات فقط</label>
+                    <p-inputSwitch formControlName="setAsNecessary"></p-inputSwitch>
+                  </div>
+
+                </div>
+                <div class="sectionFive mb-3">
+                  <label for="" class="label-input mb-2">رقم الموظف</label>
+                  <div class="content-password">
+                    <input type="text" pInputText placeholder="رقم الموظف" class="w-100" />
+                  </div>
+
+                </div>
+                <div class="sectionFive mb-3">
+                  <label for="" class="label-input mb-2">اسم الموظف</label>
+                  <div class="content-password">
+                    <input type="text" pInputText placeholder="اسم الموظف" class="w-100" />
+                  </div>
+
+                </div>
+
+                <div class="sectionThree">
+                  <label class="title mb-2">التاريخ</label>
+                  <div class="content-password">
+                    <div class="content-pCalendar-default" dir="ltr">
+                      <p-calendar appendTo="body" selectionMode="range" [readonlyInput]="true"
+                        placeholder="بداية - نهاية" [showIcon]="true"></p-calendar>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="footer-filter">
+                  <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16">تصفية
+                    النتائج</button>
+
+                  <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
+                    type="button">إعادة
+                    ضبط</button>
+
+                </div>
+              </form>
+
+            </p-overlayPanel>
+            <button class="btn btn-primary action-button-t d-flex align-items-center" (click)="addEmployment()">
+              <i class="pi bi-plus-circle-fill"></i>
+              <span>إضافة دوام</span>
+            </button>
+            <!--
+            <button (click)="op.toggle($event)" class="btn button-filter-table">
+
+              <i class="bi bi-filter"></i>
+            </button> -->
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngFor="let column of columns">
+          {{ column.name }}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData>
+      <tr *ngIf="!isLoading">
+        <!-- <ng-container *ngFor="
+                    let customer of customers
+                      | paginate
+                        : {
+                            id: 'some_id',
+                            itemsPerPage: itemsPerPage,
+                            currentPage: filteration.page,
+                            totalItems: totalItems
+                          }
+                  "></ng-container> -->
+        <ng-container *ngFor="let column of columns">
+          <!-- <td  *ngIf="column.field == 'flsName'">
+                                  <ng-container *ngIf="rowData[column.field][column.fieldTwo]">
+                                    {{ rowData[column.field][column.fieldTwo] }}
+                                  </ng-container>
+                                  <ng-container *ngIf="!rowData[column.field][column.fieldTwo] ">
+                                    No Data
+                                  </ng-container>
+
+                                </td> -->
+          <ng-container *ngIf="column.field != 'employeeName' && column.field != 'actions'">
+            <td>
+              <span class="p-column-title">
+                {{column.name}}
+              </span>
+              {{ rowData[column.field] }}
+            </td>
+          </ng-container>
+          <td *ngIf="column.field === 'employeeName'">
+            <span class="p-column-title">
+              {{column.name}}
+            </span>
+            <span>
+              <img [src]="rowData[column.field]['img']" width="32" height="32" [alt]="rowData[column.field]['alt']">
+
+              {{ rowData[column.field]['name'] }}
+            </span>
+
+          </td>
+
+          <td *ngIf="column.field === 'actions'">
+            <span class="p-column-title">
+              {{column.name}}
+            </span>
+            <div class="action-body-td">
+              <button type="button" class="btn btn-outline-secondary action-accept color-green"><i
+                  class="bi bi-check-circle"></i></button>
+              <button type="button" class="btn btn-outline-secondary action-accept color-green"
+                (click)="editEmployment()"><i class="bi bi-pencil-square"></i></button>
+              <button type="button" class="btn btn-outline-secondary action-close color-red"
+                (click)="deleteRow(rowData)"><i class="bi bi-trash3-fill"></i>
+              </button>
+
+
+
+            </div>
+          </td>
+
+          <!-- <td *ngIf="column.field != 'FLSname'&&column.field != 'Branchname' ">
+                                  <span class="first-number number-currency"
+                                      [class.invalidNumber]="rowData[column.field].first > (rowData[column.field].second * 90) / 100">{{rowData[column.field].first
+                                      | number:'1.0-0'}}</span>/
+                                  <span class="second-number number-currency">{{rowData[column.field].second |
+                                      number:'1.0-0'}}</span>
+                                  <i class="bi bi-info-circle-fill color-red-icon ml-2"
+                                      *ngIf="rowData[column.field].first > (rowData[column.field].second * 90) / 100"></i>
+
+
+                              </td> -->
+
+        </ng-container>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr *ngIf="isLoading ===false">
+        <td colspan="9">
+          <div class="container-empty-data w-100 d-flex justify-content-center align-items-center">
+            <svg width="65" height="40" viewBox="0 0 65 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip0_1920_5847)">
+                <rect width="64" height="40" transform="translate(0.5)" fill="white" fill-opacity="0.01" />
+                <path
+                  d="M32.5 39.7047C50.1731 39.7047 64.5 36.5939 64.5 32.7566C64.5 28.9193 50.1731 25.8086 32.5 25.8086C14.8269 25.8086 0.5 28.9193 0.5 32.7566C0.5 36.5939 14.8269 39.7047 32.5 39.7047Z"
+                  fill="#F5F5F5" />
+                <path
+                  d="M55.5 13.6653L45.354 2.24866C44.867 1.47048 44.156 1 43.407 1H21.593C20.844 1 20.133 1.47048 19.646 2.24767L9.5 13.6663V22.8367H55.5V13.6653Z"
+                  stroke="#CED4DA" />
+                <path
+                  d="M42.113 16.8116C42.113 15.2185 43.107 13.9033 44.34 13.9023H55.5V31.9047C55.5 34.0119 54.18 35.739 52.55 35.739H12.45C10.82 35.739 9.5 34.011 9.5 31.9047V13.9023H20.66C21.893 13.9023 22.887 15.2155 22.887 16.8086V16.8304C22.887 18.4235 23.892 19.7099 25.124 19.7099H39.876C41.108 19.7099 42.113 18.4116 42.113 16.8185V16.8116Z"
+                  fill="#FAFAFA" stroke="#CED4DA" />
+              </g>
+              <defs>
+                <clipPath id="clip0_1920_5847">
+                  <rect width="64" height="40" fill="white" transform="translate(0.5)" />
+                </clipPath>
+              </defs>
+            </svg>
+            <span class="empty-table f-s-16">No Data</span>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <tr *ngIf="isLoading">
+        <td colspan="9">
+          <div class="spinner d-flex justify-content-center align-items-center">
+            <mat-spinner></mat-spinner>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="9">
+          <div class="paginate d-flex align-items-center justify-content-end">
+            <div class="NumberOfRowsPerPage">
+              <span>عدد الصفوف بالصفحة:</span>
+              <p-dropdown [options]="RowsPerPage" appendTo="body" (onChange)="numberOfRowsPerPage($event)"
+                optionLabel="name"></p-dropdown>
+
+            </div>
+            <div class="text-paginator d-flex align-items-center">
+
+              {{mathRound(totalItems / filteration.PageSize)}} - {{filteration.PageNumber + 1}}
+
+            </div>
+            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
+              [totalRecords]="10"></p-paginator>
+
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

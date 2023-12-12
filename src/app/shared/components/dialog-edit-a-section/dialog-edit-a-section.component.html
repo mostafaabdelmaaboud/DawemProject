@@ -1,0 +1,61 @@
+<div class="container-Dialog">
+  <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+    <h3 class="title-Dialog m-0">
+      {{data!['title']|translate}}
+
+    </h3>
+    <button class="icon-close iconCloseFilteration iconCloseDialog" type="button" (click)="close()">
+      <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+      <i class="pi pi-times-circle"></i>
+    </button>
+  </header>
+  <div class="body-dialog p-15 f-s-16">
+    <form [formGroup]="addBranchGroupForm">
+      <div class="field-disabled mb-3 readOnly">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['titleFieldDisabled']|translate"></label>
+        <div class="content-password">
+          <input type="text" pInputText formControlName="fieldDisabled" [readOnly]="true"
+            [placeholder]="data!['placeholdeieldDisabled']|translate" class="w-100" />
+        </div>
+      </div>
+      <div class="sectionFive mb-3">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['titleShift']|translate"></label>
+        <div class="content-password">
+          <input type="text" pInputText formControlName="shift" [placeholder]="data!['placeholdeShift']|translate"
+            class="w-100" />
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts" *ngIf="getControl('shift')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('shift')?.hasError('required') && getControl('shift')?.dirty">
+            {{data!['validationtitleShift']|translate}}
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+      <div class="sectionTwo mb-3">
+        <label class="title" [innerHTML]="data!['titlePermanentType']|translate"></label>
+        <div class="content-password">
+          <p-dropdown appendTo="body" formControlName="permanentType" [options]="listFirst"
+            [placeholder]="data!['placeholderPermanentType']|translate" optionLabel="name"></p-dropdown>
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts" *ngIf="getControl('permanentType')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('permanentType')?.hasError('required') && getControl('permanentType')?.dirty">
+            {{data!['validationtitlePermanentType']|translate}}
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+
+    </form>
+  </div>
+  <footer class="footer-dialog p-15 d-flex justify-content-end">
+    <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+      (click)="request()">{{submitted ?
+      (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+    <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
+      (click)="close()">{{data!['titleClose']|translate}}</button>
+  </footer>
+</div>

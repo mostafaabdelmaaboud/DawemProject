@@ -1,0 +1,23 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { GroupsRoutingModule } from './groups-routing.module';
+import { GroupsComponent } from './groups.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { TablesRoutingModule } from '../tables/tables-routing.module';
+import { SharedModule } from 'src/app/shared/shared.module';
+
+
+@NgModule({
+  declarations: [
+    GroupsComponent
+  ],
+  imports: [
+    CommonModule,
+    GroupsRoutingModule,
+    TablesRoutingModule,
+    MatDialogModule,
+    SharedModule
+  ]
+})
+export class GroupsModule { }

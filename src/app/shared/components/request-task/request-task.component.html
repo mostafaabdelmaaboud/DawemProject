@@ -1,0 +1,241 @@
+<div class="container-Dialog">
+  <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+    <h3 class="title-Dialog m-0">
+      {{data!['title']|translate}}
+
+    </h3>
+    <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+      <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+      <i class="pi pi-times-circle"></i>
+    </button>
+  </header>
+  <div class="body-dialog p-15 f-s-16">
+    <form [formGroup]="addBranchGroupForm">
+      <div class="section1 d-flex justify-content-between">
+        <div class="col">
+          <label class="title">{{data!['setAsNecessary']|translate}}</label>
+          <p-inputSwitch formControlName="IsNecessary"></p-inputSwitch>
+        </div>
+        <div class="col">
+          <label class="title">{{data!['labelRadioButton']|translate}}</label>
+
+          <div class="container-radio-button">
+            <mat-radio-group aria-label="Select an option" color="primary" formControlName="radioButtons">
+              <mat-radio-button value="false">{{data!['firstRadio']|translate}}
+              </mat-radio-button>
+              <mat-radio-button value="true">{{data!['secondRadio']|translate}}</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+
+      </div>
+      <div class="sectionTwo mb-3" *ngIf="toggleForEmployee">
+        <label class="title" [innerHTML]="data!['titleEmployeeId']|translate"></label>
+        <div class="content-password">
+          <p-dropdown appendTo="body" formControlName="EmployeeId" [options]="listEmployees"
+            [placeholder]="data!['placeholderEmployeeId']|translate" optionLabel="name">
+            <ng-template pTemplate="header">
+              <span class="p-input-icon-left input-search-dropdown">
+
+                <i class="pi pi-search" (click)="searchDropdown(searchEmployeeId.value, 'EmployeeId')"></i>
+                <input type="text" placeholder="بحث" pInputText #searchEmployeeId />
+              </span>
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+              {{ option.name }}
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts mt-2" *ngIf="getControl('EmployeeId')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('EmployeeId')?.hasError('required') && getControl('EmployeeId')?.dirty">
+            {{data!['EmployeeIdValidation']|translate}}
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+      <div class="sectionTwo mb-3">
+        <label class="title" [innerHTML]="data!['titleDropdownOne']|translate"></label>
+        <div class="content-password">
+          <p-dropdown appendTo="body" formControlName="TaskTypeId" [options]="list"
+            [placeholder]="data!['placeholderDropdown']|translate" optionLabel="name">
+            <ng-template pTemplate="header">
+              <span class="p-input-icon-left input-search-dropdown">
+
+                <i class="pi pi-search" (click)="searchDropdown(searchTaskTypeId.value, 'TaskTypeId')"></i>
+                <input type="text" placeholder="بحث" pInputText #searchTaskTypeId />
+              </span>
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+              {{ option.name }}
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts mt-2" *ngIf="getControl('TaskTypeId')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('TaskTypeId')?.hasError('required') && getControl('TaskTypeId')?.dirty">
+            {{data!['TaskTypeIdValidation']|translate}}
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+
+      <div class="col-12  mb-3">
+        <div class="row">
+          <div class="col">
+            <div class="sectionThree">
+              <label class="title" [innerHTML]="data!['titleCalendar']|translate"></label>
+              <div class="content-password">
+                <div class="content-pCalendar-default" dir="ltr">
+                  <p-calendar formControlName="dateTask" appendTo="body" selectionMode="range"
+                    [placeholder]="data!['placeholderCalendar']|translate" [showIcon]="true"></p-calendar>
+                </div>
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('dateTask')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('dateTask')?.hasError('required') && getControl('dateTask')?.dirty">
+                  {{data!['dateTaskValidation']|translate}}
+                </div>
+
+              </div>
+              <div class="container-alerts mt-2"
+                *ngIf="dateTaskMultiple &&  !getControl('dateTask')?.hasError('required')">
+                <div class="alert alert-danger">
+                  فريق عمل متعدد
+
+                </div>
+
+              </div>
+              <!--End Custom Validators-->
+            </div>
+          </div>
+          <!-- <div class="col" *ngIf="toggleHistoryOfJustification">
+            <div class="sectionThree">
+              <label class="title" [innerHTML]="data!['timeAttendance']|translate"></label>
+              <div class="content-password">
+                <div class="content-pCalendar-default" dir="ltr">
+                  <p-calendar appendTo="body" formControlName="timeAttendance" [timeOnly]="true" hourFormat="12"
+                    [inline]="false" [placeholder]="data!['placeholdertimeAttendance']|translate" [showIcon]="true"
+                    icon="pi pi-clock"></p-calendar>
+                </div>
+              </div>
+
+            </div>
+          </div> -->
+        </div>
+      </div>
+      <div class="sectionTwo mb-3">
+        <label class="title" [innerHTML]="data!['titleWorkTeam']|translate"></label>
+        <div class="content-password multiSelect-workTeam">
+          <p-multiSelect [options]="workTeamList" [filter]="false"
+            [placeholder]="data!['placeholderWorkTeam']|translate" formControlName="TaskEmployeeIds" optionLabel="name">
+            <ng-template pTemplate="header">
+              <span class="p-input-icon-left input-search-dropdown">
+
+                <i class="pi pi-search" (click)="searchDropdown(searchTaskEmployeeIds.value, 'TaskEmployeeIds')"></i>
+                <input type="text" placeholder="بحث" pInputText #searchTaskEmployeeIds />
+              </span>
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+              {{ option.name }}
+            </ng-template>
+          </p-multiSelect>
+
+
+
+        </div>
+      </div>
+      <div class="section-workingDays mb-3">
+        <label class="mb-2 d-block f-s-16">{{data!['uploadFile']|translate}}</label>
+        <div class="item uploadFiles">
+          <!-- accept="image/*" -->
+          <p-fileUpload name="uploadedCommercialRegFiles[]" chooseIcon="pi pi-cloud-upload" [customUpload]="true"
+            [chooseLabel]="data!['chooseLabel']|translate" (onSelect)="files($event)" [multiple]="true"
+            [showUploadButton]="false" [showCancelButton]="false" [maxFileSize]="1000000">
+            <ng-template pTemplate="content">
+
+              <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length">
+                <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
+                  <div>
+                    <img [src]="file.imageSrc" width="50" alt="">
+
+                  </div>
+                  <div class="p-fileupload-filename">
+                    <span class="d-block">name:</span>
+                    {{ file.fileUpload.name
+                    }}
+                  </div>
+                  <div>
+                    <span class="d-block">size:</span>
+                    {{
+                    file.fileUpload.size }}
+                  </div>
+                  <div>
+                    <button class="p-element p-button p-component p-button-icon-only"
+                      (click)="onRemoveCommercialReg(file.fileUpload)">
+                      <span class="p-button-icon pi pi-times" aria-hidden="true">
+
+                      </span>
+                    </button>
+
+                  </div>
+                </li>
+              </ul>
+            </ng-template>
+          </p-fileUpload>
+          <span class="maximum-size">الحد الأقصى لحجم الملف 2 ميجابايت</span>
+        </div>
+        <!--
+        <div class="container-alerts mb-2" *ngIf="uploadedCommercialRegFiles.length<= 0 && requiredCommercialRegFiles">
+          <div class="alert alert-danger">
+            مطلوب تحميل الملف
+          </div>
+
+        </div> -->
+
+      </div>
+      <div class="sectionFive">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['titleNotes']|translate"></label>
+        <div class="content-password">
+          <input type="text" pInputText formControlName="Notes" [placeholder]="data!['placeholdeNotes']|translate"
+            class="w-100" />
+        </div>
+
+      </div>
+    </form>
+
+    <!-- <form [formGroup]="addBranchGroupForm">
+            <ng-container *ngIf="data?.subTitle">
+                <div class="mb-3" [innerHTML]="data!['subTitle']!|translate"></div>
+            </ng-container>
+            <div class="li-input col-12" *ngFor="let input of data?.addBranchesInputsProps">
+                <label for="" class="label-input mb-2" [innerHTML]="input['LabelMessage']|translate"></label>
+                <div class="content-password">
+
+
+                    <input [formControlName]="input.name" pInputText class="w-100" [type]="input.inputType" required
+                        [name]="input.name" />
+                </div>
+                <div class="container-alerts" *ngIf="getControl(input.name)?.errors">
+                    <div class="alert alert-danger"
+                        *ngIf="getControl(input.name)?.hasError('required') && getControl(input.name)?.dirty">
+                        {{input['message']|translate}}
+                    </div>
+                </div>
+            </div>
+        </form> -->
+
+  </div>
+  <footer class="footer-dialog p-15 d-flex justify-content-end">
+
+    <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+      (click)="request()">{{submitted ?
+      (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+  </footer>
+</div>
+<div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>

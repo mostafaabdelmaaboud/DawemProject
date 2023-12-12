@@ -1,0 +1,5 @@
+@media (max-width:960px) {
+  :host ::ng-deep .table-basic #tableRequetsts .p-datatable-tfoot>tr>td {
+    display: block !important;
+  }
+}

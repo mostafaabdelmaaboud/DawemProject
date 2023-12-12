@@ -1,0 +1,6 @@
+@media (max-width:520px) {
+
+  :host ::ng-deep .table-basic #tableJustification .p-datatable-tfoot>tr>td {
+    display: block !important;
+  }
+}

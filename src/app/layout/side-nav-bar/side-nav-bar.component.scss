@@ -1,0 +1,468 @@
+mat-sidenav-container {
+  height: 100%;
+}
+
+// .mat-drawer.mat-drawer-side {
+//   z-index: 0;
+// }
+
+mat-sidenav {
+  width: 260px;
+  background-color: #eee;
+  height: 100%;
+  overflow-x: hidden !important;
+}
+
+:host .mat-sidenav-content {
+  border-top: 0 !important;
+}
+
+::ng-deep .mat-drawer-inner-container {
+  height: 100%;
+  overflow-x: hidden !important;
+}
+
+@media (min-width: 414px)and (max-width: 415px) {
+  mat-sidenav-container {
+    height: 100%;
+  }
+
+  mat-sidenav {
+    height: 100%;
+  }
+}
+
+@media (min-width: 412px)and (max-width: 413px) {
+  mat-sidenav-container {
+    height: 100%;
+  }
+
+  mat-sidenav {
+    height: 100%;
+  }
+}
+
+@media (min-width:375px)and (max-width:376px) {
+  mat-sidenav-container {
+    height: 100%;
+  }
+
+  mat-sidenav {
+    height: 98%;
+  }
+}
+
+@media (min-width:688px)and (max-width:689px) {
+  mat-sidenav-container {
+    height: 100%;
+  }
+
+  mat-sidenav {
+    height: 100%;
+  }
+}
+
+
+
+
+.mat-drawer-content {
+  position: relative;
+  z-index: 1;
+  display: block;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.mat-toolbar {
+  background-color: #fafafa !important;
+  z-index: 999;
+}
+
+:host ::ng-deep .mdc-button {
+  min-width: 45px;
+}
+
+:host ::ng-deep .mat-icon {
+  display: flex !important;
+  align-items: center !important;
+}
+
+:host ::ng-deep .mat-mdc-button.mat-mdc-button-base {
+  height: 100% !important;
+}
+
+
+
+
+.nameShow {
+  font-size: 14px;
+  line-height: 20px;
+  font-family: 'Cairo';
+
+  span:first-of-type {
+    font-weight: 500;
+  }
+
+  span:last-of-type {
+    font-size: 11px;
+    font-weight: 400;
+  }
+}
+
+.mat-drawer-content {
+  position: relative;
+  z-index: 1;
+  display: block;
+  height: 100%;
+  overflow: auto;
+  border-top: 1px solid rgba(33, 37, 41, 0.25);
+  background-color: transparent;
+}
+
+div.relative {
+  position: relative;
+
+}
+
+div.absolute {
+  position: absolute;
+  top: 5px;
+}
+
+a:not([href]):not([tabindex]) {
+  color: #6C757D;
+  text-decoration: none;
+}
+
+select {
+  width: 4.5em;
+  text-align: end;
+  color: #6C757D;
+  height: 2.5em;
+  border: 1px solid #6C757D;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+button:focus {
+  border-color: transparent !important;
+  outline: none;
+}
+
+.dateShow {
+  margin: 0 1em;
+}
+
+.userDropDown {
+  left: -50px;
+}
+
+.userDropDownAR {
+  right: -50px;
+}
+
+.ant-layout-sider {
+  position: relative;
+  min-width: 0;
+  background: white;
+  transition: all 0.2s;
+  min-width: 260px !important;
+  padding-top: 1em;
+}
+
+::ng-deep .ant-menu-submenu-arrow {
+  color: #666666;
+}
+
+
+.ant-menu-root.ant-menu-vertical-left,
+.ant-menu-root.ant-menu-vertical-right,
+.ant-menu-root.ant-menu-inline {
+  box-shadow: none;
+  color: #666666;
+  width: 260px;
+}
+
+/* .ant-menu-light .ant-menu-item-active, .ant-menu-light .ant-menu-item:hover, .ant-menu-light .ant-menu-submenu-active, .ant-menu-light .ant-menu-submenu-title:hover, .ant-menu-light .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open {
+  color: #ED7723 !important;
+} */
+
+
+.ant-menu ul,
+.ant-menu ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #666666;
+}
+
+.ant-menu-item-selected {
+  color: var(--color-blue);
+  position: relative;
+}
+
+
+.ant-menu-submenu-selected {
+  color: var(--color-blue);
+}
+
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: transparent;
+}
+
+
+.ant-menu-vertical .ant-menu-item::after,
+.ant-menu-vertical-left .ant-menu-item::after,
+.ant-menu-vertical-right .ant-menu-item::after,
+.ant-menu-inline .ant-menu-item::after {
+  border-right: 0 !important;
+}
+
+.ant-menu-submenu-title:hover {
+  color: var(--color-blue) !important;
+}
+
+
+.ant-menu-inline.ant-menu-root .ant-menu-item,
+.ant-menu-inline.ant-menu-root .ant-menu-submenu-title {
+
+  height: 2.9em;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+:host ::ng-deep .ant-menu-inline .ant-menu-item {
+  margin-top: 1px !important
+}
+
+:host ::ng-deep .ant-menu-inline .ant-menu-item:not(:last-child) {
+  margin-bottom: 0px !important;
+}
+
+
+:host ::ng-deep .mat-drawer-side {
+  height: 97%;
+  margin-top: 0.6%;
+  box-shadow: 0px -4px 80px 0px rgba(0, 0, 0, 0.04), 0px -4px 20px 0px rgba(48, 133, 254, 0.04);
+  border-radius: 17.6px;
+  border: 0;
+}
+
+.ant-menu-light .ant-menu-item-active,
+.ant-menu-light .ant-menu-item:hover,
+.ant-menu-light .ant-menu-submenu-active,
+.ant-menu-light .ant-menu-submenu-title:hover,
+.ant-menu-light .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open {
+  color: var(--color-blue);
+}
+
+:host ::ng-deep .ant-menu-item {
+  svg {
+    * {
+      stroke: rgba(51, 65, 85, 1) !important;
+    }
+
+  }
+}
+
+.ant-menu-light .ant-menu-item:hover,
+:host ::ng-deep .ant-menu-item.ant-menu-item-selected {
+  svg {
+    * {
+      stroke: var(--color-blue) !important;
+    }
+
+  }
+}
+
+.ant-menu-light .ant-menu-item-active,
+.ant-menu-light .ant-menu-item:hover,
+.ant-menu-light .ant-menu-submenu-active,
+.ant-menu-light .ant-menu-submenu-title:hover,
+.ant-menu-light .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open {
+  color: var(--color-blue) !important;
+}
+
+
+::ng-deep .ant-menu-inline .ant-menu-submenu-title {
+  padding-right: 20px;
+  z-index: 1;
+}
+
+
+/* .ant-menu ul, .ant-menu ol {
+  margin-right: 2em;
+} */
+
+::ng-deep.ant-menu-light .ant-menu-submenu-title:hover {
+  color: var(--color-blue);
+}
+
+@media (min-width: 200px) and (max-width: 846px) {
+  .dateShow {
+    display: none;
+  }
+
+  .timeShow {
+    display: none;
+  }
+
+  .nameShow {
+    display: none;
+  }
+
+  .userDropDown {
+    margin-left: -105px;
+  }
+
+  .userDropDownAR {
+    margin-right: -105px;
+  }
+
+  .branchShow {
+    display: none;
+  }
+}
+
+
+
+.dropdown-menu-arrow {
+  top: -25px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  position: relative;
+}
+
+.dropdown-menu-arrow:before,
+.dropdown-menu-arrow:after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-width: 7px 8px;
+  border-style: solid;
+  border-color: transparent;
+  z-index: 1001;
+}
+
+.dropdown-menu-arrow:after {
+  bottom: -18px;
+  right: -8px;
+  border-bottom-color: #fff;
+}
+
+.dropdown-menu-arrow:before {
+  bottom: -17px;
+  right: -8px;
+  border-bottom-color: rgba(0, 0, 0, .15);
+}
+
+.icon-number-notification:empty {
+  padding: 0 !important;
+}
+
+.dropdownLocalization {
+  margin: 0 1.3em 0 1.4em;
+}
+
+.dropdownLocalization select {
+  border: 1px solid #ececec !important;
+  width: 4.8em;
+}
+
+.dropdownLocalization .absolute {
+  left: 0;
+}
+
+.dropdownLocalization .absolute img {
+  margin-left: 5px;
+}
+
+.dropdownUserInfo a img {
+  margin-right: 5px;
+
+}
+
+.toggle-asidebar mat-icon {
+  color: rgba(102, 102, 102, 0.9);
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.example-viewport {
+  height: 200px;
+  width: 200px;
+}
+
+.example-item {
+  height: 50px;
+}
+
+.dropdownUserInfo {
+  display: flex !important;
+  align-items: center;
+}
+
+.link-aside {
+  white-space: normal !important;
+  line-height: 25px !important;
+}
+
+:host ::ng-deep .ant-menu-submenu-open+.arrow-asidebar {
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+}
+
+:host ::ng-deep .ant-menu-submenu-arrow {
+  display: none !important;
+}
+
+::ng-deep .ant-menu-submenu-arrow {
+  color: #666666;
+}
+
+
+.arrow-asidebar {
+  position: absolute;
+  top: 13px;
+  right: 15px;
+  transition: all .3s ease;
+  -webkit-transition: all .3s ease;
+  -moz-transition: all .3s ease;
+  -ms-transition: all .3s ease;
+  -o-transition: all .3s ease;
+}
+
+[lang="ar"] .arrow-asidebar {
+  right: initial !important;
+  left: 15px !important;
+}
+
+.custom-link {
+  margin-left: 10px;
+}
+
+.arrow-asidebar i {
+  color: rgba(108, 117, 125, 1);
+}
+
+:host ::ng-deep .ant-menu-submenu-open+.arrow-asidebar i {
+  color: rgba(33, 37, 41, 1);
+}
+
+.p-input-icon-right {
+  input::placeholder {
+    color: rgba(0, 0, 0, .5);
+    font-weight: 700
+  }
+}

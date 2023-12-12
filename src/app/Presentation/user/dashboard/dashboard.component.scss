@@ -1,0 +1,289 @@
+.header-dashboard {
+  background-image: url(../../../../assets/img/div.welcome-back-content.png);
+  background-size: cover;
+  height: 167.39px;
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+
+  img {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+  }
+
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+}
+
+.progress-StaffAttendanceStatus {
+  .progress {
+    height: 6px;
+    overflow: initial;
+    display: flex;
+    align-items: center;
+
+    .progress-bar {
+      height: 12px;
+      border-radius: 14px;
+    }
+  }
+}
+
+
+:host ::ng-deep .body-chart .apexcharts-legend-marker {
+  margin-left: 10px !important;
+  height: 100% !important;
+  width: 2px !important;
+}
+
+:host ::ng-deep .body-chart .title-chart-dount {
+  line-height: 15px !important;
+  font-weight: 700;
+}
+
+:host ::ng-deep .body-chart .apexcharts-legend-series {
+  margin: 0px 5px !important;
+}
+
+:host ::ng-deep .body-chart .subTitle-chart-dount {
+  line-height: 21px !important;
+  color: var(#7D8B9E);
+}
+
+.desc-table {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.body-table-dashboard {
+  padding: 0 15px;
+
+  .table * {
+    border: 0;
+  }
+}
+
+
+
+.table-dashboard {
+  border: 1px solid #EBF1FF;
+  background: var(--White, #FFF);
+  box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.03);
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+}
+
+.dashboard-description {
+  margin-right: 25px;
+  color: white;
+  line-height: 36px;
+}
+
+
+
+
+
+.title-StaffAttendanceStatus {
+  color: #292D32;
+  text-align: right;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+:host ::ng-deep.dropdown-StaffAttendanceStatus {
+  .dropdown-toggle::after {
+    display: none;
+  }
+}
+
+
+
+.field-action-employee {
+  button {
+    padding: 7.5px 9.8px 8.5px 9.75px
+  }
+}
+
+.right-StaffAttendanceStatus {
+  .users {
+    padding: 0 10px !important;
+  }
+}
+
+.right-StaffAttendanceStatus {
+  .ul-users {
+
+
+    .user {
+      width: 40px;
+      height: 40px;
+      margin-right: -18px;
+
+      .txt {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 11px;
+        font-weight: 400;
+      }
+    }
+
+  }
+
+}
+
+.body-DepartmentsAndTeamFormation {
+  >ul {
+    padding: 0 15px !important;
+  }
+
+  .li-StaffAttendanceStatus {
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 1px solid var(--Primary-100, #F0F5FD);
+    background: var(--White, #FFF);
+    box-shadow: 0px 5px 25px 0px rgba(202, 214, 242, 0.40);
+  }
+}
+
+.header-li-StaffAttendanceStatus {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
+.text-title-StaffAttendanceStatus {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.body-li-StaffAttendanceStatus {
+  margin-top: 13px;
+  margin-bottom: 10px;
+
+  .left-StaffAttendanceStatus {
+    button {
+      font-size: 10px;
+      font-style: normal;
+      font-weight: 500;
+      padding: 7.5px 10.4px 8px 10.6px;
+      border-radius: 7px;
+    }
+  }
+}
+
+.text-subTitle-StaffAttendanceStatus {
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  color: #7D8B9E;
+}
+
+.precentage-StaffAttendanceStatus {
+  margin-bottom: 13px;
+  display: block;
+  margin-top: -5px;
+  font-weight: 700;
+  margin-left: 10px;
+}
+
+.userImage-StaffAttendanceStatus {
+  width: 60px;
+  height: 60px;
+  margin-left: 10px;
+}
+
+.section-three {
+  margin-top: 25px;
+}
+
+
+
+
+
+.title-header-dashboard {
+  font-size: 26px;
+  margin-bottom: 10px;
+  font-weight: 700;
+  line-height: 31.2px;
+  letter-spacing: 0.78px;
+}
+
+.footer-chartTwo {
+  padding: 15px;
+}
+
+.li-chart-foo::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 2px;
+  position: absolute;
+  right: 0;
+  top: 0;
+
+}
+
+.border-right-green::before {
+  background-color: #10B981;
+}
+
+.border-right-blue::before {
+  background-color: #3085FE;
+}
+
+.li-chart-foo {
+  position: relative;
+  padding: 0px 15px;
+  margin-right: 10px;
+
+  span:first-of-type {
+    color: #67748E;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  span:last-of-type {
+    color: #292D32;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+  }
+}
+
+.rate-employee {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+  word-spacing: 3px;
+}
+
+.title-employeeSectionTwo {
+  font-size: 30px;
+}
+
+.title-section-three-employe {
+  font-size: 13px;
+}
+
+.body-card-dashboard.mt-3 {
+  margin-top: 12px !important;
+}

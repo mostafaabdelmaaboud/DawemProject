@@ -1,0 +1,131 @@
+<div class="body-login">
+  <div class="row m-0">
+    <div class="background-dawem col-lg-4 d-none d-md-none d-lg-block">
+    </div>
+    <div class="container-login d-flex justify-content-between align-items-center col-lg-8 col-12 position-relative">
+      <div class="card d-flex justify-content-center change-language">
+        <p-dropdown [options]="countries" [(ngModel)]="selectedCountry" (onChange)="changeLanguage($event)"
+          optionLabel="name" placeholder="Select a Country">
+          <ng-template pTemplate="selectedItem">
+            <ng-container *ngIf="selectedCountry.code !='AR'">
+              <div class="d-flex align-items-center gap-2" *ngIf="selectedCountry">
+                <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                  [class]="'flag flag-' + selectedCountry.code.toLowerCase()" style="width: 18px" />
+                <div>{{ selectedCountry.name }}</div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="selectedCountry.code ==='AR'">
+              <div class="d-flex align-items-center gap-2" *ngIf="selectedCountry">
+                <img src="assets/img/flag-400.png" style="width: 18px" />
+                <div>{{ selectedCountry.name }}</div>
+              </div>
+            </ng-container>
+
+          </ng-template>
+          <ng-template let-country pTemplate="item">
+            <ng-container *ngIf="country.code != 'AR'">
+              <div class="d-flex align-items-center gap-2">
+                <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                  [class]="'flag flag-' + country.code.toLowerCase()" style="width: 18px" />
+                <div>{{ country.name }}</div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="country.code === 'AR'">
+              <div class="d-flex align-items-center gap-2">
+                <img src="assets/img/flag-400.png" style="width: 18px" />
+                <div>{{ country.name }}</div>
+              </div>
+            </ng-container>
+          </ng-template>
+        </p-dropdown>
+      </div>
+      <div class="content-login">
+        <div class="header text-center">
+          <h3 class="title">{{'login.welcomeAgain' | translate}}</h3>
+          <p class="sub-text">{{'login.LogInToContinue' | translate}}</p>
+        </div>
+        <div class="form">
+          <form class="w-100" [formGroup]="FormGroup" (submit)="submit()">
+            <div class="section-field mb-3">
+              <label class="mb-2 d-block f-s-16 label-form">{{'login.email' | translate}}<span
+                  class="color-red ml-2">*</span></label>
+              <div class="content-input position-relative">
+                <span class="p-input-icon-right w-100">
+                  <i class="pi pi-envelope"></i>
+                  <input type="text" class="w-100" formControlName="Email" pInputText placeholder="user@mail.com" />
+                </span>
+                <!-- <div class="container-alerts mb-2" *ngIf="getControl('bankAccount.bankName')?.errors">
+                            <div class="alert alert-danger"
+                              *ngIf="getControl('bankAccount.bankName')?.hasError('required') && getControl('bankAccount.bankName')?.dirty">
+                              Bank Name is required
+                            </div>
+                          </div> -->
+                <div class="container-alerts mb-2" *ngIf="getControl('Email')?.errors">
+                  <div class="alert alert-danger"
+                    *ngIf="getControl('Email')?.hasError('required') && getControl('Email')?.dirty">
+                    {{'login.EmailIsRequired' | translate}}
+                  </div>
+                  <div class="alert alert-danger"
+                    *ngIf="getControl('Email')?.hasError('pattern') && !getControl('Email')?.hasError('required')">
+                    {{'login.EmailIsIncorrect' | translate}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="section-field c-f">
+              <label class="mb-2 d-block f-s-16 label-form">{{'login.password' | translate}}<span
+                  class="color-red ml-2">*</span></label>
+              <div class="content-input position-relative">
+                <span class="p-input-icon-right w-100 field-password">
+                  <i class="pi pi-lock"></i>
+                  <input [type]="togglePassword ? 'password' : 'text'" formControlName="password" class="w-100"
+                    pInputText [placeholder]="'login.password' | translate" />
+                  <span (click)="togglePassword = !togglePassword">
+                    <i class=" pi pi-eye" *ngIf="togglePassword"></i>
+                    <i class=" pi pi-eye-slash" *ngIf="!togglePassword"></i>
+                  </span>
+                </span>
+                <div class="container-alerts mb-2" *ngIf="getControl('password')?.errors">
+                  <div class="alert alert-danger"
+                    *ngIf="getControl('password')?.hasError('required') && getControl('password')?.dirty">
+                    {{'login.PasswordRequired' | translate}}
+                  </div>
+                  <div class="alert alert-danger"
+                    *ngIf="getControl('password')?.hasError('minlength') && !getControl('password')?.hasError('required')">
+                    {{'login.TheMinimumNumberOfCharactersIsFive' | translate}}
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="container-alerts mb-2" *ngIf="getControl('bankAccount.bankName')?.errors">
+                            <div class="alert alert-danger"
+                              *ngIf="getControl('bankAccount.bankName')?.hasError('required') && getControl('bankAccount.bankName')?.dirty">
+                              Bank Name is required
+                            </div>
+                          </div> -->
+            </div>
+            <button class="btn btn-primary w-100 button-submit">{{loading ? ('login.signIn' | translate) :
+              ('login.loading' | translate) + '....'}}</button>
+          </form>
+          <div class="footer-form">
+            <span class="section-footer-login-left">انشاء حساب جديد</span>
+            <span class="section-footer-login-right">نسيت الرقم السري؟</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-login w-100">
+        <div class="row align-items-center">
+          <div class="col-8 text-right">{{'login.Copyrights' | translate}}</div>
+          <div class="col-4 d-flex align-items-center footer-info text-left"><i class="bi bi-info-lg"></i>
+            {{'login.WeNeedHelp' | translate}}
+            ؟</div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+</div>
+<div class="spinner d-flex justify-content-center align-items-center loading" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
