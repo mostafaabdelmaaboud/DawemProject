@@ -22,12 +22,12 @@ export class ZonesService {
     }
     return this.http.get<any>(`${environment.baseUrl}Zone/Get`, { params: queryParams })
   }
-  createZone(formData: FormData) {
+  createZone(formData: any) {
 
     return this.http.post<any>(`${environment.baseUrl}Zone/Create`, formData)
 
   }
-  updateZone(formData: FormData) {
+  updateZone(formData: any) {
 
     return this.http.put<any>(`${environment.baseUrl}Zone/Update`, formData)
 
@@ -123,7 +123,7 @@ export class ZonesService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}Employee/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
+    return this.http.get<any>(`${environment.baseUrl}Zone/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
   }
 
 

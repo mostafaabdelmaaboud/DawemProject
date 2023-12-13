@@ -14,6 +14,7 @@ import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { ZonesService } from './services/zones.service';
 import { AddZoneComponent } from 'src/app/shared/components/add-zone/add-zone.component';
+import { DialogZoneFileComponent } from 'src/app/shared/components/dialog-zone-file/dialog-zone-file.component';
 
 @Component({
   selector: 'app-zones',
@@ -234,7 +235,7 @@ export class ZonesComponent {
   }
   enabledRow(data: any) {
 
-    this.zonesService.enabledZone({ employeeId: data.id }).subscribe(
+    this.zonesService.enabledZone({ zoneId: data.id }).subscribe(
       {
         next: res => {
 
@@ -284,35 +285,15 @@ export class ZonesComponent {
     dialogRefAddCurrency.componentInstance.editEmployee = false;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData = new FormData();
-
-      formData.append("CreateEmployeeModelString", JSON.stringify({
-        IsActive: result.isActive,
-        AttendanceType: Number(result.AttendanceType),
+      let formData = {};
+      formData = {
         name: result.name,
-        DirectManagerId: result.directManager.key,
-        email: result.email,
-        address: result.address,
-        EmployeeType: Number(result.employeeType),
-        employeeNumber: result.employeeNumber,
+        isActive: result.isActive,
+        latitude: result.latitude,
+        longitude: result.longitude,
+        radius: result.radius,
+      }
 
-        mobileNumber: result.mobileNumber,
-        JobTitleId: result.JobTitleId.key,
-        DepartmentId: result.DepartmentId.key,
-        JoiningDate: moment(result.JoiningDate).format("MM/DD/YYYY"),
-        ScheduleId: result.ScheduleId.key,
-        AnnualVacationBalance: result.AnnualVacationBalance
-
-      }));
-      // formData.append("IsActive", result.isActive);
-      // formData.append("AttendanceType", result.AttendanceType);
-
-      // formData.append("name", result.name);
-      // formData.append("JobTitleId", result.JobTitleId.key.toString());
-      // formData.append("DepartmentId", result.DepartmentId.key.toString());
-      // formData.append("JoiningDate", moment(result.JoiningDate).format("DD/MM/YYYY"));
-      // formData.append("ScheduleId", result.ScheduleId.key.toString());
-      // formData.append("AnnualVacationBalance", result.AnnualVacationBalance.toString());
 
       dialogRefAddCurrency.componentInstance.submitted = false;
 
@@ -502,25 +483,15 @@ export class ZonesComponent {
 
     dialogRefAddCurrency.componentInstance.id = data.id;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData = new FormData();
-      formData.append("UpdateEmployeeModelString", JSON.stringify({
+      let formData = {};
+      formData = {
         id: data.id,
-        IsActive: result.isActive,
-        AttendanceType: Number(result.AttendanceType),
         name: result.name,
-        DirectManagerId: result.directManager.key,
-        email: result.email,
-        address: result.address,
-        mobileNumber: result.mobileNumber,
-        EmployeeType: Number(result.employeeType),
-        employeeNumber: result.employeeNumber,
-        JobTitleId: result.JobTitleId.key,
-        DepartmentId: result.DepartmentId.key,
-        JoiningDate: moment(result.JoiningDate).format("MM/DD/YYYY"),
-        ScheduleId: result.ScheduleId.key,
-        AnnualVacationBalance: result.AnnualVacationBalance
-
-      }));
+        isActive: result.isActive,
+        latitude: result.latitude,
+        longitude: result.longitude,
+        radius: result.radius,
+      }
 
       dialogRefAddCurrency.componentInstance.submitted = false;
       this.zonesService.updateZone(formData).subscribe(
@@ -564,7 +535,7 @@ export class ZonesComponent {
     });
   }
   dialogZonesFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogEmployeeFileComponent, {
+    const dialogRefAddCurrency = this.dialog.open(DialogZoneFileComponent, {
       width: "40vw",
       data: {
         title: "ملف المنطقة"
@@ -575,14 +546,14 @@ export class ZonesComponent {
   }
   reasonOfRefuse(data: any) {
     const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
-      width: "30vw",
+      width: "50vw",
       data: {
-        title: "متأكد من تعليق حساب الموظف؟",
-        message: "برجاء توضيح السبب إن أمكن ليظهر للموظف عند محاولة تسجيل الدخول",
+        title: "متأكد من تعليق حساب المنطقة",
+        message: "برجاء توضيح السبب إن أمكن ليظهر للمنطقة عند محاولة تسجيل الدخول",
         titleReasonOfRefuse: "سبب التعليق",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض ليظهر للموظف",
+        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض ليظهر للمنطقة",
         titleClose: "تراجع",
-        buttonSend: "تعليق الحساب"
+        buttonSend: "تعليق المنطقة"
       },
     });
     reasonOfRefuseDialog.componentInstance.submitted = true;

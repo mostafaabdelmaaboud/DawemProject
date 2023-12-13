@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, Output, inject } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, Input, Output, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/core/auth/services/auth-service.service';
@@ -13,6 +13,10 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EmployeesService } from 'src/app/Presentation/user/employees/services/employees.service';
 import { EMPTY, Subject, combineLatest, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { GooglePlaceDirective, GooglePlaceModule } from 'ngx-google-places-autocomplete-esb';
+import { Address } from 'ngx-google-places-autocomplete-esb/lib/objects/address';
+import { ZonesService } from 'src/app/Presentation/user/zones/services/zones.service';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -81,13 +85,19 @@ interface DataDialog {
 @Component({
   selector: 'app-add-zone',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatRadioModule, MatProgressSpinnerModule, ReactiveFormsModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
+  imports: [CommonModule, FormsModule, MatRadioModule, GooglePlaceModule, GoogleMapsModule, MatProgressSpinnerModule, ReactiveFormsModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
   templateUrl: './add-zone.component.html',
   styleUrls: ['./add-zone.component.scss']
 })
 export class AddZoneComponent {
   loading = false;
-  private employeesService = inject(EmployeesService);
+  private zonesService = inject(ZonesService);
+  options: any = {
+    types: [],
+    componentRestrictions: { country: 'UA' }
+  }
+  @ViewChild("searchMapRef") searchMapRef!: ElementRef;
+  autoComplete!: google.maps.places.Autocomplete | undefined;
 
   @Output() submitClicked = new EventEmitter<any>();
   @Input() submitted!: boolean;
@@ -99,20 +109,27 @@ export class AddZoneComponent {
   @Input() id!: string;
   listDirectManager: any[] = [];
 
-
+  zoom = 12;
+  center!: google.maps.LatLngLiteral;
+  optionsMap: google.maps.MapOptions = {
+    mapTypeId: 'terrain',
+    zoomControl: true,
+    scrollwheel: false,
+    disableDoubleClickZoom: false,
+    maxZoom: 15,
+    minZoom: 8,
+  };
+  markers: any[] = [];
+  latitude!: number;
+  longitude!: number;
   addBranchGroupForm: FormGroup = this.fb.group({
-    ScheduleId: ['', Validators.required],
     isActive: [false],
-    name: ['', Validators.required],
-    employeeNumber: ['', Validators.required],
-    JobTitleId: ['', Validators.required],
-    DepartmentId: ['', Validators.required],
-    directManager: ['', Validators.required],
-    mobileNumber: ['', Validators.required],
-    email: ['', [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
-    address: ['', Validators.required],
     fieldDisabled: [''],
-    AnnualVacationBalance: ['', Validators.required]
+
+    name: ['', Validators.required],
+    radius: ['', Validators.required],
+    latitude: ['', Validators.required],
+    longitude: ['', Validators.required]
   });
   constructor(
     public dialogRef: MatDialogRef<AddZoneComponent>,
@@ -130,202 +147,96 @@ export class AddZoneComponent {
     }
     this.loading = true;
 
-    let employeeForDropDown = this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-
-    let employeesService = this.employeesService.getJobTitles({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-    let departmentGetForDropDown = this.employeesService.getDepartmentForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-    let scheduleForDropDown = this.employeesService.getScheduleForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0 });
 
 
-    combineLatest({
-      employeeForDropDown,
-      employeesService,
-      departmentGetForDropDown,
-      scheduleForDropDown
-    }).subscribe(data => {
-      this.jobTitleFirst = [];
-      this.sectionList = [];
-      this.workScheduleList = [];
-      this.listDirectManager = [];
+    if (this.editEmployee) {
 
 
-      data.employeeForDropDown?.data?.forEach((jobTitle: any) => {
-        this.listDirectManager.push({ name: jobTitle.name, key: jobTitle.id })
-      });
-      data.employeesService?.data?.forEach((jobTitle: any) => {
-        this.jobTitleFirst.push({ name: jobTitle.name, key: jobTitle.id })
-      });
-      data.departmentGetForDropDown?.data?.forEach((jobTitle: any) => {
-        this.sectionList.push({ name: jobTitle.name, key: jobTitle.id })
-      });
-      data.scheduleForDropDown?.data?.forEach((jobTitle: any) => {
-        this.workScheduleList.push({ name: jobTitle.name, key: jobTitle.id })
-      });
-      if (this.editEmployee) {
-
-
-        this.employeesService.employeeGetById({ employeeId: this.id }).subscribe(
-          {
-            next: data => {
+      this.zonesService.ZoneGetById({ zoneId: this.id }).subscribe(
+        {
+          next: data => {
 
 
 
-              this.addBranchGroupForm.get("isActive")?.setValue(data.isActive);
+            this.addBranchGroupForm.get("isActive")?.setValue(data.isActive);
 
+            this.addBranchGroupForm.get("name")?.setValue(data.name);
+            this.addBranchGroupForm.get("radius")?.setValue(data.radius);
+            this.latitude = data.latitude;
+            this.longitude = data.longitude;
+            this.center = { lat: this.latitude, lng: this.longitude };
+            this.getControl("latitude")?.setValue(this.latitude);
+            this.getControl("longitude")?.setValue(this.longitude);
+            this.markers = [{
+              position: {
+                lat: this.latitude,
+                lng: this.longitude,
+              },
+              label: {
+                color: 'blue',
+              },
 
-              this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.directManagerId }).subscribe(dataDropdown => {
-
-                this.listDirectManager = []
-                dataDropdown.data?.forEach((insideData: any) => {
-                  this.listDirectManager.push({ name: insideData.name, key: insideData.id })
-                });
-
-                let indexDirectManager = this.listDirectManager.findIndex(job => job.key === data.directManagerId);
-                if (indexDirectManager >= 0) {
-                  this.addBranchGroupForm.get("directManager")?.setValue(this.listDirectManager[indexDirectManager]);
-                }
-              });
-              this.addBranchGroupForm.get("email")?.setValue(data.email);
-              this.addBranchGroupForm.get("address")?.setValue(data.address);
-              this.addBranchGroupForm.get("mobileNumber")?.setValue(data.mobileNumber);
-              this.addBranchGroupForm.get("AttendanceType")?.setValue(data.attendanceType.toString());
-              this.addBranchGroupForm.get("name")?.setValue(data.name);
-
-              this.addBranchGroupForm.get("employeeType")?.setValue(data.employeeType.toString());
-              this.addBranchGroupForm.get("employeeNumber")?.setValue(data.employeeNumber);
-
-
-              this.employeesService.getJobTitles({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.jobTitleId }).subscribe(dataDropdown => {
-
-                this.jobTitleFirst = []
-                dataDropdown.data?.forEach((insideData: any) => {
-                  this.jobTitleFirst.push({ name: insideData.name, key: insideData.id })
-                });
-                let JobTitleId = this.jobTitleFirst.findIndex(job => job.key === data.jobTitleId);
-                if (JobTitleId >= 0) {
-                  this.addBranchGroupForm.get("JobTitleId")?.setValue(this.jobTitleFirst[JobTitleId]);
-                }
-              });
-              this.employeesService.getDepartmentForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.departmentId }).subscribe(dataDropdown => {
-
-                this.sectionList = []
-                dataDropdown.data?.forEach((insideData: any) => {
-                  this.sectionList.push({ name: insideData.name, key: insideData.id })
-                });
-                let sectionList = this.sectionList.findIndex(job => job.key === data.departmentId);
-                if (sectionList >= 0) {
-                  this.addBranchGroupForm.get("DepartmentId")?.setValue(this.sectionList[sectionList]);
-                }
-              });
-              this.addBranchGroupForm.get("JoiningDate")?.setValue(new Date(data.joiningDate));
-              this.employeesService.getScheduleForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.scheduleId }).subscribe(dataDropdown => {
-                this.workScheduleList = []
-                dataDropdown.data?.forEach((insideData: any) => {
-                  this.workScheduleList.push({ name: insideData.name, key: insideData.id })
-                });
-                let ScheduleId = this.workScheduleList.findIndex(job => job.key === data.scheduleId);
-                if (ScheduleId >= 0) {
-                  this.addBranchGroupForm.get("ScheduleId")?.setValue(this.workScheduleList[ScheduleId]);
-                }
-              });
-              this.addBranchGroupForm.get("AnnualVacationBalance")?.setValue(data.annualVacationBalance);
-              this.loading = false;
-            },
-            error: err => {
-              this.loading = false;
-            }
+              options: {
+                animation: google.maps.Animation.BOUNCE,
+              },
+            }]
+            this.loading = false;
+          },
+          error: err => {
+            this.loading = false;
           }
-        )
+        }
+      )
 
-      }
-      if (!this.editEmployee) {
-        this.loading = false;
+    }
+    if (!this.editEmployee) {
+      this.loading = false;
 
-      }
-
-    })
+    }
 
   }
   lastSearchQuery = "";
 
-  searchDropdown(data: any, type: string) {
-
-    switch (type) {
-      case 'JobTitleId':
-        if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
-            this.lastSearchQuery = data;
-            this.employeesService.getJobTitles({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
-              distinctUntilChanged()).subscribe((res: any) => {
-                this.jobTitleFirst = [];
-                res?.data?.forEach((jobTitle: any) => {
-                  this.jobTitleFirst.push({ name: jobTitle.name, key: jobTitle.id })
-                });
-              });
-          }
-
-        }
-        break;
-      case 'directManager':
-        if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
-            this.lastSearchQuery = data;
-            this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
-              distinctUntilChanged()).subscribe((res: any) => {
-                this.listDirectManager = [];
-                res?.data?.forEach((jobTitle: any) => {
-                  this.listDirectManager.push({ name: jobTitle.name, key: jobTitle.id })
-                });
-              });
-          }
 
 
+  handleAddressChange(address: Address) {
+    // Do some stuff
 
-        }
 
-        break;
-      case 'DepartmentId':
-        if (data || data === "") {
-
-          if (data !== this.lastSearchQuery) {
-            this.lastSearchQuery = data;
-            this.employeesService.getDepartmentForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
-              distinctUntilChanged()).subscribe((res: any) => {
-                this.sectionList = [];
-                res?.data?.forEach((jobTitle: any) => {
-                  this.sectionList.push({ name: jobTitle.name, key: jobTitle.id })
-                });
-              });
-          }
-
-        }
-        break;
-      case 'ScheduleId':
-        if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
-            this.lastSearchQuery = data;
-            this.employeesService.getScheduleForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
-              distinctUntilChanged()).subscribe((res: any) => {
-                this.sectionList = [];
-                res?.data?.forEach((jobTitle: any) => {
-                  this.sectionList.push({ name: jobTitle.name, key: jobTitle.id })
-                });
-              });
-          }
-
-        }
-
-        break;
-
-      default:
-        break;
-    }
+    // console.log(this.placesRef)
   }
+  ngAfterViewInit() {
+    this.autoComplete = new google.maps.places.Autocomplete(this.searchMapRef.nativeElement)
+    this.autoComplete.addListener("place_changed", () => {
 
+      const place = this.autoComplete?.getPlace();
+
+      console.log(place)
+    })
+  }
+  clickMap(event: any) {
+
+    this.latitude = event.latLng.lat();
+    this.longitude = event.latLng.lng();
+    this.center = { lat: this.latitude, lng: this.longitude };
+    this.getControl("latitude")?.setValue(this.latitude);
+    this.getControl("longitude")?.setValue(this.longitude);
+    this.markers = [{
+      position: {
+        lat: this.latitude,
+        lng: this.longitude,
+      },
+      label: {
+        color: 'blue',
+      },
+
+      options: {
+        animation: google.maps.Animation.BOUNCE,
+      },
+    }]
+
+    console.log(event);
+  }
   getControl(controlName: string) {
     return this.addBranchGroupForm?.get(controlName);
   }
@@ -337,18 +248,10 @@ export class AddZoneComponent {
       // this.dialogRef.close(true);
     } else {
 
-      this.getControl("fieldFirst")?.markAsDirty();
-      this.getControl("JobTitleId")?.markAsDirty();
-      this.getControl("DepartmentId")?.markAsDirty();
-      this.getControl("JoiningDate")?.markAsDirty();
-      this.getControl("ScheduleId")?.markAsDirty(); this.getControl("directManager")?.markAsDirty();
-
-      this.getControl("mobileNumber")?.markAsDirty();
-
-      this.getControl("email")?.markAsDirty();
-      this.getControl("address")?.markAsDirty();
-
-      this.getControl("AnnualVacationBalance")?.markAsDirty();
+      this.getControl("name")?.markAsDirty();
+      this.getControl("radius")?.markAsDirty();
+      this.getControl("latitude")?.markAsDirty();
+      this.getControl("longitude")?.markAsDirty();
 
     }
 
