@@ -1,28 +1,23 @@
-import { ChangeDetectorRef, Component, Inject, LOCALE_ID, inject } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { RequestVacationComponent } from 'src/app/shared/components/request-vacation/request-vacation.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
-import { DialogVacationFileComponent } from 'src/app/shared/components/dialog-vacation-file/dialog-vacation-file.component';
-import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { VacationTypeService } from './services/vacation-type.service';
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
-import { RequestVacationTypeComponent } from 'src/app/shared/components/request-vacation-type/request-vacation-type.component';
-import { DialogVacationTypeFileComponent } from 'src/app/shared/components/dialog-vacation-type-file/dialog-vacation-type-file.component';
+import { DialogTaskTypeFileComponent } from 'src/app/shared/components/dialog-task-type-file/dialog-task-type-file.component';
+import { RequestTaskTypeComponent } from 'src/app/shared/components/request-task-type/request-task-type.component';
+import { TaskTypeService } from './services/task-type.service';
 @Component({
-  selector: 'app-vacation-type',
-  templateUrl: './vacation-type.component.html',
-  styleUrls: ['./vacation-type.component.scss']
+  selector: 'app-task-type',
+  templateUrl: './task-type.component.html',
+  styleUrls: ['./task-type.component.scss']
 })
-export class VacationTypeComponent {
+export class TaskTypeComponent {
   date!: Date;
   arabic: any;
   subscription!: Subscription;
@@ -32,7 +27,7 @@ export class VacationTypeComponent {
 
   columns: any[] = [
     {
-      name: "رقم الاجازة",
+      name: "رقم المهمة",
       field: "code",
     },
     {
@@ -49,7 +44,7 @@ export class VacationTypeComponent {
     }
 
   ];
-  vacations: any = [];
+  tasks: any = [];
 
   isLoading = true;
 
@@ -78,7 +73,7 @@ export class VacationTypeComponent {
   mobileQuery: MediaQueryList;
   opened = false;
   private _mobileQueryListener: () => void;
-  private vacationTypeService = inject(VacationTypeService);
+  private taskTypeService = inject(TaskTypeService);
   list: any[] = [
     { name: "نسيان تسجيل حضور", key: "1" },
     { name: "نسيان تسجيل انصراف", key: "2" },
@@ -93,11 +88,11 @@ export class VacationTypeComponent {
     this._mobileQueryListener = () => {
       if (this.mobileQuery.matches) {
         this.opened = true;
-        this.vacations = this.vacations;
+        this.tasks = this.tasks;
         changeDetectorRef.detectChanges();
       } else {
         this.opened = false;
-        this.vacations = this.vacations;
+        this.tasks = this.tasks;
 
         changeDetectorRef.detectChanges();
 
@@ -140,17 +135,17 @@ export class VacationTypeComponent {
       { name: '10', code: 10 },
       { name: '25', code: 25 },
     ];
-    this.getVacations(this.filteration);
+    this.getTasks(this.filteration);
   }
 
-  getVacations(filteration: any) {
-    this.vacations = [];
+  getTasks(filteration: any) {
+    this.tasks = [];
     this.isLoading = true;
-    this.vacationTypeService.listVacations(filteration).subscribe(
+    this.taskTypeService.listTasks(filteration).subscribe(
       {
         next: data => {
           data.data.forEach((vacation: any) => {
-            this.vacations.push({
+            this.tasks.push({
               id: vacation.id,
               code: vacation.code,
               name: vacation.name,
@@ -173,7 +168,7 @@ export class VacationTypeComponent {
   }
   numberOfRowsPerPage(data: any) {
     this.filteration = { ...this.filteration, PageSize: data.value.code };
-    this.getVacations(this.filteration)
+    this.getTasks(this.filteration)
   }
   reasonOfRefuse(data: any) {
     const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
@@ -181,7 +176,6 @@ export class VacationTypeComponent {
       data: {
         title: "هل متأكد من حذف الطلب؟",
         message: "برجاء توضيح السبب إن أمكن",
-
         titleClose: "تراجع",
         buttonSend: "حذف"
       },
@@ -190,12 +184,12 @@ export class VacationTypeComponent {
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
-      this.vacationTypeService.deleteVacation({ VacationTypeId: data.id }).subscribe({
+      this.taskTypeService.deleteTask({ taskTypeid: data.id }).subscribe({
         next: res => {
           this.toast.success(res.message);
           reasonOfRefuseDialog.componentInstance.submitted = true;
           reasonOfRefuseDialog.close();
-          this.getVacations(this.filteration);
+          this.getTasks(this.filteration);
         },
         error: err => {
           reasonOfRefuseDialog.componentInstance.submitted = true;
@@ -208,12 +202,12 @@ export class VacationTypeComponent {
     })
   }
   requestVacation() {
-    const dialogRefAddCurrency = this.dialog.open(RequestVacationTypeComponent, {
+    const dialogRefAddCurrency = this.dialog.open(RequestTaskTypeComponent, {
       width: "50vw",
       data: {
-        title: "طلب اجازة",
+        title: "طلب مهمة",
         setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاجازة <span class='color-red'>*</span>",
+        titleVacationTypeId: "نوع المهمة <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
@@ -221,7 +215,7 @@ export class VacationTypeComponent {
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editVacation = false;
+    dialogRefAddCurrency.componentInstance.editTask = false;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
       formData.name = result.name;
@@ -229,7 +223,7 @@ export class VacationTypeComponent {
 
       dialogRefAddCurrency.componentInstance.submitted = false;
 
-      this.vacationTypeService.createVacation(formData).subscribe(
+      this.taskTypeService.createTask(formData).subscribe(
         {
           next: (data: any) => {
 
@@ -243,11 +237,11 @@ export class VacationTypeComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الاجازات"
+                buttonSend: "طلبات المهمات"
 
               },
             });
-            this.getVacations(this.filteration);
+            this.getTasks(this.filteration);
 
             setTimeout(() => {
               succressDialog.close();
@@ -274,12 +268,12 @@ export class VacationTypeComponent {
     });
   }
   editVacation(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(RequestVacationTypeComponent, {
+    const dialogRefAddCurrency = this.dialog.open(RequestTaskTypeComponent, {
       width: "50vw",
       data: {
-        title: "طلب اجازة",
+        title: "تعديل المهمة",
         setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاجازة <span class='color-red'>*</span>",
+        titleVacationTypeId: "نوع المهمة <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
@@ -287,7 +281,7 @@ export class VacationTypeComponent {
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editVacation = true;
+    dialogRefAddCurrency.componentInstance.editTask = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
@@ -298,11 +292,9 @@ export class VacationTypeComponent {
 
       dialogRefAddCurrency.componentInstance.submitted = false;
 
-      this.vacationTypeService.updateVacation(formData).subscribe(
+      this.taskTypeService.updateTask(formData).subscribe(
         {
           next: (data: any) => {
-
-
             dialogRefAddCurrency.componentInstance.submitted = true;
 
             dialogRefAddCurrency.close();
@@ -312,11 +304,11 @@ export class VacationTypeComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الاجازات"
+                buttonSend: "طلبات المهمات"
 
               },
             });
-            this.getVacations(this.filteration);
+            this.getTasks(this.filteration);
 
             setTimeout(() => {
               succressDialog.close();
@@ -345,10 +337,10 @@ export class VacationTypeComponent {
 
 
   dialogVacationFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogVacationTypeFileComponent, {
+    const dialogRefAddCurrency = this.dialog.open(DialogTaskTypeFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف الاجازة"
+        title: "ملف المهمات"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id
@@ -396,7 +388,7 @@ export class VacationTypeComponent {
 
     this.filteration.page = even;
     let filteration = { ...this.filteration, page: even - 1 };
-    this.getVacations(filteration)
+    this.getTasks(filteration)
 
   }
   changeLang(lang: string) {
