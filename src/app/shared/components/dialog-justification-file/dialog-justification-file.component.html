@@ -1,0 +1,90 @@
+<div class="container-Dialog">
+  <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+    <h3 class="title-Dialog m-0">
+      {{data!['title']|translate}}
+    </h3>
+    <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+      <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+      <i class="pi pi-times-circle"></i>
+    </button>
+  </header>
+  <div class="body-dialog p-15 f-s-16">
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">الرقم الموظف</label>
+      <div class="content-password">
+        {{info?.employee?.code ? info?.employee?.code : "لا يوجد"}}
+      </div>
+
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title"> اسم الموظف</label>
+      <div class="content-password">
+        {{info?.employee?.name ? info?.employee?.name : "لا يوجد"}}
+
+      </div>
+
+    </div>
+
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">نوع التبرير</label>
+      <div class="content-password">
+        {{info?.vacationTypeName ? info?.vacationTypeName : "لا يوجد"}}
+      </div>
+
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">الملفات</label>
+      <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length">
+        <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
+          <div>
+            <img [src]="file.imageSrc" width="50" alt="">
+
+          </div>
+          <div class="p-fileupload-filename">
+            <span class="d-block">name:</span>
+            {{ file.fileUpload.name
+            }}
+          </div>
+          <div>
+            <span class="d-block">size:</span>
+            {{
+            file.fileUpload.size }}
+          </div>
+
+        </li>
+      </ul>
+
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">البداية</label>
+      <div class="content-password">
+        {{info?.dateFrom ? info?.dateFrom : "لا يوجد"}}
+
+      </div>
+
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">النهاية</label>
+      <div class="content-password">
+        {{info?.dateTo ? info?.dateTo : "لا يوجد"}}
+      </div>
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">حالة الطلب</label>
+      <div class="content-password">
+        {{info?.statusName ? info?.statusName : "لا يوجد"}}
+      </div>
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">رصيد الاجازات</label>
+      <div class="content-password">
+        {{info?.joiningDate ? info?.joiningDate: "لا يوجد"}}
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+  </div>

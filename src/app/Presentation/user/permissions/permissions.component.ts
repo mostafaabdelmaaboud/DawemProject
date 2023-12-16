@@ -91,6 +91,8 @@ export class PermissionsComponent {
   RowsPerPage!: any[];
   mobileQuery: MediaQueryList;
   opened = false;
+  cards!: any;
+  spinnerCards = false;
   private _mobileQueryListener: () => void;
   private permissionsService = inject(PermissionsService);
 
@@ -147,12 +149,29 @@ export class PermissionsComponent {
 
     ];
 
+    this.getInformation();
 
     this.getPermissions(this.filteration)
 
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
+  }
+  getInformation() {
+    this.spinnerCards = true;
+    this.permissionsService.getInformation().subscribe({
+      next: data => {
+        this.cards = {
+          ...data
+        };
+        this.spinnerCards = false;
+
+      },
+      error: err => {
+        this.spinnerCards = false;
+
+      }
+    })
   }
   getPermissions(filteration: any) {
     this.permissions = [];

@@ -168,27 +168,6 @@
 
     </form>
 
-    <!-- <form [formGroup]="addBranchGroupForm">
-            <ng-container *ngIf="data?.subTitle">
-                <div class="mb-3" [innerHTML]="data!['subTitle']!|translate"></div>
-            </ng-container>
-            <div class="li-input col-12" *ngFor="let input of data?.addBranchesInputsProps">
-                <label for="" class="label-input mb-2" [innerHTML]="input['LabelMessage']|translate"></label>
-                <div class="content-password">
-
-
-                    <input [formControlName]="input.name" pInputText class="w-100" [type]="input.inputType" required
-                        [name]="input.name" />
-                </div>
-                <div class="container-alerts" *ngIf="getControl(input.name)?.errors">
-                    <div class="alert alert-danger"
-                        *ngIf="getControl(input.name)?.hasError('required') && getControl(input.name)?.dirty">
-                        {{input['message']|translate}}
-                    </div>
-                </div>
-            </div>
-        </form> -->
-
   </div>
   <footer class="footer-dialog p-15 d-flex justify-content-end">
 

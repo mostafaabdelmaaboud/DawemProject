@@ -12,8 +12,7 @@ import { CalendarModule } from "primeng/calendar";
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { VacationTypeService } from 'src/app/Presentation/user/vacation-type/services/vacation-type.service';
-
+import { PermissionTypeService } from 'src/app/Presentation/user/permission-type/services/permission-type.service';
 interface addBranchesInputsProps {
   LabelMessage: string;
   inputType: string;
@@ -38,13 +37,13 @@ interface UploadEvent {
   files: File[];
 }
 @Component({
-  selector: 'app-request-vacation-type',
+  selector: 'app-request-permission-type',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, MatProgressSpinnerModule, MatRadioModule, MultiSelectModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
-  templateUrl: './request-vacation-type.component.html',
-  styleUrls: ['./request-vacation-type.component.scss']
+  templateUrl: './request-permission-type.component.html',
+  styleUrls: ['./request-permission-type.component.scss']
 })
-export class RequestVacationTypeComponent {
+export class RequestPermissionTypeComponent {
 
   @Output() submitClicked = new EventEmitter<any>();
   @Input() submitted!: boolean;
@@ -59,7 +58,7 @@ export class RequestVacationTypeComponent {
   ];
   loading = false;
 
-  @Input() editVacation!: boolean;
+  @Input() editPermission!: boolean;
   addBranchGroupForm: FormGroup = this.fb.group({
     IsNecessary: [false],
     name: ["", Validators.required]
@@ -67,9 +66,9 @@ export class RequestVacationTypeComponent {
   AttachmentsFiles: any[] = [];
   requiredCommercialRegFiles = false;
   toggleForEmployee = false;
-  private vacationsService = inject(VacationTypeService);
+  private permissionTypeService = inject(PermissionTypeService);
   constructor(
-    public dialogRef: MatDialogRef<RequestVacationTypeComponent>,
+    public dialogRef: MatDialogRef<RequestPermissionTypeComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
     private fb: FormBuilder
@@ -80,9 +79,9 @@ export class RequestVacationTypeComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.loading = true;
-    if (this.editVacation) {
+    if (this.editPermission) {
 
-      this.vacationsService.vacationGetById({ VacationTypeId: this.id }).subscribe(
+      this.permissionTypeService.permissionGetById({ permissionTypeId: this.id }).subscribe(
         {
           next: data => {
             this.addBranchGroupForm.get("IsNecessary")?.setValue(data.isActive);
@@ -96,7 +95,7 @@ export class RequestVacationTypeComponent {
       )
 
     }
-    if (!this.editVacation) {
+    if (!this.editPermission) {
       this.loading = false;
 
     }

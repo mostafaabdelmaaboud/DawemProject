@@ -177,6 +177,17 @@ body {
   flex-direction: row-reverse;
 }
 
+.spinner-cards {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+}
+
 .b-r-4 {
   border-radius: 4px;
   -webkit-border-radius: 4px;

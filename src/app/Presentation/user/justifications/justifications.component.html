@@ -7,13 +7,13 @@
 
   </div>
 </div>
-<div class="cards-dashboard">
-  <div class="row">
+<div class="cards-dashboard position-relative">
+  <div class="row" *ngIf="cards?.totalJustificationsCount">
     <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Primary-700">إجمالي التبريرات</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">320</span>
+          <span class="number-card-dashboard">{{cards?.totalJustificationsCount}}</span>
           <span class="icon-card-dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
               <g opacity="0.2">
@@ -36,7 +36,7 @@
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Warning-700 ">التبريرات المنتظرة</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">420</span>
+          <span class="number-card-dashboard">{{cards?.pendingCount}}</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
             <g opacity="0.2">
               <path opacity="0.4"
@@ -54,7 +54,7 @@
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Success-700">التبريرات المقبولة</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">318</span>
+          <span class="number-card-dashboard">{{cards?.acceptedCount}}</span>
           <span class="icon-card-dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
               <g opacity="0.2">
@@ -74,7 +74,7 @@
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Error-700">التبريرات المرفوضة</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">201</span>
+          <span class="number-card-dashboard">{{cards?.rejectedCount}}</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
             <g opacity="0.2">
               <path opacity="0.5"
@@ -88,6 +88,9 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="spinner spinner-cards d-flex justify-content-center align-items-center" *ngIf="spinnerCards">
+    <mat-spinner></mat-spinner>
   </div>
 </div>
 <div class="table-basic">
@@ -118,20 +121,19 @@
             <input pInputText type="text" #search (input)="dt1.filterGlobal(search.value, 'contains')"
               placeholder="Search..." />
           </span> -->
-          <button (click)="op.toggle($event)" class="btn btn-outline-primary action-button-t d-flex align-items-center">
+          <!-- <button (click)="op.toggle($event)" class="btn btn-outline-primary action-button-t d-flex align-items-center">
             <i class="pi pi-filter-fill"></i>
 
             <span>تصفية النتائج</span>
-          </button>
+          </button> -->
           <div class="container-filteration">
-            <p-overlayPanel #op>
+            <!-- <p-overlayPanel #op>
               <header class="header-filter d-flex justify-content-center align-items-center p-15 position-relative">
                 <h3 class="title-filteration m-0">
                   تصفية النتائج
 
                 </h3>
                 <button class="icon-close iconCloseDialog iconCloseFilteration" type="button" (click)="op.hide()">
-                  <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
                   <i class="pi pi-times-circle"></i>
                 </button>
               </header>
@@ -184,12 +186,12 @@
                 </div>
               </form>
 
-            </p-overlayPanel>
-            <button class="btn btn-primary action-button-t d-flex align-items-center" (click)="requestJustification()">
+            </p-overlayPanel> -->
+            <!-- <button class="btn btn-primary action-button-t d-flex align-items-center" (click)="requestJustification()">
               <i class="pi bi-plus-circle-fill"></i>
 
               <span>إضافة تبرير</span>
-            </button>
+            </button> -->
             <!--
             <button (click)="op.toggle($event)" class="btn button-filter-table">
 
@@ -253,7 +255,7 @@
               {{column.name}}
             </span>
             <div class="action-body-td">
-              <button type="button" (click)="sendRequest()"
+              <button type="button" (click)="sendRequest(rowData)"
                 class="btn btn-outline-secondary action-accept color-green"><i class="bi bi-check-circle"></i></button>
               <button type="button" (click)="reasonOfRefuse(rowData)"
                 class="btn btn-outline-secondary action-close color-red"><i class="bi bi-x-circle"></i></button>

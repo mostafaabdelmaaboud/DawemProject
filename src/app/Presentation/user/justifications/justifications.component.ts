@@ -91,6 +91,8 @@ export class JustificationsComponent {
   RowsPerPage!: any[];
   mobileQuery: MediaQueryList;
   opened = false;
+  cards!: any;
+  spinnerCards = false;
   private _mobileQueryListener: () => void;
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
     this.date = new Date();
@@ -149,12 +151,30 @@ export class JustificationsComponent {
       { name: '5', code: '5' }
     ];
 
+    this.getInformation();
 
 
     this.getJustifications(this.filteration)
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
+  }
+  getInformation() {
+    this.spinnerCards = true;
+
+    this.justificationsService.getInformation().subscribe({
+      next: data => {
+        this.cards = {
+          ...data
+        };
+        this.spinnerCards = false;
+
+      },
+      error: err => {
+        this.spinnerCards = false;
+
+      }
+    })
   }
   getJustifications(filteration: any) {
     this.justifications = [];
@@ -282,26 +302,36 @@ export class JustificationsComponent {
 
     })
   }
-  sendRequest() {
-    const succressDialog = this.dialog.open(ToastSuccessComponent, {
-      width: "30vw",
-      data: {
-        title: "تم قبول الطلب",
-        message: "تم ارسال الموافقة على الطلب للموظف",
-        buttonSend: "اعلاق"
-      },
-    });
-    setTimeout(() => {
-      succressDialog.close();
+  sendRequest(data: any) {
+    this.justificationsService.accept({ requestId: data.id }).subscribe(
+      {
+        next: res => {
+          this.getJustifications(this.filteration);
+          const succressDialog = this.dialog.open(ToastSuccessComponent, {
+            width: "30vw",
+            data: {
+              title: "تم قبول الطلب",
+              message: res.message,
+              buttonSend: "اغلاق"
+            },
+          });
+          setTimeout(() => {
+            succressDialog.close();
 
-    }, 2000);
-    succressDialog.componentInstance.submitted = true;
-    succressDialog.componentInstance.submitClicked.subscribe(result => {
-      succressDialog.close();
+          }, 2000);
+          succressDialog.componentInstance.submitted = true;
+          succressDialog.componentInstance.submitClicked.subscribe(result => {
+            succressDialog.close();
 
-    })
+          })
+        },
+        error: err => {
+
+        }
+      }
+    )
+
   }
-
   minimumValidator(conInput: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       const value: string = control.value;

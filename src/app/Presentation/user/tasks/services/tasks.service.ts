@@ -18,6 +18,10 @@ export class TasksService {
     }
     return this.http.get<any>(`${environment.baseUrl}RequestTask/Get`, { params: queryParams })
   }
+  getInformation(): Observable<any> {
+
+    return this.http.get<any>(`${environment.baseUrl}RequestTask/GetTasksInformations`).pipe(map(data => data.data));
+  }
   deleteTasks(params: any) {
     let queryParams = new HttpParams();
 

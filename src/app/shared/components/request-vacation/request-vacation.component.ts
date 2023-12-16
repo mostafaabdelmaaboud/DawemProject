@@ -294,20 +294,9 @@ export class RequestVacationComponent {
         return function (e: any) {
           // Render thumbnail.
           thisParent.AttachmentsFiles.push({ imageSrc: e.target.result, fileUpload: file, detailsImage: false });
-
         };
-
       })(file);
-
-
-
-      // this.uploadedCommercialRegFiles.push({ imageSrc: src, fileUpload: file });
-
-
     }
-    // this.uploadedCommercialRegFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
-
-    // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
   }
   request() {
 

@@ -11,16 +11,20 @@ import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/t
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
 import { DialogVacationFileComponent } from 'src/app/shared/components/dialog-vacation-file/dialog-vacation-file.component';
-import { VacationsService } from './services/vacations.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-
+import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
+import { RequestVacationTypeComponent } from 'src/app/shared/components/request-vacation-type/request-vacation-type.component';
+import { DialogVacationTypeFileComponent } from 'src/app/shared/components/dialog-vacation-type-file/dialog-vacation-type-file.component';
+import { PermissionTypeService } from './services/permission-type.service';
+import { RequestPermissionTypeComponent } from 'src/app/shared/components/request-permission-type/request-permission-type.component';
+import { DialogPermissionTypeFileComponent } from 'src/app/shared/components/dialog-permission-type-file/dialog-permission-type-file.component';
 @Component({
-  selector: 'app-vacations',
-  templateUrl: './vacations.component.html',
-  styleUrls: ['./vacations.component.scss']
+  selector: 'app-permission-type',
+  templateUrl: './permission-type.component.html',
+  styleUrls: ['./permission-type.component.scss']
 })
-export class VacationsComponent {
+export class PermissionTypeComponent {
   date!: Date;
   arabic: any;
   subscription!: Subscription;
@@ -30,32 +34,16 @@ export class VacationsComponent {
 
   columns: any[] = [
     {
-      name: "رقم الموظف",
-      field: "orderNumber",
+      name: "رقم الاجازة",
+      field: "code",
     },
     {
-      name: "اسم الموظف",
-      field: "employeeName",
-    },
-    {
-      name: "نوع الاجازة",
-      field: "kindOfHoliday"
-    },
-    {
-      name: "البداية",
-      field: "beginning"
-    },
-    {
-      name: "النهاية",
-      field: "final"
+      name: "الأسم",
+      field: "name",
     },
     {
       name: "حاله الطلب",
-      field: "reason"
-    },
-    {
-      name: "رصيد الاجازات",
-      field: "vacationsBalance"
+      field: "isActive"
     },
     {
       name: "الإجراء",
@@ -91,10 +79,8 @@ export class VacationsComponent {
   RowsPerPage!: any[];
   mobileQuery: MediaQueryList;
   opened = false;
-  spinnerCards = false;
-  cards!: any;
   private _mobileQueryListener: () => void;
-  private vacationsService = inject(VacationsService);
+  private permissionTypeService = inject(PermissionTypeService);
   list: any[] = [
     { name: "نسيان تسجيل حضور", key: "1" },
     { name: "نسيان تسجيل انصراف", key: "2" },
@@ -155,51 +141,23 @@ export class VacationsComponent {
       { name: '5', code: 5 },
       { name: '10', code: 10 },
       { name: '25', code: 25 },
-
     ];
-    this.getInformation();
     this.getVacations(this.filteration);
-
   }
-  getInformation() {
-    this.spinnerCards = true;
 
-    this.vacationsService.getInformation().subscribe({
-      next: data => {
-
-        this.cards = {
-          ...data
-        };
-        this.spinnerCards = false;
-
-      },
-      error: err => {
-        this.spinnerCards = false;
-
-      }
-    })
-  }
   getVacations(filteration: any) {
     this.vacations = [];
     this.isLoading = true;
-    this.vacationsService.listVacations(filteration).subscribe(
+    this.permissionTypeService.listPermission(filteration).subscribe(
       {
         next: data => {
+
           data.data.forEach((vacation: any) => {
             this.vacations.push({
               id: vacation.id,
-              orderNumber: vacation.employee?.code ? vacation.employee?.code : "لا يوجد",
-              status: vacation.status,
-              employeeName: {
-                name: vacation.employee?.name ? vacation.employee?.name : "لا يوجد",
-                alt: vacation.employee?.name ? vacation.employee?.name : "لا يوجد",
-                img: vacation.employee?.profileImagePath ? vacation.employee?.profileImagePath : "../../../../assets/img/5034901-200.png"
-              },
-              kindOfHoliday: vacation.vacationTypeName,
-              beginning: moment(new Date(vacation.dateFrom)).format("MM/DD/YYYY"),
-              final: moment(new Date(vacation.dateTo)).format("MM/DD/YYYY"),
-              vacationsBalance: 9,
-              reason: vacation.statusName
+              code: vacation.code,
+              name: vacation.name,
+              isActive: vacation.isActive
 
             })
           });
@@ -221,96 +179,61 @@ export class VacationsComponent {
     this.getVacations(this.filteration)
   }
   reasonOfRefuse(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
+    const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
       width: "30vw",
       data: {
-        title: "هل متأكد من رفض الطلب؟",
+        title: "هل متأكد من حذف الطلب؟",
         message: "برجاء توضيح السبب إن أمكن",
-        titleReasonOfRefuse: "سبب الرفض",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض",
+
         titleClose: "تراجع",
-        buttonSend: "رفض الطلب"
+        buttonSend: "حذف"
       },
     });
 
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
+      this.permissionTypeService.deletePermission({ permissionTypeId: data.id }).subscribe({
+        next: res => {
+          this.toast.success(res.message);
+          reasonOfRefuseDialog.componentInstance.submitted = true;
+          reasonOfRefuseDialog.close();
+          this.getVacations(this.filteration);
+        },
+        error: err => {
+          reasonOfRefuseDialog.componentInstance.submitted = true;
 
-
-      this.vacationsService.rejectVacation({ id: data.id, rejectReason: result.notes }).subscribe(
-        {
-          next: res => {
-
-            this.toast.success(res.message);
-            reasonOfRefuseDialog.componentInstance.submitted = true;
-            this.getVacations(this.filteration);
-            reasonOfRefuseDialog.close();
-          },
-          error: err => {
-            reasonOfRefuseDialog.componentInstance.submitted = true;
-
-          }
         }
-      )
+      })
+
 
 
     })
   }
   requestVacation() {
-    const dialogRefAddCurrency = this.dialog.open(RequestVacationComponent, {
+    const dialogRefAddCurrency = this.dialog.open(RequestPermissionTypeComponent, {
       width: "50vw",
       data: {
-        title: "طلب اجازة",
+        title: "طلب استئذان",
         setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاجازة <span class='color-red'>*</span>",
-        placeholderVacationTypeId: " برجاء اختيار نوع الاجازة",
-        VacationTypeIdValidation: "نوع الاجازه مطلوب",
-        titleCalendar: "تاريخ الاجازة <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ الاجازة",
-        dateTaskValidation: "تاريخ الاجازة مطلوب",
-        labelRadioButton: "صاحب الطلب",
-        firstRadio: "لنفسي",
-        secondRadio: "لموظف",
-        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
-        placeholderEmployeeId: "الموظف",
-        EmployeeIdValidation: "الموظف مطلوب",
-        uploadFile: "ارفاق ملف",
-        chooseLabel: "اختار الملف ليتم رفعه",
+        titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
+        titleName: "الأسم<span class='color-red'>*</span>",
+        placeholdeName: "برجاء ادخال الأسم",
+        validationtitleName: "الأسم مطلوب",
         buttonSend: "إرسال الطلب"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editVacation = false;
+    dialogRefAddCurrency.componentInstance.editPermission = false;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData = new FormData();
-      if (result.ForEmployee) {
-        formData.append("CreateRequestVacationModelString", JSON.stringify({
-          IsNecessary: result.IsNecessary,
-          ForEmployee: result.ForEmployee,
-          EmployeeId: result.EmployeeId.key,
-          VacationTypeId: result.VacationTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY")
-        }));
 
-      } else {
-        formData.append("CreateRequestVacationModelString", JSON.stringify({
-          IsNecessary: result.IsNecessary,
-          ForEmployee: result.ForEmployee,
-          VacationTypeId: result.VacationTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY")
-        }));
-      }
-      result.files.forEach((file: any) => {
-        if (file.detailsImage === false) {
-          formData.append("Attachments", file.fileUpload, file.fileUpload.name);
-        }
-      });
+      let formData: any = {};
+      formData.name = result.name;
+      formData.isActive = result.IsNecessary;
+
       dialogRefAddCurrency.componentInstance.submitted = false;
 
-      this.vacationsService.createVacation(formData).subscribe(
+      this.permissionTypeService.createPermission(formData).subscribe(
         {
           next: (data: any) => {
 
@@ -324,7 +247,7 @@ export class VacationsComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الاجازات"
+                buttonSend: "طلبات الاستئذانات"
 
               },
             });
@@ -354,65 +277,32 @@ export class VacationsComponent {
       }
     });
   }
-  editVacation(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(RequestVacationComponent, {
+  editPermission(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(RequestPermissionTypeComponent, {
       width: "50vw",
       data: {
-        title: "طلب اجازة",
+        title: "تعديل الاستئذان",
         setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاجازة <span class='color-red'>*</span>",
-        placeholderVacationTypeId: " برجاء اختيار نوع الاجازة",
-        VacationTypeIdValidation: "نوع الاجازه مطلوب",
-        titleCalendar: "تاريخ الاجازة <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ الاجازة",
-        dateTaskValidation: "تاريخ الاجازة مطلوب",
-        labelRadioButton: "صاحب الطلب",
-        firstRadio: "لنفسي",
-        secondRadio: "لموظف",
-        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
-        placeholderEmployeeId: "الموظف",
-        EmployeeIdValidation: "الموظف مطلوب",
-        uploadFile: "ارفاق ملف",
-        chooseLabel: "اختار الملف ليتم رفعه",
+        titleVacationTypeId: "نوع الاستئذانات <span class='color-red'>*</span>",
+        titleName: "الأسم<span class='color-red'>*</span>",
+        placeholdeName: "برجاء ادخال الأسم",
+        validationtitleName: "الأسم مطلوب",
         buttonSend: "إرسال الطلب"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editVacation = true;
+    dialogRefAddCurrency.componentInstance.editPermission = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData = new FormData();
-      if (result.ForEmployee) {
-        formData.append("UpdateRequestTaskModelString", JSON.stringify({
-          id: data.id,
-          IsNecessary: result.IsNecessary,
-          ForEmployee: result.ForEmployee,
-          EmployeeId: result.EmployeeId.key,
-          VacationTypeId: result.VacationTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY")
-        }));
+      let formData: any = {};
+      formData.id = data.id;
+      formData.name = result.name;
+      formData.isActive = result.IsNecessary;
 
-      } else {
-        formData.append("UpdateRequestTaskModelString", JSON.stringify({
-          id: data.id,
-
-          IsNecessary: result.IsNecessary,
-          ForEmployee: result.ForEmployee,
-          TaskTypeId: result.TaskTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY")
-        }));
-      }
-      result.files.forEach((file: any) => {
-        if (file.detailsImage === false) {
-          formData.append("Attachments", file.fileUpload, file.fileUpload.name);
-        }
-      });
       dialogRefAddCurrency.componentInstance.submitted = false;
 
-      this.vacationsService.updateVacation(formData).subscribe(
+      this.permissionTypeService.updatePermission(formData).subscribe(
         {
           next: (data: any) => {
 
@@ -457,42 +347,12 @@ export class VacationsComponent {
     });
   }
 
-  sendRequest(data: any) {
 
-    this.vacationsService.accept({ requestId: data.id }).subscribe(
-      {
-        next: res => {
-          this.getVacations(this.filteration);
-          const succressDialog = this.dialog.open(ToastSuccessComponent, {
-            width: "30vw",
-            data: {
-              title: "تم قبول الطلب",
-              message: res.message,
-              buttonSend: "اغلاق"
-            },
-          });
-          setTimeout(() => {
-            succressDialog.close();
-
-          }, 2000);
-          succressDialog.componentInstance.submitted = true;
-          succressDialog.componentInstance.submitClicked.subscribe(result => {
-            succressDialog.close();
-
-          })
-        },
-        error: err => {
-
-        }
-      }
-    )
-
-  }
-  dialogVacationFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogVacationFileComponent, {
+  dialogPermissionFile(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(DialogPermissionTypeFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف الاجازة"
+        title: "ملف الاستئذان"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id

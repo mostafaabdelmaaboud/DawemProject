@@ -26,7 +26,7 @@
             class="w-100" />
         </div>
         <!--Start Custom Validators-->
-        <div class="container-alerts" *ngIf="getControl('name')?.errors">
+        <div class="container-alerts mt-2" *ngIf="getControl('name')?.errors">
           <div class="alert alert-danger" *ngIf="getControl('name')?.hasError('required') && getControl('name')?.dirty">
             {{data!['validationtitleName']|translate}}
           </div>

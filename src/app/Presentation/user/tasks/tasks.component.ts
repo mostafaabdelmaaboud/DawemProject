@@ -91,6 +91,8 @@ export class TasksComponent {
   RowsPerPage!: any[];
   mobileQuery: MediaQueryList;
   opened = false;
+  cards!: any;
+  spinnerCards = false;
   private _mobileQueryListener: () => void;
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
     this.date = new Date();
@@ -147,7 +149,26 @@ export class TasksComponent {
       { name: '25', code: 25 },
 
     ];
+    this.getInformation();
+
     this.getTasks(this.filteration)
+  }
+  getInformation() {
+    this.spinnerCards = true;
+
+    this.tasksService.getInformation().subscribe({
+      next: data => {
+        this.cards = {
+          ...data
+        };
+        this.spinnerCards = false;
+
+      },
+      error: err => {
+        this.spinnerCards = false;
+
+      }
+    })
   }
   getTasks(filteration: any) {
     this.tasks = [];
