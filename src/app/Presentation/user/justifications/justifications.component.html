@@ -255,6 +255,8 @@
               {{column.name}}
             </span>
             <div class="action-body-td">
+              <button type="button" class="btn btn-outline-secondary action-accept color-green"
+                (click)="editJustification(rowData)"><i class="bi bi-pencil-square"></i></button>
               <button type="button" (click)="sendRequest(rowData)"
                 class="btn btn-outline-secondary action-accept color-green"><i class="bi bi-check-circle"></i></button>
               <button type="button" (click)="reasonOfRefuse(rowData)"

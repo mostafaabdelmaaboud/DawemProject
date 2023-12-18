@@ -6,10 +6,11 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class JustificationsService {
+export class JustificationsTypeService {
+
 
   constructor(private http: HttpClient) { }
-  listJustifications(filter: any): Observable<any> {
+  listJustification(filter: any): Observable<any> {
     let queryParams = new HttpParams();
     if (filter) {
       Object.entries(filter).forEach(([key, value]: any) => {
@@ -18,21 +19,7 @@ export class JustificationsService {
     }
     return this.http.get<any>(`${environment.baseUrl}JustificationType/Get`, { params: queryParams })
   }
-  getInformation(): Observable<any> {
-
-    return this.http.get<any>(`${environment.baseUrl}RequestJustification/GetJustificationsInformations`).pipe(map(data => data.data));
-  }
-  JustificationGetById(params: any) {
-    let queryParams = new HttpParams();
-
-    if (params) {
-      Object.entries(params).forEach(([key, value]: any) => {
-        queryParams = queryParams.set(key, value);
-      })
-    }
-    return this.http.get<any>(`${environment.baseUrl}RequestJustification/GetById`, { params: queryParams }).pipe(map(data => data.data))
-  }
-  deleteJustification(params: any) {
+  deleteJusification(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -42,7 +29,7 @@ export class JustificationsService {
     }
     return this.http.delete<any>(`${environment.baseUrl}JustificationType/delete`, { params: queryParams })
   }
-  accept(params: any) {
+  jusificationGetInfo(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -50,13 +37,30 @@ export class JustificationsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.put<any>(`${environment.baseUrl}RequestJustification/Accept`, {}, { params: queryParams })
+    return this.http.get<any>(`${environment.baseUrl}JustificationType/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
+  }
+
+
+  createJusification(formData: any) {
+
+    return this.http.post<any>(`${environment.baseUrl}JustificationType/Create`, formData)
 
   }
-  updateJustification(formData: FormData) {
+  updateJusification(formData: FormData) {
 
-    return this.http.put<any>(`${environment.baseUrl}RequestJustification/Update`, formData)
+    return this.http.put<any>(`${environment.baseUrl}JustificationType/Update`, formData)
 
+  }
+
+  jusificationGetById(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}JustificationType/GetById`, { params: queryParams }).pipe(map(data => data.data))
   }
   jusificationTypeDropdown(filter: any) {
     let queryParams = new HttpParams();

@@ -400,7 +400,7 @@ export class PermissionsComponent {
           id: data.id,
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
-          PermissionTypeId: result.TaskTypeId.key,
+          PermissionTypeId: result.PermissionTypeId.key,
           DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
           DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
           Notes: result.Notes

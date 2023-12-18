@@ -16,15 +16,17 @@ import { ToastrService } from 'ngx-toastr';
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
 import { RequestVacationTypeComponent } from 'src/app/shared/components/request-vacation-type/request-vacation-type.component';
 import { DialogVacationTypeFileComponent } from 'src/app/shared/components/dialog-vacation-type-file/dialog-vacation-type-file.component';
-import { PermissionTypeService } from './services/permission-type.service';
 import { RequestPermissionTypeComponent } from 'src/app/shared/components/request-permission-type/request-permission-type.component';
 import { DialogPermissionTypeFileComponent } from 'src/app/shared/components/dialog-permission-type-file/dialog-permission-type-file.component';
+import { JustificationsTypeService } from './services/justifications-type.service';
+import { RequestJustificationTypeComponent } from 'src/app/shared/components/request-justification-type/request-justification-type.component';
+import { DialogJustificationTypeFileComponent } from 'src/app/shared/components/dialog-justification-type-file/dialog-justification-type-file.component';
 @Component({
-  selector: 'app-permission-type',
-  templateUrl: './permission-type.component.html',
-  styleUrls: ['./permission-type.component.scss']
+  selector: 'app-justifications-type',
+  templateUrl: './justifications-type.component.html',
+  styleUrls: ['./justifications-type.component.scss']
 })
-export class PermissionTypeComponent {
+export class JustificationsTypeComponent {
   date!: Date;
   arabic: any;
   subscription!: Subscription;
@@ -34,7 +36,7 @@ export class PermissionTypeComponent {
 
   columns: any[] = [
     {
-      name: "رقم الاستئذان",
+      name: "رقم التبرير",
       field: "code",
     },
     {
@@ -51,7 +53,7 @@ export class PermissionTypeComponent {
     }
 
   ];
-  permissions: any = [];
+  justifications: any = [];
 
   isLoading = true;
 
@@ -80,7 +82,7 @@ export class PermissionTypeComponent {
   mobileQuery: MediaQueryList;
   opened = false;
   private _mobileQueryListener: () => void;
-  private permissionTypeService = inject(PermissionTypeService);
+  private justificationsTypeService = inject(JustificationsTypeService);
   list: any[] = [
     { name: "نسيان تسجيل حضور", key: "1" },
     { name: "نسيان تسجيل انصراف", key: "2" },
@@ -95,11 +97,11 @@ export class PermissionTypeComponent {
     this._mobileQueryListener = () => {
       if (this.mobileQuery.matches) {
         this.opened = true;
-        this.permissions = this.permissions;
+        this.justifications = this.justifications;
         changeDetectorRef.detectChanges();
       } else {
         this.opened = false;
-        this.permissions = this.permissions;
+        this.justifications = this.justifications;
 
         changeDetectorRef.detectChanges();
 
@@ -142,18 +144,18 @@ export class PermissionTypeComponent {
       { name: '10', code: 10 },
       { name: '25', code: 25 },
     ];
-    this.getPermissions(this.filteration);
+    this.getJustifications(this.filteration);
   }
 
-  getPermissions(filteration: any) {
-    this.permissions = [];
+  getJustifications(filteration: any) {
+    this.justifications = [];
     this.isLoading = true;
-    this.permissionTypeService.listPermission(filteration).subscribe(
+    this.justificationsTypeService.listJustification(filteration).subscribe(
       {
         next: data => {
 
           data.data.forEach((vacation: any) => {
-            this.permissions.push({
+            this.justifications.push({
               id: vacation.id,
               code: vacation.code,
               name: vacation.name,
@@ -176,7 +178,7 @@ export class PermissionTypeComponent {
   }
   numberOfRowsPerPage(data: any) {
     this.filteration = { ...this.filteration, PageSize: data.value.code };
-    this.getPermissions(this.filteration)
+    this.getJustifications(this.filteration)
   }
   reasonOfRefuse(data: any) {
     const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
@@ -193,12 +195,12 @@ export class PermissionTypeComponent {
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
-      this.permissionTypeService.deletePermission({ permissionTypeId: data.id }).subscribe({
+      this.justificationsTypeService.deleteJusification({ justificationTypeId: data.id }).subscribe({
         next: res => {
           this.toast.success(res.message);
           reasonOfRefuseDialog.componentInstance.submitted = true;
           reasonOfRefuseDialog.close();
-          this.getPermissions(this.filteration);
+          this.getJustifications(this.filteration);
         },
         error: err => {
           reasonOfRefuseDialog.componentInstance.submitted = true;
@@ -210,13 +212,13 @@ export class PermissionTypeComponent {
 
     })
   }
-  requestPermission() {
-    const dialogRefAddCurrency = this.dialog.open(RequestPermissionTypeComponent, {
+  requestJustification() {
+    const dialogRefAddCurrency = this.dialog.open(RequestJustificationTypeComponent, {
       width: "50vw",
       data: {
-        title: "طلب استئذان",
+        title: "طلب التبرير",
         setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
+        titleVacationTypeId: "نوع التبرير <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
@@ -224,7 +226,7 @@ export class PermissionTypeComponent {
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editPermission = false;
+    dialogRefAddCurrency.componentInstance.editJustification = false;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
 
       let formData: any = {};
@@ -233,7 +235,7 @@ export class PermissionTypeComponent {
 
       dialogRefAddCurrency.componentInstance.submitted = false;
 
-      this.permissionTypeService.createPermission(formData).subscribe(
+      this.justificationsTypeService.createJusification(formData).subscribe(
         {
           next: (data: any) => {
 
@@ -251,7 +253,7 @@ export class PermissionTypeComponent {
 
               },
             });
-            this.getPermissions(this.filteration);
+            this.getJustifications(this.filteration);
 
             setTimeout(() => {
               succressDialog.close();
@@ -277,13 +279,13 @@ export class PermissionTypeComponent {
       }
     });
   }
-  editPermission(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(RequestPermissionTypeComponent, {
+  editJustification(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(RequestJustificationTypeComponent, {
       width: "50vw",
       data: {
-        title: "تعديل الاستئذان",
+        title: "تعديل التبرير",
         setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاستئذانات <span class='color-red'>*</span>",
+        titleVacationTypeId: "نوع التبرير <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
@@ -291,7 +293,7 @@ export class PermissionTypeComponent {
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editPermission = true;
+    dialogRefAddCurrency.componentInstance.editJustification = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
@@ -302,7 +304,7 @@ export class PermissionTypeComponent {
 
       dialogRefAddCurrency.componentInstance.submitted = false;
 
-      this.permissionTypeService.updatePermission(formData).subscribe(
+      this.justificationsTypeService.updateJusification(formData).subscribe(
         {
           next: (data: any) => {
 
@@ -320,7 +322,7 @@ export class PermissionTypeComponent {
 
               },
             });
-            this.getPermissions(this.filteration);
+            this.getJustifications(this.filteration);
 
             setTimeout(() => {
               succressDialog.close();
@@ -349,10 +351,10 @@ export class PermissionTypeComponent {
 
 
   dialogPermissionFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogPermissionTypeFileComponent, {
+    const dialogRefAddCurrency = this.dialog.open(DialogJustificationTypeFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف الاستئذان"
+        title: "ملف التبرير"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id
@@ -400,7 +402,7 @@ export class PermissionTypeComponent {
 
     this.filteration.page = even;
     let filteration = { ...this.filteration, page: even - 1 };
-    this.getPermissions(filteration)
+    this.getJustifications(filteration)
 
   }
   changeLang(lang: string) {

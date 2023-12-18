@@ -12,6 +12,8 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
 import { JustificationsService } from './services/justifications.service';
 import { ToastrService } from 'ngx-toastr';
+import { RequestForJustificationComponent } from 'src/app/shared/components/request-for-justification/request-for-justification.component';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-justifications',
@@ -175,6 +177,114 @@ export class JustificationsComponent {
 
       }
     })
+  }
+  editJustification(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(RequestForJustificationComponent, {
+      width: "50vw",
+      data: {
+        title: "طلب تبرير",
+        setAsNecessary: "تعيين كضرورية",
+        titlePermissionTypeId: "نوع التبرير <span class='color-red'>*</span>",
+        placeholderPermissionTypeId: " برجاء اختيار نوع التبرير",
+        PermissionTypeIdValidation: "نوع التبرير مطلوب",
+        titleCalendar: "تاريخ الاجازة <span class='color-red'>*</span>",
+        placeholderCalendar: "تاريخ الاجازة",
+        titleNotes: "الملاحظات <span class='color-red'>*</span>",
+        placeholdeNotes: "الملاحظات",
+        NotesValidation: "الملاحظات مطلوب",
+
+        dateTaskValidation: "تاريخ الاجازة مطلوب",
+        labelRadioButton: "صاحب الطلب",
+        firstRadio: "لنفسي",
+        secondRadio: "لموظف",
+        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
+        placeholderEmployeeId: "الموظف",
+        EmployeeIdValidation: "الموظف مطلوب",
+        uploadFile: "ارفاق ملف",
+        chooseLabel: "اختار الملف ليتم رفعه",
+        buttonSend: "إرسال الطلب"
+      },
+    });
+    dialogRefAddCurrency.componentInstance.submitted = true;
+    dialogRefAddCurrency.componentInstance.editjustification = true;
+    dialogRefAddCurrency.componentInstance.id = data.id;
+
+    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+      let formData = new FormData();
+      if (result.ForEmployee) {
+        formData.append("UpdateRequestJustificationModelString", JSON.stringify({
+          id: data.id,
+          IsNecessary: result.IsNecessary,
+          ForEmployee: result.ForEmployee,
+          EmployeeId: result.EmployeeId.key,
+          JustificationTypeId: result.JustificationTypeId.key,
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
+          Notes: result.Notes
+        }));
+
+      } else {
+        formData.append("UpdateRequestJustificationModelString", JSON.stringify({
+          id: data.id,
+          IsNecessary: result.IsNecessary,
+          ForEmployee: result.ForEmployee,
+          JustificationTypeId: result.JustificationTypeId.key,
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
+          Notes: result.Notes
+
+        }));
+      }
+      result.files.forEach((file: any) => {
+        if (file.detailsImage === false) {
+          formData.append("Attachments", file.fileUpload, file.fileUpload.name);
+        }
+      });
+      dialogRefAddCurrency.componentInstance.submitted = false;
+
+      this.justificationsService.updateJustification(formData).subscribe(
+        {
+          next: (data: any) => {
+
+
+            dialogRefAddCurrency.componentInstance.submitted = true;
+
+            dialogRefAddCurrency.close();
+
+            const succressDialog = this.dialog.open(ToastSuccessComponent, {
+              width: "30vw",
+              data: {
+                title: "تم ارسال طلبك",
+                message: data.message,
+                buttonSend: "طلبات التبريرات"
+
+              },
+            });
+            this.getJustifications(this.filteration);
+
+            setTimeout(() => {
+              succressDialog.close();
+
+            }, 2000);
+            succressDialog.componentInstance.submitted = true;
+            succressDialog.componentInstance.submitClicked.subscribe(result => {
+              succressDialog.close();
+            })
+
+          },
+          error: (err: any) => {
+
+            dialogRefAddCurrency.componentInstance.submitted = true;
+
+          }
+        }
+      )
+    });
+    dialogRefAddCurrency.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
   }
   getJustifications(filteration: any) {
     this.justifications = [];

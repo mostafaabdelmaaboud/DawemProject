@@ -27,6 +27,12 @@ const routes: Routes = [
         path: "employment",
         loadChildren: () => import('./department/department.module').then((m) => m.DepartmentModule),
       },
+
+
+      {
+        path: "justificationsType",
+        loadChildren: () => import('./justifications-type/justifications-type.module').then((m) => m.JustificationsTypeModule),
+      },
       {
         path: "justifications",
         loadChildren: () => import('./justifications/justifications.module').then((m) => m.JustificationsModule),

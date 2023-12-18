@@ -1,6 +1,6 @@
 <div class="header-comp d-flex align-items-center">
   <span class="title-head">
-    ملخص انواع الاستئذانات
+    ملخص انواع التبريرات
   </span>
   <div class="field-calendar-header">
     <p-calendar [(ngModel)]="date" [showIcon]="true" dateFormat="yy MM"></p-calendar>
@@ -11,7 +11,7 @@
   <div class="row">
     <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
       <div class="custom-card-dashboard">
-        <span class="title-card-dashboard Primary-700">اجمالي انواع الاستئذانات</span>
+        <span class="title-card-dashboard Primary-700">اجمالي انواع التبريرات</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
           <span class="number-card-dashboard">320</span>
           <span class="icon-card-dashboard">
@@ -34,7 +34,7 @@
     </div>
     <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
       <div class="custom-card-dashboard">
-        <span class="title-card-dashboard Warning-700 ">انواع الاستئذانات المنتظرة</span>
+        <span class="title-card-dashboard Warning-700 ">انواع التبريرات المنتظرة</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
           <span class="number-card-dashboard">400</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
@@ -52,7 +52,7 @@
     </div>
     <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
       <div class="custom-card-dashboard">
-        <span class="title-card-dashboard Success-700">انواع الاستئذانات المقبولة</span>
+        <span class="title-card-dashboard Success-700">انواع التبريرات المقبولة</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
           <span class="number-card-dashboard">150</span>
           <span class="icon-card-dashboard">
@@ -75,7 +75,7 @@
     </div>
     <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
       <div class="custom-card-dashboard">
-        <span class="title-card-dashboard Error-700">انواع الاستئذانات المرفوضة</span>
+        <span class="title-card-dashboard Error-700">انواع التبريرات المرفوضة</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
           <span class="number-card-dashboard">130</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
@@ -99,7 +99,7 @@
     <div class="actions-table-basic">
     </div>
   </div> -->
-  <p-table #dt1 [value]="permissions" id="tablePermissionType" [responsiveLayout]="opened ? 'stack' : 'scroll'"
+  <p-table #dt1 [value]="justifications" id="tableJustificationType" [responsiveLayout]="opened ? 'stack' : 'scroll'"
     [responsive]="true" [paginator]="false" [rows]="itemsPerPage" [first]="page" [rows]="10"
     [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
     currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
@@ -111,7 +111,7 @@
     <ng-template pTemplate="caption">
       <div class="custom-header-table d-flex justify-content-between align-items-center">
         <h2 class="title-table m-0">
-          انواع الاستئذانات
+          انواع التبريرات
           <!-- <span class="subTitlte ml-2">(30 FLS )</span> -->
         </h2>
         <div class="custom-filteration d-flex align-items-center">
@@ -194,7 +194,7 @@
               </form>
 
             </p-overlayPanel>
-            <button class="btn btn-primary action-button-t d-flex align-items-center" (click)="requestPermission()">
+            <button class="btn btn-primary action-button-t d-flex align-items-center" (click)="requestJustification()">
               <i class="pi bi-plus-circle-fill"></i>
 
               <span>إضافة نوع اجازة</span>
@@ -264,7 +264,7 @@
             </span>
             <div class="action-body-td">
               <button type="button" class="btn btn-outline-secondary action-accept color-green"
-                (click)="editPermission(rowData)"><i class="bi bi-pencil-square"></i></button>
+                (click)="editJustification(rowData)"><i class="bi bi-pencil-square"></i></button>
 
 
 

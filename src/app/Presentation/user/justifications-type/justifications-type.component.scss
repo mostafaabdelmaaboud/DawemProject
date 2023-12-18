@@ -1,0 +1,18 @@
+@media (max-width:520px) {
+
+  :host ::ng-deep .table-basic #tableJustificationType .p-datatable-tfoot>tr>td {
+    display: block !important;
+  }
+}
+
+.td-green {
+  color: green;
+}
+
+.td-red {
+  color: red;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead>tr>th:last-of-type {
+  width: 15% !important;
+}
