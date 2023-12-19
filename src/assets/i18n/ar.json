@@ -13,6 +13,10 @@
     "WeNeedHelp": "نحتاج مساعده ",
     "loading": "تحميل"
   },
+  "signup": {
+    "signup": "إنشاء حساب",
+    "signupToContinue": "قم بي إنشاء الحساب للمتابعه"
+  },
   "dialogs": {
     "loading": "تحميل..."
   },

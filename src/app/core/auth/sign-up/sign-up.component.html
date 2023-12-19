@@ -1,0 +1,311 @@
+<div class="body-login">
+  <div class="row m-0">
+    <div class="background-dawem col-lg-4 d-none d-md-none d-lg-block">
+    </div>
+    <div class="container-login d-flex justify-content-between align-items-center col-lg-8 col-12 position-relative">
+      <div class="card d-flex justify-content-center change-language">
+        <p-dropdown [options]="countries" [(ngModel)]="selectedCountry" (onChange)="changeLanguage($event)"
+          optionLabel="name" placeholder="Select a Country">
+          <ng-template pTemplate="selectedItem">
+            <ng-container *ngIf="selectedCountry.code !='AR'">
+              <div class="d-flex align-items-center gap-2" *ngIf="selectedCountry">
+                <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                  [class]="'flag flag-' + selectedCountry.code.toLowerCase()" style="width: 18px" />
+                <div>{{ selectedCountry.name }}</div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="selectedCountry.code ==='AR'">
+              <div class="d-flex align-items-center gap-2" *ngIf="selectedCountry">
+                <img src="assets/img/flag-400.png" style="width: 18px" />
+                <div>{{ selectedCountry.name }}</div>
+              </div>
+            </ng-container>
+
+          </ng-template>
+          <ng-template let-country pTemplate="item">
+            <ng-container *ngIf="country.code != 'AR'">
+              <div class="d-flex align-items-center gap-2">
+                <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                  [class]="'flag flag-' + country.code.toLowerCase()" style="width: 18px" />
+                <div>{{ country.name }}</div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="country.code === 'AR'">
+              <div class="d-flex align-items-center gap-2">
+                <img src="assets/img/flag-400.png" style="width: 18px" />
+                <div>{{ country.name }}</div>
+              </div>
+            </ng-container>
+          </ng-template>
+        </p-dropdown>
+      </div>
+      <div class="content-login">
+        <div class="header text-center">
+          <h3 class="title">{{'signup.signup' | translate}}</h3>
+          <p class="sub-text">{{'signup.signupToContinue' | translate}}</p>
+        </div>
+        <div class="form">
+          <form class="w-100" [formGroup]="FormGroup" (submit)="submit()">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-md-6 col-12">
+                  <div class="sectionFive mb-3">
+                    <label for="" class="label-input mb-2">الأسم <span class="color-red">*</span></label>
+
+                    <!--Start Custom Validators-->
+                    <div class="content-input position-relative">
+                      <div class="content-password">
+                        <input type="text" pInputText formControlName="name" placeholder="ادخال الأسم" class="w-100" />
+                      </div>
+                      <div class="container-alerts" *ngIf="getControl('name')?.errors">
+                        <div class="alert alert-danger"
+                          *ngIf="getControl('name')?.hasError('required') && getControl('name')?.dirty">
+                          الأسم مطلوب
+                        </div>
+                      </div>
+                    </div>
+
+                    <!--End Custom Validators-->
+                  </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="sectionFive mb-3">
+                    <label for="" class="label-input mb-2">اسم الشركه <span class="color-red">*</span></label>
+                    <div class="content-input position-relative">
+                      <div class="content-password">
+                        <input type="text" pInputText formControlName="companyName" placeholder="ادخال اسم الشركه"
+                          class="w-100" />
+                      </div>
+                      <!--Start Custom Validators-->
+                      <div class="container-alerts" *ngIf="getControl('companyName')?.errors">
+                        <div class="alert alert-danger"
+                          *ngIf="getControl('companyName')?.hasError('required') && getControl('companyName')?.dirty">
+                          اسم الشركه مطلوب
+                        </div>
+                      </div>
+                      <!--End Custom Validators-->
+                    </div>
+
+                  </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="sectionTwo mb-3">
+                    <label class="title">الدولة <span class="color-red">*</span></label>
+                    <div class="content-input position-relative">
+                      <div class="content-password">
+                        <p-dropdown appendTo="body" [options]="general" formControlName="companyCountryId"
+                          placeholder="الدولة" optionLabel="name"></p-dropdown>
+                      </div>
+                      <!--Start Custom Validators-->
+                      <div class="container-alerts" *ngIf="getControl('companyCountryId')?.errors">
+                        <div class="alert alert-danger"
+                          *ngIf="getControl('companyCountryId')?.hasError('required') && getControl('companyCountryId')?.dirty">
+                          برجاء الدولة مطلوب
+                        </div>
+                      </div>
+                      <!--End Custom Validators-->
+                    </div>
+
+                  </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="sectionFive mb-3">
+                    <label for="" class="label-input mb-2">عنوان الشركه <span class="color-red">*</span></label>
+                    <div class="content-input position-relative">
+                      <div class="content-password">
+                        <input type="text" pInputText formControlName="companyAddress" placeholder="ادخال عنوان الشركه"
+                          class="w-100" />
+                      </div>
+                      <!--Start Custom Validators-->
+                      <div class="container-alerts" *ngIf="getControl('companyAddress')?.errors">
+                        <div class="alert alert-danger"
+                          *ngIf="getControl('companyAddress')?.hasError('required') && getControl('companyAddress')?.dirty">
+                          عنوان الشركه مطلوب
+                        </div>
+                      </div>
+                      <!--End Custom Validators-->
+                    </div>
+
+                  </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="sectionFive mb-3">
+                    <label for="" class="label-input mb-2">بريد الألكتروني للشركه <span
+                        class="color-red">*</span></label>
+                    <div class="content-input position-relative">
+                      <div class="content-password">
+                        <input type="text" pInputText formControlName="companyEmail"
+                          placeholder="بريد الألكتروني للشركه " class="w-100" />
+                      </div>
+                      <!--Start Custom Validators-->
+                      <div class="container-alerts" *ngIf="getControl('companyEmail')?.errors">
+                        <div class="alert alert-danger"
+                          *ngIf="getControl('companyEmail')?.hasError('required') && getControl('companyEmail')?.dirty">
+                          بريد الألكتروني للشركه مطلوب
+                        </div>
+                      </div>
+                      <!--End Custom Validators-->
+                    </div>
+
+                  </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="section-field c-f">
+                    <label class="mb-2 d-block f-s-16 label-form">{{'login.password' | translate}}<span
+                        class="color-red ml-2">*</span></label>
+                    <div class="content-input position-relative">
+                      <span class="p-input-icon-right w-100 field-password">
+                        <i class="pi pi-lock"></i>
+                        <input [type]="togglePassword ? 'password' : 'text'" formControlName="password" class="w-100"
+                          pInputText [placeholder]="'login.password' | translate" />
+                        <span (click)="togglePassword = !togglePassword">
+                          <i class=" pi pi-eye" *ngIf="togglePassword"></i>
+                          <i class=" pi pi-eye-slash" *ngIf="!togglePassword"></i>
+                        </span>
+                      </span>
+                      <div class="container-alerts mb-2" *ngIf="getControl('password')?.errors">
+                        <div class="alert alert-danger"
+                          *ngIf="getControl('password')?.hasError('required') && getControl('password')?.dirty">
+                          {{'login.PasswordRequired' | translate}}
+                        </div>
+                        <div class="alert alert-danger"
+                          *ngIf="getControl('password')?.hasError('minlength') && !getControl('password')?.hasError('required')">
+                          {{'login.TheMinimumNumberOfCharactersIsFive' | translate}}
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div class="container-alerts mb-2" *ngIf="getControl('bankAccount.bankName')?.errors">
+                                              <div class="alert alert-danger"
+                                                *ngIf="getControl('bankAccount.bankName')?.hasError('required') && getControl('bankAccount.bankName')?.dirty">
+                                                Bank Name is required
+                                              </div>
+                                            </div> -->
+                  </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="section-field c-f">
+                    <label class="mb-2 d-block f-s-16 label-form">تأكيد كلمة المرور<span
+                        class="color-red ml-2">*</span></label>
+                    <div class="content-input position-relative">
+                      <span class="p-input-icon-right w-100 field-password">
+                        <i class="pi pi-lock"></i>
+                        <input [type]="toggleConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword"
+                          class="w-100" pInputText placeholder="تأكيد كلمة المرور" />
+                        <span (click)="toggleConfirmPassword = !toggleConfirmPassword">
+                          <i class=" pi pi-eye" *ngIf="toggleConfirmPassword"></i>
+                          <i class=" pi pi-eye-slash" *ngIf="!toggleConfirmPassword"></i>
+                        </span>
+                      </span>
+                      <div class="container-alerts mb-2" *ngIf="getControl('confirmPassword')?.errors">
+                        <div class="alert alert-danger"
+                          *ngIf="getControl('confirmPassword')?.hasError('required') && getControl('confirmPassword')?.dirty">
+                          {{'login.PasswordRequired' | translate}}
+                        </div>
+                        <div class="alert alert-danger"
+                          *ngIf="getControl('confirmPassword')?.hasError('passwordMismatch') && !getControl('confirmPassword')?.hasError('required')">
+                          تأكيد كلمة المرور
+                        </div>
+                      </div>
+                      <!-- <div class="container-alerts mb-2"
+                        *ngIf="getControl('confirmPassword')?.value != getControl('password')?.value && !getControl('confirmPassword')?.hasError('required')">
+
+                        <div class="alert alert-danger">
+                          تأكيد كلمة المرور
+                        </div>
+                      </div> -->
+                    </div>
+                    <!-- <div class="container-alerts mb-2" *ngIf="getControl('bankAccount.bankName')?.errors">
+                                                              <div class="alert alert-danger"
+                                                                *ngIf="getControl('bankAccount.bankName')?.hasError('required') && getControl('bankAccount.bankName')?.dirty">
+                                                                Bank Name is required
+                                                              </div>
+                                                            </div> -->
+                  </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="sectionFive mb-3">
+                    <label for="" class="label-input mb-2">بريد الألكتروني للمستخدم <span
+                        class="color-red">*</span></label>
+                    <div class="content-input position-relative">
+                      <div class="content-password">
+                        <input type="text" pInputText formControlName="userEmail"
+                          placeholder="بريد الألكتروني للمستخدم " class="w-100" />
+                      </div>
+                      <!--Start Custom Validators-->
+                      <div class="container-alerts" *ngIf="getControl('userEmail')?.errors">
+                        <div class="alert alert-danger"
+                          *ngIf="getControl('userEmail')?.hasError('required') && getControl('userEmail')?.dirty">
+                          بريد الألكتروني للمستخدم مطلوب
+                        </div>
+                      </div>
+                      <!--End Custom Validators-->
+                    </div>
+
+                  </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="sectionFive mb-3">
+                    <label for="" class="label-input mb-2">رقم الهاتف للمستخدم <span class="color-red">*</span></label>
+                    <div class="content-input position-relative">
+                      <div class="content-password">
+                        <input type="text" pInputText formControlName="userMobileNumber"
+                          placeholder="رقم الهاتف للمستخدم" class="w-100" />
+                      </div>
+                      <div class="container-alerts" *ngIf="getControl('userMobileNumber')?.errors">
+                        <div class="alert alert-danger"
+                          *ngIf="getControl('userMobileNumber')?.hasError('required') && getControl('userMobileNumber')?.dirty">
+                          رقم الهاتف للمستخدم مطلوب
+                        </div>
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+                <div class="col-md-12 col-12">
+                  <div class="sectionFive mb-3">
+
+                    <label for="sdad" class="mb-0 ml-15">موافق علي الشروط والاحكام</label>
+
+                    <p-checkbox name="category" [value]="true" formControlName="agreed" inputId="sdad"></p-checkbox>
+                    {{getControl('agreed')?.value}}
+                    <!--Start Custom Validators-->
+                    <div class="alert alert-danger mt-3"
+                      *ngIf="getControl('agreed')?.hasError('required') && getControl('agreed')?.dirty">
+                      الشروط والأحكام مطلوبة
+                    </div>
+
+                    <!--End Custom Validators-->
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+            <button class="btn btn-primary w-100 button-submit">{{loading ? ('login.signIn' | translate) :
+              ('login.loading' | translate) + '....'}}</button>
+          </form>
+          <div class="footer-form">
+            <span class="section-footer-login-left">انشاء حساب جديد</span>
+            <span class="section-footer-login-right">نسيت الرقم السري؟</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-login w-100">
+        <div class="row align-items-center">
+          <div class="col-8 text-right">{{'login.Copyrights' | translate}}</div>
+          <div class="col-4 d-flex align-items-center footer-info text-left"><i class="bi bi-info-lg"></i>
+            {{'login.WeNeedHelp' | translate}}
+            ؟</div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+</div>
+<div class="spinner d-flex justify-content-center align-items-center loading" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>

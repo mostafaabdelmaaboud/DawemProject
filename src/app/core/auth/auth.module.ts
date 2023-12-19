@@ -8,10 +8,12 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { ToastrModule } from 'ngx-toastr';
+import { SignUpComponent } from './sign-up/sign-up.component';
 
 @NgModule({
   declarations: [
-    LoginComponent
+    LoginComponent,
+    SignUpComponent
   ],
   imports: [
     CommonModule,

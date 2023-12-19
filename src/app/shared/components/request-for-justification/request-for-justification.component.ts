@@ -93,8 +93,7 @@ export class RequestForJustificationComponent {
     radioButtons: ["false"],
     ForEmployee: [false],
     JustificationTypeId: ['', Validators.required],
-    dateTask: [null, Validators.required],
-    Notes: [null, Validators.required],
+    dateTask: [null, Validators.required]
   });
   AttachmentsFiles: any[] = [];
   requiredCommercialRegFiles = false;
@@ -172,7 +171,7 @@ export class RequestForJustificationComponent {
 
               }
 
-              this.justificationsService.jusificationTypeDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.JustificationTypeId }).subscribe(dataDropdown => {
+              this.justificationsService.jusificationTypeDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.justificationTypeId }).subscribe(dataDropdown => {
 
                 this.list = []
 
@@ -181,9 +180,12 @@ export class RequestForJustificationComponent {
                   this.list.push({ name: insideData.name, key: insideData.id })
                 });
 
-                let indexJustificationTypeId = this.list.findIndex(job => job.key === data.JustificationTypeId);
+                let indexJustificationTypeId = this.list.findIndex(job => job.key === data.justificationTypeId);
+
                 if (indexJustificationTypeId >= 0) {
                   this.addBranchGroupForm.get("JustificationTypeId")?.setValue(this.list[indexJustificationTypeId]);
+
+
                 }
               });
               this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.employeeId }).subscribe(dataDropdown => {
@@ -200,7 +202,6 @@ export class RequestForJustificationComponent {
               });
               this.addBranchGroupForm.get("dateTask")?.setValue([new Date(data.dateFrom), new Date(data.dateTo)]);
 
-              this.addBranchGroupForm.get("Notes")?.setValue(data?.notes);
 
               this.loading = false;
             },
@@ -337,7 +338,6 @@ export class RequestForJustificationComponent {
     } else {
       this.getControl("JustificationTypeId")?.markAsDirty();
       this.getControl("dateTask")?.markAsDirty();
-      this.getControl("Notes")?.markAsDirty();
 
 
 

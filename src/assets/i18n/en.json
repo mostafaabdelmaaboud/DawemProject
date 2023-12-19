@@ -13,6 +13,10 @@
     "WeNeedHelp": "We need help",
     "loading": "loading"
   },
+  "signup": {
+    "signup": "sign up",
+    "signupToContinue": "sign up to continue"
+  },
   "dialogs": {
     "loading": "loading..."
   },

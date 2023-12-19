@@ -16,7 +16,7 @@ export class JustificationsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}JustificationType/Get`, { params: queryParams })
+    return this.http.get<any>(`${environment.baseUrl}RequestJustification/Get`, { params: queryParams })
   }
   getInformation(): Observable<any> {
 
@@ -60,9 +60,18 @@ export class JustificationsService {
   }
   jusificationTypeDropdown(filter: any) {
     let queryParams = new HttpParams();
+
     if (filter) {
       Object.entries(filter).forEach(([key, value]: any) => {
-        queryParams = queryParams.set(key, value);
+        if (key === "ids") {
+          value.forEach((id: any) => {
+            queryParams = queryParams.append(key, id)
+
+          });
+        } else {
+          queryParams = queryParams.set(key, value);
+
+        }
       })
     }
     return this.http.get<any>(`${environment.baseUrl}JustificationType/GetForDropDown`, { params: queryParams })

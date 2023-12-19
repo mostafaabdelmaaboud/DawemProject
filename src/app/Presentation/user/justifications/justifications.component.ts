@@ -48,17 +48,14 @@ export class JustificationsComponent {
       field: "typeOfJustification"
     },
     {
-      name: "التاريخ",
-      field: "date"
+      name: "البدايه",
+      field: "dateFrom"
     },
     {
-      name: "الوقت",
-      field: "time"
+      name: "النهاية",
+      field: "dateTo"
     },
-    {
-      name: "ملاحظات",
-      field: "comments"
-    },
+
     {
       name: "الإجراء",
       field: "actions"
@@ -182,7 +179,7 @@ export class JustificationsComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestForJustificationComponent, {
       width: "50vw",
       data: {
-        title: "طلب تبرير",
+        title: "تعديل التبرير",
         setAsNecessary: "تعيين كضرورية",
         titlePermissionTypeId: "نوع التبرير <span class='color-red'>*</span>",
         placeholderPermissionTypeId: " برجاء اختيار نوع التبرير",
@@ -219,8 +216,7 @@ export class JustificationsComponent {
           EmployeeId: result.EmployeeId.key,
           JustificationTypeId: result.JustificationTypeId.key,
           DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
-          Notes: result.Notes
+          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY")
         }));
 
       } else {
@@ -230,8 +226,7 @@ export class JustificationsComponent {
           ForEmployee: result.ForEmployee,
           JustificationTypeId: result.JustificationTypeId.key,
           DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
-          Notes: result.Notes
+          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY")
 
         }));
       }
@@ -290,8 +285,8 @@ export class JustificationsComponent {
     this.justifications = [];
     this.isLoading = true;
     this.justificationsService.listJustifications(filteration).subscribe(data => {
-      data.data.forEach((employee: any) => {
 
+      data.data.forEach((employee: any) => {
         this.justifications.push({
           id: employee.id,
           orderNumber: employee.code,
@@ -300,10 +295,9 @@ export class JustificationsComponent {
             alt: employee.name,
             img: employee.profileImagePath ? employee.profileImagePath : "../../../../assets/img/5034901-200.png"
           },
-          typeOfJustification: "الحضور",
-          date: "12/10/2023",
-          time: "11:08 ص",
-          comments: "الذهاب إلى عطلة"
+          typeOfJustification: employee.justificationTypeName,
+          dateFrom: moment(new Date(employee.dateFrom)).format("MM/DD/YYYY"),
+          dateTo: moment(new Date(employee.dateTo)).format("MM/DD/YYYY"),
         })
       });
       this.totalItems = data.totalCount

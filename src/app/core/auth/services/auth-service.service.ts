@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
@@ -34,6 +34,19 @@ export class AuthService {
   getToken(): string {
     return localStorage.getItem('token') as string;
   }
+
+  getCountries(filter: any) {
+    let queryParams = new HttpParams();
+
+    if (filter) {
+      Object.entries(filter).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+
+
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}Lookups/GetCountries`, { params: queryParams }).pipe(map(data => data.data))
+  }
   logout() {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
@@ -51,6 +64,9 @@ export class AuthService {
     return this.http.post(environment.baseUrl + "Authentication/SignIn", data)
 
   }
+  signup(data: any) {
+    return this.http.post(environment.baseUrl + "Authentication/SignUp", data)
 
+  }
 
 }
