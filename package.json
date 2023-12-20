@@ -10,6 +10,7 @@
   },
   "private": true,
   "dependencies": {
+    "@agm/core": "^1.1.0",
     "@angular/animations": "^15.2.10",
     "@angular/cdk": "^15.2.9",
     "@angular/common": "^15.2.10",
@@ -26,6 +27,7 @@
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
     "@popperjs/core": "^2.11.6",
+    "@types/googlemaps": "^3.43.3",
     "apexcharts": "^3.43.0",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.5",

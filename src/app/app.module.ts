@@ -14,6 +14,7 @@ import en from "@angular/common/locales/en";
 import { RouterModule } from '@angular/router';
 import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AgmCoreModule } from '@agm/core';
 
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, "./assets/i18n/", ".json");
@@ -35,6 +36,7 @@ registerLocaleData(en);
     BrowserAnimationsModule,
     HttpClientModule,
     MatSnackBarModule,
+    AgmCoreModule.forRoot({ apiKey: 'AIzaSyB56iuuwKPp0AISP5qM40vgL7hQu32RRfc' }),
     ToastrModule.forRoot(),
     TranslateModule.forRoot({
       defaultLanguage: localStorage.getItem('lang') || 'ar',

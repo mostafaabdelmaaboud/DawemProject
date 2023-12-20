@@ -216,8 +216,10 @@ export class ZonesComponent {
     this.isLoading = true;
     this.zonesService.listZones(filteration).subscribe(data => {
       data.data.forEach((zone: any) => {
+
         this.zones.push({
           id: zone.id,
+          code: zone.code,
           isActive: zone.isActive,
           zoneNumber: zone.code,
           zoneName: zone.name,
@@ -286,6 +288,7 @@ export class ZonesComponent {
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData = {};
+
       formData = {
         name: result.name,
         isActive: result.isActive,
@@ -296,6 +299,7 @@ export class ZonesComponent {
 
 
       dialogRefAddCurrency.componentInstance.submitted = false;
+
 
       this.zonesService.createZone(formData).subscribe(
         {
@@ -466,7 +470,7 @@ export class ZonesComponent {
         title: "تعديل المنطقة",
         setAsNecessary: "تعيين كنشط",
         titleFieldDisabled: "كود الموظف",
-        code: "#001093",
+        code: data.code,
 
         radiusNumber: "المسافه <span class='color-red'>*</span>",
         placeholdeRadius: "المسافه",
@@ -484,6 +488,7 @@ export class ZonesComponent {
     dialogRefAddCurrency.componentInstance.id = data.id;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData = {};
+
       formData = {
         id: data.id,
         name: result.name,
@@ -492,6 +497,7 @@ export class ZonesComponent {
         longitude: result.longitude,
         radius: result.radius,
       }
+
 
       dialogRefAddCurrency.componentInstance.submitted = false;
       this.zonesService.updateZone(formData).subscribe(

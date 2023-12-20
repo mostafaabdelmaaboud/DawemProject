@@ -46,12 +46,17 @@
           </div>
         </div>
         <div class="body-map">
-          <google-map height="500px" width="100%" (mapClick)="clickMap($event)" [zoom]="zoom" [center]="center"
-            [options]="optionsMap">
-            <map-marker *ngFor="let marker of markers" [position]="marker.position" [label]="marker.label"
-              [title]="marker.title" [options]="marker.options">
-            </map-marker>
-          </google-map>
+          <agm-map [latitude]="latitude" [scrollwheel]="false" [longitude]="longitude" [zoom]="zoomLevel"
+            [disableDefaultUI]="false" [zoomControl]="true" (mapClick)="onMapClickEvent($event)">
+            <agm-marker *ngFor="let mapMarker of markers; let i = index"
+              (markerClick)="onMarkerClickEvent(mapMarker.label, i)" [latitude]="mapMarker.latitude"
+              [longitude]="mapMarker.longitude" [label]="mapMarker.label ? mapMarker.label : ''"
+              [markerDraggable]="mapMarker.draggable" (dragEnd)="markerDragEnd(mapMarker, $event)">
+            </agm-marker>
+            <agm-circle [latitude]="latitude" [longitude]="longitude" [radius]="radius" [fillColor]="'red'"
+              [circleDraggable]="false" [editable]="false">
+            </agm-circle>
+          </agm-map>
           <div class="container-alerts mt-2" *ngIf="getControl('latitude')?.errors">
             <div class="alert alert-danger"
               *ngIf="getControl('latitude')?.hasError('required') && getControl('latitude')?.dirty">
