@@ -93,7 +93,9 @@ export class RequestForJustificationComponent {
     radioButtons: ["false"],
     ForEmployee: [false],
     JustificationTypeId: ['', Validators.required],
-    dateTask: [null, Validators.required]
+    dateTask: [null, Validators.required],
+    Notes: [null, Validators.required],
+
   });
   AttachmentsFiles: any[] = [];
   requiredCommercialRegFiles = false;
@@ -201,6 +203,7 @@ export class RequestForJustificationComponent {
                 }
               });
               this.addBranchGroupForm.get("dateTask")?.setValue([new Date(data.dateFrom), new Date(data.dateTo)]);
+              this.addBranchGroupForm.get("Notes")?.setValue(data?.notes);
 
 
               this.loading = false;
@@ -339,6 +342,7 @@ export class RequestForJustificationComponent {
       this.getControl("JustificationTypeId")?.markAsDirty();
       this.getControl("dateTask")?.markAsDirty();
 
+      this.getControl("Notes")?.markAsDirty();
 
 
     }

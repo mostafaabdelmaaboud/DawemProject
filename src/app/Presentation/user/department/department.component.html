@@ -140,20 +140,19 @@
             <input pInputText type="text" #search (input)="dt1.filterGlobal(search.value, 'contains')"
               placeholder="Search..." />
           </span> -->
-          <button (click)="op.toggle($event)" class="btn btn-outline-primary action-button-t d-flex align-items-center">
+          <!-- <button (click)="op.toggle($event)" class="btn btn-outline-primary action-button-t d-flex align-items-center">
             <i class="pi pi-filter-fill"></i>
 
             <span>تصفية النتائج</span>
-          </button>
+          </button> -->
           <div class="container-filteration">
-            <p-overlayPanel #op>
+            <!-- <p-overlayPanel #op>
               <header class="header-filter d-flex justify-content-center align-items-center p-15 position-relative">
                 <h3 class="title-filteration m-0">
                   تصفية النتائج
 
                 </h3>
                 <button class="icon-close iconCloseDialog iconCloseFilteration" type="button" (click)="op.hide()">
-                  <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
                   <i class="pi pi-times-circle"></i>
                 </button>
               </header>
@@ -212,12 +211,8 @@
             <button class="btn btn-primary action-button-t d-flex align-items-center" (click)="addEmployment()">
               <i class="pi bi-plus-circle-fill"></i>
               <span>إضافة دوام</span>
-            </button>
-            <!--
-            <button (click)="op.toggle($event)" class="btn button-filter-table">
-
-              <i class="bi bi-filter"></i>
             </button> -->
+
           </div>
         </div>
       </div>

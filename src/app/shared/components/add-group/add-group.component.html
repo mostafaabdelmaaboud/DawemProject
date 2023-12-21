@@ -131,6 +131,34 @@
               </div>
               <!--End Custom Validators-->
             </div>
+            <div class="sectionTwo mb-3">
+              <label class="title" [innerHTML]="data!['titleZone']|translate"></label>
+              <div class="content-password">
+                <p-multiSelect [options]="listZones" appendTo="body" [filter]="false" formControlName="zoneIds"
+                  [placeholder]="data!['placeholderZone']|translate" optionLabel="name">
+                  <ng-template pTemplate="header">
+                    <span class="p-input-icon-left input-search-dropdown">
+
+                      <i class="pi pi-search" (click)="searchDropdown(searchzoneIds.value, 'zoneIds')"></i>
+                      <input type="text" placeholder="بحث" pInputText #searchzoneIds />
+                    </span>
+                  </ng-template>
+                  <ng-template let-option pTemplate="item">
+                    {{ option.name }}
+                  </ng-template>
+                </p-multiSelect>
+
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('zoneIds')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('zoneIds')?.hasError('required') && getControl('zoneIds')?.dirty">
+                  {{data!['validationtitleNotes']|translate}}
+
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
           </div>
           <!-- <div class="col-5">
             <p-tree [value]="treeDepartment" (onNodeSelect)="nodeSelect($event)" selectionMode="single">

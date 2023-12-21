@@ -111,7 +111,7 @@ export class RequestPermissionTypeComponent {
 
   request() {
 
-    if (this.addBranchGroupForm.valid) {
+    if (this.addBranchGroupForm.valid && this.submitted) {
       this.submitted = false;
       this.submitClicked.emit(this.addBranchGroupForm.value);
       // this.dialogRef.close(true);

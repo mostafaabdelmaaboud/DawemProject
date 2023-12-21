@@ -190,6 +190,9 @@ export class GroupsComponent {
         groupManager: "مدير المجموعة",
         placeholdeGroupManager: "مدير المجموعة",
         ValidationGroupManager: "مدير المجموعة مطلوب",
+        titleZone: "المناطق <span class='color-red'>*</span>",
+        placeholderZone: "المناطق",
+        validationtitleZone: "المناطق مطلوبه",
 
         deputyDirector: "نواب المدير",
         placeholdeDeputyDirector: "نواب المدير",
@@ -209,16 +212,21 @@ export class GroupsComponent {
       let formData: any = {};
 
       formData.name = result.groupName;
-      formData.groupManagerDelegatorIdes = [];
-      formData.employeeIdes = [];
+      formData.managerDelegatorIds = [];
+      formData.employeeIds = [];
+      formData.zoneIds = [];
 
       result?.deputyDirector?.forEach((direct: any) => {
-        formData.groupManagerDelegatorIdes.push(direct.key);
+        formData.managerDelegatorIds.push(direct.key);
       });
       result?.groupEmployees?.forEach((direct: any) => {
-        formData.employeeIdes.push(direct.key);
+        formData.employeeIds.push(direct.key);
       });
-
+      if (result?.zoneIds?.length > 0) {
+        result?.zoneIds?.forEach((direct: any) => {
+          formData.zoneIds.push(direct.key);
+        });
+      }
       formData.groupManagerId = result.groupManager.key;
       formData.isActive = result.isActive;
 
@@ -303,6 +311,9 @@ export class GroupsComponent {
         groupManager: "مدير المجموعة",
         placeholdeGroupManager: "مدير المجموعة",
         ValidationGroupManager: "مدير المجموعة مطلوب",
+        titleZone: "المناطق <span class='color-red'>*</span>",
+        placeholderZone: "المناطق",
+        validationtitleZone: "المناطق مطلوبه",
         deputyDirector: "نواب المدير",
         placeholdeDeputyDirector: "نواب المدير",
         ValidationDeputyDirector: "نواب المدير مطلوب",
@@ -324,15 +335,22 @@ export class GroupsComponent {
 
       formData.id = data.id;
       formData.name = result.groupName;
-      formData.groupManagerDelegatorIdes = [];
-      formData.employeeIdes = [];
+      formData.managerDelegatorIds = [];
+      formData.employeeIds = [];
+      formData.zoneIds = [];
 
       result?.deputyDirector?.forEach((direct: any) => {
-        formData.groupManagerDelegatorIdes.push(direct.key);
+        formData.managerDelegatorIds.push(direct.key);
       });
       result?.groupEmployees?.forEach((direct: any) => {
-        formData.employeeIdes.push(direct.key);
+        formData.employeeIds.push(direct.key);
       });
+      if (result?.zoneIds?.length > 0) {
+        result?.zoneIds?.forEach((direct: any) => {
+          formData.zoneIds.push(direct.key);
+        });
+      }
+
       formData.groupManagerId = result.groupManager.key;
       formData.isActive = result.isActive;
       this.groupsService.updateGroup(formData).subscribe(

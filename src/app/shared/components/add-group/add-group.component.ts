@@ -16,6 +16,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { GroupsService } from 'src/app/Presentation/user/groups/services/groups.service';
 import { TreeModule } from 'primeng/tree';
 import { TreeNode } from 'primeng/api';
+import { SectionsService } from 'src/app/Presentation/user/sections/services/sections.service';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -44,6 +45,10 @@ interface DataDialog {
   deputyDirector: string;
   placeholdeDeputyDirector: string;
   ValidationDeputyDirector: string;
+  titleZone: string;
+  placeholderZone: string;
+
+  validationtitleNotes: string;
 
   message: string,
   title: string;
@@ -75,6 +80,7 @@ export class AddGroupComponent {
   ];
   @Input() editGroups!: boolean;
   @Input() id!: string;
+  listZones: any[] = [];
 
   listGroupManager: any[] = [
   ];
@@ -82,6 +88,7 @@ export class AddGroupComponent {
   ];
   listGroupEmployees: any[] = [
   ];
+  private sectionsService = inject(SectionsService);
 
   weekDays: any[] = [];
   addBranchGroupForm: FormGroup = this.fb.group({
@@ -90,6 +97,8 @@ export class AddGroupComponent {
     groupName: ['', Validators.required],
     groupEmployees: ['', Validators.required],
     groupManager: ["", Validators.required],
+    zoneIds: [''],
+
     deputyDirector: ["", Validators.required],
 
   });
@@ -108,6 +117,8 @@ export class AddGroupComponent {
     //Add 'implements OnInit' to the class.
     this.loading = true;
     let groupsDropdown = this.groupsService.GetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+    let GetForDropDownZones = this.sectionsService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+
     this.treeDepartment = [
       {
         label: 'Data Structures',
@@ -151,15 +162,18 @@ export class AddGroupComponent {
 
 
     combineLatest({
-      groupsDropdown
+      groupsDropdown,
+      GetForDropDownZones
     }).subscribe(
       {
         next: data => {
 
-          // data.GetWeekDays?.data?.forEach((day: any,) => {
-          //   (this.addBranchGroupForm.get("weekDays") as FormArray).push(this.getFormArrayWeekDays(day.name, day.weekDay))
-          //   this.weekDays.push({ name: day.name, weekDay: day.id })
-          // });
+
+
+          this.listGroupEmployees = [];
+          this.listGroupManager = [];
+          this.listDeputyDirector = [];
+          this.listZones = [];
 
           data.groupsDropdown?.data?.forEach((day: any) => {
 
@@ -169,6 +183,10 @@ export class AddGroupComponent {
             this.listDeputyDirector.push({ name: day.name, key: day.id })
 
           });
+          data.GetForDropDownZones?.data?.forEach((day: any) => {
+            this.listZones.push({ name: day.name, key: day.id });
+          });
+
           this.loading = false;
 
           if (this.editGroups) {
@@ -181,7 +199,7 @@ export class AddGroupComponent {
                   this.getControl("fieldDisabled")?.setValue(data.code);
                   this.getControl("groupName")?.setValue(data.name);
 
-
+                  debugger;
                   this.groupsService.GetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.managerId }).subscribe(dataDropdown => {
                     this.listGroupManager = [];
                     dataDropdown.data?.forEach((list: any) => {
@@ -242,7 +260,20 @@ export class AddGroupComponent {
                   });
 
 
+                  data?.zoneIds?.forEach((zone: any) => {
 
+                    let indexZones = this.listZones.findIndex(list => list.key === zone);
+
+
+                    if (indexZones >= 0) {
+                      if (Array.isArray(this.getControl("zoneIds")?.value)) {
+                        this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }, ...this.getControl("zoneIds")?.value]));
+                      } else {
+                        this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }]));
+                      }
+                    }
+
+                  });
 
 
                   this.loading = false;
@@ -337,6 +368,27 @@ export class AddGroupComponent {
 
         }
         break;
+      case 'zoneIds':
+        if (data || data === "") {
+          if (data !== this.lastSearchQuery) {
+            this.lastSearchQuery = data;
+            this.sectionsService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+              debounceTime(300),
+              distinctUntilChanged()).subscribe((res: any) => {
+                this.listZones = [];
+                res.data?.forEach((day: any) => {
+
+
+                  this.listZones.push({ name: day.name, key: day.id });
+
+                });
+
+
+              });
+          }
+
+        }
+        break;
 
       default:
         break;
@@ -348,7 +400,7 @@ export class AddGroupComponent {
 
   request() {
 
-    if (this.addBranchGroupForm.valid) {
+    if (this.addBranchGroupForm.valid && this.submitted) {
       this.submitted = false;
       this.submitClicked.emit(this.addBranchGroupForm.value);
       // this.dialogRef.close(true);

@@ -58,6 +58,11 @@ export class JustificationsService {
     return this.http.put<any>(`${environment.baseUrl}RequestJustification/Update`, formData)
 
   }
+  createJustification(formData: FormData) {
+
+    return this.http.post<any>(`${environment.baseUrl}RequestJustification/Create`, formData)
+
+  }
   jusificationTypeDropdown(filter: any) {
     let queryParams = new HttpParams();
 

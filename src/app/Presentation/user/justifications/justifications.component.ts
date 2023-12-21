@@ -318,52 +318,103 @@ export class JustificationsComponent {
     this.filteration = { ...this.filteration, PageNumber: event.page };
     this.getJustifications(this.filteration)
   }
+
   requestJustification() {
-    const dialogRefAddCurrency = this.dialog.open(RequestJustificationComponent, {
+    const dialogRefAddCurrency = this.dialog.open(RequestForJustificationComponent, {
       width: "50vw",
       data: {
-        title: "طلب تبرير",
+        title: "طلب التبرير",
         setAsNecessary: "تعيين كضرورية",
-        titleDropdownOne: "نوع التبرير <span class='color-red'>*</span>",
-        placeholderDropdown: " برجاء اختيار نوع التبرير",
-        titleCalendar: "تاريخ التبرير <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ التبرير",
+        titlePermissionTypeId: "نوع التبرير <span class='color-red'>*</span>",
+        placeholderPermissionTypeId: " برجاء اختيار نوع التبرير",
+        PermissionTypeIdValidation: "نوع التبرير مطلوب",
+        titleCalendar: "تاريخ الاجازة <span class='color-red'>*</span>",
+        placeholderCalendar: "تاريخ الاجازة",
+        titleNotes: "الملاحظات <span class='color-red'>*</span>",
+        placeholdeNotes: "الملاحظات",
+        NotesValidation: "الملاحظات مطلوب",
+
+        dateTaskValidation: "تاريخ الاجازة مطلوب",
         labelRadioButton: "صاحب الطلب",
         firstRadio: "لنفسي",
         secondRadio: "لموظف",
-        timeAttendance: "وقت الحضور <span class='color-red'>*</span>",
-        placeholdertimeAttendance: "وقت الحضور",
+        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
+        placeholderEmployeeId: "الموظف",
+        EmployeeIdValidation: "الموظف مطلوب",
         uploadFile: "ارفاق ملف",
         chooseLabel: "اختار الملف ليتم رفعه",
-        titleNotes: "ملاحظات",
-        placeholdeNotes: "برجاء كتابة الملاحظات هنا",
         buttonSend: "إرسال الطلب"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    // dialogRefAddCurrency.componentInstance.list = this.categories;
+    dialogRefAddCurrency.componentInstance.editjustification = false;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      dialogRefAddCurrency.close();
+      let formData = new FormData();
+      if (result.ForEmployee) {
+        formData.append("CreateRequestJustificationModelString", JSON.stringify({
+          IsNecessary: result.IsNecessary,
+          ForEmployee: result.ForEmployee,
+          EmployeeId: result.EmployeeId.key,
+          JustificationTypeId: result.JustificationTypeId.key,
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY")
+        }));
 
-      const succressDialog = this.dialog.open(ToastSuccessComponent, {
-        width: "30vw",
-        data: {
-          title: "تم ارسال طلبك",
-          message: "طلبك في انتظار الموافقة، ويمكنك متابعة حالة الطلب من صفحة التبريرات",
-          buttonSend: "طلبات التبريرات"
-        },
+      } else {
+        formData.append("CreateRequestJustificationModelString", JSON.stringify({
+          IsNecessary: result.IsNecessary,
+          ForEmployee: result.ForEmployee,
+          JustificationTypeId: result.JustificationTypeId.key,
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY")
+
+        }));
+      }
+      result.files.forEach((file: any) => {
+        if (file.detailsImage === false) {
+          formData.append("Attachments", file.fileUpload, file.fileUpload.name);
+        }
       });
-      setTimeout(() => {
-        succressDialog.close();
-
-      }, 2000);
-      succressDialog.componentInstance.submitted = true;
-      succressDialog.componentInstance.submitClicked.subscribe(result => {
-        succressDialog.close();
-
-      })
       dialogRefAddCurrency.componentInstance.submitted = false;
+
+      this.justificationsService.createJustification(formData).subscribe(
+        {
+          next: (data: any) => {
+
+
+            dialogRefAddCurrency.componentInstance.submitted = true;
+
+            dialogRefAddCurrency.close();
+
+            const succressDialog = this.dialog.open(ToastSuccessComponent, {
+              width: "30vw",
+              data: {
+                title: "تم ارسال طلبك",
+                message: data.message,
+                buttonSend: "طلبات التبريرات"
+
+              },
+            });
+            this.getJustifications(this.filteration);
+
+            setTimeout(() => {
+              succressDialog.close();
+
+            }, 2000);
+            succressDialog.componentInstance.submitted = true;
+            succressDialog.componentInstance.submitClicked.subscribe(result => {
+              succressDialog.close();
+            })
+
+          },
+          error: (err: any) => {
+
+            dialogRefAddCurrency.componentInstance.submitted = true;
+
+          }
+        }
+      )
     });
     dialogRefAddCurrency.afterClosed().subscribe(result => {
       if (result) {

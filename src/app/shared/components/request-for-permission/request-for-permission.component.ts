@@ -329,7 +329,7 @@ export class RequestForPermissionComponent {
 
 
 
-    if (this.addBranchGroupForm.valid && !this.dateTaskMultiple) {
+    if (this.addBranchGroupForm.valid && !this.dateTaskMultiple && this.submitted) {
       this.submitted = false;
       this.submitClicked.emit({ ...this.addBranchGroupForm.value, files: this.AttachmentsFiles });
       // this.dialogRef.close(true);

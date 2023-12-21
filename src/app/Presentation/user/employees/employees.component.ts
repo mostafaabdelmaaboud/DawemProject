@@ -646,7 +646,6 @@ export class EmployeesComponent {
             })
           },
           error: err => {
-            dialogRefAddCurrency.close();
             dialogRefAddCurrency.componentInstance.submitted = true;
 
           }

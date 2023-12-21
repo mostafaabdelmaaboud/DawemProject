@@ -283,6 +283,7 @@ export class VacationsComponent {
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editVacation = false;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+
       let formData = new FormData();
       if (result.ForEmployee) {
         formData.append("CreateRequestVacationModelString", JSON.stringify({
