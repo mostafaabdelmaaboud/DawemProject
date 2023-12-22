@@ -179,13 +179,10 @@
   width: 100%;
 }
 
-:host ::ng-deep .p-multiselect {
-  width: 100%;
-}
-
-:host ::ng-deep .p-multiselect .p-multiselect-label.p-placeholder,
-:host ::ng-deep .p-multiselect-label {
-  font-family: "Cairo";
+:host .container-radio-button {
+  .mat-mdc-radio-group {
+    margin: 0 -25px
+  }
 }
 
 :host ::ng-deep .p-fileupload .p-fileupload-row>div {

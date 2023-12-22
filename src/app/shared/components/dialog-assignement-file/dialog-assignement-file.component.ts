@@ -13,6 +13,9 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EmployeesService } from 'src/app/Presentation/user/employees/services/employees.service';
 import * as moment from 'moment';
+import { VacationsService } from 'src/app/Presentation/user/vacations/services/vacations.service';
+import { PermissionsService } from 'src/app/Presentation/user/permissions/services/permissions.service';
+import { AssignmentsService } from 'src/app/Presentation/user/assignments/services/assignments.service';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -44,12 +47,14 @@ interface UploadEvent {
 })
 export class DialogAssignementFileComponent {
   loading = false;
-  private employeesService = inject(EmployeesService);
+  private assignmentsService = inject(AssignmentsService);
 
   @Input() submitted!: boolean;
   info!: any;
   @Input() id!: any;
+  AttachmentsFiles: any[] = [];
 
+  private employeesService = inject(EmployeesService);
 
   constructor(
     public dialogRef: MatDialogRef<DialogAssignementFileComponent>,
@@ -63,19 +68,35 @@ export class DialogAssignementFileComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.loading = true;
-    this.loading = false;
 
     if (this.id) {
 
-      // this.employeesService.employeeGetInfo({ employeeId: this.id }).subscribe(data => {
+      this.assignmentsService.assignmentGetInfo({ requestId: this.id }).subscribe(
+        {
 
+          next: data => {
+            this.info = data;
+            if (this.info?.attachments.length) {
+              this.info?.attachments.forEach((attachment: any) => {
+                this.employeesService.downloadImage(attachment.filePath).subscribe(response => {
+                  const blob = new Blob([response]);
+                  const file = new File([blob], attachment.fileName);
 
-      //   this.info = data;
-      //   this.info.joiningDate = moment(new Date(this.info.joiningDate)).format("MM/DD/YYYY")
-      //   this.loading = false;
+                  this.AttachmentsFiles.push({ imageSrc: attachment.filePath, fileUpload: file, detailsImage: true });
+                });
+              });
+            }
+            this.info.dateFrom = moment(new Date(this.info.dateFrom)).format("MM/DD/YYYY");
+            this.info.dateFrom = moment(new Date(this.info.dateTo)).format("MM/DD/YYYY");
 
-      // })
-      //   this.loading = false;
+            this.loading = false;
+
+          },
+          error: err => {
+            this.loading = false;
+
+          }
+        })
 
     }
   }

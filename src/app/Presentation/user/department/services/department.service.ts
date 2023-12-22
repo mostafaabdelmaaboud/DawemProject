@@ -9,16 +9,16 @@ import { environment } from 'src/environments/environment';
 export class DepartmentService {
 
   constructor(private http: HttpClient) { }
-  listDepartment(filter: any): Observable<any> {
+  listAttendance(filter: any): Observable<any> {
     let queryParams = new HttpParams();
     if (filter) {
       Object.entries(filter).forEach(([key, value]: any) => {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}Department/Get`, { params: queryParams })
+    return this.http.get<any>(`${environment.baseUrl}EmployeeAttendance/GetAttendances`, { params: queryParams })
   }
-  deleteDepartment(params: any) {
+  deleteAttendance(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {

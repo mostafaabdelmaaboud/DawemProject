@@ -168,8 +168,6 @@ export class DialogAddAnEmployeeComponent {
       this.sectionList = [];
       this.workScheduleList = [];
       this.listDirectManager = [];
-
-      debugger;
       data.employeeForDropDown?.data?.forEach((jobTitle: any) => {
         this.listDirectManager.push({ name: jobTitle.name, key: jobTitle.id })
       });

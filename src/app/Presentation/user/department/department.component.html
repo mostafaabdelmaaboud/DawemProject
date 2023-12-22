@@ -124,7 +124,7 @@
     [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
     currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
               'orderNumber',
-              'employeeName.name',
+              'name',
               'typeOfRequest',
               'date',
               'time' ]">
@@ -246,7 +246,7 @@
                                   </ng-container>
 
                                 </td> -->
-          <ng-container *ngIf="column.field != 'employeeName' && column.field != 'actions'">
+          <ng-container *ngIf="column.field != 'actions'">
             <td>
               <span class="p-column-title">
                 {{column.name}}
@@ -254,17 +254,7 @@
               {{ rowData[column.field] }}
             </td>
           </ng-container>
-          <td *ngIf="column.field === 'employeeName'">
-            <span class="p-column-title">
-              {{column.name}}
-            </span>
-            <span>
-              <img [src]="rowData[column.field]['img']" width="32" height="32" [alt]="rowData[column.field]['alt']">
 
-              {{ rowData[column.field]['name'] }}
-            </span>
-
-          </td>
 
           <td *ngIf="column.field === 'actions'">
             <span class="p-column-title">

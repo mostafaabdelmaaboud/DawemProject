@@ -193,13 +193,9 @@ export class AddGroupComponent {
             this.groupsService.groupGetById({ groupId: this.id }).subscribe(
               {
                 next: data => {
-
-
                   this.getControl("isActive")?.setValue(data.isActive);
                   this.getControl("fieldDisabled")?.setValue(data.code);
                   this.getControl("groupName")?.setValue(data.name);
-
-                  debugger;
                   this.groupsService.GetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.managerId }).subscribe(dataDropdown => {
                     this.listGroupManager = [];
                     dataDropdown.data?.forEach((list: any) => {

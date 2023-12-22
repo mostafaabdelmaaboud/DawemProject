@@ -38,7 +38,7 @@ export class DepartmentComponent {
     },
     {
       name: "اسم الموظف",
-      field: "employeeName",
+      field: "name",
     },
     {
       name: "التاريخ",
@@ -170,28 +170,23 @@ export class DepartmentComponent {
   getDepartment(filteration: any) {
     this.department = [];
     this.isLoading = true;
-    this.departmentService.listDepartment(filteration).subscribe(data => {
-      data.data.forEach((employee: any) => {
+    this.departmentService.listAttendance(filteration).subscribe(data => {
+      data.data.employeeAttendances.forEach((attendacne: any) => {
         this.department.push({
-          id: employee.id,
-          orderNumber: employee.code,
-          employeeName: {
-            name: employee.name,
-            alt: employee.name,
-            img: employee.profileImagePath ? employee.profileImagePath : "../../../../assets/img/5034901-200.png"
-          },
-          date: "12/10/2023",
-          audience: "11:08 ص",
-          dismissing: "05:00 م",
-          status: "متأخر",
-          timeGap: "0",
-          zone: "12585",
-
+          id: attendacne.id,
+          orderNumber: attendacne.id,
+          name: attendacne.employeeName,
+          date: moment(new Date(attendacne.date)).format("MM/DD/YYYY"),
+          audience: attendacne.checkInTime.replaceAll(' ', '') ? attendacne.checkInTime : "لا يوجد",
+          dismissing: attendacne.checkOutTime.replaceAll(' ', '') ? attendacne.checkOutTime : "لا يوجد",
+          status: attendacne.status,
+          timeGap: attendacne.timeGap,
+          zone: attendacne.zoneName
         })
       });
 
 
-      this.totalItems = data.totalCount
+      this.totalItems = data.data.totalCount
       this.isLoading = false;
     })
   }
@@ -331,21 +326,21 @@ export class DepartmentComponent {
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
-      this.departmentService.deleteDepartment({ departmentid: data.id }).subscribe(
-        {
-          next: res => {
+      // this.departmentService.deleteAttendance({ departmentid: data.id }).subscribe(
+      //   {
+      //     next: res => {
 
-            this.toast.success(res.message);
-            reasonOfRefuseDialog.componentInstance.submitted = true;
-            this.getDepartment(this.filteration);
-            reasonOfRefuseDialog.close();
-          },
-          error: err => {
-            reasonOfRefuseDialog.componentInstance.submitted = true;
+      //       this.toast.success(res.message);
+      //       reasonOfRefuseDialog.componentInstance.submitted = true;
+      //       this.getDepartment(this.filteration);
+      //       reasonOfRefuseDialog.close();
+      //     },
+      //     error: err => {
+      //       reasonOfRefuseDialog.componentInstance.submitted = true;
 
-          }
-        }
-      )
+      //     }
+      //   }
+      // )
 
     })
   }
