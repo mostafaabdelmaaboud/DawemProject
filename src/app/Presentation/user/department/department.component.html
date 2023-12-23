@@ -7,13 +7,13 @@
 
   </div>
 </div>
-<div class="cards-dashboard">
-  <div class="row">
+<div class="cards-dashboard position-relative">
+  <div class="row" *ngIf="!spinnerCards">
     <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Success-700">إجمالي حضور اليوم</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">318</span>
+          <span class="number-card-dashboard">{{cards?.dayTotalAttendanceCount}}</span>
           <span class="icon-card-dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
               <g opacity="0.2">
@@ -33,7 +33,7 @@
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Primary-700">إجمالي اجازات اليوم</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">12</span>
+          <span class="number-card-dashboard">{{cards?.dayTotalVacationsCount}}</span>
           <span class="icon-card-dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
               <g opacity="0.2">
@@ -66,7 +66,7 @@
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Error-700">إجمالي غياب اليوم</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">8</span>
+          <span class="number-card-dashboard">{{cards?.dayTotalAbsencesCount}}</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
             <g opacity="0.2">
               <path opacity="0.5"
@@ -90,7 +90,7 @@
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Warning-700 ">إجمالي تأخيرات اليوم</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">13</span>
+          <span class="number-card-dashboard">{{cards?.dayTotalDelaysCount}}</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
             <g opacity="0.2">
               <path opacity="0.4"
@@ -109,7 +109,9 @@
 
 
   </div>
-
+  <div class="spinner spinner-cards d-flex justify-content-center align-items-center" *ngIf="spinnerCards">
+    <mat-spinner></mat-spinner>
+  </div>
 
 </div>
 <div class="table-basic">

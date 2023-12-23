@@ -103,6 +103,9 @@ export class EmployeesComponent {
   opened = false;
   private _mobileQueryListener: () => void;
   private employeesService = inject(EmployeesService);
+  cards!: any;
+
+  spinnerCards = false;
 
   constructor(
     private config: PrimeNGConfig, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
@@ -165,6 +168,8 @@ export class EmployeesComponent {
         this.listDirectManager.push({ name: jobTitle.name, key: jobTitle.id })
       });
     })
+    this.getInformation();
+
     this.getEmployees(this.filteration);
     this.getListDepartment();
     this.getListSchedules();
@@ -172,6 +177,22 @@ export class EmployeesComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
+  }
+  getInformation() {
+    this.spinnerCards = true;
+    this.employeesService.getInformation().subscribe({
+      next: data => {
+        this.cards = {
+          ...data
+        };
+        this.spinnerCards = false;
+
+      },
+      error: err => {
+        this.spinnerCards = false;
+
+      }
+    })
   }
   mathRound(data: any) {
     return Math.ceil(data)

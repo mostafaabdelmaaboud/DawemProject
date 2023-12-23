@@ -7,13 +7,13 @@
 
   </div>
 </div>
-<div class="cards-dashboard">
-  <div class="row">
+<div class="cards-dashboard position-relative">
+  <div class="row" *ngIf="!spinnerCards">
     <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
       <div class="custom-card-dashboard">
-        <span class="title-card-dashboard Primary-700">اجمالي انواع المهمات</span>
+        <span class="title-card-dashboard Primary-700"> اجمالي انواع المهمات</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">320</span>
+          <span class="number-card-dashboard">{{cards?.totalCount}}</span>
           <span class="icon-card-dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
               <g opacity="0.2">
@@ -34,27 +34,9 @@
     </div>
     <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
       <div class="custom-card-dashboard">
-        <span class="title-card-dashboard Warning-700 ">انواع المهمات المنتظرة</span>
+        <span class="title-card-dashboard Success-700"> انواع المهمات النشطة</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">400</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
-            <g opacity="0.2">
-              <path opacity="0.4"
-                d="M31.9999 58.8117C46.7275 58.8117 58.6666 46.8726 58.6666 32.145C58.6666 17.4174 46.7275 5.47833 31.9999 5.47833C17.2723 5.47833 5.33325 17.4174 5.33325 32.145C5.33325 46.8726 17.2723 58.8117 31.9999 58.8117Z"
-                fill="#F59E0B" />
-              <path fill-rule="evenodd" clip-rule="evenodd"
-                d="M32 19.4783C33.1046 19.4783 34 20.3738 34 21.4783V31.3166L40.0809 37.3975C40.8619 38.1785 40.8619 39.4448 40.0809 40.2259C39.2998 41.0069 38.0335 41.0069 37.2525 40.2259L30.5858 33.5592C30.2107 33.1841 30 32.6754 30 32.145V21.4783C30 20.3738 30.8954 19.4783 32 19.4783Z"
-                fill="#F59E0B" />
-            </g>
-          </svg>
-        </div>
-      </div>
-    </div>
-    <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
-      <div class="custom-card-dashboard">
-        <span class="title-card-dashboard Success-700">انواع المهمات المقبولة</span>
-        <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">150</span>
+          <span class="number-card-dashboard">{{cards?.activeCount}}</span>
           <span class="icon-card-dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
               <g opacity="0.2">
@@ -75,9 +57,28 @@
     </div>
     <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
       <div class="custom-card-dashboard">
-        <span class="title-card-dashboard Error-700">انواع المهمات المرفوضة</span>
+        <span class="title-card-dashboard Warning-700 "> انواع المهمات المعلقة </span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">130</span>
+          <span class="number-card-dashboard">{{cards?.notActiveCount}}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
+            <g opacity="0.2">
+              <path opacity="0.4"
+                d="M31.9999 58.8117C46.7275 58.8117 58.6666 46.8726 58.6666 32.145C58.6666 17.4174 46.7275 5.47833 31.9999 5.47833C17.2723 5.47833 5.33325 17.4174 5.33325 32.145C5.33325 46.8726 17.2723 58.8117 31.9999 58.8117Z"
+                fill="#F59E0B" />
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M32 19.4783C33.1046 19.4783 34 20.3738 34 21.4783V31.3166L40.0809 37.3975C40.8619 38.1785 40.8619 39.4448 40.0809 40.2259C39.2998 41.0069 38.0335 41.0069 37.2525 40.2259L30.5858 33.5592C30.2107 33.1841 30 32.6754 30 32.145V21.4783C30 20.3738 30.8954 19.4783 32 19.4783Z"
+                fill="#F59E0B" />
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
+      <div class="custom-card-dashboard">
+        <span class="title-card-dashboard Error-700">انواع المهمات المعطلة</span>
+        <div class="body-card-dashboard d-flex align-items-center justify-content-between">
+          <span class="number-card-dashboard">{{cards?.deletedCount}}</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
             <g opacity="0.2">
               <path opacity="0.5"
@@ -91,6 +92,9 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="spinner spinner-cards d-flex justify-content-center align-items-center" *ngIf="spinnerCards">
+    <mat-spinner></mat-spinner>
   </div>
 </div>
 <div class="table-basic">

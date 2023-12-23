@@ -72,6 +72,8 @@ export class TaskTypeComponent {
   RowsPerPage!: any[];
   mobileQuery: MediaQueryList;
   opened = false;
+  cards!: any;
+  spinnerCards = false;
   private _mobileQueryListener: () => void;
   private taskTypeService = inject(TaskTypeService);
   list: any[] = [
@@ -135,9 +137,26 @@ export class TaskTypeComponent {
       { name: '10', code: 10 },
       { name: '25', code: 25 },
     ];
+    this.getInformation();
+
     this.getTasks(this.filteration);
   }
+  getInformation() {
+    this.spinnerCards = true;
+    this.taskTypeService.getInformation().subscribe({
+      next: data => {
+        this.cards = {
+          ...data
+        };
+        this.spinnerCards = false;
 
+      },
+      error: err => {
+        this.spinnerCards = false;
+
+      }
+    })
+  }
   getTasks(filteration: any) {
     this.tasks = [];
     this.isLoading = true;

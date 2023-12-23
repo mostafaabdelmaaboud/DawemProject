@@ -19,6 +19,10 @@ export class PermissionTypeService {
     }
     return this.http.get<any>(`${environment.baseUrl}PermissionType/Get`, { params: queryParams })
   }
+  getInformation(): Observable<any> {
+
+    return this.http.get<any>(`${environment.baseUrl}PermissionType/GetPermissionTypesInformations`).pipe(map(data => data.data));
+  }
   deletePermission(params: any) {
     let queryParams = new HttpParams();
 

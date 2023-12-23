@@ -19,6 +19,10 @@ export class TaskTypeService {
     }
     return this.http.get<any>(`${environment.baseUrl}TaskType/Get`, { params: queryParams })
   }
+  getInformation(): Observable<any> {
+
+    return this.http.get<any>(`${environment.baseUrl}TaskType/GetTaskTypesInformations`).pipe(map(data => data.data));
+  }
   deleteTask(params: any) {
     let queryParams = new HttpParams();
 

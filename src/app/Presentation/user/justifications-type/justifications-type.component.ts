@@ -81,6 +81,8 @@ export class JustificationsTypeComponent {
   RowsPerPage!: any[];
   mobileQuery: MediaQueryList;
   opened = false;
+  cards!: any;
+  spinnerCards = false;
   private _mobileQueryListener: () => void;
   private justificationsTypeService = inject(JustificationsTypeService);
   list: any[] = [
@@ -144,9 +146,26 @@ export class JustificationsTypeComponent {
       { name: '10', code: 10 },
       { name: '25', code: 25 },
     ];
+    this.getInformation();
+
     this.getJustifications(this.filteration);
   }
+  getInformation() {
+    this.spinnerCards = true;
+    this.justificationsTypeService.getInformation().subscribe({
+      next: data => {
+        this.cards = {
+          ...data
+        };
+        this.spinnerCards = false;
 
+      },
+      error: err => {
+        this.spinnerCards = false;
+
+      }
+    })
+  }
   getJustifications(filteration: any) {
     this.justifications = [];
     this.isLoading = true;

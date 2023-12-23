@@ -18,6 +18,10 @@ export class ShiftsService {
     }
     return this.http.get<any>(`${environment.baseUrl}ShiftWorkingTime/Get`, { params: queryParams })
   }
+  getInformation(): Observable<any> {
+
+    return this.http.get<any>(`${environment.baseUrl}ShiftWorkingTime/GetShiftWorkingTimesInformations`).pipe(map(data => data.data));
+  }
   deleteShift(params: any) {
     let queryParams = new HttpParams();
 

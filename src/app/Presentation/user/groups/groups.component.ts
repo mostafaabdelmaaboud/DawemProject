@@ -87,6 +87,8 @@ export class GroupsComponent {
   RowsPerPage!: any[];
   mobileQuery: MediaQueryList;
   opened = false;
+  cards!: any;
+  spinnerCards = false;
   private _mobileQueryListener: () => void;
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
     this.date = new Date();
@@ -143,12 +145,29 @@ export class GroupsComponent {
       { name: '25', code: 25 },
 
     ];
+    this.getInformation();
+
     this.getGroups(this.filteration);
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
   }
+  getInformation() {
+    this.spinnerCards = true;
+    this.groupsService.getInformation().subscribe({
+      next: data => {
+        this.cards = {
+          ...data
+        };
+        this.spinnerCards = false;
 
+      },
+      error: err => {
+        this.spinnerCards = false;
+
+      }
+    })
+  }
   getGroups(filteration: any) {
     this.groups = [];
     this.isLoading = true;

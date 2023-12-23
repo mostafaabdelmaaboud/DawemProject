@@ -1,0 +1,210 @@
+<div class="container-Dialog">
+  <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+    <h3 class="title-Dialog m-0">
+      {{data!['title']|translate}}
+
+    </h3>
+    <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+      <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+      <i class="pi pi-times-circle"></i>
+    </button>
+  </header>
+  <div class="body-dialog p-15 f-s-16">
+    <form [formGroup]="addBranchGroupForm">
+      <div class="section1 mb-3">
+        <label class="title">{{data!['setAsActive']|translate}}</label>
+        <p-inputSwitch formControlName="isActive"></p-inputSwitch>
+      </div>
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12">
+            <ng-container *ngIf="editSchedualPlan">
+              <div class="field-disabled mb-3 readOnly">
+                <label for="" class="label-input mb-2" [innerHTML]="data!['titleFieldDisabled']|translate"></label>
+                <div class="content-password">
+                  <input type="text" pInputText formControlName="fieldDisabled" [readOnly]="true"
+                    [placeholder]="data!['placeholdeieldDisabled']|translate" class="w-100" />
+                </div>
+              </div>
+            </ng-container>
+
+            <div class="sectionFive mb-3">
+              <label class="title">{{data!['labelRadioButton']|translate}}</label>
+
+              <div class="container-radio-button">
+                <mat-radio-group aria-label="Select an option" color="primary" formControlName="SchedulePlanType">
+                  <mat-radio-button value="0">{{data!['firstRadio']|translate}}
+                  </mat-radio-button>
+                  <mat-radio-button value="1">{{data!['secondRadio']|translate}}</mat-radio-button>
+                  <mat-radio-button value="2">{{data!['thirdRadio']|translate}}</mat-radio-button>
+
+                </mat-radio-group>
+              </div>
+
+            </div>
+
+
+            <div class="sectionTwo mb-3" *ngIf="employeeIdToggle">
+              <label class="title">{{data!['titleEmployeeId']|translate}} <span class="color-red">*</span></label>
+              <div class="content-password">
+                <p-dropdown appendTo="body" formControlName="EmployeeId" appendTo="body" [options]="listEmployeeId"
+                  [placeholder]="data!['placeholdeEmployeeId']|translate" optionLabel="name">
+                  <ng-template pTemplate="header">
+                    <span class="p-input-icon-left input-search-dropdown">
+
+                      <i class="pi pi-search" (click)="searchDropdown(searchEmployeeId, 'EmployeeId')"></i>
+                      <input type="text" placeholder="بحث" pInputText #searchEmployeeId />
+                    </span>
+                  </ng-template>
+                  <ng-template let-option pTemplate="item">
+                    {{ option.name }}
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('EmployeeId')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('EmployeeId')?.hasError('required') && getControl('EmployeeId')?.dirty">
+                  {{data!['ValidationEmployeeId']|translate}}
+
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+            <div class="sectionTwo mb-3" *ngIf="groupIdToggle">
+              <label class="title">{{data!['titleGroupId']|translate}} <span class="color-red">*</span></label>
+              <div class="content-password">
+                <p-dropdown appendTo="body" formControlName="GroupId" appendTo="body" [options]="listGroupId"
+                  [placeholder]="data!['placeholdeGroupId']|translate" optionLabel="name">
+                  <ng-template pTemplate="header">
+                    <span class="p-input-icon-left input-search-dropdown">
+
+                      <i class="pi pi-search" (click)="searchDropdown(searchGroupId, 'GroupId')"></i>
+                      <input type="text" placeholder="بحث" pInputText #searchGroupId />
+                    </span>
+                  </ng-template>
+                  <ng-template let-option pTemplate="item">
+                    {{ option.name }}
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('GroupId')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('GroupId')?.hasError('required') && getControl('GroupId')?.dirty">
+                  {{data!['ValidationGroupId']|translate}}
+
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+            <div class="sectionTwo mb-3" *ngIf="departmentIdToggle">
+              <label class="title">{{data!['titleDepartmentId']|translate}} <span class="color-red">*</span></label>
+              <div class="content-password">
+                <p-dropdown appendTo="body" formControlName="DepartmentId" appendTo="body" [options]="listDepartmentId"
+                  [placeholder]="data!['placeholdeDepartmentId']|translate" optionLabel="name">
+                  <ng-template pTemplate="header">
+                    <span class="p-input-icon-left input-search-dropdown">
+
+                      <i class="pi pi-search" (click)="searchDropdown(searchDepartmentId, 'DepartmentId')"></i>
+                      <input type="text" placeholder="بحث" pInputText #searchDepartmentId />
+                    </span>
+                  </ng-template>
+                  <ng-template let-option pTemplate="item">
+                    {{ option.name }}
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('DepartmentId')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('DepartmentId')?.hasError('required') && getControl('DepartmentId')?.dirty">
+                  {{data!['ValidationDepartmentId']|translate}}
+
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+
+            <div class="sectionTwo mb-3">
+              <label class="title">{{data!['titleScheduleId']|translate}} <span class="color-red">*</span></label>
+              <div class="content-password">
+                <p-dropdown appendTo="body" formControlName="ScheduleId" appendTo="body" [options]="listScheduleId"
+                  [placeholder]="data!['placeholdeScheduleId']|translate" optionLabel="name">
+                  <ng-template pTemplate="header">
+                    <span class="p-input-icon-left input-search-dropdown">
+
+                      <i class="pi pi-search" (click)="searchDropdown(searchScheduleId, 'ScheduleId')"></i>
+                      <input type="text" placeholder="بحث" pInputText #searchScheduleId />
+                    </span>
+                  </ng-template>
+                  <ng-template let-option pTemplate="item">
+                    {{ option.name }}
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('ScheduleId')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('ScheduleId')?.hasError('required') && getControl('ScheduleId')?.dirty">
+                  {{data!['ValidationScheduleId']|translate}}
+
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+            <div class="sectionFive  mb-3">
+              <div class="sectionThree">
+                <label class="title" [innerHTML]="data!['titleCalendar']|translate"></label>
+                <div class="content-password">
+                  <div class="content-pCalendar-default" dir="ltr">
+                    <p-calendar formControlName="DateFrom" appendTo="body"
+                      [placeholder]="data!['placeholderCalendar']|translate" [showIcon]="true"></p-calendar>
+                  </div>
+                </div>
+                <!--Start Custom Validators-->
+                <div class="container-alerts mt-2" *ngIf="getControl('DateFrom')?.errors">
+                  <div class="alert alert-danger"
+                    *ngIf="getControl('DateFrom')?.hasError('required') && getControl('DateFrom')?.dirty">
+                    {{data!['validationCalendar']|translate}}
+                  </div>
+                </div>
+                <!--End Custom Validators-->
+              </div>
+            </div>
+            <div class="sectionFive mb-3">
+              <label for="" class="label-input mb-2" [innerHTML]="data!['titleNotes']|translate"></label>
+              <div class="content-password">
+                <input type="text" pInputText formControlName="notes" [placeholder]="data!['placeholdeNotes']|translate"
+                  class="w-100" />
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('notes')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('notes')?.hasError('required') && getControl('notes')?.dirty">
+                  {{data!['ValidationNotes']|translate}}
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+
+
+          </div>
+
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <footer class="footer-dialog p-15 d-flex justify-content-end">
+    <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+      (click)="request()">{{submitted
+      ?
+      (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+    <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
+      (click)="close()">{{data!['titleClose']|translate}}</button>
+  </footer>
+</div>
+<div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>

@@ -77,6 +77,8 @@ export class VacationTypeComponent {
   RowsPerPage!: any[];
   mobileQuery: MediaQueryList;
   opened = false;
+  cards!: any;
+  spinnerCards = false;
   private _mobileQueryListener: () => void;
   private vacationTypeService = inject(VacationTypeService);
   list: any[] = [
@@ -140,9 +142,26 @@ export class VacationTypeComponent {
       { name: '10', code: 10 },
       { name: '25', code: 25 },
     ];
+    this.getInformation();
+
     this.getVacations(this.filteration);
   }
+  getInformation() {
+    this.spinnerCards = true;
+    this.vacationTypeService.getInformation().subscribe({
+      next: data => {
+        this.cards = {
+          ...data
+        };
+        this.spinnerCards = false;
 
+      },
+      error: err => {
+        this.spinnerCards = false;
+
+      }
+    })
+  }
   getVacations(filteration: any) {
     this.vacations = [];
     this.isLoading = true;

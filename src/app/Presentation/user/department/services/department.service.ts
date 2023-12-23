@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -17,6 +17,10 @@ export class DepartmentService {
       })
     }
     return this.http.get<any>(`${environment.baseUrl}EmployeeAttendance/GetAttendances`, { params: queryParams })
+  }
+  getInformation(): Observable<any> {
+
+    return this.http.get<any>(`${environment.baseUrl}EmployeeAttendance/GetEmployeesAttendancesInformations`).pipe(map(data => data.data));
   }
   deleteAttendance(params: any) {
     let queryParams = new HttpParams();

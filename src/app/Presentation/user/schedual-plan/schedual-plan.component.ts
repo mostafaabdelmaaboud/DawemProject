@@ -13,44 +13,46 @@ import { AddShiftComponent } from 'src/app/shared/components/add-shift/add-shift
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
 import { EditShiftComponent } from 'src/app/shared/components/edit-shift/edit-shift.component';
 import { DeleteShiftComponent } from 'src/app/shared/components/delete-shift/delete-shift.component';
-import { AddTableComponent } from 'src/app/shared/components/add-table/add-table.component';
-import { EditTableComponent } from 'src/app/shared/components/edit-table/edit-table.component';
-import { SchedulesService } from './services/schedules.service';
+import { AddGroupComponent } from 'src/app/shared/components/add-group/add-group.component';
+import { EditGroupComponent } from 'src/app/shared/components/edit-group/edit-group.component';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { DialogScheduleFileComponent } from 'src/app/shared/components/dialog-schedule-file/dialog-schedule-file.component';
+import { DialogGroupFileComponent } from 'src/app/shared/components/dialog-group-file/dialog-group-file.component';
+import { SchedualPlanService } from './services/schedual-plan.service';
+import { AddSchedualPlanComponent } from 'src/app/shared/components/add-schedual-plan/add-schedual-plan.component';
+import { DialogSchedulePlanFileComponent } from 'src/app/shared/components/dialog-schedule-plan-file/dialog-schedule-plan-file.component';
 
 @Component({
-  selector: 'app-tables',
-  templateUrl: './tables.component.html',
-  styleUrls: ['./tables.component.scss']
+  selector: 'app-schedual-plan',
+  templateUrl: './schedual-plan.component.html',
+  styleUrls: ['./schedual-plan.component.scss']
 })
-export class TablesComponent {
+export class SchedualPlanComponent {
   date!: Date;
   arabic: any;
   subscription!: Subscription;
   itemsPerPage = 5;
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
-  private schedulesService = inject(SchedulesService);
+  private schedualPlanService = inject(SchedualPlanService);
 
 
   columns: any[] = [
     {
-      name: "رقم الجدول",
-      field: "tableNumber",
+      name: "رقم الجدولة",
+      field: "code",
     },
     {
-      name: "اسم الجدول",
-      field: "tableName",
+      name: "اسم الجدولة",
+      field: "scheduleName",
     },
     {
-      name: "موظفين الجدول",
-      field: "tableStaff"
+      name: "نوع الجدولة",
+      field: "schedulePlanTypeName"
     },
     {
-      name: "الملاحظات",
-      field: "notes"
+      name: "التاريخ",
+      field: "dateFrom"
     },
 
     {
@@ -59,7 +61,7 @@ export class TablesComponent {
     }
 
   ];
-  schedules: any = [];
+  schedualPlan: any = [];
 
   isLoading = true;
 
@@ -97,11 +99,11 @@ export class TablesComponent {
     this._mobileQueryListener = () => {
       if (this.mobileQuery.matches) {
         this.opened = true;
-        this.schedules = this.schedules;
+        this.schedualPlan = this.schedualPlan;
         changeDetectorRef.detectChanges();
       } else {
         this.opened = false;
-        this.schedules = this.schedules;
+        this.schedualPlan = this.schedualPlan;
 
         changeDetectorRef.detectChanges();
 
@@ -147,15 +149,16 @@ export class TablesComponent {
     ];
     this.getInformation();
 
-    this.getSchedules(this.filteration);
+    this.getGroups(this.filteration);
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
   }
   getInformation() {
     this.spinnerCards = true;
-    this.schedulesService.getInformation().subscribe({
+    this.schedualPlanService.getInformation().subscribe({
       next: data => {
+
         this.cards = {
           ...data
         };
@@ -168,19 +171,23 @@ export class TablesComponent {
       }
     })
   }
-  getSchedules(filteration: any) {
-    this.schedules = [];
+  getGroups(filteration: any) {
+    this.schedualPlan = [];
     this.isLoading = true;
-    this.schedulesService.listSchedules(filteration).subscribe(data => {
 
-      data.data.forEach((employee: any) => {
-        this.schedules.push({
-          id: employee.id,
-          tableNumber: employee.code,
-          tableName: employee.name,
-          tableStaff: employee.employeesNumber ? employee.employeesNumber : "لا يوجد",
-          notes: employee.notes ? employee.notes : "لا يوجد"
+    this.schedualPlanService.listSchedualPlan(filteration).subscribe(data => {
 
+      data.data.forEach((schedualPlan: any) => {
+
+
+        this.schedualPlan.push({
+          id: schedualPlan.id,
+          code: schedualPlan.code,
+          scheduleName: schedualPlan.scheduleName,
+          schedulePlanTypeName: schedualPlan.schedulePlanTypeName,
+          dateFrom: moment(new Date(schedualPlan.dateFrom)).format("MM/DD/YYYY"),
+
+          isActive: schedualPlan.isActive
         })
       });
       this.totalItems = data.totalCount
@@ -188,38 +195,70 @@ export class TablesComponent {
 
     })
   }
-  addTable() {
-    const dialogRefAddCurrency = this.dialog.open(AddTableComponent, {
-      width: "50vw",
+  addSchedualPlane() {
+    const dialogRefAddCurrency = this.dialog.open(AddSchedualPlanComponent, {
+      width: "70vw",
       data: {
-        title: "إضافة جدول",
-        titleTableName: "اسم الجدول <span class='color-red'>*</span>",
-        placeholdetableName: "اسم الجدول",
-        ValidationTableName: "اسم الجدول مطلوب",
+        title: "اضافه جدولة",
+        setAsActive: "تعيين كنشط",
+
+        titleDepartmentId: "نوع القسم",
+        placeholdeDepartmentId: "نوع القسم",
+        ValidationDepartmentId: "نوع القسم مطلوب",
+
+
+        labelRadioButton: "نوع الجدولة",
+        firstRadio: "لموظف",
+        secondRadio: "لجروب",
+        thirdRadio: "لقسم",
+
+        titleEmployeeId: "نوع الموظف",
+        placeholdeEmployeeId: "نوع الموظف",
+        ValidationEmployeeId: "نوع الموظف مطلوب",
+
+
+        titleScheduleId: "جدول الدوام",
+        placeholdeScheduleId: "جدول الدوام",
+        ValidationScheduleId: "جدول الدوام مطلوب",
+
+        titleCalendar: "التاريخ",
+        placeholderCalendar: "اختار التاريخ",
+        validationCalendar: "التاريخ مطلوب",
+
+        titleGroupId: "نواب الجروب",
+        placeholdeGroupId: "نواب الجروب",
+        ValidationGroupId: "نواب الجروب مطلوب",
+
+        titleNotes: "الملاحظات <span class='color-red'>*</span>",
+        placeholdeNotes: "الملاحظات",
+        ValidationNotes: "الملاحظات مطلةب",
+
         titleClose: "تراجع",
-        buttonSend: "إضافة الجدول"
+        buttonSend: "إضافة جدولة"
       },
     });
-
-
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editSchedule = false;
-
-    // dialogRefAddCurrency.componentInstance.list = this.categories;
+    dialogRefAddCurrency.componentInstance.editSchedualPlan = false;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-
-
       let formData: any = {};
-      formData.name = result.tableName;
-      formData.scheduleDays = [];
-      result?.weekDays?.forEach((day: any) => {
-        formData.scheduleDays.push({ WeekDay: day.weekDay, ShiftId: day.weekDayValue.key })
-      });
-      this.schedulesService.createSchedule(formData).subscribe(
+
+      formData.isActive = result.isActive;
+
+      formData.SchedulePlanType = Number(result.SchedulePlanType);
+      formData.EmployeeId = result.EmployeeId ? result.EmployeeId.key : null;
+      formData.GroupId = result.GroupId ? result.GroupId.key : null;
+      formData.DepartmentId = result.DepartmentId ? result.DepartmentId.key : null;
+      formData.ScheduleId = result.ScheduleId.key;
+      formData.DateFrom = moment(new Date(result.DateFrom)).format("DD/MM/YYYY");
+      formData.notes = result.notes;
+
+
+
+
+      this.schedualPlanService.createSchedualPlan(formData).subscribe(
         {
           next: data => {
-
 
 
             dialogRefAddCurrency.componentInstance.submitted = true;
@@ -231,10 +270,10 @@ export class TablesComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الموظفين"
+                buttonSend: "طلبات الجدولة"
               },
             });
-            this.getSchedules(this.filteration);
+            this.getGroups(this.filteration);
             setTimeout(() => {
               succressDialog.close();
 
@@ -260,45 +299,96 @@ export class TablesComponent {
       }
     });
   }
-  dialogScheduleFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogScheduleFileComponent, {
+  dialogGroupFile(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(DialogSchedulePlanFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف الجدول"
+        title: "ملف الجدولة"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id
   }
-  editTable(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddTableComponent, {
-      width: "50vw",
+  enabledRow(data: any) {
+
+    this.schedualPlanService.enabledSchedualPlan({ groupId: data.id }).subscribe(
+      {
+        next: res => {
+
+          this.toast.success(res.message);
+          this.getGroups(this.filteration);
+        },
+        error: err => {
+
+        }
+      }
+    )
+  }
+  editSchedualPlane(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(AddSchedualPlanComponent, {
+      width: "70vw",
       data: {
-        title: "تعديل الجدول",
-        titleTableName: "اسم الجدول <span class='color-red'>*</span>",
-        placeholdetableName: "اسم الجدول",
-        ValidationTableName: "اسم الجدول مطلوب",
-        code: "#001093",
+        title: "تعديل الجدولة",
+        setAsActive: "تعيين كنشط",
+
+        titleDepartmentId: "نوع القسم",
+        placeholdeDepartmentId: "نوع القسم",
+        ValidationDepartmentId: "نوع القسم مطلوب",
+
+
+        labelRadioButton: "نوع الجدولة",
+        firstRadio: "لموظف",
+        secondRadio: "لجروب",
+        thirdRadio: "لقسم",
+
+        titleEmployeeId: "نوع الموظف",
+        placeholdeEmployeeId: "نوع الموظف",
+        ValidationEmployeeId: "نوع الموظف مطلوب",
+
+
+        titleScheduleId: "جدول الدوام",
+        placeholdeScheduleId: "جدول الدوام",
+        ValidationScheduleId: "جدول الدوام مطلوب",
+
+        titleCalendar: "التاريخ",
+        placeholderCalendar: "اختار التاريخ",
+        validationCalendar: "التاريخ مطلوب",
+
+        titleGroupId: "نواب الجروب",
+        placeholdeGroupId: "نواب الجروب",
+        ValidationGroupId: "نواب الجروب مطلوب",
+
+        titleNotes: "الملاحظات <span class='color-red'>*</span>",
+        placeholdeNotes: "الملاحظات",
+        ValidationNotes: "الملاحظات مطلةب",
+
         titleClose: "تراجع",
-        buttonSend: "حفظ الجدول"
+        buttonSend: "تعديل الجدولة"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editSchedule = true;
+    dialogRefAddCurrency.componentInstance.editSchedualPlan = true;
+
     dialogRefAddCurrency.componentInstance.id = data.id;
 
-    // dialogRefAddCurrency.componentInstance.list = this.categories;
-
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-
       let formData: any = {};
-      formData.name = result.tableName;
-      formData.scheduleDays = [];
-      result?.weekDays?.forEach((day: any) => {
-        formData.scheduleDays.push({ WeekDay: day.weekDay, ShiftId: day.weekDayValue.key, id: day.id })
 
-      });
-      formData.id = data.id;
-      this.schedulesService.updateSchedule(formData).subscribe(
+      formData.id = data.row;
+
+      formData.isActive = result.isActive;
+
+      formData.SchedulePlanType = Number(result.SchedulePlanType);
+      formData.EmployeeId = result.EmployeeId ? result.EmployeeId.key : null;
+      formData.GroupId = result.GroupId ? result.GroupId.key : null;
+      formData.DepartmentId = result.DepartmentId ? result.DepartmentId.key : null;
+      formData.ScheduleId = result.ScheduleId.key;
+      formData.DateFrom = moment(new Date(result.DateFrom)).format("DD/MM/YYYY");
+      formData.notes = result.notes;
+
+
+
+
+      this.schedualPlanService.updateSchedualPlan(formData).subscribe(
         {
           next: data => {
 
@@ -312,11 +402,10 @@ export class TablesComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الموظفين"
+                buttonSend: "طلبات الجدولة"
               },
             });
-            this.getSchedules(this.filteration);
-
+            this.getGroups(this.filteration);
             setTimeout(() => {
               succressDialog.close();
 
@@ -324,15 +413,12 @@ export class TablesComponent {
 
             succressDialog.componentInstance.submitted = true;
             succressDialog.componentInstance.submitClicked.subscribe(result => {
-
-
               succressDialog.close();
 
             })
 
           },
           error: err => {
-
             dialogRefAddCurrency.componentInstance.submitted = true;
 
           }
@@ -350,29 +436,33 @@ export class TablesComponent {
   }
   numberOfRowsPerPage(data: any) {
     this.filteration = { ...this.filteration, PageSize: data.value.code };
-    this.getSchedules(this.filteration)
+    this.getGroups(this.filteration)
   }
 
 
   deleteRow(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DeleteShiftComponent, {
+
+    const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
       width: "30vw",
       data: {
-        title: "متأكد من حذف الجدول؟",
-        message: "لا يمكن الرجوع في في هذا الأمر",
+        title: "متأكد من تعليق المجموعة؟",
+        message: "برجاء توضيح السبب إن أمكن ليظهر للمجموعة عند محاولة تسجيل الدخول",
+        titleReasonOfRefuse: "سبب التعليق",
+        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض ليظهر للمجموعة",
         titleClose: "تراجع",
-        buttonSend: "حذف"
+        buttonSend: "تعليق المجموعة"
       },
     });
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
-      this.schedulesService.deleteSchedule({ ScheduleId: data.id }).subscribe(
+      reasonOfRefuseDialog.componentInstance.submitted = false;
+      this.schedualPlanService.disabledSchedualPlan({ Id: data.id, DisableReason: result.notes }).subscribe(
         {
           next: res => {
 
             this.toast.success(res.message);
             reasonOfRefuseDialog.componentInstance.submitted = true;
-            this.getSchedules(this.filteration);
+            this.getGroups(this.filteration);
             reasonOfRefuseDialog.close();
           },
           error: err => {
@@ -382,11 +472,22 @@ export class TablesComponent {
         }
       )
 
+
     })
+
+
+
+
+
+
+
+
+
+
   }
   onPageChange(event: any) {
     this.filteration = { ...this.filteration, PageNumber: event.page };
-    this.getSchedules(this.filteration)
+    this.getGroups(this.filteration)
   }
   minimumValidator(conInput: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
@@ -421,43 +522,7 @@ export class TablesComponent {
       return checkMin ? null : { numberIsLess: true };
     };
   }
-  changePage(even: number) {
 
-    // if (this.filteration.page < even) {
-    //   if (this.page === 0) {
-    //     if (this.filteration.page + 1 < even) {
-    //       let minusCurrentPage = even - this.filteration.page;
-    //       this.page += this.itemsPerPage * minusCurrentPage;
-    //     } else {
-    //       this.page = this.itemsPerPage;
-    //     }
-    //   } else {
-    //     if (this.filteration.page + 1 < even) {
-    //       let minusCurrentPage = even - this.filteration.page;
-    //       this.page += this.itemsPerPage * minusCurrentPage;
-
-    //     } else {
-    //       this.page += this.itemsPerPage;
-
-    //     }
-    //   }
-    // } else {
-    //       //   if (this.filteration.page > even + 1) {
-    //     let minusCurrentPage = this.filteration.page - even;
-    //     this.page -= this.itemsPerPage * minusCurrentPage;
-
-    //   } else {
-    //     this.page -= this.itemsPerPage;
-
-    //   }
-    //   this.page -= this.itemsPerPage;
-    // }
-
-    this.filteration.page = even;
-    let filteration = { ...this.filteration, page: even - 1 };
-    // this.getListTransaction(filteration)
-
-  }
   changeLang(lang: string) {
     this.translate.use(lang);
   }

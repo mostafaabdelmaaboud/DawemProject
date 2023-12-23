@@ -19,6 +19,10 @@ export class VacationTypeService {
     }
     return this.http.get<any>(`${environment.baseUrl}VacationType/Get`, { params: queryParams })
   }
+  getInformation(): Observable<any> {
+
+    return this.http.get<any>(`${environment.baseUrl}VacationType/GetVacationTypesInformations`).pipe(map(data => data.data));
+  }
   deleteVacation(params: any) {
     let queryParams = new HttpParams();
 

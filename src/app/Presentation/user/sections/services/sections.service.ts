@@ -17,6 +17,10 @@ export class SectionsService {
     }
     return this.http.get<any>(`${environment.baseUrl}Department/Get`, { params: queryParams })
   }
+  getInformation(): Observable<any> {
+
+    return this.http.get<any>(`${environment.baseUrl}Department/GetDepartmentsInformations`).pipe(map(data => data.data));
+  }
   createSection(formData: FormData) {
 
     return this.http.post<any>(`${environment.baseUrl}Department/Create`, formData)

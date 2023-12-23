@@ -99,7 +99,8 @@ export class ZonesComponent {
   opened = false;
   private _mobileQueryListener: () => void;
   private zonesService = inject(ZonesService);
-
+  cards!: any;
+  spinnerCards = false;
   constructor(
     private config: PrimeNGConfig, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
@@ -160,7 +161,8 @@ export class ZonesComponent {
       res?.data?.forEach((jobTitle: any) => {
         this.listDirectManager.push({ name: jobTitle.name, key: jobTitle.id })
       });
-    })
+    });
+    this.getInformation();
     this.getZones(this.filteration);
     this.getListDepartment();
     this.getListSchedules();
@@ -168,6 +170,22 @@ export class ZonesComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
+  }
+  getInformation() {
+    this.spinnerCards = true;
+    this.zonesService.getInformation().subscribe({
+      next: data => {
+        this.cards = {
+          ...data
+        };
+        this.spinnerCards = false;
+
+      },
+      error: err => {
+        this.spinnerCards = false;
+
+      }
+    })
   }
   mathRound(data: any) {
     return Math.ceil(data)

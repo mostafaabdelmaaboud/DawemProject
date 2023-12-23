@@ -22,6 +22,10 @@ export class ZonesService {
     }
     return this.http.get<any>(`${environment.baseUrl}Zone/Get`, { params: queryParams })
   }
+  getInformation(): Observable<any> {
+
+    return this.http.get<any>(`${environment.baseUrl}Zone/GetZonesInformations`).pipe(map(data => data.data));
+  }
   createZone(formData: any) {
 
     return this.http.post<any>(`${environment.baseUrl}Zone/Create`, formData)

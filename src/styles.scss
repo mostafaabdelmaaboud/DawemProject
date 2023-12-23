@@ -1037,7 +1037,9 @@ html[lang="ar"] .mat-sidenav-content {
 }
 
 .cards-dashboard {
-  margin-top: 25px;
+  min-height: 100px;
+  margin: 0;
+  padding: 25px 0 0 0;
 }
 
 .title-filteration {

@@ -79,6 +79,8 @@ export class PermissionTypeComponent {
   RowsPerPage!: any[];
   mobileQuery: MediaQueryList;
   opened = false;
+  cards!: any;
+  spinnerCards = false;
   private _mobileQueryListener: () => void;
   private permissionTypeService = inject(PermissionTypeService);
   list: any[] = [
@@ -142,9 +144,26 @@ export class PermissionTypeComponent {
       { name: '10', code: 10 },
       { name: '25', code: 25 },
     ];
+    this.getInformation();
+
     this.getPermissions(this.filteration);
   }
+  getInformation() {
+    this.spinnerCards = true;
+    this.permissionTypeService.getInformation().subscribe({
+      next: data => {
+        this.cards = {
+          ...data
+        };
+        this.spinnerCards = false;
 
+      },
+      error: err => {
+        this.spinnerCards = false;
+
+      }
+    })
+  }
   getPermissions(filteration: any) {
     this.permissions = [];
     this.isLoading = true;

@@ -6,13 +6,13 @@
     <p-calendar [(ngModel)]="date" [showIcon]="true" dateFormat="yy MM"></p-calendar>
   </div>
 </div>
-<div class="cards-dashboard">
-  <div class="row">
+<div class="cards-dashboard position-relative">
+  <div class="row" *ngIf="!spinnerCards">
     <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Primary-700">عدد الجداول</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">150</span>
+          <span class="number-card-dashboard">{{cards?.totalCount}}</span>
           <span class="icon-card-dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
               <g opacity="0.2">
@@ -32,7 +32,7 @@
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Success-700">الجداول النشطة</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">247</span>
+          <span class="number-card-dashboard">{{cards?.activeCount}}</span>
           <span class="icon-card-dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
               <g opacity="0.2">
@@ -55,7 +55,7 @@
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Error-700">الجداول المعطلة</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">328</span>
+          <span class="number-card-dashboard">{{cards?.deletedCount}}</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
             <g opacity="0.2">
               <path opacity="0.5"
@@ -73,7 +73,7 @@
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Warning-700 ">الجداول المعلقة</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">225</span>
+          <span class="number-card-dashboard">{{cards?.notActiveCount}}</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
             <g opacity="0.2">
               <path opacity="0.4"
@@ -87,6 +87,9 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="spinner spinner-cards d-flex justify-content-center align-items-center" *ngIf="spinnerCards">
+    <mat-spinner></mat-spinner>
   </div>
 </div>
 <div class="table-basic">

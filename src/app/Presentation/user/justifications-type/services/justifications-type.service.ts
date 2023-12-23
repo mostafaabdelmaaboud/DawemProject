@@ -19,6 +19,10 @@ export class JustificationsTypeService {
     }
     return this.http.get<any>(`${environment.baseUrl}JustificationType/Get`, { params: queryParams })
   }
+  getInformation(): Observable<any> {
+
+    return this.http.get<any>(`${environment.baseUrl}JustificationType/GetJustificationTypesInformations`).pipe(map(data => data.data));
+  }
   deleteJusification(params: any) {
     let queryParams = new HttpParams();
 

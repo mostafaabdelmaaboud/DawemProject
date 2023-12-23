@@ -17,7 +17,10 @@ export class GroupsService {
     }
     return this.http.get<any>(`${environment.baseUrl}Group/Get`, { params: queryParams })
   }
+  getInformation(): Observable<any> {
 
+    return this.http.get<any>(`${environment.baseUrl}Group/GetGroupsInformations`).pipe(map(data => data.data));
+  }
   GetForDropDown(params: any) {
     let queryParams = new HttpParams();
 
@@ -37,6 +40,7 @@ export class GroupsService {
     return this.http.get<any>(`${environment.baseUrl}Employee/GetForDropDown`, { params: queryParams })
 
   }
+
   enabledEmployee(params: any) {
     let queryParams = new HttpParams();
 

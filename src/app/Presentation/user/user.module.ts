@@ -28,7 +28,10 @@ const routes: Routes = [
         loadChildren: () => import('./department/department.module').then((m) => m.DepartmentModule),
       },
 
-
+      {
+        path: "schedualPlan",
+        loadChildren: () => import('./schedual-plan/schedual-plan.module').then((m) => m.SchedualPlanModule),
+      },
       {
         path: "justificationsType",
         loadChildren: () => import('./justifications-type/justifications-type.module').then((m) => m.JustificationsTypeModule),
@@ -103,7 +106,6 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-
   ],
   imports: [
     CommonModule,

@@ -1,21 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { GroupsRoutingModule } from './groups-routing.module';
-import { GroupsComponent } from './groups.component';
+import { SchedualPlanRoutingModule } from './schedual-plan-routing.module';
+import { SchedualPlanComponent } from './schedual-plan.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
-  declarations: [
-    GroupsComponent
-  ],
+  declarations: [SchedualPlanComponent],
   imports: [
     CommonModule,
-    GroupsRoutingModule,
+    SchedualPlanRoutingModule,
     MatDialogModule,
     SharedModule
   ]
 })
-export class GroupsModule { }
+export class SchedualPlanModule { }

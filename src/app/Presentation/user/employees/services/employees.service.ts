@@ -47,6 +47,10 @@ export class EmployeesService {
     }
     return this.http.put<any>(`${environment.baseUrl}Employee/Disable`, {}, { params: queryParams })
   }
+  getInformation(): Observable<any> {
+
+    return this.http.get<any>(`${environment.baseUrl}Employee/GetEmployeesInformations`).pipe(map(data => data.data));
+  }
   GetForDropDownEmployee(params: any) {
     let queryParams = new HttpParams();
 

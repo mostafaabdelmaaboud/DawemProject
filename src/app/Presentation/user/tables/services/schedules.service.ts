@@ -17,6 +17,10 @@ export class SchedulesService {
     }
     return this.http.get<any>(`${environment.baseUrl}Schedule/Get`, { params: queryParams })
   }
+  getInformation(): Observable<any> {
+
+    return this.http.get<any>(`${environment.baseUrl}Schedule/GetSchedulesInformations`).pipe(map(data => data.data));
+  }
   scheduleGetInfo(params: any) {
     let queryParams = new HttpParams();
 

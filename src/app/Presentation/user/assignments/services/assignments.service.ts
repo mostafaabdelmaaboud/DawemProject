@@ -17,9 +17,10 @@ export class AssignmentsService {
     }
     return this.http.get<any>(`${environment.baseUrl}RequestAssignment/Get`, { params: queryParams })
   }
+
   getInformation(): Observable<any> {
 
-    return this.http.get<any>(`${environment.baseUrl}RequestPermission/GetPermissionsInformations`).pipe(map(data => data.data));
+    return this.http.get<any>(`${environment.baseUrl}RequestAssignment/GetAssignmentsInformations`).pipe(map(data => data.data));
   }
   assignmentGetInfo(params: any) {
     let queryParams = new HttpParams();
