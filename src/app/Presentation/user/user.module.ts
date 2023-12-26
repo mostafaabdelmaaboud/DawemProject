@@ -44,6 +44,11 @@ const routes: Routes = [
         path: "groups",
         loadChildren: () => import('./groups/groups.module').then((m) => m.GroupsModule),
       },
+
+      {
+        path: "assignmentType",
+        loadChildren: () => import('./assignment-type/assignment-type.module').then((m) => m.AssignmentTypeModule),
+      },
       {
         path: "permissionType",
         loadChildren: () => import('./permission-type/permission-type.module').then((m) => m.PermissionTypeModule),

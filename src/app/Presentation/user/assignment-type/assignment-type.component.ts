@@ -5,24 +5,21 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { RequestVacationComponent } from 'src/app/shared/components/request-vacation/request-vacation.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
-import { DialogVacationFileComponent } from 'src/app/shared/components/dialog-vacation-file/dialog-vacation-file.component';
-import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { VacationTypeService } from './services/vacation-type.service';
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
-import { RequestVacationTypeComponent } from 'src/app/shared/components/request-vacation-type/request-vacation-type.component';
-import { DialogVacationTypeFileComponent } from 'src/app/shared/components/dialog-vacation-type-file/dialog-vacation-type-file.component';
+import { DialogPermissionTypeFileComponent } from 'src/app/shared/components/dialog-permission-type-file/dialog-permission-type-file.component';
+import { AssignmentTypeService } from './services/assignment-type.service';
+import { RequestAssignmentTypeComponent } from 'src/app/shared/components/request-assignment-type/request-assignment-type.component';
+import { DialogAssignmentTypeFileComponent } from 'src/app/shared/components/dialog-assignment-type-file/dialog-assignment-type-file.component';
 @Component({
-  selector: 'app-vacation-type',
-  templateUrl: './vacation-type.component.html',
-  styleUrls: ['./vacation-type.component.scss']
+  selector: 'app-assignment-type',
+  templateUrl: './assignment-type.component.html',
+  styleUrls: ['./assignment-type.component.scss']
 })
-export class VacationTypeComponent {
+export class AssignmentTypeComponent {
   date!: Date;
   arabic: any;
   subscription!: Subscription;
@@ -32,18 +29,13 @@ export class VacationTypeComponent {
 
   columns: any[] = [
     {
-      name: "رقم الاجازة",
+      name: "رقم الاستئذان",
       field: "code",
     },
     {
       name: "الأسم",
       field: "name",
     },
-    {
-      name: "نوع الاجازة",
-      field: "typeName",
-    },
-
     {
       name: "حاله الطلب",
       field: "isActive"
@@ -54,7 +46,7 @@ export class VacationTypeComponent {
     }
 
   ];
-  vacations: any = [];
+  assignments: any = [];
 
   isLoading = true;
 
@@ -85,7 +77,7 @@ export class VacationTypeComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
-  private vacationTypeService = inject(VacationTypeService);
+  private assignmentTypeService = inject(AssignmentTypeService);
   list: any[] = [
     { name: "نسيان تسجيل حضور", key: "1" },
     { name: "نسيان تسجيل انصراف", key: "2" },
@@ -100,11 +92,11 @@ export class VacationTypeComponent {
     this._mobileQueryListener = () => {
       if (this.mobileQuery.matches) {
         this.opened = true;
-        this.vacations = this.vacations;
+        this.assignments = this.assignments;
         changeDetectorRef.detectChanges();
       } else {
         this.opened = false;
-        this.vacations = this.vacations;
+        this.assignments = this.assignments;
 
         changeDetectorRef.detectChanges();
 
@@ -149,11 +141,11 @@ export class VacationTypeComponent {
     ];
     this.getInformation();
 
-    this.getVacations(this.filteration);
+    this.getAssignments(this.filteration);
   }
   getInformation() {
     this.spinnerCards = true;
-    this.vacationTypeService.getInformation().subscribe({
+    this.assignmentTypeService.getInformation().subscribe({
       next: data => {
         this.cards = {
           ...data
@@ -167,18 +159,18 @@ export class VacationTypeComponent {
       }
     })
   }
-  getVacations(filteration: any) {
-    this.vacations = [];
+  getAssignments(filteration: any) {
+    this.assignments = [];
     this.isLoading = true;
-    this.vacationTypeService.listVacations(filteration).subscribe(
+    this.assignmentTypeService.listAssignments(filteration).subscribe(
       {
         next: data => {
+
           data.data.forEach((vacation: any) => {
-            this.vacations.push({
+            this.assignments.push({
               id: vacation.id,
               code: vacation.code,
               name: vacation.name,
-              typeName: vacation.typeName,
               isActive: vacation.isActive
 
             })
@@ -198,7 +190,7 @@ export class VacationTypeComponent {
   }
   numberOfRowsPerPage(data: any) {
     this.filteration = { ...this.filteration, PageSize: data.value.code };
-    this.getVacations(this.filteration)
+    this.getAssignments(this.filteration)
   }
   reasonOfRefuse(data: any) {
     const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
@@ -215,12 +207,12 @@ export class VacationTypeComponent {
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
-      this.vacationTypeService.deleteVacation({ VacationTypeId: data.id }).subscribe({
+      this.assignmentTypeService.deleteAssignment({ assignmentTypeId: data.id }).subscribe({
         next: res => {
           this.toast.success(res.message);
           reasonOfRefuseDialog.componentInstance.submitted = true;
           reasonOfRefuseDialog.close();
-          this.getVacations(this.filteration);
+          this.getAssignments(this.filteration);
         },
         error: err => {
           reasonOfRefuseDialog.componentInstance.submitted = true;
@@ -232,13 +224,13 @@ export class VacationTypeComponent {
 
     })
   }
-  requestVacation() {
-    const dialogRefAddCurrency = this.dialog.open(RequestVacationTypeComponent, {
+  requestAssignment() {
+    const dialogRefAddCurrency = this.dialog.open(RequestAssignmentTypeComponent, {
       width: "50vw",
       data: {
-        title: "طلب اجازة",
+        title: "طلب تكليف",
         setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاجازة <span class='color-red'>*</span>",
+        titleVacationTypeId: "نوع التكليف <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
@@ -246,16 +238,16 @@ export class VacationTypeComponent {
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editVacation = false;
+    dialogRefAddCurrency.componentInstance.editAssignment = false;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+
       let formData: any = {};
       formData.name = result.name;
       formData.isActive = result.IsNecessary;
-      formData.type = result.type.key;
 
       dialogRefAddCurrency.componentInstance.submitted = false;
 
-      this.vacationTypeService.createVacation(formData).subscribe(
+      this.assignmentTypeService.createAssignment(formData).subscribe(
         {
           next: (data: any) => {
 
@@ -269,11 +261,11 @@ export class VacationTypeComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الاجازات"
+                buttonSend: "طلبات الاستئذانات"
 
               },
             });
-            this.getVacations(this.filteration);
+            this.getAssignments(this.filteration);
 
             setTimeout(() => {
               succressDialog.close();
@@ -299,13 +291,13 @@ export class VacationTypeComponent {
       }
     });
   }
-  editVacation(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(RequestVacationTypeComponent, {
+  editAssignment(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(RequestAssignmentTypeComponent, {
       width: "50vw",
       data: {
-        title: "طلب اجازة",
+        title: "تعديل التكليف",
         setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاجازة <span class='color-red'>*</span>",
+        titleVacationTypeId: "نوع التكليف <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
@@ -313,7 +305,7 @@ export class VacationTypeComponent {
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editVacation = true;
+    dialogRefAddCurrency.componentInstance.editAssignment = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
@@ -321,11 +313,10 @@ export class VacationTypeComponent {
       formData.id = data.id;
       formData.name = result.name;
       formData.isActive = result.IsNecessary;
-      formData.type = result.type.key;
 
       dialogRefAddCurrency.componentInstance.submitted = false;
 
-      this.vacationTypeService.updateVacation(formData).subscribe(
+      this.assignmentTypeService.updateAssignment(formData).subscribe(
         {
           next: (data: any) => {
 
@@ -339,11 +330,11 @@ export class VacationTypeComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الاجازات"
+                buttonSend: "طلبات التكليفات"
 
               },
             });
-            this.getVacations(this.filteration);
+            this.getAssignments(this.filteration);
 
             setTimeout(() => {
               succressDialog.close();
@@ -371,11 +362,11 @@ export class VacationTypeComponent {
   }
 
 
-  dialogVacationFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogVacationTypeFileComponent, {
+  dialogAssignmentFile(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(DialogAssignmentTypeFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف الاجازة"
+        title: "ملف التكليف"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id
@@ -423,7 +414,7 @@ export class VacationTypeComponent {
 
     this.filteration.page = even;
     let filteration = { ...this.filteration, page: even - 1 };
-    this.getVacations(filteration)
+    this.getAssignments(filteration)
 
   }
   changeLang(lang: string) {

@@ -12,8 +12,7 @@ import { CalendarModule } from "primeng/calendar";
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { VacationTypeService } from 'src/app/Presentation/user/vacation-type/services/vacation-type.service';
-
+import { AssignmentTypeService } from 'src/app/Presentation/user/assignment-type/services/assignment-type.service';
 interface addBranchesInputsProps {
   LabelMessage: string;
   inputType: string;
@@ -38,13 +37,13 @@ interface UploadEvent {
   files: File[];
 }
 @Component({
-  selector: 'app-request-vacation-type',
+  selector: 'app-request-assignment-type',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, MatProgressSpinnerModule, MatRadioModule, MultiSelectModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
-  templateUrl: './request-vacation-type.component.html',
-  styleUrls: ['./request-vacation-type.component.scss']
+  templateUrl: './request-assignment-type.component.html',
+  styleUrls: ['./request-assignment-type.component.scss']
 })
-export class RequestVacationTypeComponent {
+export class RequestAssignmentTypeComponent {
 
   @Output() submitClicked = new EventEmitter<any>();
   @Input() submitted!: boolean;
@@ -53,24 +52,23 @@ export class RequestVacationTypeComponent {
   @Input() workTeamList: any[] = [
   ];
   @Input() id!: string;
-  listVacationType: any[] = [];
+
   dateTaskMultiple = false;
   listEmployees: any[] = [
   ];
   loading = false;
 
-  @Input() editVacation!: boolean;
+  @Input() editAssignment!: boolean;
   addBranchGroupForm: FormGroup = this.fb.group({
     IsNecessary: [false],
-    name: ["", Validators.required],
-    type: ["", Validators.required]
+    name: ["", Validators.required]
   });
   AttachmentsFiles: any[] = [];
   requiredCommercialRegFiles = false;
   toggleForEmployee = false;
-  private vacationsService = inject(VacationTypeService);
+  private assignmentTypeService = inject(AssignmentTypeService);
   constructor(
-    public dialogRef: MatDialogRef<RequestVacationTypeComponent>,
+    public dialogRef: MatDialogRef<RequestAssignmentTypeComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
     private fb: FormBuilder
@@ -81,28 +79,13 @@ export class RequestVacationTypeComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.loading = true;
-    this.listVacationType = [
-      { name: "إعتيادي", key: 0 },
-      { name: "عارضة", key: 1 },
-      { name: "مرضي", key: 2 },
-      { name: "اجازة نسائية", key: 3 },
-      { name: "أخري", key: 4 }
-    ]
-    if (this.editVacation) {
+    if (this.editAssignment) {
 
-      this.vacationsService.vacationGetById({ VacationTypeId: this.id }).subscribe(
+      this.assignmentTypeService.assignmentGetById({ assignmentTypeId: this.id }).subscribe(
         {
           next: data => {
             this.addBranchGroupForm.get("IsNecessary")?.setValue(data.isActive);
             this.addBranchGroupForm.get("name")?.setValue(data.name);
-            if (data.type != null) {
-              let indexVacationType = this.listVacationType.findIndex(list => list.key === data.type);
-              if (indexVacationType >= 0) {
-                this.getControl("type")?.setValue(this.listVacationType[indexVacationType]);
-
-              }
-            }
-
             this.loading = false;
           },
           error: err => {
@@ -112,7 +95,7 @@ export class RequestVacationTypeComponent {
       )
 
     }
-    if (!this.editVacation) {
+    if (!this.editAssignment) {
       this.loading = false;
 
     }
@@ -128,15 +111,12 @@ export class RequestVacationTypeComponent {
 
   request() {
 
-    if (this.addBranchGroupForm.valid) {
+    if (this.addBranchGroupForm.valid && this.submitted) {
       this.submitted = false;
       this.submitClicked.emit(this.addBranchGroupForm.value);
       // this.dialogRef.close(true);
     } else {
       this.getControl("name")?.markAsDirty();
-      this.getControl("type")?.markAsDirty();
-
-
     }
 
   }
