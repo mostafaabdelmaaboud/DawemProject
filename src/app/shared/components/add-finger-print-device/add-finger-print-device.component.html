@@ -1,0 +1,124 @@
+<div class="container-Dialog">
+  <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+    <h3 class="title-Dialog m-0">
+      {{data!['title']|translate}}
+
+    </h3>
+    <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+      <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+      <i class="pi pi-times-circle"></i>
+    </button>
+  </header>
+  <div class="body-dialog p-15 f-s-16">
+    <form [formGroup]="addBranchGroupForm">
+      <div class="section1 mb-3">
+        <label class="title">{{data!['setAsActive']|translate}}</label>
+        <p-inputSwitch formControlName="isActive"></p-inputSwitch>
+      </div>
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12">
+            <ng-container *ngIf="editFingerPrintDevice">
+              <div class="field-disabled mb-3 readOnly">
+                <label for="" class="label-input mb-2" [innerHTML]="data!['titleFieldDisabled']|translate"></label>
+                <div class="content-password">
+                  <input type="text" pInputText formControlName="fieldDisabled" [readOnly]="true"
+                    [placeholder]="data!['placeholdeieldDisabled']|translate" class="w-100" />
+                </div>
+              </div>
+            </ng-container>
+            <div class="sectionFive mb-3">
+              <label for="" class="label-input mb-2" [innerHTML]="data!['titleName']|translate"></label>
+              <div class="content-password">
+                <input type="text" pInputText formControlName="name" [placeholder]="data!['placeholdeName']|translate"
+                  class="w-100" />
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('name')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('name')?.hasError('required') && getControl('name')?.dirty">
+                  {{data!['ValidationName']|translate}}
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+            <div class="sectionFive mb-3">
+              <label for="" class="label-input mb-2" [innerHTML]="data!['titleIpAddress']|translate"></label>
+              <div class="content-password">
+                <input type="text" pInputText formControlName="IpAddress"
+                  [placeholder]="data!['placeholdeIpAddress']|translate" class="w-100" />
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('IpAddress')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('IpAddress')?.hasError('required') && getControl('IpAddress')?.dirty">
+                  {{data!['ValidationIpAddress']|translate}}
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+            <div class="sectionFive mb-3">
+              <label for="" class="label-input mb-2" [innerHTML]="data!['titlePortNumber']|translate"></label>
+              <div class="content-password">
+                <input type="text" pInputText formControlName="PortNumber"
+                  [placeholder]="data!['placeholdePortNumber']|translate" class="w-100" />
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('PortNumber')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('PortNumber')?.hasError('required') && getControl('PortNumber')?.dirty">
+                  {{data!['ValidationPortNumber']|translate}}
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+            <div class="sectionFive mb-3">
+              <label for="" class="label-input mb-2" [innerHTML]="data!['titleModel']|translate"></label>
+              <div class="content-password">
+                <input type="text" pInputText formControlName="Model"
+                  [placeholder]="data!['placeholderModel']|translate" class="w-100" />
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('Model')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('Model')?.hasError('required') && getControl('Model')?.dirty">
+                  {{data!['validationModel']|translate}}
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+            <div class="sectionFive mb-3">
+              <label for="" class="label-input mb-2" [innerHTML]="data!['titleSerialNumber']|translate"></label>
+              <div class="content-password">
+                <input type="text" pInputText formControlName="SerialNumber"
+                  [placeholder]="data!['placeholdeSerialNumber']|translate" class="w-100" />
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('SerialNumber')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('SerialNumber')?.hasError('required') && getControl('SerialNumber')?.dirty">
+                  {{data!['ValidationSerialNumber']|translate}}
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <footer class="footer-dialog p-15 d-flex justify-content-end">
+    <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+      (click)="request()">{{submitted
+      ?
+      (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+    <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
+      (click)="close()">{{data!['titleClose']|translate}}</button>
+  </footer>
+</div>
+<div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>

@@ -46,6 +46,10 @@ const routes: Routes = [
       },
 
       {
+        path: "fingerPrintDevice",
+        loadChildren: () => import('./finger-print-devices/finger-print-devices.module').then((m) => m.FingerPrintDevicesModule),
+      },
+      {
         path: "assignmentType",
         loadChildren: () => import('./assignment-type/assignment-type.module').then((m) => m.AssignmentTypeModule),
       },
