@@ -11,9 +11,11 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { CalendarModule } from "primeng/calendar";
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { EmployeesService } from 'src/app/Presentation/user/employees/services/employees.service';
 import * as moment from 'moment';
 
-import { FingerPrintDevicesService } from 'src/app/Presentation/user/finger-print-devices/services/finger-print-devices.service';
+import { PermissionTypeService } from 'src/app/Presentation/user/permission-type/services/permission-type.service';
+import { JobTitlesService } from 'src/app/Presentation/user/job-titles/services/job-titles.service';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -37,37 +39,51 @@ interface UploadEvent {
   files: File[];
 }
 @Component({
-  selector: 'app-dialog-finger-print-device-file',
+  selector: 'app-dialog-job-title-file',
   standalone: true,
   imports: [CommonModule, FormsModule, MatRadioModule, MatProgressSpinnerModule, ReactiveFormsModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
-  templateUrl: './dialog-finger-print-device-file.component.html',
-  styleUrls: ['./dialog-finger-print-device-file.component.scss']
+  templateUrl: './dialog-job-title-file.component.html',
+  styleUrls: ['./dialog-job-title-file.component.scss']
 })
-export class DialogFingerPrintDeviceFileComponent {
+export class DialogJobTitleFileComponent {
   loading = false;
-  private fingerPrintDevicesService = inject(FingerPrintDevicesService);
+  private jobTitlesService = inject(JobTitlesService);
 
   @Input() submitted!: boolean;
   info!: any;
   @Input() id!: any;
+  AttachmentsFiles: any[] = [];
+
 
   constructor(
-    public dialogRef: MatDialogRef<DialogFingerPrintDeviceFileComponent>,
+    public dialogRef: MatDialogRef<DialogJobTitleFileComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
     private fb: FormBuilder
   ) {
-
     this.dialogRef.disableClose = true;
-
   }
   ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
     this.loading = true;
+
     if (this.id) {
-      this.fingerPrintDevicesService.fingerprintDeviceGetInfo({ fingerprintDeviceid: this.id }).subscribe(data => {
-        this.info = data;
-        this.loading = false;
-      })
+
+      this.jobTitlesService.jobTitleGetInfo({ jobTitleid: this.id }).subscribe(
+        {
+
+          next: data => {
+            this.info = data;
+            this.loading = false;
+
+          },
+          error: err => {
+            this.loading = false;
+
+          }
+        })
+
     }
   }
   getMoment(date: any) {

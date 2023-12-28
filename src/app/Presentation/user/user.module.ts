@@ -44,6 +44,10 @@ const routes: Routes = [
         path: "groups",
         loadChildren: () => import('./groups/groups.module').then((m) => m.GroupsModule),
       },
+      {
+        path: "jobTitles",
+        loadChildren: () => import('./job-titles/job-titles.module').then((m) => m.JobTitlesModule),
+      },
 
       {
         path: "fingerPrintDevice",
