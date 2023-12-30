@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/core/auth/services/auth-service.service';
@@ -10,6 +10,8 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CalendarModule } from "primeng/calendar";
 import { MatRadioModule } from '@angular/material/radio';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { HolidaysService } from 'src/app/Presentation/user/holidays/services/holidays.service';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -55,35 +57,30 @@ interface UploadEvent {
 @Component({
   selector: 'app-add-aholiday',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatRadioModule, ReactiveFormsModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
+  imports: [CommonModule, FormsModule, MatRadioModule, MatProgressSpinnerModule, ReactiveFormsModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
   templateUrl: './add-aholiday.component.html',
   styleUrls: ['./add-aholiday.component.scss']
 })
 export class AddAholidayComponent {
+  loading = false;
 
   @Output() submitClicked = new EventEmitter<any>();
   @Input() submitted!: boolean;
-  @Input() listFirst: any[] = [
-    { name: "احمد علي", key: "1" },
-    { name: "محسن سيد", key: "2" },
-    { name: "علي رجب", key: "3" },
-    { name: "شوقي رجب", key: "4" }
+  @Input() listFirst: any[] = [];
+  @Input() list: any[] = [];
+  @Input() editHoliday!: boolean;
 
-  ];
-  @Input() list: any[] = [
-    { name: "نسيان تسجيل حضور", key: "1" },
-    { name: "نسيان تسجيل انصراف", key: "2" },
-    { name: "تسجيل حضور خاطئ", key: "3" },
-    { name: "تسجيل انصراف خاطئ", key: "4" }
-
-  ];
   addBranchGroupForm: FormGroup = this.fb.group({
-    frstRadios: ['first'],
+    frstRadios: ['0'],
     holidayName: [''],
     calendarFirst: [''],
     calendarSecond: [''],
     notes: ['', Validators.required]
   });
+  private holidaysService = inject(HolidaysService);
+  @Input() id!: boolean;
+
+
   uploadedCommercialRegFiles: any[] = [];
   requiredCommercialRegFiles = false;
   constructor(
@@ -99,6 +96,42 @@ export class AddAholidayComponent {
     //Add 'implements OnInit' to the class.
     if (this.data?.code) {
       this.addBranchGroupForm.get("fieldDisabled")?.setValue(this.data?.code);
+    }
+    if (this.editHoliday) {
+      this.holidaysService.holidayGetById({ holidayId: this.id }).subscribe(
+        {
+          next: data => {
+
+            // SchedulePlanType: ['0', Validators.required],
+            //   EmployeeId: ['', Validators.required],
+
+            //     ScheduleId: ["", Validators.required],
+            //       DateFrom: ['', Validators.required],
+            //         notes: ["", Validators.required],
+            this.getControl("isActive")?.setValue(data.isActive);
+            this.getControl("notes")?.setValue(data.notes);
+
+            this.getControl("DateFrom")?.setValue(new Date(data.dateFrom));
+
+            this.getControl("SchedulePlanType")?.setValue(data.schedulePlanType.toString());
+            this.getControl("fieldDisabled")?.setValue(data.code);
+
+
+
+
+
+            this.loading = false;
+          },
+          error: err => {
+            this.loading = false;
+          }
+        }
+      )
+
+    }
+    if (!this.editHoliday) {
+      this.loading = false;
+
     }
 
   }

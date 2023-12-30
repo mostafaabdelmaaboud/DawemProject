@@ -31,9 +31,9 @@
 
         <div class="container-radio-button">
           <mat-radio-group aria-label="Select an option" color="primary" formControlName="frstRadios">
-            <mat-radio-button value="first">{{data!['firstRadio']|translate}}
+            <mat-radio-button value="0">{{data!['secondRadio']|translate}}
             </mat-radio-button>
-            <mat-radio-button value="second">{{data!['secondRadio']|translate}}</mat-radio-button>
+            <mat-radio-button value="1">{{data!['firstRadio']|translate}}</mat-radio-button>
           </mat-radio-group>
         </div>
       </div>
@@ -121,4 +121,7 @@
       (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
 
   </footer>
+</div>
+<div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+  <mat-spinner></mat-spinner>
 </div>

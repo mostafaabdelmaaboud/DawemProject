@@ -48,6 +48,10 @@ const routes: Routes = [
         path: "jobTitles",
         loadChildren: () => import('./job-titles/job-titles.module').then((m) => m.JobTitlesModule),
       },
+      {
+        path: "vacationBalance",
+        loadChildren: () => import('./vacation-balance/vacation-balance.module').then((m) => m.VacationBalanceModule),
+      },
 
       {
         path: "fingerPrintDevice",

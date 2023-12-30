@@ -13,6 +13,8 @@ import { AddAholidayComponent } from 'src/app/shared/components/add-aholiday/add
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { EditAholidayComponent } from 'src/app/shared/components/edit-aholiday/edit-aholiday.component';
 import { DialogHolidayFileComponent } from 'src/app/shared/components/dialog-holiday-file/dialog-holiday-file.component';
+import { HolidaysService } from './services/holidays.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-holidays',
@@ -29,16 +31,16 @@ export class HolidaysComponent {
 
   columns: any[] = [
     {
-      name: "#",
-      field: "orderNumber",
+      name: "الكود",
+      field: "code",
     },
     {
-      name: "اسم العطلة",
-      field: "holidayName",
+      name: "الاسم",
+      field: "name",
     },
     {
-      name: "مدة العطلة",
-      field: "vacationDuration"
+      name: "نوع العطلة",
+      field: "dateType"
     },
     {
       name: "تاريخ البداية",
@@ -46,11 +48,7 @@ export class HolidaysComponent {
     },
     {
       name: "تاريخ النهاية",
-      field: "expiryDate"
-    },
-    {
-      name: "الملاحظات",
-      field: "notes"
+      field: "endDate"
     },
     {
       name: "الإجراء",
@@ -58,14 +56,14 @@ export class HolidaysComponent {
     }
 
   ];
-  customers: any = [];
+  holidays: any = [];
 
   isLoading = true;
 
   filteration: any = {
-    page: 0,
-    branchId: "7ecf59aa-a3c6-45d1-9f14-86671b814a8d",
-    sort: "DESC",
+    PageSize: 5,
+    PageNumber: 0,
+    PagingEnabled: true
   };
 
   services: any[] = [
@@ -75,6 +73,7 @@ export class HolidaysComponent {
   page = 0;
   categories: any[] = [
   ];
+  private holidaysService = inject(HolidaysService);
   public configs: PaginationInstance = {
     id: "custom",
     itemsPerPage: 10,
@@ -86,6 +85,8 @@ export class HolidaysComponent {
   RowsPerPage!: any[];
   mobileQuery: MediaQueryList;
   opened = false;
+  cards!: any;
+  spinnerCards = false;
   private _mobileQueryListener: () => void;
 
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder) {
@@ -95,11 +96,11 @@ export class HolidaysComponent {
     this._mobileQueryListener = () => {
       if (this.mobileQuery.matches) {
         this.opened = true;
-        this.customers = this.customers;
+        this.holidays = this.holidays;
         changeDetectorRef.detectChanges();
       } else {
         this.opened = false;
-        this.customers = this.customers;
+        this.holidays = this.holidays;
 
         changeDetectorRef.detectChanges();
 
@@ -138,105 +139,117 @@ export class HolidaysComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '1', code: '1' },
-      { name: '2', code: '2' },
-      { name: '3', code: '3' },
-      { name: '4', code: '4' },
-      { name: '5', code: '5' }
+      { name: '5', code: 5 },
+      { name: '10', code: 10 },
+      { name: '25', code: 25 },
+
     ];
 
-    this.customers = [
-      {
-        orderNumber: "01",
-        holidayName: "عيد الفطر",
-        vacationDuration: "7 أيام",
-        startDate: "12/10/2023",
-        expiryDate: "12/10/2023",
-        notes: "ملاحظات المهمة"
+    this.getInformation();
 
-      },
-      {
-        orderNumber: "02",
-        holidayName: "عيد الأضحى",
-        vacationDuration: "7 أيام",
-        startDate: "12/10/2023",
-        expiryDate: "12/10/2023",
-        notes: "ملاحظات المهمة"
-      },
-      {
-        orderNumber: "03",
-        holidayName: "اليوم الوطني",
-        vacationDuration: "7 أيام",
-        startDate: "12/10/2023",
-        expiryDate: "12/10/2023",
-        notes: "ملاحظات المهمة"
-      },
-      {
-        orderNumber: "04",
-        holidayName: "يوم التأسيس",
-        vacationDuration: "7 أيام",
-        startDate: "12/10/2023",
-        expiryDate: "12/10/2023",
-        notes: "ملاحظات المهمة"
-      },
-      {
-        orderNumber: "05",
-        holidayName: "عطلة الافتتاح",
-        vacationDuration: "7 أيام",
-        startDate: "12/10/2023",
-        expiryDate: "12/10/2023",
-        notes: "ملاحظات المهمة"
-      },
-      {
-        orderNumber: "06",
-        holidayName: "عطلة رسمية",
-        vacationDuration: "7 أيام",
-        startDate: "12/10/2023",
-        expiryDate: "12/10/2023",
-        notes: "ملاحظات المهمة"
-      },
-      {
+    this.getHolidays(this.filteration)
 
-        orderNumber: "07",
-        holidayName: "عطلة الافتتاح",
-        vacationDuration: "7 أيام",
-        startDate: "12/10/2023",
-        expiryDate: "12/10/2023",
-        notes: "ملاحظات المهمة"
-      },
-      {
-
-        orderNumber: "08",
-        holidayName: "عطلة الافتتاح",
-        vacationDuration: "7 أيام",
-        startDate: "12/10/2023",
-        expiryDate: "12/10/2023",
-        notes: "ملاحظات المهمة"
-      },
-      {
-
-        orderNumber: "09",
-        holidayName: "عطلة الافتتاح",
-        vacationDuration: "7 أيام",
-        startDate: "12/10/2023",
-        expiryDate: "12/10/2023",
-        notes: "ملاحظات المهمة"
-      },
-      {
-
-        orderNumber: "10",
-        holidayName: "عطلة الافتتاح",
-        vacationDuration: "7 أيام",
-        startDate: "12/10/2023",
-        expiryDate: "12/10/2023",
-        notes: "ملاحظات المهمة"
-      },
-    ];
-    this.isLoading = false;
-    this.totalItems = 3;
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
+  }
+  getInformation() {
+    this.spinnerCards = true;
+    this.holidaysService.getInformation().subscribe({
+      next: data => {
+        this.cards = {
+          ...data
+        };
+        this.spinnerCards = false;
+
+      },
+      error: err => {
+        this.spinnerCards = false;
+
+      }
+    })
+  }
+  getHolidays(filteration: any) {
+    this.holidays = [];
+    this.isLoading = true;
+    this.holidaysService.listHolidays(filteration).subscribe(data => {
+      data.data.forEach((اholiday: any) => {
+
+        this.holidays.push({
+          id: اholiday.id,
+          code: اholiday.code,
+          isActive: اholiday.isActive,
+          dateType: اholiday.dateType,
+          startDate: اholiday.startDate,
+          endDate: اholiday.endDate,
+        })
+      });
+      this.totalItems = data.totalCount
+      this.isLoading = false;
+
+
+    })
+  }
+  mathRound(data: any) {
+    return Math.ceil(data)
+  }
+  numberOfRowsPerPage(data: any) {
+
+    this.filteration = { ...this.filteration, PageSize: data.value.code };
+
+    this.getHolidays(this.filteration)
+  }
+  addholiday() {
+    const dialogRefAddCurrency = this.dialog.open(AddAholidayComponent, {
+      width: "50vw",
+      data: {
+        title: "إضافة عطلة",
+        titleHolidayName: "اسم العطلة",
+        placeholdeHolidayName: "اسم العطلة",
+        labelRadioButtonFirst: "العطلة بالتقويم",
+        firstRadio: "الهجري",
+        secondRadio: "الميلادي",
+        titleCalendarFirst: "تاريخ البداية",
+        placeholderCalendarFirst: "اختار تاريخ البداية (هجري)",
+        titleCalendarSecond: "تاريخ النهاية",
+        placeholderCalendarSecond: "اختار تاريخ النهاية (هجري)",
+        titleNotes: "ملاحظات",
+        placeholdeNotes: "برجاء كتابة الملاحظات هنا",
+        buttonSend: "إضافة العطلة",
+        titleClose: "تراجع"
+      },
+    });
+    dialogRefAddCurrency.componentInstance.submitted = true;
+    // dialogRefAddCurrency.componentInstance.list = this.categories;
+
+    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+      dialogRefAddCurrency.close();
+
+      const succressDialog = this.dialog.open(ToastSuccessComponent, {
+        width: "30vw",
+        data: {
+          title: "تم ارسال طلبك",
+          message: "طلبك في انتظار الموافقة، ويمكنك متابعة حالة الطلب من صفحة التبريرات",
+          buttonSend: "طلبات التبريرات"
+        },
+      });
+      setTimeout(() => {
+        succressDialog.close();
+
+      }, 2000);
+      succressDialog.componentInstance.submitted = true;
+      succressDialog.componentInstance.submitClicked.subscribe(result => {
+        succressDialog.close();
+
+      })
+
+      dialogRefAddCurrency.componentInstance.submitted = false;
+    });
+    dialogRefAddCurrency.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
   }
   editHoliday() {
 
@@ -298,58 +311,7 @@ export class HolidaysComponent {
     dialogRefAddCurrency.componentInstance.id = data.id
 
   }
-  addAholiday() {
-    const dialogRefAddCurrency = this.dialog.open(AddAholidayComponent, {
-      width: "50vw",
-      data: {
-        title: "إضافة عطلة",
-        titleHolidayName: "اسم العطلة",
-        placeholdeHolidayName: "اسم العطلة",
-        labelRadioButtonFirst: "العطلة بالتقويم",
-        firstRadio: "الهجري",
-        secondRadio: "الميلادي",
-        titleCalendarFirst: "تاريخ البداية",
-        placeholderCalendarFirst: "اختار تاريخ البداية (هجري)",
-        titleCalendarSecond: "تاريخ النهاية",
-        placeholderCalendarSecond: "اختار تاريخ النهاية (هجري)",
-        titleNotes: "ملاحظات",
-        placeholdeNotes: "برجاء كتابة الملاحظات هنا",
-        buttonSend: "إضافة العطلة",
-        titleClose: "تراجع"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    // dialogRefAddCurrency.componentInstance.list = this.categories;
 
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      dialogRefAddCurrency.close();
-
-      const succressDialog = this.dialog.open(ToastSuccessComponent, {
-        width: "30vw",
-        data: {
-          title: "تم ارسال طلبك",
-          message: "طلبك في انتظار الموافقة، ويمكنك متابعة حالة الطلب من صفحة التبريرات",
-          buttonSend: "طلبات التبريرات"
-        },
-      });
-      setTimeout(() => {
-        succressDialog.close();
-
-      }, 2000);
-      succressDialog.componentInstance.submitted = true;
-      succressDialog.componentInstance.submitClicked.subscribe(result => {
-        succressDialog.close();
-
-      })
-
-      dialogRefAddCurrency.componentInstance.submitted = false;
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
-
-      }
-    });
-  }
   deleteRow() {
     const reasonOfRefuseDialog = this.dialog.open(DeleteShiftComponent, {
       width: "30vw",

@@ -20,6 +20,7 @@ import { SectionsService } from 'src/app/Presentation/user/sections/services/sec
 import { MatRadioModule } from '@angular/material/radio';
 import { EmployeesService } from 'src/app/Presentation/user/employees/services/employees.service';
 import { SchedualPlanService } from 'src/app/Presentation/user/schedual-plan/services/schedual-plan.service';
+import { VacationBalanceService } from 'src/app/Presentation/user/vacation-balance/services/vacation-balance.service';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -56,13 +57,17 @@ interface DataDialog {
   placeholdeGroupId: string;
   ValidationGroupId: string;
 
-  titleScheduleId: string;
-  placeholdeScheduleId: string;
-  ValidationScheduleId: string;
+  titleVacationType: string;
+  placeholdeVacationType: string;
+  ValidationVacationType: string;
 
   titleCalendar: string;
   placeholderCalendar: string;
   validationCalendar: string;
+
+  titleBalance: string;
+  placeholderBalance: string;
+  validationBalance: string;
 
 
   message: string,
@@ -77,13 +82,13 @@ interface UploadEvent {
   files: File[];
 }
 @Component({
-  selector: 'app-add-schedual-plan',
+  selector: 'app-add-vacation-balance',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, MatRadioModule, MultiSelectModule, MatProgressSpinnerModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
-  templateUrl: './add-schedual-plan.component.html',
-  styleUrls: ['./add-schedual-plan.component.scss']
+  templateUrl: './add-vacation-balance.component.html',
+  styleUrls: ['./add-vacation-balance.component.scss']
 })
-export class AddSchedualPlanComponent {
+export class AddVacationBalanceComponent {
   loading = false;
 
 
@@ -91,7 +96,7 @@ export class AddSchedualPlanComponent {
   @Input() submitted!: boolean;
   list: any[] = [
   ];
-  @Input() editSchedualPlan!: boolean;
+  @Input() editVacation!: boolean;
   @Input() id!: string;
 
   listEmployeeId: any[] = [
@@ -100,9 +105,9 @@ export class AddSchedualPlanComponent {
   ];
   listDepartmentId: any[] = [
   ];
-  listScheduleId: any[] = [];
+  listVacationType: any[] = [];
 
-  private schedualPlanService = inject(SchedualPlanService);
+  private vacationBalanceService = inject(VacationBalanceService);
 
 
   employeeIdToggle = true;
@@ -113,19 +118,18 @@ export class AddSchedualPlanComponent {
   addBranchGroupForm: FormGroup = this.fb.group({
     isActive: [false],
     fieldDisabled: [""],
-
-    SchedulePlanType: ['0', Validators.required],
+    ForType: ['0', Validators.required],
     EmployeeId: ['', Validators.required],
-
-    ScheduleId: ["", Validators.required],
-    DateFrom: ['', Validators.required],
+    Balance: ['', Validators.required],
+    VacationType: ["", Validators.required],
+    Year: ['', Validators.required],
     notes: ["", Validators.required],
 
   });
   uploadedCommercialRegFiles: any[] = [];
   requiredCommercialRegFiles = false;
   constructor(
-    public dialogRef: MatDialogRef<AddSchedualPlanComponent>,
+    public dialogRef: MatDialogRef<AddVacationBalanceComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
     private fb: FormBuilder
@@ -136,11 +140,17 @@ export class AddSchedualPlanComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.loading = true;
-    let employeesDropdown = this.schedualPlanService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+    this.listVacationType = [
+      { name: "إعتيادي", key: 0 },
+      { name: "عارضة", key: 1 },
+      { name: "مرضي", key: 2 },
+      { name: "اجازة نسائية", key: 3 },
+      { name: "أخري", key: 4 }
+    ]
+    let employeesDropdown = this.vacationBalanceService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
 
-    let groupsForDropdown = this.schedualPlanService.groupsForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-    let departmentForDropdown = this.schedualPlanService.departmentForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-    let schedualForDropdown = this.schedualPlanService.schedualForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+    let groupsForDropdown = this.vacationBalanceService.groupsForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+    let departmentForDropdown = this.vacationBalanceService.departmentForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
 
 
 
@@ -149,7 +159,7 @@ export class AddSchedualPlanComponent {
       employeesDropdown,
       groupsForDropdown,
       departmentForDropdown,
-      schedualForDropdown
+
     }).subscribe(
       {
         next: data => {
@@ -159,7 +169,6 @@ export class AddSchedualPlanComponent {
           this.listEmployeeId = [];
           this.listGroupId = [];
           this.listDepartmentId = [];
-          this.listScheduleId = [];
 
           data.employeesDropdown?.data?.forEach((day: any) => {
             this.listEmployeeId.push({ name: day.name, key: day.id });
@@ -173,47 +182,36 @@ export class AddSchedualPlanComponent {
             this.listDepartmentId.push({ name: day.name, key: day.id });
 
           });
-          data.schedualForDropdown?.data?.forEach((day: any) => {
-            this.listScheduleId.push({ name: day.name, key: day.id });
 
-          });
           this.loading = false;
 
-          if (this.editSchedualPlan) {
-            this.schedualPlanService.schedualPlanGetById({ schedulePlanId: this.id }).subscribe(
+          if (this.editVacation) {
+            this.vacationBalanceService.vacationGetById({ vacationBalanceId: this.id }).subscribe(
               {
                 next: data => {
+                  debugger;
 
-                  // SchedulePlanType: ['0', Validators.required],
-                  //   EmployeeId: ['', Validators.required],
-
-                  //     ScheduleId: ["", Validators.required],
-                  //       DateFrom: ['', Validators.required],
-                  //         notes: ["", Validators.required],
                   this.getControl("isActive")?.setValue(data.isActive);
                   this.getControl("notes")?.setValue(data.notes);
 
-                  this.getControl("DateFrom")?.setValue(new Date(data.dateFrom));
+                  this.getControl("Year")?.setValue(new Date(data.year.toString()));
+                  this.getControl("Balance")?.setValue(data.balance);
 
-                  this.getControl("SchedulePlanType")?.setValue(data.schedulePlanType.toString());
+                  data.employeeId != undefined ? this.getControl("ForType")?.setValue("0") : [];
+                  data.groupId != undefined ? this.getControl("ForType")?.setValue("1") : [];
+                  data.departmentId != undefined ? this.getControl("ForType")?.setValue("2") : [];
+
                   this.getControl("fieldDisabled")?.setValue(data.code);
 
+                  debugger;
+                  let indexGroupManager = this.listVacationType.findIndex(list => list.key === data.vacationType);
+                  if (indexGroupManager >= 0) {
+                    this.getControl("VacationType")?.setValue(this.listVacationType[indexGroupManager]);
 
+                  }
 
-                  this.schedualPlanService.schedualForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.scheduleId }).subscribe(dataDropdown => {
-                    this.listScheduleId = [];
-                    dataDropdown.data?.forEach((list: any) => {
-                      this.listScheduleId.push({ name: list.name, key: list.id });
-                    });
-                    let indexGroupManager = this.listScheduleId.findIndex(list => list.key === data.scheduleId);
-                    if (indexGroupManager >= 0) {
-                      this.getControl("ScheduleId")?.setValue(this.listScheduleId[indexGroupManager]);
-
-                    }
-
-                  });
                   if (data.employeeId != null) {
-                    this.schedualPlanService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.employeeId }).subscribe(dataDropdown => {
+                    this.vacationBalanceService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.employeeId }).subscribe(dataDropdown => {
                       this.listEmployeeId = [];
                       dataDropdown.data?.forEach((list: any) => {
                         this.listEmployeeId.push({ name: list.name, key: list.id });
@@ -227,7 +225,7 @@ export class AddSchedualPlanComponent {
                     });
                   }
                   if (data.groupId != null) {
-                    this.schedualPlanService.groupsForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.groupId }).subscribe(dataDropdown => {
+                    this.vacationBalanceService.groupsForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.groupId }).subscribe(dataDropdown => {
                       this.listGroupId = [];
                       dataDropdown.data?.forEach((list: any) => {
                         this.listGroupId.push({ name: list.name, key: list.id });
@@ -241,7 +239,7 @@ export class AddSchedualPlanComponent {
                     });
                   }
                   if (data.departmentId != null) {
-                    this.schedualPlanService.departmentForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.departmentId }).subscribe(dataDropdown => {
+                    this.vacationBalanceService.departmentForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.departmentId }).subscribe(dataDropdown => {
                       this.listDepartmentId = [];
                       dataDropdown.data?.forEach((list: any) => {
                         this.listDepartmentId.push({ name: list.name, key: list.id });
@@ -255,69 +253,6 @@ export class AddSchedualPlanComponent {
                     });
                   }
 
-                  // this.groupsService.GetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids: data?.employeeIds }).subscribe(dataDropdown => {
-
-                  //   this.listGroupEmployees = [];
-                  //   dataDropdown.data?.forEach((list: any) => {
-                  //     this.listGroupEmployees.push({ name: list.name, key: list.id });
-                  //   });
-                  //   data?.employeeIds?.forEach((employee: any) => {
-
-
-                  //     let indexEmployees = this.listGroupEmployees.findIndex(list => list.key === employee);
-
-
-                  //     if (indexEmployees >= 0) {
-                  //       if (Array.isArray(this.getControl("groupEmployees")?.value)) {
-                  //         this.getControl("groupEmployees")?.patchValue(([{ name: this.listGroupEmployees[indexEmployees].name, key: this.listGroupEmployees[indexEmployees].key }, ...this.getControl("groupEmployees")?.value]));
-                  //       } else {
-                  //         this.getControl("groupEmployees")?.patchValue(([{ name: this.listGroupEmployees[indexEmployees].name, key: this.listGroupEmployees[indexEmployees].key }]));
-                  //       }
-                  //     }
-
-                  //   });
-
-                  // });
-
-                  // this.groupsService.GetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids: data?.managerDelegatorIds }).subscribe(dataDropdown => {
-
-                  //   this.listDeputyDirector = [];
-                  //   dataDropdown.data?.forEach((list: any) => {
-                  //     this.listDeputyDirector.push({ name: list.name, key: list.id });
-                  //   });
-
-                  //   data?.managerDelegatorIds?.forEach((employee: any) => {
-
-                  //     let indexDeputyDirector = this.listDeputyDirector.findIndex(list => list.key === employee);
-                  //     if (indexDeputyDirector >= 0) {
-                  //       if (Array.isArray(this.getControl("deputyDirector")?.value)) {
-                  //         this.getControl("deputyDirector")?.patchValue(([{ name: this.listDeputyDirector[indexDeputyDirector].name, key: this.listDeputyDirector[indexDeputyDirector].key }, ...this.getControl("deputyDirector")?.value]));
-                  //       } else {
-                  //         this.getControl("deputyDirector")?.patchValue(([{ name: this.listDeputyDirector[indexDeputyDirector].name, key: this.listDeputyDirector[indexDeputyDirector].key }]));
-                  //       }
-                  //     }
-
-                  //   });
-
-                  // });
-
-
-                  // data?.zoneIds?.forEach((zone: any) => {
-
-                  //   let indexZones = this.listZones.findIndex(list => list.key === zone);
-
-
-                  //   if (indexZones >= 0) {
-                  //     if (Array.isArray(this.getControl("zoneIds")?.value)) {
-                  //       this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }, ...this.getControl("zoneIds")?.value]));
-                  //     } else {
-                  //       this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }]));
-                  //     }
-                  //   }
-
-                  // });
-
-
                   this.loading = false;
                 },
                 error: err => {
@@ -327,7 +262,7 @@ export class AddSchedualPlanComponent {
             )
 
           }
-          if (!this.editSchedualPlan) {
+          if (!this.editVacation) {
             this.loading = false;
 
           }
@@ -339,7 +274,7 @@ export class AddSchedualPlanComponent {
         }
       }
     )
-    this.addBranchGroupForm.get("SchedulePlanType")?.valueChanges.subscribe(data => {
+    this.addBranchGroupForm.get("ForType")?.valueChanges.subscribe(data => {
 
       if (data === "0") {
         this.addBranchGroupForm.removeControl("GroupId");
@@ -388,7 +323,7 @@ export class AddSchedualPlanComponent {
         if (data || data === "") {
           if (data !== this.lastSearchQuery) {
             this.lastSearchQuery = data;
-            this.schedualPlanService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+            this.vacationBalanceService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listEmployeeId = [];
@@ -410,7 +345,7 @@ export class AddSchedualPlanComponent {
         if (data || data === "") {
           if (data !== this.lastSearchQuery) {
             this.lastSearchQuery = data;
-            this.schedualPlanService.groupsForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+            this.vacationBalanceService.groupsForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listGroupId = [];
@@ -431,7 +366,7 @@ export class AddSchedualPlanComponent {
         if (data || data === "") {
           if (data !== this.lastSearchQuery) {
             this.lastSearchQuery = data;
-            this.schedualPlanService.departmentForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+            this.vacationBalanceService.departmentForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listDepartmentId = [];
@@ -448,18 +383,18 @@ export class AddSchedualPlanComponent {
 
         }
         break;
-      case 'ScheduleId':
+      case 'VacationType':
         if (data || data === "") {
           if (data !== this.lastSearchQuery) {
             this.lastSearchQuery = data;
-            this.schedualPlanService.schedualForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+            this.vacationBalanceService.vacationForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listScheduleId = [];
+                this.listVacationType = [];
                 res.data?.forEach((day: any) => {
 
 
-                  this.listScheduleId.push({ name: day.name, key: day.id });
+                  this.listVacationType.push({ name: day.name, key: day.id });
 
                 });
 
@@ -485,10 +420,13 @@ export class AddSchedualPlanComponent {
       this.submitClicked.emit(this.addBranchGroupForm.value);
       // this.dialogRef.close(true);
     } else {
-      this.getControl("ScheduleId")?.markAsDirty();
-      this.getControl("SchedulePlanType")?.markAsDirty();
-      this.getControl("DateFrom")?.markAsDirty();
+      this.getControl("VacationType")?.markAsDirty();
+      this.getControl("ForType")?.markAsDirty();
+      this.getControl("Year")?.markAsDirty();
       this.getControl("notes")?.markAsDirty();
+      this.getControl("Balance")?.markAsDirty();
+
+
       this.getControl("EmployeeId")?.markAsDirty();
       this.getControl("DepartmentId")?.markAsDirty();
       this.getControl("GroupId")?.markAsDirty();
