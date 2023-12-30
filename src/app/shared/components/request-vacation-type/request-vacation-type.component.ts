@@ -95,8 +95,8 @@ export class RequestVacationTypeComponent {
           next: data => {
             this.addBranchGroupForm.get("IsNecessary")?.setValue(data.isActive);
             this.addBranchGroupForm.get("name")?.setValue(data.name);
-            if (data.type != null) {
-              let indexVacationType = this.listVacationType.findIndex(list => list.key === data.type);
+            if (data.defaultType != null) {
+              let indexVacationType = this.listVacationType.findIndex(list => list.key === data.defaultType);
               if (indexVacationType >= 0) {
                 this.getControl("type")?.setValue(this.listVacationType[indexVacationType]);
 

@@ -251,7 +251,7 @@ export class VacationTypeComponent {
       let formData: any = {};
       formData.name = result.name;
       formData.isActive = result.IsNecessary;
-      formData.type = result.type.key;
+      formData.DefaultType = result.type.key;
 
       dialogRefAddCurrency.componentInstance.submitted = false;
 
@@ -321,7 +321,7 @@ export class VacationTypeComponent {
       formData.id = data.id;
       formData.name = result.name;
       formData.isActive = result.IsNecessary;
-      formData.type = result.type.key;
+      formData.DefaultType = result.type.key;
 
       dialogRefAddCurrency.componentInstance.submitted = false;
 

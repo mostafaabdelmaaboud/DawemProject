@@ -204,7 +204,7 @@ export class AddVacationBalanceComponent {
                   this.getControl("fieldDisabled")?.setValue(data.code);
 
 
-                  let indexGroupManager = this.listVacationType.findIndex(list => list.key === data.vacationType);
+                  let indexGroupManager = this.listVacationType.findIndex(list => list.key === data.defaultVacationType);
                   if (indexGroupManager >= 0) {
                     this.getControl("VacationType")?.setValue(this.listVacationType[indexGroupManager]);
 

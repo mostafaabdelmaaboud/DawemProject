@@ -234,9 +234,9 @@ export class VacationBalanceComponent {
         ValidationEmployeeId: "نوع الموظف مطلوب",
 
 
-        titleVacationType: "نوع الاجازة",
-        placeholdeVacationType: "نوع الاجازة",
-        ValidationVacationType: "نوع الاجازة مطلوب",
+        titleVacationType: " نوع الأجازة الافتراضي",
+        placeholdeVacationType: " نوع الأجازة الافتراضي",
+        ValidationVacationType: " نوع الأجازة الافتراضي مطلوب",
 
         titleCalendar: "التاريخ",
         placeholderCalendar: "اختار التاريخ",
@@ -273,7 +273,7 @@ export class VacationBalanceComponent {
 
       formData.Balance = result.Balance;
 
-      formData.VacationType = result.VacationType.key;
+      formData.DefaultVacationType = result.VacationType.key;
 
       formData.Year = moment(new Date(result.Year)).format("yy");
       formData.notes = result.notes;
@@ -387,9 +387,9 @@ export class VacationBalanceComponent {
         ValidationEmployeeId: "نوع الموظف مطلوب",
 
 
-        titleVacationType: "نوع الاجازة",
-        placeholdeVacationType: "نوع الاجازة",
-        ValidationVacationType: "نوع الاجازة مطلوب",
+        titleVacationType: " نوع الأجازة الافتراضي",
+        placeholdeVacationType: " نوع الأجازة الافتراضي",
+        ValidationVacationType: " نوع الأجازة الافتراضي مطلوب",
 
         titleCalendar: "التاريخ",
         placeholderCalendar: "اختار التاريخ",
@@ -428,7 +428,7 @@ export class VacationBalanceComponent {
 
       formData.Balance = result.Balance;
 
-      formData.VacationType = result.VacationType.key;
+      formData.DefaultVacationType = result.VacationType.key;
 
       formData.Year = moment(new Date(result.Year)).format("yy");
       formData.notes = result.notes;
