@@ -7,13 +7,13 @@
 
   </div>
 </div>
-<div class="cards-dashboard">
-  <div class="row">
-    <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
+<div class="cards-dashboard position-relative">
+  <div class="row" *ngIf="!spinnerCards">
+    <div class="content-card cardHead col-xl-4 col-sm-6 col-12">
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Primary-700">اجمالي العطلات</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">147</span>
+          <span class="number-card-dashboard">{{cards.totalHolidayCount}}</span>
           <span class="icon-card-dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
               <g opacity="0.2">
@@ -32,11 +32,11 @@
         </div>
       </div>
     </div>
-    <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
+    <div class="content-card cardHead col-xl-4 col-sm-6 col-12">
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Warning-700 ">العطلات القادمة</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">168</span>
+          <span class="number-card-dashboard">{{cards.upcomingHolidaiesCount}}</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
             <g opacity="0.2">
               <path opacity="0.4"
@@ -50,11 +50,11 @@
         </div>
       </div>
     </div>
-    <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
+    <div class="content-card cardHead col-xl-4 col-sm-6 col-12">
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Success-700">العطلات الماضية</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">124</span>
+          <span class="number-card-dashboard">{{cards.pastHolidaiesCount}}</span>
           <span class="icon-card-dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
               <g opacity="0.2">
@@ -73,34 +73,10 @@
         </div>
       </div>
     </div>
-
-
-    <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
-      <div class="custom-card-dashboard">
-        <span class="title-card-dashboard Error-700">العطلات المرفوضة</span>
-        <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">325</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
-            <g opacity="0.2">
-              <path opacity="0.5"
-                d="M32.25 58.8117C19.6792 58.8117 13.3938 58.8117 9.48858 54.9064C5.58334 51.0012 5.58334 44.7158 5.58334 32.145C5.58334 19.5742 5.58334 13.2888 9.48858 9.38358C13.3938 5.47833 19.6792 5.47833 32.25 5.47833C44.8208 5.47833 51.1062 5.47833 55.0114 9.38358C58.9167 13.2888 58.9167 19.5742 58.9167 32.145C58.9167 44.7158 58.9167 51.0012 55.0114 54.9064C51.1062 58.8117 44.8208 58.8117 32.25 58.8117Z"
-                fill="#D21C1C" />
-              <path
-                d="M24.1691 24.0641C24.9502 23.2831 26.2165 23.2831 26.9975 24.0641L32.25 29.3166L37.5025 24.0642C38.2835 23.2831 39.5498 23.2831 40.3309 24.0642C41.1119 24.8452 41.1119 26.1116 40.3309 26.8926L35.0785 32.145L40.3308 37.3974C41.1119 38.1784 41.1119 39.4448 40.3308 40.2258C39.5498 41.0069 38.2834 41.0069 37.5024 40.2258L32.25 34.9735L26.9976 40.2259C26.2166 41.0069 24.9502 41.0069 24.1692 40.2259C23.3881 39.4448 23.3881 38.1785 24.1692 37.3974L29.4216 32.145L24.1691 26.8925C23.3881 26.1115 23.3881 24.8452 24.1691 24.0641Z"
-                fill="#D21C1C" />
-            </g>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-
-
-
-
   </div>
-
-
+  <div class="spinner spinner-cards d-flex justify-content-center align-items-center" *ngIf="spinnerCards">
+    <mat-spinner></mat-spinner>
+  </div>
 </div>
 <div class="table-basic">
   <!-- <div class="header-table-basic">
@@ -307,12 +283,21 @@
             </span>
             <div class="action-body-td">
               <button type="button" class="btn btn-outline-secondary action-accept color-green"
-                (click)="editHoliday()"><i class="bi bi-pencil-square"></i></button>
+                (click)="editHoliday(rowData)"><i class="bi bi-pencil-square"></i></button>
               <button type="button" class="btn btn-outline-secondary action-close color-blue"
                 (click)="dialogHolidayFile(rowData)"><i class="bi bi-person-vcard"></i></button>
-              <button type="button" class="btn btn-outline-secondary action-close color-red" (click)="deleteRow()"><i
-                  class="bi bi-trash3-fill"></i>
-              </button>
+
+              <ng-container *ngIf="rowData.isActive">
+                <button type="button" class="btn btn-outline-secondary action-close color-red"
+                  (click)="reasonOfRefuse(rowData)"><i class="bi bi-x-circle"></i></button>
+              </ng-container>
+              <ng-container *ngIf="!rowData.isActive">
+
+                <button type="button" (click)="enabledRow(rowData)"
+                  class="btn btn-outline-secondary action-accept color-green"><i
+                    class="bi bi-check-circle"></i></button>
+              </ng-container>
+
 
 
 

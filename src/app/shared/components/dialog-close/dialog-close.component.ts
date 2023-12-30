@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/core/auth/services/auth-service.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { InputTextModule } from 'primeng/inputtext';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 interface addBranchesInputsProps {
@@ -35,7 +36,7 @@ interface UploadEvent {
 @Component({
   selector: 'app-dialog-close',
   standalone: true,
-  imports: [CommonModule, TranslateModule, InputTextModule, ReactiveFormsModule],
+  imports: [CommonModule, TranslateModule, InputTextModule, MatProgressSpinnerModule, ReactiveFormsModule],
   templateUrl: './dialog-close.component.html',
   styleUrls: ['./dialog-close.component.scss']
 })

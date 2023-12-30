@@ -11,16 +11,19 @@
   </header>
   <div class="body-dialog p-15 f-s-16">
     <form [formGroup]="addBranchGroupForm">
+      <div class="section1 mb-3">
+        <label class="title">{{data!['setAsActive']|translate}}</label>
+        <p-inputSwitch formControlName="isActive"></p-inputSwitch>
+      </div>
       <div class="sectionField mb-3">
         <label for="" class="label-input mb-2" [innerHTML]="data!['titleHolidayName']|translate"></label>
         <div class="content-password">
-          <input type="text" pInputText formControlName="holidayName"
-            [placeholder]="data!['placeholdeHolidayName']|translate" class="w-100" />
+          <input type="text" pInputText formControlName="name" [placeholder]="data!['placeholdeHolidayName']|translate"
+            class="w-100" />
         </div>
         <!--Start Custom Validators-->
-        <div class="container-alerts" *ngIf="getControl('holidayName')?.errors">
-          <div class="alert alert-danger"
-            *ngIf="getControl('holidayName')?.hasError('required') && getControl('holidayName')?.dirty">
+        <div class="container-alerts mt-2" *ngIf="getControl('name')?.errors">
+          <div class="alert alert-danger" *ngIf="getControl('name')?.hasError('required') && getControl('name')?.dirty">
             {{data!['validationtitleHolidayName']|translate}}
           </div>
         </div>
@@ -30,7 +33,7 @@
         <label class="title">{{data!['labelRadioButtonFirst']|translate}}</label>
 
         <div class="container-radio-button">
-          <mat-radio-group aria-label="Select an option" color="primary" formControlName="frstRadios">
+          <mat-radio-group aria-label="Select an option" color="primary" formControlName="dateType">
             <mat-radio-button value="0">{{data!['secondRadio']|translate}}
             </mat-radio-button>
             <mat-radio-button value="1">{{data!['firstRadio']|translate}}</mat-radio-button>
@@ -42,15 +45,19 @@
         <label class="title" [innerHTML]="data!['titleCalendarFirst']|translate"></label>
         <div class="content-password">
           <div class="content-pCalendar-default" dir="ltr">
-            <p-calendar formControlName="calendarFirst" appendTo="body"
+            <p-calendar formControlName="startDate" appendTo="body" [locale]="hijriLocale"
               [placeholder]="data!['placeholderCalendarFirst']|translate" [showIcon]="true"></p-calendar>
           </div>
         </div>
         <!--Start Custom Validators-->
-        <div class="container-alerts" *ngIf="getControl('calendarFirst')?.errors">
+        <div class="container-alerts mt-2" *ngIf="getControl('startDate')?.errors">
           <div class="alert alert-danger"
-            *ngIf="getControl('calendarFirst')?.hasError('required') && getControl('calendarFirst')?.dirty">
+            *ngIf="getControl('startDate')?.hasError('required') && getControl('startDate')?.dirty">
             {{data!['validationCalendarFirst']|translate}}
+          </div>
+          <div class="alert alert-danger"
+            *ngIf="getControl('startDate')?.hasError('dateRangeError') && !getControl('startDate')?.hasError('required')">
+            يجب البدايه اصغر من النهايه التاريخ
           </div>
         </div>
         <!--End Custom Validators-->
@@ -60,15 +67,19 @@
         <label class="title" [innerHTML]="data!['titleCalendarSecond']|translate"></label>
         <div class="content-password">
           <div class="content-pCalendar-default" dir="ltr">
-            <p-calendar formControlName="calendarSecond" appendTo="body"
+            <p-calendar formControlName="endDate" appendTo="body" [locale]="hijriLocale"
               [placeholder]="data!['placeholderCalendarSecond']|translate" [showIcon]="true"></p-calendar>
           </div>
         </div>
         <!--Start Custom Validators-->
-        <div class="container-alerts" *ngIf="getControl('calendarSecond')?.errors">
+        <div class="container-alerts mt-2" *ngIf="getControl('endDate')?.errors">
           <div class="alert alert-danger"
-            *ngIf="getControl('calendarSecond')?.hasError('required') && getControl('calendarSecond')?.dirty">
+            *ngIf="getControl('endDate')?.hasError('required') && getControl('endDate')?.dirty">
             {{data!['validationCalendarSecond']|translate}}
+          </div>
+          <div class="alert alert-danger"
+            *ngIf="getControl('endDate')?.hasError('dateRangeError') && !getControl('endDate')?.hasError('required')">
+            يجب النهاية اكبر من البدايه التاريخ
           </div>
         </div>
         <!--End Custom Validators-->
@@ -82,7 +93,7 @@
             class="w-100" />
         </div>
         <!--Start Custom Validators-->
-        <div class="container-alerts" *ngIf="getControl('notes')?.errors">
+        <div class="container-alerts mt-2" *ngIf="getControl('notes')?.errors">
           <div class="alert alert-danger"
             *ngIf="getControl('notes')?.hasError('required') && getControl('notes')?.dirty">
             {{data!['validationtitleNotes']|translate}}
@@ -90,28 +101,12 @@
         </div>
         <!--End Custom Validators-->
       </div>
+      <div class="field-checkbox mb-1">
+        <p-checkbox name="category" formControlName="isSpecifiedByYear" [value]="true"
+          inputId="isSpecifiedByYear"></p-checkbox>
+        <label for="isSpecifiedByYear" class="mb-0">يتم تحديده حسب السنة</label>
+      </div>
     </form>
-
-    <!-- <form [formGroup]="addBranchGroupForm">
-            <ng-container *ngIf="data?.subTitle">
-                <div class="mb-3" [innerHTML]="data!['subTitle']!|translate"></div>
-            </ng-container>
-            <div class="li-input col-12" *ngFor="let input of data?.addBranchesInputsProps">
-                <label for="" class="label-input mb-2" [innerHTML]="input['LabelMessage']|translate"></label>
-                <div class="content-password">
-
-
-                    <input [formControlName]="input.name" pInputText class="w-100" [type]="input.inputType" required
-                        [name]="input.name" />
-                </div>
-                <div class="container-alerts" *ngIf="getControl(input.name)?.errors">
-                    <div class="alert alert-danger"
-                        *ngIf="getControl(input.name)?.hasError('required') && getControl(input.name)?.dirty">
-                        {{input['message']|translate}}
-                    </div>
-                </div>
-            </div>
-        </form> -->
 
   </div>
   <footer class="footer-dialog p-15 d-flex justify-content-end">

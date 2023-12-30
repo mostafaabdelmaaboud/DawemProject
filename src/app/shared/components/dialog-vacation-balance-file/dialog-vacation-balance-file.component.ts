@@ -68,7 +68,6 @@ export class DialogVacationBalanceFileComponent {
     if (this.id) {
 
       this.vacationBalanceService.vacationGetInfo({ vacationBalanceId: this.id }).subscribe(data => {
-        debugger;
         this.info = data;
 
         this.loading = false;

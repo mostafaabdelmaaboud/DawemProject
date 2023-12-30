@@ -175,7 +175,7 @@ export class VacationBalanceComponent {
     this.spinnerCards = true;
     this.vacationBalanceService.getInformation().subscribe({
       next: data => {
-        debugger;
+
         this.cards = {
           ...data
         };
@@ -193,9 +193,9 @@ export class VacationBalanceComponent {
     this.isLoading = true;
 
     this.vacationBalanceService.listVacations(filteration).subscribe(data => {
-      debugger;
+
       data.data.forEach((vacation: any) => {
-        debugger;
+
         this.Vacations.push({
           id: vacation.id,
           code: vacation.code,
@@ -263,7 +263,7 @@ export class VacationBalanceComponent {
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
-      debugger;
+
       formData.isActive = result.isActive;
 
       formData.ForType = Number(result.ForType);
@@ -277,7 +277,7 @@ export class VacationBalanceComponent {
 
       formData.Year = moment(new Date(result.Year)).format("yy");
       formData.notes = result.notes;
-      debugger;
+
       dialogRefAddCurrency.componentInstance.loading = true;
       this.vacationBalanceService.createVacation(formData).subscribe(
         {
@@ -417,7 +417,7 @@ export class VacationBalanceComponent {
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
-      debugger;
+
       formData.isActive = result.isActive;
       formData.id = data.id;
 
@@ -432,7 +432,7 @@ export class VacationBalanceComponent {
 
       formData.Year = moment(new Date(result.Year)).format("yy");
       formData.notes = result.notes;
-      debugger;
+
       dialogRefAddCurrency.componentInstance.loading = true;
       this.vacationBalanceService.updateVacation(formData).subscribe(
         {

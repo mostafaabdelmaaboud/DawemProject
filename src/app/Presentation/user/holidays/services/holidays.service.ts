@@ -32,6 +32,16 @@ export class HolidaysService {
     }
     return this.http.get<any>(`${environment.baseUrl}Holiday/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
   }
+  enabledHoliday(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.put<any>(`${environment.baseUrl}Holiday/enable`, {}, { params: queryParams })
+  }
   disableHoliday(params: any) {
     let queryParams = new HttpParams();
 

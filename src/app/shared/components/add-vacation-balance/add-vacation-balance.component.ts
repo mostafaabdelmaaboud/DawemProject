@@ -189,7 +189,7 @@ export class AddVacationBalanceComponent {
             this.vacationBalanceService.vacationGetById({ vacationBalanceId: this.id }).subscribe(
               {
                 next: data => {
-                  debugger;
+
 
                   this.getControl("isActive")?.setValue(data.isActive);
                   this.getControl("notes")?.setValue(data.notes);
@@ -203,7 +203,7 @@ export class AddVacationBalanceComponent {
 
                   this.getControl("fieldDisabled")?.setValue(data.code);
 
-                  debugger;
+
                   let indexGroupManager = this.listVacationType.findIndex(list => list.key === data.vacationType);
                   if (indexGroupManager >= 0) {
                     this.getControl("VacationType")?.setValue(this.listVacationType[indexGroupManager]);

@@ -11,8 +11,8 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { CalendarModule } from "primeng/calendar";
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { EmployeesService } from 'src/app/Presentation/user/employees/services/employees.service';
 import * as moment from 'moment';
+import { HolidaysService } from 'src/app/Presentation/user/holidays/services/holidays.service';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -44,7 +44,7 @@ interface UploadEvent {
 })
 export class DialogHolidayFileComponent {
   loading = false;
-  private employeesService = inject(EmployeesService);
+  private holidaysService = inject(HolidaysService);
 
   @Input() submitted!: boolean;
   info!: any;
@@ -63,19 +63,24 @@ export class DialogHolidayFileComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.loading = true;
-    this.loading = false;
 
     if (this.id) {
 
-      // this.employeesService.employeeGetInfo({ employeeId: this.id }).subscribe(data => {
+      this.holidaysService.holidayGetInfo({ HolidayId: this.id }).subscribe(
+        {
+          next: data => {
 
 
-      //   this.info = data;
-      //   this.info.joiningDate = moment(new Date(this.info.joiningDate)).format("MM/DD/YYYY")
-      //   this.loading = false;
+            this.info = data;
+            this.loading = false;
 
-      // })
-      //   this.loading = false;
+          },
+          error: err => {
+            this.loading = false;
+
+          }
+        }
+      )
 
     }
   }

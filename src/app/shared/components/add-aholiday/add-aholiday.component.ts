@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/core/auth/services/auth-service.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DropdownModule } from 'primeng/dropdown';
@@ -12,6 +12,9 @@ import { CalendarModule } from "primeng/calendar";
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HolidaysService } from 'src/app/Presentation/user/holidays/services/holidays.service';
+import { CheckboxModule } from 'primeng/checkbox';
+import * as moment from 'moment';
+import { PrimeNGConfig } from 'primeng/api';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -38,6 +41,10 @@ interface DataDialog {
   secondRadio: string;
   titleClose: string;
   placeholderCalendar: string;
+  titleName: string;
+  placeholdeName: string;
+  validationtitleName: string;
+  setAsActive: string;
   titleNotes: string;
   placeholdeNotes: string;
   validationtitleNotes: string;
@@ -57,7 +64,7 @@ interface UploadEvent {
 @Component({
   selector: 'app-add-aholiday',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatRadioModule, MatProgressSpinnerModule, ReactiveFormsModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
+  imports: [CommonModule, FormsModule, MatRadioModule, CheckboxModule, MatProgressSpinnerModule, ReactiveFormsModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
   templateUrl: './add-aholiday.component.html',
   styleUrls: ['./add-aholiday.component.scss']
 })
@@ -71,22 +78,36 @@ export class AddAholidayComponent {
   @Input() editHoliday!: boolean;
 
   addBranchGroupForm: FormGroup = this.fb.group({
-    frstRadios: ['0'],
-    holidayName: [''],
-    calendarFirst: [''],
-    calendarSecond: [''],
+    name: ["", Validators.required],
+    isActive: [false],
+    dateType: ['0'],
+    startDate: ['', [Validators.required, this.startDateValidator("endDate")]],
+    endDate: ['', [Validators.required, this.endDateValidator("startDate")]],
+    isSpecifiedByYear: [false],
     notes: ['', Validators.required]
   });
   private holidaysService = inject(HolidaysService);
   @Input() id!: boolean;
 
-
+  hijriLocale = {
+    dayNames: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"],
+    dayNamesShort: ["أحد", "اثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"],
+    dayNamesMin: ["أح", "إث", "ثل", "أر", "خم", "جم", "سب"],
+    monthNames: ["محرّم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"],
+    monthNamesShort: ["مح", "صف", "رب الأ", "رب الآ", "جم الأ", "جم الآ", "رج", "شع", "رم", "شو", "ذو الق", "ذو الح"],
+    am: "صباحًا",
+    pm: "مساءً",
+    today: "اليوم",
+    weekHeader: "الأسبوع",
+    clear: "مسح"
+  }
   uploadedCommercialRegFiles: any[] = [];
   requiredCommercialRegFiles = false;
   constructor(
     public dialogRef: MatDialogRef<AddAholidayComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
+    private config: PrimeNGConfig,
     private fb: FormBuilder
   ) {
     this.dialogRef.disableClose = true;
@@ -94,6 +115,91 @@ export class AddAholidayComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+    this.addBranchGroupForm.get("dateType")?.valueChanges.subscribe(data => {
+
+      if (data === "0") {
+        this.hijriLocale = {
+          dayNames: [
+            "الأحد",
+            "الاثنين",
+            "الثلاثاء",
+            "الأربعاء",
+            "الخميس",
+            "الجمعة",
+            "السبت"
+          ],
+          dayNamesShort: [
+            "أحد",
+            "اثنين",
+            "ثلاثاء",
+            "أربعاء",
+            "خميس",
+            "جمعة",
+            "سبت"
+          ],
+          dayNamesMin: [
+            "ح",
+            "ن",
+            "ث",
+            "ر",
+            "خ",
+            "ج",
+            "س"
+          ],
+          monthNames: [
+            "يناير",
+            "فبراير",
+            "مارس",
+            "أبريل",
+            "مايو",
+            "يونيو",
+            "يوليو",
+            "أغسطس",
+            "سبتمبر",
+            "أكتوبر",
+            "نوفمبر",
+            "ديسمبر"
+          ],
+          monthNamesShort: [
+            "يناير",
+            "فبراير",
+            "مارس",
+            "أبريل",
+            "مايو",
+            "يونيو",
+            "يوليو",
+            "أغسطس",
+            "سبتمبر",
+            "أكتوبر",
+            "نوفمبر",
+            "ديسمبر"
+          ],
+          am: "صباحًا",
+          pm: "مساءً",
+          today: "اليوم",
+          weekHeader: "الأسبوع",
+          clear: "مسح"
+        }
+        this.config.setTranslation(this.hijriLocale);
+
+      } else {
+
+        this.hijriLocale = {
+          dayNames: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"],
+          dayNamesShort: ["أحد", "اثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"],
+          dayNamesMin: ["أح", "إث", "ثل", "أر", "خم", "جم", "سب"],
+          monthNames: ["محرّم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"],
+          monthNamesShort: ["مح", "صف", "رب الأ", "رب الآ", "جم الأ", "جم الآ", "رج", "شع", "رم", "شو", "ذو الق", "ذو الح"],
+          am: "صباحًا",
+          pm: "مساءً",
+          today: "اليوم",
+          weekHeader: "الأسبوع",
+          clear: "مسح"
+        }
+        this.config.setTranslation(this.hijriLocale);
+
+      }
+    })
     if (this.data?.code) {
       this.addBranchGroupForm.get("fieldDisabled")?.setValue(this.data?.code);
     }
@@ -102,24 +208,13 @@ export class AddAholidayComponent {
         {
           next: data => {
 
-            // SchedulePlanType: ['0', Validators.required],
-            //   EmployeeId: ['', Validators.required],
-
-            //     ScheduleId: ["", Validators.required],
-            //       DateFrom: ['', Validators.required],
-            //         notes: ["", Validators.required],
             this.getControl("isActive")?.setValue(data.isActive);
             this.getControl("notes")?.setValue(data.notes);
-
-            this.getControl("DateFrom")?.setValue(new Date(data.dateFrom));
-
-            this.getControl("SchedulePlanType")?.setValue(data.schedulePlanType.toString());
+            this.getControl("name")?.setValue(data.name);
+            this.getControl("dateType")?.setValue(data.dateType.toString());
+            this.getControl("startDate")?.setValue(new Date(data.startDate));
+            this.getControl("endDate")?.setValue(new Date(data.endDate));
             this.getControl("fieldDisabled")?.setValue(data.code);
-
-
-
-
-
             this.loading = false;
           },
           error: err => {
@@ -138,19 +233,56 @@ export class AddAholidayComponent {
   getControl(controlName: string) {
     return this.addBranchGroupForm?.get(controlName);
   }
+  startDateValidator(conInput: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value: any = control.value;
+      let checkMin = true;
+      if (value != "") {
+        if (
+          this.addBranchGroupForm?.get(conInput)?.dirty &&
+          !this.addBranchGroupForm?.get(conInput)?.hasError("required")
+        ) {
+          if (value > this.addBranchGroupForm?.get(conInput)?.value) {
+            checkMin = false;
+          }
+        }
+      }
+      // const hasNumber = /\d/.test(value);
+      return checkMin ? null : { dateRangeError: true };
+    };
+  }
+  endDateValidator(conInput: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value: any = control.value;
+      let checkMin = true;
 
+      if (value != null) {
+        if (
+          this.addBranchGroupForm?.get(conInput)?.dirty &&
+          !this.addBranchGroupForm?.get(conInput)?.hasError("required")
+        ) {
+          if (value < this.addBranchGroupForm?.get(conInput)?.value) {
+            checkMin = false;
+          }
+        }
+
+      }
+      // const hasNumber = /\d/.test(value);
+      return checkMin ? null : { dateRangeError: true };
+    };
+  }
   request() {
-    this.submitClicked.emit(this.addBranchGroupForm.value);
 
     if (this.addBranchGroupForm.valid) {
       this.submitted = false;
       this.submitClicked.emit(this.addBranchGroupForm.value);
       // this.dialogRef.close(true);
     } else {
-      this.getControl("branchName")?.markAsDirty();
-      this.getControl("address")?.markAsDirty();
-      this.getControl("phone")?.markAsDirty();
 
+      this.getControl("name")?.markAsDirty();
+      this.getControl("startDate")?.markAsDirty();
+      this.getControl("endDate")?.markAsDirty();
+      this.getControl("notes")?.markAsDirty();
     }
 
   }
