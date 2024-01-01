@@ -1,0 +1,161 @@
+<div class="header-comp d-flex align-items-center">
+  <span class="title-head">
+    السجلات
+  </span>
+  <div class="field-calendar-header">
+    <p-calendar [(ngModel)]="date" [showIcon]="true" dateFormat="yy MM"></p-calendar>
+  </div>
+</div>
+
+<div class="table-basic">
+  <!-- <div class="header-table-basic">
+    <span class="title-table-basic">سجل الطلبات</span>
+    <div class="actions-table-basic">
+
+    </div>
+  </div> -->
+  <p-table #dt1 [value]="schedules" id="tableshift" [responsiveLayout]="opened ? 'stack' : 'scroll'" [responsive]="true"
+    [paginator]="false" [rows]="itemsPerPage" [first]="page" [rows]="10" [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }" currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
+              'orderNumber',
+              'employeeName.name',
+              'typeOfRequest',
+              'date',
+              'time' ]">
+    <ng-template pTemplate="caption">
+      <div class="custom-header-table d-flex justify-content-between align-items-center">
+        <h2 class="title-table m-0">
+          سجلات و حركات الجدولة
+          <!-- <span class="subTitlte ml-2">(30 FLS )</span> -->
+        </h2>
+
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngFor="let column of columns">
+          {{ column.name }}
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData>
+      <tr *ngIf="!isLoading">
+        <!-- <ng-container *ngFor="
+                    let customer of customers
+                      | paginate
+                        : {
+                            id: 'some_id',
+                            itemsPerPage: itemsPerPage,
+                            currentPage: filteration.page,
+                            totalItems: totalItems
+                          }
+                  "></ng-container> -->
+        <ng-container *ngFor="let column of columns">
+          <!-- <td  *ngIf="column.field == 'flsName'">
+                                  <ng-container *ngIf="rowData[column.field][column.fieldTwo]">
+                                    {{ rowData[column.field][column.fieldTwo] }}
+                                  </ng-container>
+                                  <ng-container *ngIf="!rowData[column.field][column.fieldTwo] ">
+                                    No Data
+                                  </ng-container>
+
+                                </td> -->
+          <ng-container *ngIf="column.field != 'actions'">
+            <td>
+              <span class="p-column-title">
+                {{column.name}}
+              </span>
+              {{ rowData[column.field] }}
+            </td>
+          </ng-container>
+
+
+          <td *ngIf="column.field === 'actions'">
+            <span class="p-column-title">
+              {{column.name}}
+            </span>
+            <div class="action-body-td">
+
+
+              <button type="button" class="btn btn-outline-secondary action-close color-blue"
+                (click)="dialogScheduleFile(rowData)"><i class="bi bi-person-vcard"></i></button>
+
+
+
+
+            </div>
+          </td>
+
+          <!-- <td *ngIf="column.field != 'FLSname'&&column.field != 'Branchname' ">
+                                  <span class="first-number number-currency"
+                                      [class.invalidNumber]="rowData[column.field].first > (rowData[column.field].second * 90) / 100">{{rowData[column.field].first
+                                      | number:'1.0-0'}}</span>/
+                                  <span class="second-number number-currency">{{rowData[column.field].second |
+                                      number:'1.0-0'}}</span>
+                                  <i class="bi bi-info-circle-fill color-red-icon ml-2"
+                                      *ngIf="rowData[column.field].first > (rowData[column.field].second * 90) / 100"></i>
+
+
+                              </td> -->
+
+        </ng-container>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr *ngIf="isLoading ===false">
+        <td colspan="6">
+          <div class="container-empty-data w-100 d-flex justify-content-center align-items-center">
+            <svg width="65" height="40" viewBox="0 0 65 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip0_1920_5847)">
+                <rect width="64" height="40" transform="translate(0.5)" fill="white" fill-opacity="0.01" />
+                <path
+                  d="M32.5 39.7047C50.1731 39.7047 64.5 36.5939 64.5 32.7566C64.5 28.9193 50.1731 25.8086 32.5 25.8086C14.8269 25.8086 0.5 28.9193 0.5 32.7566C0.5 36.5939 14.8269 39.7047 32.5 39.7047Z"
+                  fill="#F5F5F5" />
+                <path
+                  d="M55.5 13.6653L45.354 2.24866C44.867 1.47048 44.156 1 43.407 1H21.593C20.844 1 20.133 1.47048 19.646 2.24767L9.5 13.6663V22.8367H55.5V13.6653Z"
+                  stroke="#CED4DA" />
+                <path
+                  d="M42.113 16.8116C42.113 15.2185 43.107 13.9033 44.34 13.9023H55.5V31.9047C55.5 34.0119 54.18 35.739 52.55 35.739H12.45C10.82 35.739 9.5 34.011 9.5 31.9047V13.9023H20.66C21.893 13.9023 22.887 15.2155 22.887 16.8086V16.8304C22.887 18.4235 23.892 19.7099 25.124 19.7099H39.876C41.108 19.7099 42.113 18.4116 42.113 16.8185V16.8116Z"
+                  fill="#FAFAFA" stroke="#CED4DA" />
+              </g>
+              <defs>
+                <clipPath id="clip0_1920_5847">
+                  <rect width="64" height="40" fill="white" transform="translate(0.5)" />
+                </clipPath>
+              </defs>
+            </svg>
+            <span class="empty-table f-s-16">No Data</span>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <tr *ngIf="isLoading">
+        <td colspan="7">
+          <div class="spinner d-flex justify-content-center align-items-center">
+            <mat-spinner></mat-spinner>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="7">
+          <div class="paginate d-flex align-items-center justify-content-end">
+            <div class="NumberOfRowsPerPage">
+              <span>عدد الصفوف بالصفحة:</span>
+              <p-dropdown [options]="RowsPerPage" appendTo="body" optionLabel="name"
+                (onChange)="numberOfRowsPerPage($event)"></p-dropdown>
+
+            </div>
+            <div class="text-paginator d-flex align-items-center">
+              {{mathRound(totalItems / filteration.PageSize)}} - {{filteration.PageNumber + 1}}
+
+            </div>
+            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
+              [totalRecords]="10"></p-paginator>
+
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

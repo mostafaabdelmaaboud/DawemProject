@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from 'src/app/shared/shared.module';
 import { SideNavBarComponent } from 'src/app/layout/side-nav-bar/side-nav-bar.component';
 import { CoreModule } from 'src/app/core/core.module';
 
@@ -74,6 +72,11 @@ const routes: Routes = [
         path: "vacations",
         loadChildren: () => import('./vacations/vacations.module').then((m) => m.VacationsModule),
       },
+      {
+        path: "scheduleLogs",
+        loadChildren: () => import('./schedule-logs/schedule-logs.module').then((m) => m.ScheduleLogsModule),
+      },
+
       {
         path: "permissions",
         loadChildren: () => import('./permissions/permissions.module').then((m) => m.PermissionsModule),

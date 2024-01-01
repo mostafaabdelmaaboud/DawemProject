@@ -455,7 +455,7 @@ export class TablesComponent {
 
     this.filteration.page = even;
     let filteration = { ...this.filteration, page: even - 1 };
-    // this.getListTransaction(filteration)
+    this.getSchedules(filteration)
 
   }
   changeLang(lang: string) {
