@@ -7,20 +7,23 @@
         حيّا الله
       </span>
       <span class="title-header-dashboard d-block">
-        فيصل حمدان
+        <ng-container *ngIf="!leadingHeader">
+          ---------</ng-container>
+        <ng-container *ngIf="leadingHeader">{{headerInformations?.name}}</ng-container>
       </span>
       <span class="rate-employee d-block">
-        نسبة حضور الموظفين اليوم 87%
+        نسبة حضور الموظفين اليوم {{headerInformations?.employeesAttendanceRateToday
+        ?headerInformations?.employeesAttendanceRateToday : 0 }}%
       </span>
     </div>
   </div>
-  <div class="cards-dashboard">
-    <div class="row">
+  <div class="cards-dashboard position-relative">
+    <div class="row" *ngIf="!spinnerCards">
       <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
         <div class="custom-card-dashboard">
           <span class="title-card-dashboard Success-700">إجمالي حضور اليوم</span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-            <span class="number-card-dashboard">7845</span>
+            <span class="number-card-dashboard">{{cards?.dayTotalAttendanceCount}}</span>
             <span class="icon-card-dashboard">
               <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
                 <g opacity="0.2">
@@ -40,7 +43,7 @@
         <div class="custom-card-dashboard">
           <span class="title-card-dashboard Primary-700">إجمالي اجازات اليوم</span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-            <span class="number-card-dashboard">250</span>
+            <span class="number-card-dashboard">{{cards?.dayTotalVacationsCount}}</span>
             <span class="icon-card-dashboard">
               <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
                 <g opacity="0.2">
@@ -63,7 +66,7 @@
         <div class="custom-card-dashboard">
           <span class="title-card-dashboard Error-700">إجمالي غياب اليوم</span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-            <span class="number-card-dashboard">301</span>
+            <span class="number-card-dashboard">{{cards?.dayTotalAbsencesCount}}</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
               <g opacity="0.2">
                 <path opacity="0.5"
@@ -87,7 +90,7 @@
         <div class="custom-card-dashboard">
           <span class="title-card-dashboard Warning-700 ">إجمالي تأخيرات اليوم</span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-            <span class="number-card-dashboard">285</span>
+            <span class="number-card-dashboard">{{cards?.dayTotalDelaysCount}}</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
               <g opacity="0.4">
                 <path opacity="0.4"
@@ -103,7 +106,9 @@
       </div>
     </div>
 
-
+    <div class="spinner spinner-cards d-flex justify-content-center align-items-center" *ngIf="spinnerCards">
+      <mat-spinner></mat-spinner>
+    </div>
   </div>
   <div class="section-three">
     <div class="row">
@@ -253,10 +258,9 @@
                 </div>
               </div>
               <div class="body-chart chart-one">
-                <div id="chart">
-                  <apx-chart [series]="chartOptions.series" [colors]="chartOptions.colors" [dataLabels]="dataLabels"
-                    [plotOptions]="chartOptions.plotOptions" [chart]="chartOptions.chart" [legend]="chartOptions.legend"
-                    [labels]="chartOptions.labels" [responsive]="chartOptions.responsive"></apx-chart>
+                <div id="chart" *ngIf="!spinnerChart">
+                  <apx-chart [series]="chartOptions.series" [colors]="chartOptions.colors" [chart]="chartOptions.chart"
+                    [legend]="chartOptions.legend" [labels]="chartOptions.labels"></apx-chart>
                 </div>
               </div>
             </div>
@@ -299,7 +303,8 @@
                 <div class="custom-card-dashboard h-100 d-flex flex-column">
                   <span class="title-card-dashboard title-section-three-employee Success-700 ">الموظفين المتاحين</span>
                   <div class="body-card-dashboard d-flex align-items-center justify-content-between mt-3">
-                    <span class="number-card-dashboard p-0 title-employeeSectionTwo">9,670</span>
+                    <span class="number-card-dashboard p-0 title-employeeSectionTwo">{{employeesStatus?.availableCount ?
+                      employeesStatus?.availableCount : 0}}</span>
                     <span class="icon-card-dashboard">
                       <div class="field-action field-action-employee">
                         <button type="button" class="btn btn-outline-secondary button-border-67748E">عرض الكل</button>
@@ -312,7 +317,10 @@
                 <div class="custom-card-dashboard h-100 d-flex flex-column">
                   <span class="title-card-dashboard title-section-three-employee Primary-700">في مهمة او تكليف</span>
                   <div class="body-card-dashboard d-flex align-items-center justify-content-between mt-3">
-                    <span class="number-card-dashboard p-0 title-employeeSectionTwo">110</span>
+                    <span
+                      class="number-card-dashboard p-0 title-employeeSectionTwo">{{employeesStatus?.inTaskOrAssignmentCount
+                      ?
+                      employeesStatus?.inTaskOrAssignmentCount : 0}}</span>
                     <span class="icon-card-dashboard">
                       <div class="field-action field-action-employee">
                         <button type="button" class="btn btn-outline-secondary button-border-67748E">عرض الكل</button>
@@ -325,7 +333,10 @@
                 <div class="custom-card-dashboard h-100 d-flex flex-column">
                   <span class="title-card-dashboard title-section-three-employee color5C31D6">في أجازة أو الخارج</span>
                   <div class="body-card-dashboard d-flex align-items-center justify-content-between mt-3">
-                    <span class="number-card-dashboard p-0 title-employeeSectionTwo">34</span>
+                    <span
+                      class="number-card-dashboard p-0 title-employeeSectionTwo">{{employeesStatus?.inVacationOrOutsideCount
+                      ?
+                      employeesStatus?.inVacationOrOutsideCount : 0}}</span>
                     <span class="icon-card-dashboard">
                       <div class="field-action field-action-employee">
                         <button type="button" class="btn btn-outline-secondary button-border-67748E">عرض الكل</button>

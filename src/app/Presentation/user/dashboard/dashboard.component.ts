@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import {
   ApexNonAxisChartSeries,
@@ -7,6 +7,7 @@ import {
   ChartComponent
 } from "ng-apexcharts";
 import { MediaMatcher } from '@angular/cdk/layout';
+import { DashboardService } from './services/dashboard.service';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -22,22 +23,24 @@ export type ChartOptions = {
 export class DashboardComponent {
   @ViewChild("chart") chart!: ChartComponent;
   @ViewChild("chartCandlestick") chartCandl!: ChartComponent;
-
+  private dashboardService = inject(DashboardService);
   public chartOptions!: any;
   public chartCandlestick!: any;
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
 
+  headerInformations: any = {};
+  leadingHeader = false;
 
   items!: MenuItem[];
   cities!: any[];
   statusOfOrders!: any[];
   selectedCity!: any;
+
   plotOptions: any = {
     pie: {
       size: '100%',
       disblay: "block",
-
       startAngle: 0,
       endAngle: 360,
       expandOnClick: true,
@@ -46,6 +49,7 @@ export class DashboardComponent {
       customScale: 10,
       dataLabels: {
         offset: 0,
+        enabled: false,
         minAngleToShowLabel: 10
       },
 
@@ -58,7 +62,11 @@ export class DashboardComponent {
       return val + "%"
     }
   }
-
+  cards!: any;
+  spinnerCards = false;
+  spinnerChart = true;
+  employeesStatus: any = {};
+  loadingEmployeesStatus = false;
   constructor(media: MediaMatcher, private changeDetectorRef: ChangeDetectorRef) {
     this.mobileQuery = media.matchMedia('(max-width: 992px)');
 
@@ -85,6 +93,19 @@ export class DashboardComponent {
   }
 
   ngOnInit() {
+    this.dashboardService.getHeaderInformations().subscribe({
+      next: data => {
+
+        this.headerInformations.employeesAttendanceRateToday = data.data.employeesAttendanceRateToday;
+        this.headerInformations.name = data.data.name;
+        this.leadingHeader = true;
+
+      },
+      error: err => {
+        this.leadingHeader = false;
+
+      }
+    })
     this.chartCandlestick = {
       series: [
         {
@@ -217,76 +238,7 @@ export class DashboardComponent {
         },
       }
     }
-    this.chartOptions = {
-      series: [55, 44, 13],
-      chart: {
-        type: "donut",
-        width: "100%",
-        height: 400,
-        offsetY: 20
-      },
-      colors: ['#10B981', 'rgba(251, 191, 36, 1)', 'rgba(239, 68, 68, 1)'],
-      plotOptions: {
-        pie: {
-          size: 200,
-          offset: 0,
-          dataLabels: {
-            offset: 0,
-          },
-          dount: {
-            offset: 0
 
-          }
-        }
-      },
-      labels: [`
-      <span class='d-block title-chart-dount'>
-        الطلبات المقبولة
-      </span>
-      <span class='d-block subTitle-chart-dount'>
-      <strong>2.5</strong> طلب
-      </span>
-      `, `
-      <span class='d-block title-chart-dount'>
-الطلبات المنتظرة
-      </span>
-      <span class='d-block subTitle-chart-dount'>
-      <strong>6.4</strong> طلب
-      </span>
-      `, `
-      <span class='d-block title-chart-dount'>
-الطلبات الرفوضة
-      </span>
-      <span class='d-block subTitle-chart-dount'>
-      <strong>1,202</strong> طلب
-      </span>
-      `],
-      legend: {
-        position: "bottom",
-        horizontalAlign: 'center',
-        width: "100%",
-        offsetY: 10,
-
-        itemMargin: {
-          horizontal: 15,
-          vertical: 0,
-
-        }
-      },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: "100%"
-            },
-            legend: {
-              position: "bottom"
-            }
-          }
-        }
-      ]
-    };
 
     this.cities = [
       { name: 'New York', code: 'NY' },
@@ -334,5 +286,130 @@ export class DashboardComponent {
         ]
       }
     ];
+    this.getInformation();
+    this.getRequestsStatus();
+    this.getEmployeesStatus();
   }
+  getRequestsStatus() {
+    this.spinnerChart = true;
+    this.dashboardService.getRequestsStatus().subscribe({
+      next: data => {
+
+        this.chartOptions = {
+          series: [data.acceptedCount, data.pendingCount, data.rejectedCount],
+          chart: {
+            type: "donut",
+            width: "100%",
+            height: 400,
+            offsetY: 20
+          },
+          colors: ['#10B981', 'rgba(251, 191, 36, 1)', 'rgba(239, 68, 68, 1)'],
+
+          labels: [`
+      <span class='d-block title-chart-dount'>
+        الطلبات المقبولة
+      </span>
+      <span class='d-block subTitle-chart-dount'>
+  <strong>${data.acceptedCount}</strong> طلب
+      </span>
+      `, `
+      <span class='d-block title-chart-dount'>
+الطلبات المنتظرة
+      </span>
+      <span class='d-block subTitle-chart-dount'>
+      <strong>${data.pendingCount}</strong> طلب
+      </span>
+      `, `
+      <span class='d-block title-chart-dount'>
+الطلبات الرفوضة
+      </span>
+      <span class='d-block subTitle-chart-dount'>
+      <strong>${data.rejectedCount}</strong> طلب
+      </span>
+      `],
+
+          plotOptions: {
+            tooltip: {
+              enabled: false,
+            },
+            pie: {
+              enabled: false,
+
+              dataLabels: {
+                offset: 0,
+                enabled: false,
+                minAngleToShowLabel: 10
+              },
+
+            }
+          },
+          legend: {
+            position: "bottom",
+            horizontalAlign: 'center',
+            width: "100%",
+            offsetY: 10,
+
+            itemMargin: {
+              horizontal: 15,
+              vertical: 0,
+
+            }
+          },
+          responsive: [
+            {
+              breakpoint: 480,
+              options: {
+                chart: {
+                  width: "100%"
+                },
+                legend: {
+                  position: "bottom"
+                }
+              }
+            }
+          ]
+        };
+
+        this.spinnerChart = false;
+
+      },
+      error: err => {
+        this.spinnerChart = false;
+
+      }
+    })
+  }
+  getEmployeesStatus() {
+    this.loadingEmployeesStatus = true;
+    this.dashboardService.getEmployeesStatus().subscribe({
+      next: data => {
+
+
+        this.employeesStatus = data;
+        this.loadingEmployeesStatus = false;
+
+      },
+      error: err => {
+        this.loadingEmployeesStatus = false;
+
+      }
+    })
+  }
+  getInformation() {
+    this.dashboardService.getEmployeesAttendancesInformations().subscribe({
+      next: data => {
+
+        this.cards = {
+          ...data
+        };
+        this.spinnerCards = false;
+
+      },
+      error: err => {
+        this.spinnerCards = false;
+
+      }
+    })
+  }
+
 }

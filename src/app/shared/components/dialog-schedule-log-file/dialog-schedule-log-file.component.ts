@@ -1,23 +1,29 @@
+import { SharedModule } from 'src/app/shared/shared.module';
 import { ChangeDetectorRef, Component, Inject, LOCALE_ID, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { AssignmentRequestComponent } from 'src/app/shared/components/assignment-request/assignment-request.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MediaMatcher } from '@angular/cdk/layout';
 
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { DialogScheduleFileComponent } from 'src/app/shared/components/dialog-schedule-file/dialog-schedule-file.component';
-import { ScheduleLogsService } from './services/schedule-logs.service';
+import { CommonModule } from '@angular/common';
+import { ScheduleLogsService } from 'src/app/Presentation/user/schedule-logs/services/schedule-logs.service';
 
 @Component({
-  selector: 'app-schedule-logs',
-  templateUrl: './schedule-logs.component.html',
-  styleUrls: ['./schedule-logs.component.scss']
+  selector: 'app-dialog-schedule-log-file',
+  standalone: true,
+  imports: [CommonModule, MatDialogModule,
+    SharedModule],
+  templateUrl: './dialog-schedule-log-file.component.html',
+  styleUrls: ['./dialog-schedule-log-file.component.scss']
 })
-export class ScheduleLogsComponent {
+export class DialogScheduleLogFileComponent {
   date!: Date;
   arabic: any;
   subscription!: Subscription;
@@ -43,6 +49,14 @@ export class ScheduleLogsComponent {
     {
       name: "عدد الموظفين المطبق عليهم",
       field: "employeesNumberAppliedOn"
+    },
+    {
+      name: "اسم المجموعة",
+      field: "groupName"
+    },
+    {
+      name: "اسم المجموعة",
+      field: "groupName"
     },
     {
       name: "الاجراءات",
@@ -166,7 +180,7 @@ export class ScheduleLogsComponent {
 
   dialogScheduleFile(data: any) {
     const dialogRefAddCurrency = this.dialog.open(DialogScheduleFileComponent, {
-      width: "90vw",
+      width: "40vw",
       data: {
         title: "ملف الجدول"
       },

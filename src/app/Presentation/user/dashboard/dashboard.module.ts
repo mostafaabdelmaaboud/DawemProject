@@ -9,6 +9,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
@@ -21,7 +22,9 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     FormsModule,
     NgbDropdownModule,
     DropdownModule,
-    NgApexchartsModule
+    NgApexchartsModule,
+    SharedModule
+
   ]
 })
 export class DashboardModule { }
