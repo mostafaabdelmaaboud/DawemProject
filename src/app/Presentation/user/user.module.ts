@@ -76,6 +76,10 @@ const routes: Routes = [
         path: "scheduleLogs",
         loadChildren: () => import('./schedule-logs/schedule-logs.module').then((m) => m.ScheduleLogsModule),
       },
+      {
+        path: "users",
+        loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
+      },
 
       {
         path: "permissions",

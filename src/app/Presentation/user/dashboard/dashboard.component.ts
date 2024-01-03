@@ -105,6 +105,7 @@ export class DashboardComponent {
         this.leadingHeader = false;
 
       }
+
     })
     this.chartCandlestick = {
       series: [
