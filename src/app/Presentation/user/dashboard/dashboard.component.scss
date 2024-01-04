@@ -205,10 +205,31 @@
   margin-left: 10px;
 }
 
+:host ::ng-deep .p-paginator {
+  height: 60px;
+  margin-bottom: 15px;
+}
+
+:host ::ng-deep .p-paginator .p-paginator-first,
+:host ::ng-deep .p-paginator .p-paginator-prev,
+:host ::ng-deep .p-paginator .p-paginator-next,
+:host ::ng-deep .p-paginator .p-paginator-last {
+  min-width: 1rem;
+  height: 1rem;
+}
+
+:host ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
+  min-width: 1.5rem;
+  height: 1.5rem;
+  font-size: 14px;
+}
+
 .userImage-StaffAttendanceStatus {
   width: 60px;
   height: 60px;
   margin-left: 10px;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .section-three {

@@ -1,13 +1,14 @@
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ChangeDetectorRef, Component, Inject, LOCALE_ID, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, LOCALE_ID, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { AssignmentRequestComponent } from 'src/app/shared/components/assignment-request/assignment-request.component';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MediaMatcher } from '@angular/cdk/layout';
+import { TranslateModule } from '@ngx-translate/core';
 
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
@@ -18,7 +19,7 @@ import { ScheduleLogsService } from 'src/app/Presentation/user/schedule-logs/ser
 @Component({
   selector: 'app-dialog-schedule-log-file',
   standalone: true,
-  imports: [CommonModule, MatDialogModule,
+  imports: [CommonModule, MatDialogModule, TranslateModule,
     SharedModule],
   templateUrl: './dialog-schedule-log-file.component.html',
   styleUrls: ['./dialog-schedule-log-file.component.scss']
@@ -30,38 +31,24 @@ export class DialogScheduleLogFileComponent {
   itemsPerPage = 5;
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
+  @Input() id!: any;
+
   private scheduleLogsService = inject(ScheduleLogsService);
 
 
   columns: any[] = [
     {
-      name: "اسم الدوم",
-      field: "scheduleName",
+      name: "إسم الموظف",
+      field: "employeeName",
     },
     {
-      name: "النوع الطبق عليه",
-      field: "schedulePlanTypeName",
+      name: "الدوام القديم",
+      field: "oldScheduleName",
     },
     {
-      name: "تاريخ التطبيق",
-      field: "applyDate"
+      name: "الدوام الجديد",
+      field: "newScheduleName"
     },
-    {
-      name: "عدد الموظفين المطبق عليهم",
-      field: "employeesNumberAppliedOn"
-    },
-    {
-      name: "اسم المجموعة",
-      field: "groupName"
-    },
-    {
-      name: "اسم المجموعة",
-      field: "groupName"
-    },
-    {
-      name: "الاجراءات",
-      field: "actions"
-    }
 
   ];
   schedules: any = [];
@@ -88,13 +75,18 @@ export class DialogScheduleLogFileComponent {
   };
   totalItems: number = 0;
   first: number = 0;
-  rows: number = 10;
+  rows: number = 5;
   RowsPerPage!: any[];
   mobileQuery: MediaQueryList;
   opened = false;
+  info!: any;
+  loading = false;
 
   private _mobileQueryListener: () => void;
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(
+    public dialogRef: MatDialogRef<DialogScheduleLogFileComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: MatDialog | null,
+    private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -150,32 +142,61 @@ export class DialogScheduleLogFileComponent {
 
     ];
 
-    this.getSchedules(this.filteration);
+    if (this.id) {
+
+      this.scheduleLogsService.scheduleGetInfo({ schedulePlanLogId: this.id }).subscribe(
+        {
+          next: data => {
+
+            this.info = data;
+            this.info.applyDate = moment(new Date(data.applyDate)).format("DD/MM/YYYY");
+            this.info.scheduleDateFrom = moment(new Date(data.scheduleDateFrom)).format("DD/MM/YYYY");
+            this.filteration.SchedulePlanLogId = this.id;
+            this.getSchedules(this.filteration);
+
+
+            this.loading = false;
+
+
+          }, error: err => {
+            this.loading = false;
+
+
+          }
+        }
+      )
+
+    }
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
   }
-
+  close(): void {
+    this.dialogRef.close(false);
+  }
   getSchedules(filteration: any) {
     this.schedules = [];
     this.isLoading = true;
-    this.scheduleLogsService.listSchedules(filteration).subscribe(data => {
+    this.scheduleLogsService.scheduleLogEmployees(filteration).subscribe(
+      {
+        next: data => {
 
-      data.data.forEach((schedule: any) => {
-        this.schedules.push({
-          id: schedule.id,
-          scheduleName: schedule.scheduleName ? schedule.scheduleName : "لا يوجد",
-          schedulePlanTypeName: schedule.schedulePlanTypeName ? schedule.schedulePlanTypeName : "لا يوجد",
-          applyDate: schedule.applyDate ? moment(new Date(schedule.applyDate)).format("MM/DD/YYYY") : "لا يوجد",
-          employeesNumberAppliedOn: schedule.employeesNumberAppliedOn ? schedule.employeesNumberAppliedOn : "لا يوجد",
-
-
-        })
-      });
-      this.totalItems = data.totalCount
-      this.isLoading = false;
-
-    })
+          data.employees.forEach((schedule: any) => {
+            this.schedules.push({
+              id: schedule.id,
+              employeeName: schedule.employeeName ? schedule.employeeName : "لا يوجد",
+              oldScheduleName: schedule.oldScheduleName ? schedule.oldScheduleName : "لا يوجد",
+              newScheduleName: schedule.newScheduleName ? schedule.newScheduleName : "لا يوجد",
+            })
+          });
+          this.totalItems = data.totalCount
+          this.isLoading = false;
+        },
+        error: err => {
+          this.isLoading = false;
+        }
+      }
+    )
   }
 
   dialogScheduleFile(data: any) {

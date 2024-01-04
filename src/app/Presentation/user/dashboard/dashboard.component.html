@@ -124,126 +124,46 @@
               </div>
               <div class="body-StaffAttendanceStatus">
                 <ul class="list-unstyled p-0 m-0">
-                  <li class="li-StaffAttendanceStatus mb-4 d-flex">
-                    <span class="userImage-StaffAttendanceStatus">
-                      <img src="assets/img/student-2.png" alt="student-2">
-                    </span>
-                    <div class="desc-StaffAttendanceStatus col">
-                      <div class="title-StaffAttendanceStatus d-block">فيصل حمد سعدان</div>
-                      <div class="progress-StaffAttendanceStatus text-left d-block">
-                        <span class="precentage-StaffAttendanceStatus d-block">92%</span>
-                        <div class="progress">
-                          <div class="progress-bar" role="progressbar" style="width: 92%" aria-valuenow="92"
-                            aria-valuemin="0" aria-valuemax="100"></div>
+                  <ng-container *ngFor="let employee of employeesAttendances; let i =index">
+                    <li class="li-StaffAttendanceStatus mb-4 d-flex">
+                      <span class="userImage-StaffAttendanceStatus">
+                        <img width="100%" height="100%"
+                          [src]="employee.profileImagePath ? employee.profileImagePath : 'assets/img/5034901-200.png'"
+                          alt="student-2">
+                      </span>
+                      <div class="desc-StaffAttendanceStatus col">
+                        <div class="title-StaffAttendanceStatus d-block">{{employee.name}}</div>
+                        <div class="progress-StaffAttendanceStatus text-left d-block">
+                          <span class="precentage-StaffAttendanceStatus d-block">{{employee.attendanceRate}}%</span>
+                          <div class="progress">
+                            <div class="progress-bar" [class.background-Success-700]="i===1"
+                              [class.background-blue-700]="i===2" [class.background-Error-700]="i===3"
+                              role="progressbar" [style.width]="employee.attendanceRate + '%'"
+                              [attr.aria-valuenow]="employee.attendanceRate" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </li>
-                  <li class="li-StaffAttendanceStatus mb-4 d-flex">
-                    <span class="userImage-StaffAttendanceStatus">
-                      <img src="assets/img/student-2.png" alt="student-2">
-                    </span>
-                    <div class="desc-StaffAttendanceStatus col">
-                      <div class="title-StaffAttendanceStatus d-block">سيد علي محمد</div>
-                      <div class="progress-StaffAttendanceStatus text-left d-block">
-                        <span class="precentage-StaffAttendanceStatus d-block">88%</span>
-                        <div class="progress">
-                          <div class="progress-bar background-Success-700" role="progressbar" style="width: 88%"
-                            aria-valuenow="88" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
+                    </li>
+                  </ng-container>
+                  <div class="paginate">
+                    <div class="d-flex align-items-center">
+                      <div class="NumberOfRowsPerPage">
+                        <span>عدد الصفوف بالصفحة:</span>
+                        <p-dropdown [options]="RowsPerPage" appendTo="body" (onChange)="numberOfRowsPerPage($event)"
+                          optionLabel="name"></p-dropdown>
                       </div>
-                    </div>
-                  </li>
-                  <li class="li-StaffAttendanceStatus mb-4 d-flex">
-                    <span class="userImage-StaffAttendanceStatus">
-                      <img src="assets/img/student-2.png" alt="student-2">
-                    </span>
-                    <div class="desc-StaffAttendanceStatus col">
-                      <div class="title-StaffAttendanceStatus d-block">محسن رجب علي</div>
-                      <div class="progress-StaffAttendanceStatus text-left d-block">
-                        <span class="precentage-StaffAttendanceStatus d-block">84%</span>
-                        <div class="progress">
-                          <div class="progress-bar background-blue-700" role="progressbar" style="width: 84%"
-                            aria-valuenow="84" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
+                      <div class="text-paginator d-flex align-items-center">
+                        {{mathRound(totalItems / filteration.PageSize)}} - {{filteration.PageNumber + 1}}
+
                       </div>
+
                     </div>
-                  </li>
-                  <li class="li-StaffAttendanceStatus mb-4 d-flex">
-                    <span class="userImage-StaffAttendanceStatus">
-                      <img src="assets/img/student-2.png" alt="student-2">
-                    </span>
-                    <div class="desc-StaffAttendanceStatus col">
-                      <div class="title-StaffAttendanceStatus d-block">كريم احمد محمد</div>
-                      <div class="progress-StaffAttendanceStatus text-left d-block">
-                        <span class="precentage-StaffAttendanceStatus d-block">50%</span>
-                        <div class="progress">
-                          <div class="progress-bar background-Error-700" role="progressbar" style="width: 50%"
-                            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="li-StaffAttendanceStatus mb-4 d-flex">
-                    <span class="userImage-StaffAttendanceStatus">
-                      <img src="assets/img/student-2.png" alt="student-2">
-                    </span>
-                    <div class="desc-StaffAttendanceStatus col">
-                      <div class="title-StaffAttendanceStatus d-block">مصطفي محمد سيد</div>
-                      <div class="progress-StaffAttendanceStatus text-left d-block">
-                        <span class="precentage-StaffAttendanceStatus d-block">92%</span>
-                        <div class="progress">
-                          <div class="progress-bar" role="progressbar" style="width: 92%" aria-valuenow="92"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="li-StaffAttendanceStatus mb-4 d-flex">
-                    <span class="userImage-StaffAttendanceStatus">
-                      <img src="assets/img/student-2.png" alt="student-2">
-                    </span>
-                    <div class="desc-StaffAttendanceStatus col">
-                      <div class="title-StaffAttendanceStatus d-block">عبد الرحمن محمد محمد</div>
-                      <div class="progress-StaffAttendanceStatus text-left d-block">
-                        <span class="precentage-StaffAttendanceStatus d-block">92%</span>
-                        <div class="progress">
-                          <div class="progress-bar" role="progressbar" style="width: 92%" aria-valuenow="92"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="li-StaffAttendanceStatus mb-4 d-flex">
-                    <span class="userImage-StaffAttendanceStatus">
-                      <img src="assets/img/student-2.png" alt="student-2">
-                    </span>
-                    <div class="desc-StaffAttendanceStatus col">
-                      <div class="title-StaffAttendanceStatus d-block">مومن مصطفي سيد</div>
-                      <div class="progress-StaffAttendanceStatus text-left d-block">
-                        <span class="precentage-StaffAttendanceStatus d-block">92%</span>
-                        <div class="progress">
-                          <div class="progress-bar" role="progressbar" style="width: 92%" aria-valuenow="92"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="li-StaffAttendanceStatus mb-4 d-flex">
-                    <span class="userImage-StaffAttendanceStatus">
-                      <img src="assets/img/student-2.png" alt="student-2">
-                    </span>
-                    <div class="desc-StaffAttendanceStatus col">
-                      <div class="title-StaffAttendanceStatus d-block">علي محمد علي</div>
-                      <div class="progress-StaffAttendanceStatus text-left d-block">
-                        <span class="precentage-StaffAttendanceStatus d-block">92%</span>
-                        <div class="progress">
-                          <div class="progress-bar" role="progressbar" style="width: 92%" aria-valuenow="92"
-                            aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
+
+                    <p-paginator (onPageChange)="onPageChange($event)" [first]="filteration.PageNumber"
+                      [rows]="filteration.PageSize" [totalRecords]="totalItems"></p-paginator>
+
+                  </div>
                 </ul>
               </div>
             </div>

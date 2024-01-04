@@ -1,3 +1,4 @@
+import { map } from 'rxjs';
 import { ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import {
@@ -28,9 +29,10 @@ export class DashboardComponent {
   public chartCandlestick!: any;
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
-
+  RowsPerPage!: any[];
   headerInformations: any = {};
   leadingHeader = false;
+  totalItems: number = 0;
 
   items!: MenuItem[];
   cities!: any[];
@@ -91,8 +93,19 @@ export class DashboardComponent {
     this.mobileQuery.addListener(this._mobileQueryListener);
 
   }
-
+  employeesAttendances: any[] = []
+  filteration: any = {
+    PageSize: 5,
+    PageNumber: 0,
+    PagingEnabled: true
+  };
   ngOnInit() {
+    this.RowsPerPage = [
+      { name: '5', code: 5 },
+      { name: '10', code: 10 },
+      { name: '25', code: 25 },
+
+    ];
     this.dashboardService.getHeaderInformations().subscribe({
       next: data => {
 
@@ -290,6 +303,22 @@ export class DashboardComponent {
     this.getInformation();
     this.getRequestsStatus();
     this.getEmployeesStatus();
+    this.getEmployeesAttendancesStatus(this.filteration);
+  }
+  numberOfRowsPerPage(data: any) {
+
+
+    this.filteration = { ...this.filteration, PageSize: data.value.code };
+
+    // this.getEmployees(this.filteration)
+  }
+  onPageChange(event: any) {
+    this.filteration = { ...this.filteration, PageNumber: event.page };
+    this.getEmployeesAttendancesStatus(this.filteration);
+
+  }
+  mathRound(data: any) {
+    return Math.ceil(data)
   }
   getRequestsStatus() {
     this.spinnerChart = true;
@@ -376,6 +405,21 @@ export class DashboardComponent {
       },
       error: err => {
         this.spinnerChart = false;
+
+      }
+    })
+  }
+  getEmployeesAttendancesStatus(filteration: any) {
+    this.dashboardService.getEmployeesAttendancesStatus(filteration).subscribe({
+      next: data => {
+
+        this.employeesAttendances = data.data.map((attend: any) => {
+          return { ...attend, attendanceRate: attend.attendanceRate + 10 }
+        });
+        this.totalItems = data.totalCount;
+
+      },
+      error: err => {
 
       }
     })

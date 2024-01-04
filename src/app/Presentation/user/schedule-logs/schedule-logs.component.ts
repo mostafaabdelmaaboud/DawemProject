@@ -11,6 +11,7 @@ import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { DialogScheduleFileComponent } from 'src/app/shared/components/dialog-schedule-file/dialog-schedule-file.component';
 import { ScheduleLogsService } from './services/schedule-logs.service';
+import { DialogScheduleLogFileComponent } from 'src/app/shared/components/dialog-schedule-log-file/dialog-schedule-log-file.component';
 
 @Component({
   selector: 'app-schedule-logs',
@@ -165,7 +166,7 @@ export class ScheduleLogsComponent {
   }
 
   dialogScheduleFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogScheduleFileComponent, {
+    const dialogRefAddCurrency = this.dialog.open(DialogScheduleLogFileComponent, {
       width: "90vw",
       data: {
         title: "ملف الجدول"

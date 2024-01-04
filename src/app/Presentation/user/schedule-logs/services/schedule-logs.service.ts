@@ -26,9 +26,19 @@ export class ScheduleLogsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}Schedule/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
+    return this.http.get<any>(`${environment.baseUrl}SchedulePlanLog/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
   }
 
+  scheduleLogEmployees(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}SchedulePlanLog/GetSchedulePlanLogEmployees`, { params: queryParams }).pipe(map(data => data.data))
+  }
 
 
 }

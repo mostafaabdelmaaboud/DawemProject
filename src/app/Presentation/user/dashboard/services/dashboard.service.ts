@@ -21,4 +21,13 @@ export class DashboardService {
   getEmployeesStatus() {
     return this.http.get<any>(`${environment.baseUrl}Dashboard/GetEmployeesStatus`).pipe(map(data => data.data))
   }
+  getEmployeesAttendancesStatus(filter: any) {
+    let queryParams = new HttpParams();
+    if (filter) {
+      Object.entries(filter).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}Dashboard/GetEmployeesAttendancesStatus`, { params: queryParams })
+  }
 }

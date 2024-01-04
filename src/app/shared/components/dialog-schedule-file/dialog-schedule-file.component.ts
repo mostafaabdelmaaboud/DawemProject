@@ -64,7 +64,6 @@ export class DialogScheduleFileComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.loading = true;
-    this.loading = true;
 
     if (this.id) {
 
@@ -74,12 +73,10 @@ export class DialogScheduleFileComponent {
 
             this.info = data;
             this.loading = false;
-            this.loading = false;
 
           }, error: err => {
             this.loading = false;
 
-            this.loading = false;
 
           }
         }
