@@ -22,7 +22,7 @@ export class UsersService {
 
     return this.http.get<any>(`${environment.baseUrl}User/GetUsersInformations`).pipe(map(data => data.data));
   }
-  assignmentGetInfo(params: any) {
+  userGetInfo(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -30,7 +30,17 @@ export class UsersService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}RequestAssignment/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
+    return this.http.get<any>(`${environment.baseUrl}User/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
+  }
+  deleteUser(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.delete<any>(`${environment.baseUrl}User/Delete`, { params: queryParams })
   }
   rejectAssignment(params: any) {
     let queryParams = new HttpParams();
@@ -76,9 +86,19 @@ export class UsersService {
   }
   getRolesDropdown(filter: any) {
     let queryParams = new HttpParams();
+
     if (filter) {
+
       Object.entries(filter).forEach(([key, value]: any) => {
-        queryParams = queryParams.set(key, value);
+        if (key === "ids") {
+          value.forEach((id: any) => {
+            queryParams = queryParams.append(key, id)
+
+          });
+        } else {
+          queryParams = queryParams.set(key, value);
+
+        }
       })
     }
     return this.http.get<any>(`${environment.baseUrl}Role/GetForDropDown`, { params: queryParams })

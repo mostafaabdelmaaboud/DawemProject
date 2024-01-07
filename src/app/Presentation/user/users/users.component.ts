@@ -16,6 +16,8 @@ import { ToastrService } from 'ngx-toastr';
 import { AssignmentsService } from '../assignments/services/assignments.service';
 import { UsersService } from './services/users.service';
 import { AddUserComponent } from 'src/app/shared/components/add-user/add-user.component';
+import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
+import { DialogUserFileComponent } from 'src/app/shared/components/dialog-user-file/dialog-user-file.component';
 
 @Component({
   selector: 'app-users',
@@ -237,39 +239,35 @@ export class UsersComponent {
 
   }
   reasonOfRefuse(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
+    const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
       width: "30vw",
       data: {
-        title: "هل متأكد من رفض الطلب؟",
+        title: "هل متأكد من حذف المستخدم؟",
         message: "برجاء توضيح السبب إن أمكن",
-        titleReasonOfRefuse: "سبب الرفض",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض",
+
         titleClose: "تراجع",
-        buttonSend: "رفض الطلب"
+        buttonSend: "حذف"
       },
     });
 
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
-      reasonOfRefuseDialog.componentInstance.submitted = false;
+      this.usersService.deleteUser({ userId: data.id }).subscribe({
+        next: res => {
+          this.toast.success(res.message);
+          reasonOfRefuseDialog.componentInstance.submitted = true;
+          reasonOfRefuseDialog.close();
+          this.getUsers(this.filteration);
+        },
+        error: err => {
+          reasonOfRefuseDialog.componentInstance.submitted = true;
 
-
-      this.usersService.rejectAssignment({ id: data.id, rejectReason: result.notes }).subscribe(
-        {
-          next: res => {
-
-            this.toast.success(res.message);
-            reasonOfRefuseDialog.componentInstance.submitted = true;
-            this.getUsers(this.filteration);
-            reasonOfRefuseDialog.close();
-          },
-          error: err => {
-            reasonOfRefuseDialog.componentInstance.submitted = true;
-
-          }
         }
-      )
+      })
+
+
+
     })
   }
   requestUser() {
@@ -316,7 +314,6 @@ export class UsersComponent {
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editUser = false;
 
-    // dialogRefAddCurrency.componentInstance.list = this.categories;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
 
@@ -329,9 +326,8 @@ export class UsersComponent {
         MobileNumber: result.MobileNumber,
         Password: result.Password,
         ConfirmPassword: result.ConfirmPassword,
-        Roles: result.Roles.map((role: any) => role.name),
-        IsAdmin: Array.isArray(result.IsAdmin) ? result.IsAdmin[0] : result.IsAdmin,
-        Notes: result.Notes
+        Roles: result.Roles.map((role: any) => role.key),
+        IsAdmin: Array.isArray(result.IsAdmin) ? result.IsAdmin[0] : result.IsAdmin
       }));
       // if (result?.zoneIds?.length > 0) {
       //   result?.zoneIds?.forEach((direct: any) => {
@@ -344,6 +340,7 @@ export class UsersComponent {
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
 
       this.usersService.createUser(formData).subscribe(
         {
@@ -359,7 +356,7 @@ export class UsersComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات التكليفات"
+                buttonSend: "طلبات المستخدمين"
 
               },
             });
@@ -370,12 +367,15 @@ export class UsersComponent {
 
             }, 2000);
             succressDialog.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
+
             succressDialog.componentInstance.submitClicked.subscribe(result => {
               succressDialog.close();
             })
 
           },
           error: (err: any) => {
+            dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.componentInstance.submitted = true;
 
@@ -448,9 +448,8 @@ export class UsersComponent {
         MobileNumber: result.MobileNumber,
         Password: result.Password,
         ConfirmPassword: result.ConfirmPassword,
-        Roles: result.Roles.map((role: any) => role.name),
-        IsAdmin: Array.isArray(result.IsAdmin) ? result.IsAdmin[0] : result.IsAdmin,
-        Notes: result.Notes
+        Roles: result.Roles.map((role: any) => role.key),
+        IsAdmin: Array.isArray(result.IsAdmin) ? result.IsAdmin[0] : result.IsAdmin
       }));
       result.files.forEach((file: any) => {
         if (file.detailsImage === false) {
@@ -458,6 +457,7 @@ export class UsersComponent {
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
 
       this.usersService.updateUser(formData).subscribe(
         {
@@ -473,7 +473,7 @@ export class UsersComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات التكليفات"
+                buttonSend: "طلبات المستخدمين"
 
               },
             });
@@ -484,12 +484,15 @@ export class UsersComponent {
 
             }, 2000);
             succressDialog.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
+
             succressDialog.componentInstance.submitClicked.subscribe(result => {
               succressDialog.close();
             })
 
           },
           error: (err: any) => {
+            dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.componentInstance.submitted = true;
 
@@ -505,11 +508,11 @@ export class UsersComponent {
   }
 
 
-  dialogAssignmentFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogAssignementFileComponent, {
+  dialogUserFile(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(DialogUserFileComponent, {
       width: "60vw",
       data: {
-        title: "ملف التكليف"
+        title: "ملف المستخدم"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id

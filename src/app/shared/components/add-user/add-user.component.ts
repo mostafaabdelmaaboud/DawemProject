@@ -122,7 +122,7 @@ export class AddUserComponent {
     Roles: [""],
 
     EmployeeId: ["", Validators.required],
-    IsAdmin: [],
+    IsAdmin: [false],
   });
   uploadImages = false;
   AttachmentsFiles: any[] = [];
@@ -164,40 +164,51 @@ export class AddUserComponent {
 
       if (this.editUser) {
 
+
         this.usersService.userGetById({ userId: this.id }).subscribe(
           {
             next: data => {
 
-              if (data?.attachments.length) {
-                data?.attachments.forEach((attachment: any) => {
-                  this.employeesService.downloadImage(attachment.filePath).subscribe(response => {
-                    const blob = new Blob([response]);
-                    const file = new File([blob], attachment.fileName);
 
-                    this.AttachmentsFiles.push({ imageSrc: attachment.filePath, fileUpload: file, detailsImage: true });
-                  });
+              // if (data?.files.length) {
+              //   data?.files.forEach((attachment: any) => {
+              //     this.employeesService.downloadImage(attachment.filePath).subscribe(response => {
+              //       const blob = new Blob([response]);
+              //       const file = new File([blob], attachment.fileName);
+
+              //       this.AttachmentsFiles.push({ imageSrc: attachment.filePath, fileUpload: file, detailsImage: true });
+              //     });
+              //   });
+              // }
+              if (data?.profileImagePath) {
+                this.employeesService.downloadImage(data.profileImagePath).subscribe(response => {
+                  const blob = new Blob([response]);
+                  const file = new File([blob], data.profileImageName);
+
+                  this.AttachmentsFiles.push({ imageSrc: data.profileImagePath, fileUpload: file, detailsImage: true });
                 });
               }
-              this.addBranchGroupForm.get("IsNecessary")?.setValue(data.isNecessary);
 
+              // IsActive: [false],
+              //   Name: ["", Validators.required],
+              //     Email: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
+              //       Password: ["", [Validators.required, Validators.minLength(5)]],
+              //         ConfirmPassword: ["", [Validators.required, Validators.minLength(5), , this.passwordMatchValidator()]],
 
+              //           MobileNumber: ["", Validators.required],
+              //             Roles: [""],
 
-              this.assignmentsService.assignmentTypeDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.permissionTypeId }).subscribe(dataDropdown => {
+              //               EmployeeId: ["", Validators.required],
+              //                 IsAdmin: [],
+              this.addBranchGroupForm.get("Email")?.setValue(data.email);
+              // this.addBranchGroupForm.get("Password")?.setValue(data.isNecessary);
+              // this.addBranchGroupForm.get("ConfirmPassword")?.setValue(data.isNecessary);
+              this.addBranchGroupForm.get("MobileNumber")?.setValue(data.mobileNumber);
+              this.addBranchGroupForm.get("IsActive")?.setValue(data.isActive);
+              this.addBranchGroupForm.get("IsAdmin")?.setValue(data.isAdmin);
+              this.addBranchGroupForm.get("Name")?.setValue(data.name);
 
-                this.list = []
-
-
-                dataDropdown.data?.forEach((insideData: any) => {
-                  this.list.push({ name: insideData.name, key: insideData.id })
-                });
-
-                let indexassignmentTypeId = this.list.findIndex(job => job.key === data.assignmentTypeId);
-                if (indexassignmentTypeId >= 0) {
-                  this.addBranchGroupForm.get("AssignmentTypeId")?.setValue(this.list[indexassignmentTypeId]);
-                }
-              });
               this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.employeeId }).subscribe(dataDropdown => {
-
                 this.listEmployees = []
                 dataDropdown.data?.forEach((insideData: any) => {
                   this.listEmployees.push({ name: insideData.name, key: insideData.id })
@@ -208,9 +219,33 @@ export class AddUserComponent {
                   this.addBranchGroupForm.get("EmployeeId")?.setValue(this.listEmployees[indexEmployeeId]);
                 }
               });
-              this.addBranchGroupForm.get("dateTask")?.setValue([new Date(data.dateFrom), new Date(data.dateTo)]);
 
-              this.addBranchGroupForm.get("Notes")?.setValue(data?.notes);
+              this.usersService.getRolesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids: data?.roles }).subscribe(dataDropdown => {
+
+
+
+                this.listRoles = [];
+                dataDropdown.data?.forEach((list: any) => {
+                  this.listRoles.push({ name: list.name, key: list.id });
+                });
+                data?.roles?.forEach((employee: any) => {
+
+
+
+                  let indexRole = this.listRoles.findIndex(list => list.key === employee);
+
+
+                  if (indexRole >= 0) {
+                    if (Array.isArray(this.getControl("Roles")?.value)) {
+                      this.getControl("Roles")?.patchValue(([{ name: this.listRoles[indexRole].name, key: this.listRoles[indexRole].key }, ...this.getControl("Roles")?.value]));
+                    } else {
+                      this.getControl("Roles")?.patchValue(([{ name: this.listRoles[indexRole].name, key: this.listRoles[indexRole].key }]));
+                    }
+                  }
+
+                });
+
+              });
 
               this.loading = false;
             },
@@ -245,11 +280,7 @@ export class AddUserComponent {
   }
   onRemoveCommercialReg(event: any) {
 
-    let indexFile = this.AttachmentsFiles.findIndex(item => item.fileUpload.lastModified === event.lastModified);
-    this.AttachmentsFiles.splice(indexFile, 1)
-    this.AttachmentsFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
-    // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
-
+    this.AttachmentsFiles = []
   }
   lastSearchQuery = "";
 
@@ -303,7 +334,7 @@ export class AddUserComponent {
       reader.onload = (function (file) {
         return function (e: any) {
           // Render thumbnail.
-          thisParent.AttachmentsFiles.push({ imageSrc: e.target.result, fileUpload: file, detailsImage: false });
+          thisParent.AttachmentsFiles = [{ imageSrc: e.target.result, fileUpload: file, detailsImage: false }];
           thisParent.AttachmentsFiles.length === 0 ? thisParent.requiredCommercialRegFiles = true : thisParent.requiredCommercialRegFiles = false
 
         };
