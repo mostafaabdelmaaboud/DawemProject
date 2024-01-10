@@ -100,7 +100,7 @@
     </div>
   </div> -->
   <p-table #dt1 [value]="schedualPlan" id="tableSchedualPlan" [responsiveLayout]="opened ? 'stack' : 'scroll'"
-    [responsive]="true" [paginator]="false" [rows]="itemsPerPage" [first]="page" [rows]="10"
+    [responsive]="true" [paginator]="false" [rows]="filteration.PageSize" [first]="filteration.PageNumber" [rows]="10"
     [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
     currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
               'orderNumber',
@@ -384,8 +384,8 @@
               {{mathRound(totalItems / filteration.PageSize)}} - {{filteration.PageNumber + 1}}
 
             </div>
-            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
-              [totalRecords]="10"></p-paginator>
+            <p-paginator (onPageChange)="onPageChange($event)" [first]="filteration.PageNumber"
+              [rows]="filteration.PageSize" [totalRecords]="totalItems"></p-paginator>
 
           </div>
         </td>

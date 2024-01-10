@@ -86,6 +86,11 @@ const routes: Routes = [
         loadChildren: () => import('./permissions/permissions.module').then((m) => m.PermissionsModule),
       },
       {
+        path: "userPermissions",
+        loadChildren: () => import('./user-permissions/user-permissions.module').then((m) => m.UserPermissionsModule),
+      },
+
+      {
         path: "taskType",
         loadChildren: () => import('./task-type/task-type.module').then((m) => m.TaskTypeModule),
       },
