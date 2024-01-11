@@ -67,6 +67,16 @@ export class UserPermissionsService {
     }
     return this.http.get<any>(`${environment.baseUrl}User/GetForDropDown`, { params: queryParams })
   }
+  deletePermission(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.delete<any>(`${environment.baseUrl}Permission/delete`, { params: queryParams })
+  }
   departmentForDropdown(params: any) {
     let queryParams = new HttpParams();
 
@@ -123,39 +133,20 @@ export class UserPermissionsService {
     return this.http.get<any>(`${environment.baseUrl}Role/GetForDropDown`, { params: queryParams })
 
   }
-  enabledSchedualPlan(params: any) {
-    let queryParams = new HttpParams();
-
-    if (params) {
-      Object.entries(params).forEach(([key, value]: any) => {
-        queryParams = queryParams.set(key, value);
-      })
-    }
-    return this.http.put<any>(`${environment.baseUrl}Group/enable`, {}, { params: queryParams })
-  }
 
 
-  disabledSchedualPlan(params: any) {
-    let queryParams = new HttpParams();
 
-    if (params) {
-      Object.entries(params).forEach(([key, value]: any) => {
-        queryParams = queryParams.set(key, value);
-      })
-    }
-    return this.http.put<any>(`${environment.baseUrl}Group/disable`, {}, { params: queryParams })
-  }
   createPermission(data: any) {
 
     return this.http.post<any>(`${environment.baseUrl}Permission/Create`, data)
 
   }
-  updateSchedualPlan(data: any) {
+  updatePermission(data: any) {
 
-    return this.http.put<any>(`${environment.baseUrl}SchedulePlan/Update`, data)
+    return this.http.put<any>(`${environment.baseUrl}Permission/Update`, data)
 
   }
-  schedualPlanGetById(params: any) {
+  permissionGetById(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -163,9 +154,9 @@ export class UserPermissionsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}SchedulePlan/GetById`, { params: queryParams }).pipe(map(data => data.data))
+    return this.http.get<any>(`${environment.baseUrl}Permission/GetById`, { params: queryParams }).pipe(map(data => data.data))
   }
-  schedualPlanGetInfo(params: any) {
+  permissionGetInfo(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -173,6 +164,6 @@ export class UserPermissionsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}SchedulePlan/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
+    return this.http.get<any>(`${environment.baseUrl}Permission/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
   }
 }

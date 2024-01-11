@@ -22,6 +22,8 @@ import { AddSchedualPlanComponent } from 'src/app/shared/components/add-schedual
 import { DialogSchedulePlanFileComponent } from 'src/app/shared/components/dialog-schedule-plan-file/dialog-schedule-plan-file.component';
 import { UserPermissionsService } from './services/user-permissions.service';
 import { AddUserPermissionComponent } from 'src/app/shared/components/add-user-permission/add-user-permission.component';
+import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
+import { DialogUserPermissionFileComponent } from 'src/app/shared/components/dialog-user-permission-file/dialog-user-permission-file.component';
 
 @Component({
   selector: 'app-user-permissions',
@@ -221,7 +223,7 @@ export class UserPermissionsComponent {
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editSchedualPlan = false;
+    dialogRefAddCurrency.componentInstance.editPermission = false;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       this.userPermissionsService.createPermission(result).subscribe(
@@ -273,123 +275,72 @@ export class UserPermissionsComponent {
       }
     });
   }
-  dialogGroupFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogSchedulePlanFileComponent, {
-      width: "40vw",
+  editUserPermission(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(AddUserPermissionComponent, {
+      width: "90vw",
+      maxWidth: "90vw",
+
       data: {
-        title: "ملف الجدولة"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.id = data.id
-  }
-  enabledRow(data: any) {
-
-    this.userPermissionsService.enabledSchedualPlan({ groupId: data.id }).subscribe(
-      {
-        next: res => {
-
-          this.toast.success(res.message);
-          this.getPermissions(this.filteration);
-        },
-        error: err => {
-
-        }
-      }
-    )
-  }
-  editSchedualPlane(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddSchedualPlanComponent, {
-      width: "70vw",
-      data: {
-        title: "تعديل الجدولة",
+        title: "تعديل صلاحية",
         setAsActive: "تعيين كنشط",
+        labelRadioButton: "النوع",
+        firstRadio: "الصلاحية",
+        secondRadio: "مستخدم",
 
-        titleDepartmentId: "نوع القسم",
-        placeholdeDepartmentId: "نوع القسم",
-        ValidationDepartmentId: "نوع القسم مطلوب",
+        titleRoleId: "نوع الصلاحية",
+        placeholdeRoleId: "نوع الصلاحية",
+        ValidationRoleId: "نوع الصلاحية مطلوب",
 
-
-        labelRadioButton: "نوع الجدولة",
-        firstRadio: "لموظف",
-        secondRadio: "لجروب",
-        thirdRadio: "لقسم",
-
-        titleEmployeeId: "نوع الموظف",
-        placeholdeEmployeeId: "نوع الموظف",
-        ValidationEmployeeId: "نوع الموظف مطلوب",
-
-
-        titleScheduleId: "جدول الدوام",
-        placeholdeScheduleId: "جدول الدوام",
-        ValidationScheduleId: "جدول الدوام مطلوب",
-
-        titleCalendar: "التاريخ",
-        placeholderCalendar: "اختار التاريخ",
-        validationCalendar: "التاريخ مطلوب",
-
-        titleGroupId: "نواب الجروب",
-        placeholdeGroupId: "نواب الجروب",
-        ValidationGroupId: "نواب الجروب مطلوب",
-
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        ValidationNotes: "الملاحظات مطلةب",
+        titleUserId: "نوع المستخدم",
+        placeholdeUserId: "نوع المستخدم",
+        ValidationUserId: "نوع المستخدم مطلوب",
 
         titleClose: "تراجع",
-        buttonSend: "تعديل الجدولة"
+        buttonSend: "حفظ الصلاحية"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editSchedualPlan = true;
-
+    dialogRefAddCurrency.componentInstance.editPermission = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
 
+
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData: any = {};
+      result.id = data.id;
 
-      formData.id = data.row;
-
-      formData.isActive = result.isActive;
-
-      formData.SchedulePlanType = Number(result.SchedulePlanType);
-      formData.EmployeeId = result.EmployeeId ? result.EmployeeId.key : null;
-      formData.GroupId = result.GroupId ? result.GroupId.key : null;
-      formData.DepartmentId = result.DepartmentId ? result.DepartmentId.key : null;
-      formData.ScheduleId = result.ScheduleId.key;
-      formData.DateFrom = moment(new Date(result.DateFrom)).format("DD/MM/YYYY");
-      formData.notes = result.notes;
-
-
-
-
-      this.userPermissionsService.updateSchedualPlan(formData).subscribe(
+      this.userPermissionsService.updatePermission(result).subscribe(
         {
           next: data => {
 
+            if (data?.state === 2) {
+              this.toast.error(data?.message);
+              dialogRefAddCurrency.close();
 
-            dialogRefAddCurrency.componentInstance.submitted = true;
+            } else {
+              dialogRefAddCurrency.componentInstance.submitted = true;
 
-            dialogRefAddCurrency.close();
+              dialogRefAddCurrency.close();
 
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات الجدولة"
-              },
-            });
-            this.getPermissions(this.filteration);
-            setTimeout(() => {
-              succressDialog.close();
+              const succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: "تم ارسال طلبك",
+                  message: data.message,
+                  buttonSend: "طلبات الصلاحيات"
+                },
+              });
+              this.getPermissions(this.filteration);
+              setTimeout(() => {
+                succressDialog.close();
 
-            }, 2000);
+              }, 2000);
 
-            succressDialog.componentInstance.submitted = true;
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-              succressDialog.close();
+              succressDialog.componentInstance.submitted = true;
+              succressDialog.componentInstance.submitClicked.subscribe(result => {
+                succressDialog.close();
 
-            })
+              })
+
+            }
 
           },
           error: err => {
@@ -405,6 +356,18 @@ export class UserPermissionsComponent {
       }
     });
   }
+  dialogPermissionFile(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(DialogUserPermissionFileComponent, {
+      width: "80vw",
+      data: {
+        title: "ملف الصلاحية"
+      },
+    });
+    dialogRefAddCurrency.componentInstance.id = data.id
+  }
+
+
+
   mathRound(data: any) {
     return Math.ceil(data)
   }
@@ -414,50 +377,37 @@ export class UserPermissionsComponent {
   }
 
 
-  deleteRow(data: any) {
-
-    const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
+  reasonOfRefuse(data: any) {
+    const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
       width: "30vw",
       data: {
-        title: "متأكد من تعليق المجموعة؟",
-        message: "برجاء توضيح السبب إن أمكن ليظهر للمجموعة عند محاولة تسجيل الدخول",
-        titleReasonOfRefuse: "سبب التعليق",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض ليظهر للمجموعة",
+        title: "هل متأكد من حذف الصلاحية؟",
+        message: "برجاء توضيح السبب إن أمكن",
+
         titleClose: "تراجع",
-        buttonSend: "تعليق المجموعة"
+        buttonSend: "حذف"
       },
     });
+
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
-      this.userPermissionsService.disabledSchedualPlan({ Id: data.id, DisableReason: result.notes }).subscribe(
-        {
-          next: res => {
+      this.userPermissionsService.deletePermission({ permissionId: data.id }).subscribe({
+        next: res => {
+          this.toast.success(res.message);
+          reasonOfRefuseDialog.componentInstance.submitted = true;
+          reasonOfRefuseDialog.close();
+          this.getPermissions(this.filteration);
+        },
+        error: err => {
+          reasonOfRefuseDialog.componentInstance.submitted = true;
 
-            this.toast.success(res.message);
-            reasonOfRefuseDialog.componentInstance.submitted = true;
-            this.getPermissions(this.filteration);
-            reasonOfRefuseDialog.close();
-          },
-          error: err => {
-            reasonOfRefuseDialog.componentInstance.submitted = true;
-
-          }
         }
-      )
+      })
+
 
 
     })
-
-
-
-
-
-
-
-
-
-
   }
   onPageChange(event: any) {
     this.filteration = { ...this.filteration, PageNumber: event.page };

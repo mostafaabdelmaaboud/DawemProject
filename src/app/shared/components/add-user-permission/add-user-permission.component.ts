@@ -89,14 +89,14 @@ export class AddUserPermissionComponent {
   @Input() submitted!: boolean;
   list: any[] = [
   ];
-  @Input() editSchedualPlan!: boolean;
+  @Input() editPermission!: boolean;
   @Input() id!: string;
 
   listRoleId: any[] = [
   ];
   listUserId: any[] = [
   ];
-  permissions: any = [];
+  permissions: any[] = [];
 
 
   private userPermissionsService = inject(UserPermissionsService);
@@ -167,7 +167,7 @@ export class AddUserPermissionComponent {
   requiredCommercialRegFiles = false;
   opened = false;
   totalItems: number = 0;
-
+  permissionScreens = [];
   private _mobileQueryListener: () => void;
   constructor(public dialogRef: MatDialogRef<AddUserPermissionComponent>,
     private toast: ToastrService,
@@ -237,11 +237,10 @@ export class AddUserPermissionComponent {
 
           });
 
-          this.getPermissions(this.filteration);
 
 
-          if (this.editSchedualPlan) {
-            this.userPermissionsService.schedualPlanGetById({ schedulePlanId: this.id }).subscribe(
+          if (this.editPermission) {
+            this.userPermissionsService.permissionGetById({ permissionId: this.id }).subscribe(
               {
                 next: data => {
 
@@ -282,72 +281,9 @@ export class AddUserPermissionComponent {
 
                     });
                   }
+                  this.permissionScreens = data?.permissionScreens;
+                  this.getPermissions(this.filteration, this.permissionScreens);
 
-
-                  // this.groupsService.GetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids: data?.employeeIds }).subscribe(dataDropdown => {
-
-                  //   this.listGroupEmployees = [];
-                  //   dataDropdown.data?.forEach((list: any) => {
-                  //     this.listGroupEmployees.push({ name: list.name, key: list.id });
-                  //   });
-                  //   data?.employeeIds?.forEach((employee: any) => {
-
-
-                  //     let indexEmployees = this.listGroupEmployees.findIndex(list => list.key === employee);
-
-
-                  //     if (indexEmployees >= 0) {
-                  //       if (Array.isArray(this.getControl("groupEmployees")?.value)) {
-                  //         this.getControl("groupEmployees")?.patchValue(([{ name: this.listGroupEmployees[indexEmployees].name, key: this.listGroupEmployees[indexEmployees].key }, ...this.getControl("groupEmployees")?.value]));
-                  //       } else {
-                  //         this.getControl("groupEmployees")?.patchValue(([{ name: this.listGroupEmployees[indexEmployees].name, key: this.listGroupEmployees[indexEmployees].key }]));
-                  //       }
-                  //     }
-
-                  //   });
-
-                  // });
-
-                  // this.groupsService.GetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids: data?.managerDelegatorIds }).subscribe(dataDropdown => {
-
-                  //   this.listDeputyDirector = [];
-                  //   dataDropdown.data?.forEach((list: any) => {
-                  //     this.listDeputyDirector.push({ name: list.name, key: list.id });
-                  //   });
-
-                  //   data?.managerDelegatorIds?.forEach((employee: any) => {
-
-                  //     let indexDeputyDirector = this.listDeputyDirector.findIndex(list => list.key === employee);
-                  //     if (indexDeputyDirector >= 0) {
-                  //       if (Array.isArray(this.getControl("deputyDirector")?.value)) {
-                  //         this.getControl("deputyDirector")?.patchValue(([{ name: this.listDeputyDirector[indexDeputyDirector].name, key: this.listDeputyDirector[indexDeputyDirector].key }, ...this.getControl("deputyDirector")?.value]));
-                  //       } else {
-                  //         this.getControl("deputyDirector")?.patchValue(([{ name: this.listDeputyDirector[indexDeputyDirector].name, key: this.listDeputyDirector[indexDeputyDirector].key }]));
-                  //       }
-                  //     }
-
-                  //   });
-
-                  // });
-
-
-                  // data?.zoneIds?.forEach((zone: any) => {
-
-                  //   let indexZones = this.listZones.findIndex(list => list.key === zone);
-
-
-                  //   if (indexZones >= 0) {
-                  //     if (Array.isArray(this.getControl("zoneIds")?.value)) {
-                  //       this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }, ...this.getControl("zoneIds")?.value]));
-                  //     } else {
-                  //       this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }]));
-                  //     }
-                  //   }
-
-                  // });
-
-
-                  this.loading = false;
                 },
                 error: err => {
                   this.loading = false;
@@ -356,8 +292,9 @@ export class AddUserPermissionComponent {
             )
 
           }
-          if (!this.editSchedualPlan) {
-            this.loading = false;
+          if (!this.editPermission) {
+            this.getPermissions(this.filteration, this.permissionScreens);
+
 
           }
 
@@ -406,17 +343,17 @@ export class AddUserPermissionComponent {
   }
   numberOfRowsPerPage(data: any) {
     this.filteration = { ...this.filteration, PageSize: data.value.code };
-    this.getPermissions(this.filteration)
+    this.getPermissions(this.filteration, this.permissionScreens)
   }
 
   nodeSelect(data: any) {
   }
   onPageChange(event: any) {
     this.filteration = { ...this.filteration, PageNumber: event.page };
-    this.getPermissions(this.filteration)
+    this.getPermissions(this.filteration, this.permissionScreens)
   }
   lastSearchQuery = "";
-  getPermissions(filteration: any) {
+  getPermissions(filteration: any, permissionScreens: any) {
     this.permissions = [];
     this.isLoading = true;
 
@@ -442,7 +379,7 @@ export class AddUserPermissionComponent {
               checkbox: false
             },
             "3": {
-              readoOnly: screen.availableActions[3] >= 0 ? false : true,
+              readoOnly: false,
               checkbox: false
             },
             "4": {
@@ -465,8 +402,27 @@ export class AddUserPermissionComponent {
         });
 
         this.totalItems = data.totalCount
-        this.isLoading = false;
-        this.loading = false;
+
+        if (this.editPermission) {
+          if (permissionScreens.length > 0) {
+            permissionScreens.forEach((permission: any) => {
+              let indexPermission = this.permissions.findIndex((per: any) => per.screenCode == permission.screenCode);
+              if (indexPermission >= 0) {
+                permission.permissionScreenActions.forEach((action: any) => {
+                  this.permissions[indexPermission][action.actionCode.toString()].checkbox = true;
+                  this.permissions[indexPermission][action.actionCode.toString()].readoOnly = false;
+
+                });
+
+              }
+            });
+          }
+          this.isLoading = false;
+          this.loading = false;
+        } else {
+          this.isLoading = false;
+          this.loading = false;
+        }
 
       },
       error: err => {
