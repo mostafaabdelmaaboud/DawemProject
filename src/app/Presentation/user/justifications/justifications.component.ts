@@ -14,6 +14,7 @@ import { JustificationsService } from './services/justifications.service';
 import { ToastrService } from 'ngx-toastr';
 import { RequestForJustificationComponent } from 'src/app/shared/components/request-for-justification/request-for-justification.component';
 import * as moment from 'moment';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 
 @Component({
   selector: 'app-justifications',
@@ -93,7 +94,8 @@ export class JustificationsComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -307,6 +309,9 @@ export class JustificationsComponent {
   mathRound(data: any) {
     return Math.ceil(data)
   }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 24, actionCode: data.actionCode })
+  }
   numberOfRowsPerPage(data: any) {
 
 
@@ -438,7 +443,8 @@ export class JustificationsComponent {
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
-      this.justificationsService.deleteJustification({ justificationTypeId: data.id }).subscribe(
+
+      this.justificationsService.rejectJustification({ refuseReason: result.notes, id: data.id }).subscribe(
         {
           next: res => {
 

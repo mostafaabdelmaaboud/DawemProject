@@ -158,7 +158,7 @@ export class AddUserPermissionComponent {
   rows: number = 10;
   weekDays: any[] = [];
   addBranchGroupForm: FormGroup = this.fb.group({
-    isActive: [false],
+    isActive: [true],
     fieldDisabled: [""],
     ForType: ['0', Validators.required],
     RoleId: ['', Validators.required],
@@ -323,6 +323,7 @@ export class AddUserPermissionComponent {
         this.addBranchGroupForm.removeControl("RoleId");
 
         this.addBranchGroupForm.addControl("UserId", this.fb.control("", [Validators.required]));
+
         this.RoleToggle = false;
         this.userIdToggle = true;
 
@@ -330,6 +331,10 @@ export class AddUserPermissionComponent {
 
 
     })
+
+
+
+
     this.RowsPerPage = [
       { name: '5', code: 5 },
       { name: '10', code: 10 },
@@ -337,6 +342,121 @@ export class AddUserPermissionComponent {
 
     ];
 
+  }
+  dropdownChangedUserId(userId: any) {
+
+    this.userPermissionsService.checkAndGetPermission({ UserId: userId.value.key }).subscribe({
+      next: role => {
+
+        this.data!['buttonSend'] = "حفظ الصلاحية";
+        this.data!['title'] = "تعديل صلاحية";
+        this.editPermission = true;
+        this.id = role.id
+        this.getControl("isActive")?.setValue(role.isActive);
+
+
+        this.getControl("ForType")?.setValue(role.forType.toString());
+        this.getControl("fieldDisabled")?.setValue(role.code);
+
+
+
+        if (role.roleId != null) {
+          this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: role.employeeId }).subscribe(dataDropdown => {
+            this.listRoleId = [];
+            dataDropdown.data?.forEach((list: any) => {
+              this.listRoleId.push({ name: list.name, key: list.id });
+            });
+            let indexRoleId = this.listRoleId.findIndex(list => list.key === role.roleId);
+            if (indexRoleId >= 0) {
+              this.getControl("RoleId")?.setValue(this.listRoleId[indexRoleId]);
+
+            }
+
+          });
+        }
+        if (role.userId != null) {
+          this.userPermissionsService.usersForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: role.userId }).subscribe(dataDropdown => {
+            this.listUserId = [];
+            dataDropdown.data?.forEach((list: any) => {
+              this.listUserId.push({ name: list.name, key: list.id });
+            });
+            let indexUserId = this.listUserId.findIndex(list => list.key === role.userId);
+            if (indexUserId >= 0) {
+              this.getControl("UserId")?.setValue(this.listUserId[indexUserId]);
+
+            }
+
+          });
+        }
+        this.permissionScreens = role?.permissionScreens;
+        this.getPermissions(this.filteration, this.permissionScreens);
+      },
+      error: err => {
+        this.data!['buttonSend'] = "اضافه صلاحية";
+        this.data!['title'] = "إضافة صلاحية";
+        this.editPermission = false;
+        this.permissionScreens = [];
+        this.getPermissions(this.filteration, this.permissionScreens);
+
+      }
+    })
+  }
+  dropdownChangedRoleId(RoleId: any) {
+
+    this.userPermissionsService.checkAndGetPermission({ RoleId: RoleId.value.key }).subscribe({
+      next: role => {
+        this.data!['titleClose'] = "حفظ الصلاحية";
+        this.data!['title'] = "تعديل صلاحية";
+        this.editPermission = true;
+        this.id = role.id
+        this.getControl("isActive")?.setValue(role.isActive);
+
+
+        this.getControl("ForType")?.setValue(role.forType.toString());
+        this.getControl("fieldDisabled")?.setValue(role.code);
+
+
+
+        if (role.roleId != null) {
+          this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: role.employeeId }).subscribe(dataDropdown => {
+            this.listRoleId = [];
+            dataDropdown.data?.forEach((list: any) => {
+              this.listRoleId.push({ name: list.name, key: list.id });
+            });
+            let indexRoleId = this.listRoleId.findIndex(list => list.key === role.roleId);
+            if (indexRoleId >= 0) {
+              this.getControl("RoleId")?.setValue(this.listRoleId[indexRoleId]);
+
+            }
+
+          });
+        }
+        if (role.userId != null) {
+          this.userPermissionsService.usersForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: role.userId }).subscribe(dataDropdown => {
+            this.listUserId = [];
+            dataDropdown.data?.forEach((list: any) => {
+              this.listUserId.push({ name: list.name, key: list.id });
+            });
+            let indexUserId = this.listUserId.findIndex(list => list.key === role.userId);
+            if (indexUserId >= 0) {
+              this.getControl("UserId")?.setValue(this.listUserId[indexUserId]);
+
+            }
+
+          });
+        }
+        this.permissionScreens = role?.permissionScreens;
+        this.getPermissions(this.filteration, this.permissionScreens);
+
+      },
+      error: err => {
+        this.data!['buttonSend'] = "اضافه صلاحية";
+        this.data!['title'] = "إضافة صلاحية";
+        this.editPermission = false;
+        this.permissionScreens = [];
+        this.getPermissions(this.filteration, this.permissionScreens);
+      }
+    })
   }
   mathRound(data: any) {
     return Math.ceil(data)
@@ -367,35 +487,35 @@ export class AddUserPermissionComponent {
             screenCode: screen.screenCode,
             screenName: screen.screenName,
             "0": {
-              readoOnly: screen.availableActions[0] >= 0 ? false : true,
+              readoOnly: screen.availableActions.includes(0) ? false : true,
               checkbox: false
             },
             "1": {
-              readoOnly: screen.availableActions[1] >= 0 ? false : true,
+              readoOnly: screen.availableActions.includes(1) ? false : true,
               checkbox: false
             },
             "2": {
-              readoOnly: screen.availableActions[2] >= 0 ? false : true,
+              readoOnly: screen.availableActions.includes(2) ? false : true,
               checkbox: false
             },
             "3": {
-              readoOnly: false,
+              readoOnly: screen.availableActions.length > 0 ? false : true,
               checkbox: false
             },
             "4": {
-              readoOnly: screen.availableActions[4] >= 0 ? false : true,
+              readoOnly: screen.availableActions.includes(4) ? false : true,
               checkbox: false
             },
             "5": {
-              readoOnly: screen.availableActions[5] >= 0 ? false : true,
+              readoOnly: screen.availableActions.includes(5) ? false : true,
               checkbox: false
             },
             "6": {
-              readoOnly: screen.availableActions[6] >= 0 ? false : true,
+              readoOnly: screen.availableActions.includes(6) ? false : true,
               checkbox: false
             },
             "7": {
-              readoOnly: screen.availableActions[7] >= 0 ? false : true,
+              readoOnly: screen.availableActions.includes(7) ? false : true,
               checkbox: false
             }
           })

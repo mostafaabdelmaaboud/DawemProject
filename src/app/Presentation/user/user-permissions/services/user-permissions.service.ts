@@ -166,4 +166,16 @@ export class UserPermissionsService {
     }
     return this.http.get<any>(`${environment.baseUrl}Permission/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
   }
+  checkAndGetPermission(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}Permission/CheckAndGetPermission`, { params: queryParams }).pipe(map(data => data.data))
+
+  }
+
 }

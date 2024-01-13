@@ -265,10 +265,12 @@
             <div class="action-body-td">
               <button type="button" class="btn btn-outline-secondary action-accept color-green"><i
                   class="bi bi-check-circle"></i></button>
-              <button type="button" class="btn btn-outline-secondary action-accept color-green"
-                (click)="editEmployment()"><i class="bi bi-pencil-square"></i></button>
-              <button type="button" class="btn btn-outline-secondary action-close color-red"
-                (click)="deleteRow(rowData)"><i class="bi bi-trash3-fill"></i>
+              <button *ngIf="showActions({actionCode:1})" type="button"
+                class="btn btn-outline-secondary action-accept color-green" (click)="editEmployment()"><i
+                  class="bi bi-pencil-square"></i></button>
+              <button *ngIf="showActions({actionCode:2})" type="button"
+                class="btn btn-outline-secondary action-close color-red" (click)="deleteRow(rowData)"><i
+                  class="bi bi-trash3-fill"></i>
               </button>
 
 

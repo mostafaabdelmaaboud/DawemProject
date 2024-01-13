@@ -187,7 +187,8 @@
               </form>
 
             </p-overlayPanel>
-            <button class="btn btn-primary action-button-t d-flex align-items-center" (click)="requestJustification()">
+            <button *ngIf="showActions({actionCode:0})"
+              class="btn btn-primary action-button-t d-flex align-items-center" (click)="requestJustification()">
               <i class="pi bi-plus-circle-fill"></i>
 
               <span>إضافة تبرير</span>
@@ -255,11 +256,12 @@
               {{column.name}}
             </span>
             <div class="action-body-td">
-              <button type="button" class="btn btn-outline-secondary action-accept color-green"
-                (click)="editJustification(rowData)"><i class="bi bi-pencil-square"></i></button>
-              <button type="button" (click)="sendRequest(rowData)"
+              <button *ngIf="showActions({actionCode:1})" type="button"
+                class="btn btn-outline-secondary action-accept color-green" (click)="editJustification(rowData)"><i
+                  class="bi bi-pencil-square"></i></button>
+              <button *ngIf="showActions({actionCode:4})" type="button" (click)="sendRequest(rowData)"
                 class="btn btn-outline-secondary action-accept color-green"><i class="bi bi-check-circle"></i></button>
-              <button type="button" (click)="reasonOfRefuse(rowData)"
+              <button *ngIf="showActions({actionCode:5})" type="button" (click)="reasonOfRefuse(rowData)"
                 class="btn btn-outline-secondary action-close color-red"><i class="bi bi-x-circle"></i></button>
 
 

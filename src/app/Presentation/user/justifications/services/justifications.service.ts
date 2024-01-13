@@ -42,6 +42,16 @@ export class JustificationsService {
     }
     return this.http.delete<any>(`${environment.baseUrl}JustificationType/delete`, { params: queryParams })
   }
+  rejectJustification(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.delete<any>(`${environment.baseUrl}RequestJustification/Reject`, { params: queryParams })
+  }
   accept(params: any) {
     let queryParams = new HttpParams();
 

@@ -45,13 +45,14 @@ export class UserPermissionsComponent {
       name: "رقم الصلاحية",
       field: "code",
     },
-    {
-      name: "لي نوع",
-      field: "forType",
-    },
+
     {
       name: "نوع الصلاحية",
       field: "forTypeName"
+    },
+    {
+      name: "اسم الصلاحية / المستخدم",
+      field: "roleOrUserName",
     },
     {
       name: "عدد الشاشات المسموح بها",
@@ -186,7 +187,7 @@ export class UserPermissionsComponent {
         this.permissions.push({
           id: permission.id,
           code: permission.code,
-          forType: permission.forType == 0 ? "الصلاحية" : "مستخدم",
+          roleOrUserName: permission.roleOrUserName,
           forTypeName: permission.forTypeName,
           allowedScreensCount: permission.allowedScreensCount,
           isActive: permission.isActive
@@ -226,48 +227,95 @@ export class UserPermissionsComponent {
     dialogRefAddCurrency.componentInstance.editPermission = false;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      this.userPermissionsService.createPermission(result).subscribe(
-        {
-          next: data => {
+      if (dialogRefAddCurrency.componentInstance.editPermission) {
+        result.id = dialogRefAddCurrency.componentInstance.id;
+        this.userPermissionsService.updatePermission(result).subscribe(
+          {
+            next: data => {
 
-            if (data?.state === 2) {
-              this.toast.error(data?.message);
-              dialogRefAddCurrency.close();
+              if (data?.state === 2) {
+                this.toast.error(data?.message);
+                dialogRefAddCurrency.close();
 
-            } else {
+              } else {
+                dialogRefAddCurrency.componentInstance.submitted = true;
+
+                dialogRefAddCurrency.close();
+
+                const succressDialog = this.dialog.open(ToastSuccessComponent, {
+                  width: "30vw",
+                  data: {
+                    title: "تم ارسال طلبك",
+                    message: data.message,
+                    buttonSend: "طلبات الصلاحيات"
+                  },
+                });
+                this.getPermissions(this.filteration);
+                setTimeout(() => {
+                  succressDialog.close();
+
+                }, 2000);
+
+                succressDialog.componentInstance.submitted = true;
+                succressDialog.componentInstance.submitClicked.subscribe(result => {
+                  succressDialog.close();
+
+                })
+
+              }
+
+            },
+            error: err => {
               dialogRefAddCurrency.componentInstance.submitted = true;
 
-              dialogRefAddCurrency.close();
+            }
+          }
+        )
+      } else {
+        this.userPermissionsService.createPermission(result).subscribe(
+          {
+            next: data => {
 
-              const succressDialog = this.dialog.open(ToastSuccessComponent, {
-                width: "30vw",
-                data: {
-                  title: "تم ارسال طلبك",
-                  message: data.message,
-                  buttonSend: "طلبات الصلاحيات"
-                },
-              });
-              this.getPermissions(this.filteration);
-              setTimeout(() => {
-                succressDialog.close();
+              if (data?.state === 2) {
+                this.toast.error(data?.message);
+                dialogRefAddCurrency.close();
 
-              }, 2000);
+              } else {
+                dialogRefAddCurrency.componentInstance.submitted = true;
 
-              succressDialog.componentInstance.submitted = true;
-              succressDialog.componentInstance.submitClicked.subscribe(result => {
-                succressDialog.close();
+                dialogRefAddCurrency.close();
 
-              })
+                const succressDialog = this.dialog.open(ToastSuccessComponent, {
+                  width: "30vw",
+                  data: {
+                    title: "تم ارسال طلبك",
+                    message: data.message,
+                    buttonSend: "طلبات الصلاحيات"
+                  },
+                });
+                this.getPermissions(this.filteration);
+                setTimeout(() => {
+                  succressDialog.close();
+
+                }, 2000);
+
+                succressDialog.componentInstance.submitted = true;
+                succressDialog.componentInstance.submitClicked.subscribe(result => {
+                  succressDialog.close();
+
+                })
+
+              }
+
+            },
+            error: err => {
+              dialogRefAddCurrency.componentInstance.submitted = true;
 
             }
-
-          },
-          error: err => {
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
           }
-        }
-      )
+        )
+      }
+
     });
     dialogRefAddCurrency.afterClosed().subscribe(result => {
       if (result) {
@@ -305,50 +353,96 @@ export class UserPermissionsComponent {
 
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      result.id = data.id;
+      if (dialogRefAddCurrency.componentInstance.editPermission) {
+        result.id = data.id;
+        this.userPermissionsService.updatePermission(result).subscribe(
+          {
+            next: data => {
 
-      this.userPermissionsService.updatePermission(result).subscribe(
-        {
-          next: data => {
+              if (data?.state === 2) {
+                this.toast.error(data?.message);
+                dialogRefAddCurrency.close();
 
-            if (data?.state === 2) {
-              this.toast.error(data?.message);
-              dialogRefAddCurrency.close();
+              } else {
+                dialogRefAddCurrency.componentInstance.submitted = true;
 
-            } else {
+                dialogRefAddCurrency.close();
+
+                const succressDialog = this.dialog.open(ToastSuccessComponent, {
+                  width: "30vw",
+                  data: {
+                    title: "تم ارسال طلبك",
+                    message: data.message,
+                    buttonSend: "طلبات الصلاحيات"
+                  },
+                });
+                this.getPermissions(this.filteration);
+                setTimeout(() => {
+                  succressDialog.close();
+
+                }, 2000);
+
+                succressDialog.componentInstance.submitted = true;
+                succressDialog.componentInstance.submitClicked.subscribe(result => {
+                  succressDialog.close();
+
+                })
+
+              }
+
+            },
+            error: err => {
               dialogRefAddCurrency.componentInstance.submitted = true;
 
-              dialogRefAddCurrency.close();
+            }
+          }
+        )
+      } else {
+        this.userPermissionsService.createPermission(result).subscribe(
+          {
+            next: data => {
 
-              const succressDialog = this.dialog.open(ToastSuccessComponent, {
-                width: "30vw",
-                data: {
-                  title: "تم ارسال طلبك",
-                  message: data.message,
-                  buttonSend: "طلبات الصلاحيات"
-                },
-              });
-              this.getPermissions(this.filteration);
-              setTimeout(() => {
-                succressDialog.close();
+              if (data?.state === 2) {
+                this.toast.error(data?.message);
+                dialogRefAddCurrency.close();
 
-              }, 2000);
+              } else {
+                dialogRefAddCurrency.componentInstance.submitted = true;
 
-              succressDialog.componentInstance.submitted = true;
-              succressDialog.componentInstance.submitClicked.subscribe(result => {
-                succressDialog.close();
+                dialogRefAddCurrency.close();
 
-              })
+                const succressDialog = this.dialog.open(ToastSuccessComponent, {
+                  width: "30vw",
+                  data: {
+                    title: "تم ارسال طلبك",
+                    message: data.message,
+                    buttonSend: "طلبات الصلاحيات"
+                  },
+                });
+                this.getPermissions(this.filteration);
+                setTimeout(() => {
+                  succressDialog.close();
+
+                }, 2000);
+
+                succressDialog.componentInstance.submitted = true;
+                succressDialog.componentInstance.submitClicked.subscribe(result => {
+                  succressDialog.close();
+
+                })
+
+              }
+
+            },
+            error: err => {
+              dialogRefAddCurrency.componentInstance.submitted = true;
 
             }
-
-          },
-          error: err => {
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
           }
-        }
-      )
+        )
+      }
+
+
     });
     dialogRefAddCurrency.afterClosed().subscribe(result => {
       if (result) {

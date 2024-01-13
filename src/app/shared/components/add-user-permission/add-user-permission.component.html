@@ -13,7 +13,7 @@
     <form [formGroup]="addBranchGroupForm">
       <div class="section1 mb-3">
         <label class="title">{{data!['setAsActive']|translate}}</label>
-        <p-inputSwitch formControlName="isActive"></p-inputSwitch>
+        <p-inputSwitch formControlName="isActive" [readonly]="true"></p-inputSwitch>
       </div>
       <div class="col-12">
         <div class="row">
@@ -46,8 +46,9 @@
             <div class="sectionTwo mb-3" *ngIf="RoleToggle">
               <label class="title">{{data!['titleRoleId']|translate}} <span class="color-red">*</span></label>
               <div class="content-password">
-                <p-dropdown appendTo="body" formControlName="RoleId" appendTo="body" [options]="listRoleId"
-                  [placeholder]="data!['placeholdeRoleId']|translate" optionLabel="name">
+                <p-dropdown appendTo="body" (onChange)="dropdownChangedRoleId($event)" formControlName="RoleId"
+                  appendTo="body" [options]="listRoleId" [placeholder]="data!['placeholdeRoleId']|translate"
+                  optionLabel="name">
                   <ng-template pTemplate="header">
                     <span class="p-input-icon-left input-search-dropdown">
 
@@ -73,8 +74,9 @@
             <div class="sectionTwo mb-3" *ngIf="userIdToggle">
               <label class="title">{{data!['titleUserId']|translate}} <span class="color-red">*</span></label>
               <div class="content-password">
-                <p-dropdown appendTo="body" formControlName="UserId" appendTo="body" [options]="listUserId"
-                  [placeholder]="data!['placeholdeUserId']|translate" optionLabel="name">
+                <p-dropdown appendTo="body" (onChange)="dropdownChangedUserId($event)" formControlName="UserId"
+                  appendTo="body" [options]="listUserId" [placeholder]="data!['placeholdeUserId']|translate"
+                  optionLabel="name">
                   <ng-template pTemplate="header">
                     <span class="p-input-icon-left input-search-dropdown">
 
@@ -236,7 +238,8 @@
       ?
       (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
     <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
-      (click)="close()">{{data!['titleClose']|translate}}</button>
+      (click)="close()">{{data!['titleClose']|translate}}
+    </button>
   </footer>
 </div>
 <div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">

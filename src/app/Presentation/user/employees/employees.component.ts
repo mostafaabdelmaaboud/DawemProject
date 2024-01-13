@@ -15,6 +15,7 @@ import { DialogEmployeeFileComponent } from 'src/app/shared/components/dialog-em
 import { EmployeesService } from './services/employees.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 
 @Component({
   selector: 'app-employees',
@@ -109,7 +110,8 @@ export class EmployeesComponent {
 
   constructor(
     private config: PrimeNGConfig, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
-    public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+    public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -679,6 +681,9 @@ export class EmployeesComponent {
 
       }
     });
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 4, actionCode: data.actionCode })
   }
   dialogEmployeeFile(data: any) {
     const dialogRefAddCurrency = this.dialog.open(DialogEmployeeFileComponent, {

@@ -415,7 +415,6 @@ export class DashboardComponent {
   getDepartmentsInformations(filteration: any) {
     this.dashboardService.getDepartmentsInformations(filteration).subscribe({
       next: data => {
-        debugger;
         moment.locale("ar");
         this.departmentsInformations = data.data.map((depratment: any) => {
           return {

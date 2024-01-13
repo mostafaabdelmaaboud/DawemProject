@@ -87,7 +87,7 @@ export class LoginComponent {
       }).subscribe(
         {
           next: (res: any) => {
-            debugger;
+
             this.toast.success(res.message);
             this.authService.setToken(res.data.token);
             this.isLoading = false;
