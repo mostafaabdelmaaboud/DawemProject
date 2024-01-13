@@ -87,9 +87,13 @@ export class LoginComponent {
       }).subscribe(
         {
           next: (res: any) => {
+            debugger;
             this.toast.success(res.message);
             this.authService.setToken(res.data.token);
             this.isLoading = false;
+
+            let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: res.data.availablePermissions })
+            localStorage.setItem("permissions", formatObjectPermissions);
 
             this.router.navigate(["/user/dashboard"]);
 

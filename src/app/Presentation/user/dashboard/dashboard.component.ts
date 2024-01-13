@@ -9,6 +9,7 @@ import {
 } from "ng-apexcharts";
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DashboardService } from './services/dashboard.service';
+import * as moment from 'moment';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -93,7 +94,8 @@ export class DashboardComponent {
     this.mobileQuery.addListener(this._mobileQueryListener);
 
   }
-  employeesAttendances: any[] = []
+  employeesAttendances: any[] = [];
+  departmentsInformations: any[] = [];
   filteration: any = {
     PageSize: 5,
     PageNumber: 0,
@@ -304,6 +306,7 @@ export class DashboardComponent {
     this.getRequestsStatus();
     this.getEmployeesStatus();
     this.getEmployeesAttendancesStatus(this.filteration);
+    this.getDepartmentsInformations(this.filteration);
   }
   numberOfRowsPerPage(data: any) {
 
@@ -408,6 +411,34 @@ export class DashboardComponent {
 
       }
     })
+  }
+  getDepartmentsInformations(filteration: any) {
+    this.dashboardService.getDepartmentsInformations(filteration).subscribe({
+      next: data => {
+        debugger;
+        moment.locale("ar");
+        this.departmentsInformations = data.data.map((depratment: any) => {
+          return {
+            ...depratment, lastEditDate: {
+              Date: this.isSameDay(new Date(), new Date(depratment.lastEditDate)) ? moment(new Date(depratment.lastEditDate)).format('h:mm A') : moment(new Date(depratment.lastEditDate)).format('MMMM Do YYYY, h:mm a'),
+              currentDate: this.isSameDay(new Date(), new Date(depratment.lastEditDate))
+            }
+          }
+        });
+        this.totalItems = data.totalCount;
+
+      },
+      error: err => {
+
+      }
+    })
+  }
+  isSameDay(date1: Date, date2: Date): boolean {
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
   }
   getEmployeesAttendancesStatus(filteration: any) {
     this.dashboardService.getEmployeesAttendancesStatus(filteration).subscribe({
