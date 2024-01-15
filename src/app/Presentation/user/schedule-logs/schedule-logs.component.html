@@ -77,8 +77,9 @@
             <div class="action-body-td">
 
 
-              <button type="button" class="btn btn-outline-secondary action-close color-blue"
-                (click)="dialogScheduleFile(rowData)"><i class="bi bi-person-vcard"></i></button>
+              <button type="button" *ngIf="showActions({actionCode:3})"
+                class="btn btn-outline-secondary action-close color-blue" (click)="dialogScheduleFile(rowData)"><i
+                  class="bi bi-person-vcard"></i></button>
 
 
 

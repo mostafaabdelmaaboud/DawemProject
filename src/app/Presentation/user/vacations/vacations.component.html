@@ -197,7 +197,8 @@
               </form>
 
             </p-overlayPanel>
-            <button class="btn btn-primary action-button-t d-flex align-items-center" (click)="requestVacation()">
+            <button class="btn btn-primary action-button-t d-flex align-items-center"
+              *ngIf="showActions({actionCode:0})" (click)="requestVacation()">
               <i class="pi bi-plus-circle-fill"></i>
 
               <span>إضافة طلب</span>
@@ -277,19 +278,21 @@
               {{column.name}}
             </span>
             <div class="action-body-td">
-              <button type="button" class="btn btn-outline-secondary action-accept color-green"
-                (click)="editVacation(rowData)"><i class="bi bi-pencil-square"></i></button>
+              <button type="button" *ngIf="showActions({actionCode:1})"
+                class="btn btn-outline-secondary action-accept color-green" (click)="editVacation(rowData)"><i
+                  class="bi bi-pencil-square"></i></button>
 
 
 
-              <button type="button" class="btn btn-outline-secondary action-close color-blue"
-                (click)="dialogVacationFile(rowData)"><i class="bi bi-person-vcard"></i></button>
-              <ng-container *ngIf="rowData.status === 0">
+              <button type="button" *ngIf="showActions({actionCode:3})"
+                class="btn btn-outline-secondary action-close color-blue" (click)="dialogVacationFile(rowData)"><i
+                  class="bi bi-person-vcard"></i></button>
+              <ng-container *ngIf="rowData.status === 0 && showActions({actionCode:4})">
                 <button type="button" (click)="sendRequest(rowData)"
                   class="btn btn-outline-secondary action-accept color-green"><i
                     class="bi bi-check-circle"></i></button>
               </ng-container>
-              <ng-container *ngIf="rowData.status === 0">
+              <ng-container *ngIf="rowData.status === 0 && showActions({actionCode:5})">
                 <button type="button" (click)="reasonOfRefuse(rowData)"
                   class="btn btn-outline-secondary action-close color-red"><i class="bi bi-x-circle"></i></button>
               </ng-container>

@@ -196,7 +196,8 @@
               </form>
 
             </p-overlayPanel>
-            <button class="btn btn-primary action-button-t d-flex align-items-center" (click)="requestUser()">
+            <button class="btn btn-primary action-button-t d-flex align-items-center"
+              *ngIf="showActions({actionCode:0})" (click)="requestUser()">
               <i class="pi bi-plus-circle-fill"></i>
               <span>إضافة مستخدم</span>
             </button>
@@ -254,12 +255,14 @@
               {{column.name}}
             </span>
             <div class="action-body-td">
-              <button type="button" class="btn btn-outline-secondary action-accept color-green"
-                (click)="editUser(rowData)"><i class="bi bi-pencil-square"></i></button>
+              <button type="button" *ngIf="showActions({actionCode:1})"
+                class="btn btn-outline-secondary action-accept color-green" (click)="editUser(rowData)"><i
+                  class="bi bi-pencil-square"></i></button>
 
-              <button type="button" class="btn btn-outline-secondary action-close color-blue"
-                (click)="dialogUserFile(rowData)"><i class="bi bi-person-vcard"></i></button>
-              <button type="button" (click)="reasonOfRefuse(rowData)"
+              <button type="button" *ngIf="showActions({actionCode:3})"
+                class="btn btn-outline-secondary action-close color-blue" (click)="dialogUserFile(rowData)"><i
+                  class="bi bi-person-vcard"></i></button>
+              <button type="button" *ngIf="showActions({actionCode:2})" (click)="reasonOfRefuse(rowData)"
                 class="btn btn-outline-secondary action-close color-red"><i class="bi bi-x-circle"></i></button>
             </div>
           </td>

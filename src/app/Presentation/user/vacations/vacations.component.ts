@@ -14,6 +14,7 @@ import { DialogVacationFileComponent } from 'src/app/shared/components/dialog-va
 import { VacationsService } from './services/vacations.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 
 @Component({
   selector: 'app-vacations',
@@ -102,7 +103,7 @@ export class VacationsComponent {
     { name: "تسجيل انصراف خاطئ", key: "4" }
 
   ];
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService, private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -178,6 +179,9 @@ export class VacationsComponent {
 
       }
     })
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 27, actionCode: data.actionCode })
   }
   getVacations(filteration: any) {
     this.vacations = [];

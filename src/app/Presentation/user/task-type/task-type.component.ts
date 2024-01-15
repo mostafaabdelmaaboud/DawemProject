@@ -12,6 +12,7 @@ import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/d
 import { DialogTaskTypeFileComponent } from 'src/app/shared/components/dialog-task-type-file/dialog-task-type-file.component';
 import { RequestTaskTypeComponent } from 'src/app/shared/components/request-task-type/request-task-type.component';
 import { TaskTypeService } from './services/task-type.service';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 @Component({
   selector: 'app-task-type',
   templateUrl: './task-type.component.html',
@@ -83,7 +84,8 @@ export class TaskTypeComponent {
     { name: "تسجيل انصراف خاطئ", key: "4" }
 
   ];
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -156,6 +158,9 @@ export class TaskTypeComponent {
 
       }
     })
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 33, actionCode: data.actionCode })
   }
   getTasks(filteration: any) {
     this.tasks = [];

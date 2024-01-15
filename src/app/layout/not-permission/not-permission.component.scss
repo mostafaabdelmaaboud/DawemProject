@@ -1,0 +1,13 @@
+.notPermission {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notPermission p {
+  padding: 10%;
+  background-color: red;
+  font-size: 18px;
+  color: white;
+}

@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { DialogScheduleFileComponent } from 'src/app/shared/components/dialog-schedule-file/dialog-schedule-file.component';
 import { ScheduleLogsService } from './services/schedule-logs.service';
 import { DialogScheduleLogFileComponent } from 'src/app/shared/components/dialog-schedule-log-file/dialog-schedule-log-file.component';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 
 @Component({
   selector: 'app-schedule-logs',
@@ -81,7 +82,8 @@ export class ScheduleLogsComponent {
   opened = false;
 
   private _mobileQueryListener: () => void;
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -164,7 +166,9 @@ export class ScheduleLogsComponent {
 
     })
   }
-
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 31, actionCode: data.actionCode })
+  }
   dialogScheduleFile(data: any) {
     const dialogRefAddCurrency = this.dialog.open(DialogScheduleLogFileComponent, {
       width: "90vw",

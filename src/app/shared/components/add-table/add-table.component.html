@@ -30,7 +30,7 @@
         <div class="row" formArrayName="weekDays">
           <div class="col-lg-6 col-12" *ngFor="let day of getFormArray().controls; index as i">
             <div class="sectionTwo mb-3" [formGroupName]="i">
-              <label class="title">{{day?.value?.name}} <span class="color-red">*</span></label>
+              <label class="title">{{day?.value?.name}}</label>
               <div class="content-password">
                 <ng-container *ngIf="list[i].weekDay === day?.value?.weekDay">
                   <p-dropdown appendTo="body" formControlName="weekDayValue" [options]="list[i].data"
@@ -51,14 +51,7 @@
 
 
               </div>
-              <!--Start Custom Validators-->
-              <div class="container-alerts mt-2" *ngIf="getFormArray().at(i).get('weekDayValue')?.errors">
-                <div class="alert alert-danger"
-                  *ngIf="getFormArray().at(i).get('weekDayValue')?.hasError('required') && getFormArray().at(i).get('weekDayValue')?.dirty">
-                   اختيار الوردية مطلوب
-                </div>
-              </div>
-              <!--End Custom Validators-->
+
             </div>
           </div>
 

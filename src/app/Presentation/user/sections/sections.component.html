@@ -253,7 +253,8 @@
               </form>
 
             </p-overlayPanel>
-            <button class="btn btn-primary action-button-t d-flex align-items-center" (click)="addSection()">
+            <button class="btn btn-primary action-button-t d-flex align-items-center"
+              *ngIf="showActions({actionCode:0})" (click)="addSection()">
               <i class="pi bi-plus-circle-fill"></i>
 
               <span>إضافة قسم</span>
@@ -338,16 +339,18 @@
               {{column.name}}
             </span>
             <div class="action-body-td">
-              <button type="button" class="btn btn-outline-secondary action-accept color-green"
-                (click)="editSection(rowData)"><i class="bi bi-pencil-square"></i></button>
-              <button type="button" class="btn btn-outline-secondary action-close color-blue"
-                (click)="dialogSectionFile(rowData)"><i class="bi bi-person-vcard"></i></button>
-              <ng-container *ngIf="rowData.isActive">
+              <button type="button" *ngIf="showActions({actionCode:1})"
+                class="btn btn-outline-secondary action-accept color-green" (click)="editSection(rowData)"><i
+                  class="bi bi-pencil-square"></i></button>
+              <button type="button" *ngIf="showActions({actionCode:3})"
+                class="btn btn-outline-secondary action-close color-blue" (click)="dialogSectionFile(rowData)"><i
+                  class="bi bi-person-vcard"></i></button>
+              <ng-container *ngIf="rowData.isActive && showActions({actionCode:7})">
                 <button type="button" class="btn btn-outline-secondary action-close color-red"
                   (click)="reasonOfRefuse(rowData)"><i class="bi bi-trash3-fill"></i>
                 </button>
               </ng-container>
-              <ng-container *ngIf="!rowData.isActive">
+              <ng-container *ngIf="!rowData.isActive && showActions({actionCode:6})">
                 <button type="button" (click)="enabledRow(rowData)"
                   class="btn btn-outline-secondary action-accept color-green"><i
                     class="bi bi-check-circle"></i></button>

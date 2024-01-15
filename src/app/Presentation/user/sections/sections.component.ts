@@ -16,6 +16,7 @@ import { SectionsService } from './services/sections.service';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
 import { ToastrService } from 'ngx-toastr';
 import { DialogSectionFileComponent } from 'src/app/shared/components/dialog-section-file/dialog-section-file.component';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 
 @Component({
   selector: 'app-sections',
@@ -88,7 +89,8 @@ export class SectionsComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -168,6 +170,9 @@ export class SectionsComponent {
 
       }
     })
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 2, actionCode: data.actionCode })
   }
   dialogSectionFile(data: any) {
     const dialogRefAddCurrency = this.dialog.open(DialogSectionFileComponent, {

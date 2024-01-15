@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ZonesService } from './services/zones.service';
 import { AddZoneComponent } from 'src/app/shared/components/add-zone/add-zone.component';
 import { DialogZoneFileComponent } from 'src/app/shared/components/dialog-zone-file/dialog-zone-file.component';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 
 @Component({
   selector: 'app-zones',
@@ -103,7 +104,8 @@ export class ZonesComponent {
   spinnerCards = false;
   constructor(
     private config: PrimeNGConfig, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
-    public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+    public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -170,6 +172,9 @@ export class ZonesComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 37, actionCode: data.actionCode })
   }
   getInformation() {
     this.spinnerCards = true;

@@ -19,11 +19,13 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 import { CookieService } from 'ngx-cookie-service';
 import { AuthGuard } from './guard/auth.guard';
+import { NotPermissionComponent } from '../layout/not-permission/not-permission.component';
 
 
 @NgModule({
   declarations: [
-    SideNavBarComponent
+    SideNavBarComponent,
+    NotPermissionComponent
   ],
   imports: [
     CommonModule,

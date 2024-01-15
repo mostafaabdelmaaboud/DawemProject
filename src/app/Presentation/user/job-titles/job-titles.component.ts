@@ -20,6 +20,7 @@ import { DialogPermissionTypeFileComponent } from 'src/app/shared/components/dia
 import { JobTitlesService } from './services/job-titles.service';
 import { RequestJobTitleComponent } from 'src/app/shared/components/request-job-title/request-job-title.component';
 import { DialogJobTitleFileComponent } from 'src/app/shared/components/dialog-job-title-file/dialog-job-title-file.component';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 @Component({
   selector: 'app-job-titles',
   templateUrl: './job-titles.component.html',
@@ -91,7 +92,8 @@ export class JobTitlesComponent {
     { name: "تسجيل انصراف خاطئ", key: "4" }
 
   ];
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -191,6 +193,9 @@ export class JobTitlesComponent {
         }
       }
     )
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 17, actionCode: data.actionCode })
   }
   mathRound(data: any) {
     return Math.ceil(data)

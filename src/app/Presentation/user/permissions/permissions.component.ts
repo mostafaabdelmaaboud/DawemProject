@@ -14,6 +14,7 @@ import { PermissionsService } from './services/permissions.service';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { DialogPermissionFileComponent } from 'src/app/shared/components/dialog-permission-file/dialog-permission-file.component';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 
 @Component({
   selector: 'app-permissions',
@@ -96,7 +97,8 @@ export class PermissionsComponent {
   private _mobileQueryListener: () => void;
   private permissionsService = inject(PermissionsService);
 
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -156,6 +158,9 @@ export class PermissionsComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 25, actionCode: data.actionCode })
   }
   getInformation() {
     this.spinnerCards = true;

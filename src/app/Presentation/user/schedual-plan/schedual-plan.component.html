@@ -239,7 +239,8 @@
               </form>
 
             </p-overlayPanel>
-            <button class="btn btn-primary action-button-t d-flex align-items-center" (click)="addSchedualPlane()">
+            <button class="btn btn-primary action-button-t d-flex align-items-center"
+              *ngIf="showActions({actionCode:0})" (click)="addSchedualPlane()">
               <i class="pi bi-plus-circle-fill"></i>
 
               <span>إضافة جدولة</span>
@@ -296,15 +297,17 @@
               {{column.name}}
             </span>
             <div class="action-body-td">
-              <button type="button" class="btn btn-outline-secondary action-accept color-green"
-                (click)="editSchedualPlane(rowData)"><i class="bi bi-pencil-square"></i></button>
+              <button type="button" *ngIf="showActions({actionCode:1})"
+                class="btn btn-outline-secondary action-accept color-green" (click)="editSchedualPlane(rowData)"><i
+                  class="bi bi-pencil-square"></i></button>
 
 
               <!-- <button type="button" class="btn btn-outline-secondary action-close color-red"
                 (click)="deleteRow(rowData)"><i class="bi bi-trash3-fill"></i>
               </button> -->
-              <button type="button" class="btn btn-outline-secondary action-close color-blue"
-                (click)="dialogGroupFile(rowData)"><i class="bi bi-person-vcard"></i></button>
+              <button type="button" *ngIf="showActions({actionCode:3})"
+                class="btn btn-outline-secondary action-close color-blue" (click)="dialogGroupFile(rowData)"><i
+                  class="bi bi-person-vcard"></i></button>
               <!-- <ng-container *ngIf="rowData.isActive">
                 <button type="button" class="btn btn-outline-secondary action-close color-red"
                   (click)="deleteRow(rowData)"><i class="bi bi-x-circle"></i></button>

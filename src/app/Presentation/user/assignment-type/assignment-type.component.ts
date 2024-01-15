@@ -14,6 +14,7 @@ import { DialogPermissionTypeFileComponent } from 'src/app/shared/components/dia
 import { AssignmentTypeService } from './services/assignment-type.service';
 import { RequestAssignmentTypeComponent } from 'src/app/shared/components/request-assignment-type/request-assignment-type.component';
 import { DialogAssignmentTypeFileComponent } from 'src/app/shared/components/dialog-assignment-type-file/dialog-assignment-type-file.component';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 @Component({
   selector: 'app-assignment-type',
   templateUrl: './assignment-type.component.html',
@@ -85,7 +86,8 @@ export class AssignmentTypeComponent {
     { name: "تسجيل انصراف خاطئ", key: "4" }
 
   ];
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -158,6 +160,9 @@ export class AssignmentTypeComponent {
 
       }
     })
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 0, actionCode: data.actionCode })
   }
   getAssignments(filteration: any) {
     this.assignments = [];

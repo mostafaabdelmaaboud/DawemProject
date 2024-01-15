@@ -23,6 +23,7 @@ import { DialogSchedulePlanFileComponent } from 'src/app/shared/components/dialo
 import { FingerPrintDevicesService } from './services/finger-print-devices.service';
 import { AddFingerPrintDeviceComponent } from 'src/app/shared/components/add-finger-print-device/add-finger-print-device.component';
 import { DialogFingerPrintDeviceFileComponent } from 'src/app/shared/components/dialog-finger-print-device-file/dialog-finger-print-device-file.component';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 
 @Component({
   selector: 'app-finger-print-devices',
@@ -104,7 +105,8 @@ export class FingerPrintDevicesComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -181,6 +183,9 @@ export class FingerPrintDevicesComponent {
 
       }
     })
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 13, actionCode: data.actionCode })
   }
   getFingerprintDevices(filteration: any) {
     this.fingerPrintDevices = [];

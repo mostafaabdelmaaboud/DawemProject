@@ -111,6 +111,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
             localStorage.removeItem("deviceToken");
             localStorage.removeItem("me");
             localStorage.removeItem("rules");
+            localStorage.removeItem("permissions");
 
             localStorage.clear();
             sessionStorage.clear();
@@ -126,6 +127,8 @@ export class HttpConfigInterceptor implements HttpInterceptor {
                 localStorage.removeItem("token");
                 localStorage.removeItem("fingerPrint");
                 localStorage.removeItem("isLogin");
+                localStorage.removeItem("permissions");
+
                 localStorage.clear();
                 sessionStorage.clear();
 

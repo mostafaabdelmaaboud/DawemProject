@@ -16,6 +16,7 @@ import { DialogHolidayFileComponent } from 'src/app/shared/components/dialog-hol
 import { HolidaysService } from './services/holidays.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 
 @Component({
   selector: 'app-holidays',
@@ -90,7 +91,8 @@ export class HolidaysComponent {
   spinnerCards = false;
   private _mobileQueryListener: () => void;
 
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private toast: ToastrService, public translate: TranslateService, private fb: FormBuilder) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private toast: ToastrService, public translate: TranslateService, private fb: FormBuilder,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -153,6 +155,9 @@ export class HolidaysComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 15, actionCode: data.actionCode })
   }
   getInformation() {
     this.spinnerCards = true;

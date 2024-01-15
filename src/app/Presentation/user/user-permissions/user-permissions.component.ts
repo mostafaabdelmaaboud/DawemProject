@@ -24,6 +24,7 @@ import { UserPermissionsService } from './services/user-permissions.service';
 import { AddUserPermissionComponent } from 'src/app/shared/components/add-user-permission/add-user-permission.component';
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
 import { DialogUserPermissionFileComponent } from 'src/app/shared/components/dialog-user-permission-file/dialog-user-permission-file.component';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 
 @Component({
   selector: 'app-user-permissions',
@@ -96,7 +97,8 @@ export class UserPermissionsComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -157,6 +159,9 @@ export class UserPermissionsComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 19, actionCode: data.actionCode })
   }
   getInformation() {
     this.spinnerCards = true;

@@ -24,6 +24,7 @@ import { VacationBalanceService } from './services/vacation-balance.service';
 import { AddVacationBalanceComponent } from 'src/app/shared/components/add-vacation-balance/add-vacation-balance.component';
 import { DialogVacationBalanceFileComponent } from 'src/app/shared/components/dialog-vacation-balance-file/dialog-vacation-balance-file.component';
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 
 @Component({
   selector: 'app-vacation-balance',
@@ -109,7 +110,8 @@ export class VacationBalanceComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -211,6 +213,9 @@ export class VacationBalanceComponent {
       this.isLoading = false;
 
     })
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 35, actionCode: data.actionCode })
   }
   addVacation() {
     const dialogRefAddCurrency = this.dialog.open(AddVacationBalanceComponent, {

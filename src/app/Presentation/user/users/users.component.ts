@@ -18,6 +18,7 @@ import { UsersService } from './services/users.service';
 import { AddUserComponent } from 'src/app/shared/components/add-user/add-user.component';
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
 import { DialogUserFileComponent } from 'src/app/shared/components/dialog-user-file/dialog-user-file.component';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 
 @Component({
   selector: 'app-users',
@@ -96,7 +97,9 @@ export class UsersComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
+    public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -388,6 +391,9 @@ export class UsersComponent {
 
       }
     });
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 34, actionCode: data.actionCode })
   }
   editUser(data: any) {
     const dialogRefAddCurrency = this.dialog.open(AddUserComponent, {

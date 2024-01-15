@@ -219,7 +219,7 @@ export class AddTableComponent {
     return this.fb.group({
       name: [name],
       weekDay: [weekDay],
-      weekDayValue: ["", Validators.required]
+      weekDayValue: [""]
     })
   }
   getControl(controlName: string) {

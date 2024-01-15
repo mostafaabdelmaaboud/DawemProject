@@ -24,7 +24,6 @@ export class SideNavBarComponent {
   numNotification: null | string = "";
   notificationCount = 0;
   usersMe!: any;
-  permission: any = JSON.parse(localStorage.getItem("permissions") as string);
 
   private dialog = inject(MatDialog);
   private _mobileQueryListener: () => void;
@@ -52,18 +51,32 @@ export class SideNavBarComponent {
     setInterval(() => { this.today = Date.now() }, 1);
 
   }
+  getPermissions(): any {
+    const permissionsString = localStorage.getItem('permissions') as string;
+
+    try {
+      // حاول تحويل القيمة إلى كائن JSON
+      return JSON.parse(permissionsString);
+    } catch (error) {
+      // إذا كان هناك أي خطأ، فقط أرجع القيمة النصية
+      return permissionsString;
+    }
+  }
   showComponent(data: any) {
     return this.permissionsUserService.checkPermission({ type: "component", screenCode: data.screenCode })
   }
   componentName(data: any): string {
-    let findIndexPermission = (this.permission.availablePermissions as any[]).findIndex(permission => permission.screenCode === data.screenCode);
-    return this.permission.availablePermissions[findIndexPermission]?.screenName
+    let findIndexPermission = (this.getPermissions()?.availablePermissions as any[]).findIndex(permission => permission.screenCode === data.screenCode);
+    return this.getPermissions()?.availablePermissions[findIndexPermission]?.screenName
 
   }
   numberNotification() {
     this.numNotification = "";
   }
   ngOnInit(): void {
+    if (!this.getPermissions()) {
+      this.authService.logout();
+    }
     if (this.mobileQuery.matches) {
       this.opened = false;
     } else {
@@ -87,8 +100,6 @@ export class SideNavBarComponent {
         this.localization = true;
       }
     }
-
-
   }
 
   SelectedLang(event: any) {

@@ -1,24 +1,18 @@
-import { ChangeDetectorRef, Component, Inject, LOCALE_ID, inject } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { RequestVacationComponent } from 'src/app/shared/components/request-vacation/request-vacation.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
-import { DialogVacationFileComponent } from 'src/app/shared/components/dialog-vacation-file/dialog-vacation-file.component';
-import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
-import { RequestVacationTypeComponent } from 'src/app/shared/components/request-vacation-type/request-vacation-type.component';
-import { DialogVacationTypeFileComponent } from 'src/app/shared/components/dialog-vacation-type-file/dialog-vacation-type-file.component';
 import { PermissionTypeService } from './services/permission-type.service';
 import { RequestPermissionTypeComponent } from 'src/app/shared/components/request-permission-type/request-permission-type.component';
 import { DialogPermissionTypeFileComponent } from 'src/app/shared/components/dialog-permission-type-file/dialog-permission-type-file.component';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 @Component({
   selector: 'app-permission-type',
   templateUrl: './permission-type.component.html',
@@ -90,7 +84,8 @@ export class PermissionTypeComponent {
     { name: "تسجيل انصراف خاطئ", key: "4" }
 
   ];
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -163,6 +158,9 @@ export class PermissionTypeComponent {
 
       }
     })
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 21, actionCode: data.actionCode })
   }
   getPermissions(filteration: any) {
     this.permissions = [];

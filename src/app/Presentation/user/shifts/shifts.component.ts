@@ -17,6 +17,7 @@ import { ShiftsService } from './services/shifts.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { DialogShiftFileComponent } from 'src/app/shared/components/dialog-shift-file/dialog-shift-file.component';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 
 @Component({
   selector: 'app-shifts',
@@ -96,7 +97,8 @@ export class ShiftsComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -175,6 +177,9 @@ export class ShiftsComponent {
 
       }
     })
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 32, actionCode: data.actionCode })
   }
   getShifts(filteration: any) {
     this.shifts = [];

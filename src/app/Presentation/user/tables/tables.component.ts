@@ -19,6 +19,7 @@ import { SchedulesService } from './services/schedules.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { DialogScheduleFileComponent } from 'src/app/shared/components/dialog-schedule-file/dialog-schedule-file.component';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 
 @Component({
   selector: 'app-tables',
@@ -90,7 +91,8 @@ export class TablesComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+    private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -168,6 +170,9 @@ export class TablesComponent {
       }
     })
   }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 29, actionCode: data.actionCode })
+  }
   getSchedules(filteration: any) {
     this.schedules = [];
     this.isLoading = true;
@@ -214,37 +219,51 @@ export class TablesComponent {
       formData.name = result.tableName;
       formData.scheduleDays = [];
       result?.weekDays?.forEach((day: any) => {
-        formData.scheduleDays.push({ WeekDay: day.weekDay, ShiftId: day.weekDayValue.key })
+        if (day.weekDayValue.key != undefined) {
+          formData.scheduleDays.push({ WeekDay: day.weekDay, ShiftId: day.weekDayValue.key })
+
+        } else {
+          formData.scheduleDays.push({ WeekDay: day.weekDay, ShiftId: null })
+
+        }
       });
+
       this.schedulesService.createSchedule(formData).subscribe(
         {
           next: data => {
 
+            if (data?.state === 2) {
+              dialogRefAddCurrency.componentInstance.submitted = true;
+
+              this.toast.error(data?.message);
+
+            } else {
+              dialogRefAddCurrency.componentInstance.submitted = true;
+
+              dialogRefAddCurrency.close();
+
+              const succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: "تم ارسال طلبك",
+                  message: data.message,
+                  buttonSend: "طلبات الموظفين"
+                },
+              });
+              this.getSchedules(this.filteration);
+              setTimeout(() => {
+                succressDialog.close();
+
+              }, 2000);
+
+              succressDialog.componentInstance.submitted = true;
+              succressDialog.componentInstance.submitClicked.subscribe(result => {
+                succressDialog.close();
+
+              })
+            }
 
 
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
-            dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات الموظفين"
-              },
-            });
-            this.getSchedules(this.filteration);
-            setTimeout(() => {
-              succressDialog.close();
-
-            }, 2000);
-
-            succressDialog.componentInstance.submitted = true;
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-              succressDialog.close();
-
-            })
 
           },
           error: err => {
