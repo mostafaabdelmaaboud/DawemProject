@@ -330,8 +330,8 @@
               {{mathRound(totalItems / filteration.PageSize)}} - {{filteration.PageNumber + 1}}
 
             </div>
-            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
-              [totalRecords]="10"></p-paginator>
+            <p-paginator (onPageChange)="onPageChange($event)" [first]="0" [rows]="filteration.PageSize"
+              [totalRecords]="totalItems"></p-paginator>
 
           </div>
         </td>

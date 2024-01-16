@@ -7,13 +7,13 @@
 
   </div>
 </div>
-<div class="cards-dashboard">
-  <div class="row">
+<div class="cards-dashboard position-relative">
+  <div class="row" *ngIf="!spinnerCards">
     <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Primary-700">اجمالي الطلبات</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">324</span>
+          <span class="number-card-dashboard">{{cards?.totalRequestsCount}}</span>
           <span class="icon-card-dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
               <g opacity="0.2">
@@ -36,7 +36,7 @@
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Warning-700 ">طلبات قيد الانتظار</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">420</span>
+          <span class="number-card-dashboard">{{cards?.pendingCount}}</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
             <g opacity="0.4">
               <path opacity="0.4"
@@ -54,7 +54,7 @@
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Success-700">الطلبات المقبولة</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">520</span>
+          <span class="number-card-dashboard">{{cards?.acceptedCount}}</span>
           <span class="icon-card-dashboard">
             <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
               <g opacity="0.2">
@@ -77,7 +77,7 @@
       <div class="custom-card-dashboard">
         <span class="title-card-dashboard Error-700">الطلبات المرفوضة</span>
         <div class="body-card-dashboard d-flex align-items-center justify-content-between">
-          <span class="number-card-dashboard">362</span>
+          <span class="number-card-dashboard">{{cards?.rejectedCount}}</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
             <g opacity="0.2">
               <path opacity="0.5"
@@ -92,6 +92,9 @@
       </div>
     </div>
   </div>
+  <div class="spinner spinner-cards d-flex justify-content-center align-items-center" *ngIf="spinnerCards">
+    <mat-spinner></mat-spinner>
+  </div>
 </div>
 <div class="table-basic">
   <!-- <div class="header-table-basic">
@@ -100,8 +103,8 @@
 
     </div>
   </div> -->
-  <p-table #dt1 [value]="customers" id="tableRequetsts" responsiveLayout="stack" [paginator]="false"
-    [rows]="itemsPerPage" [first]="page" [rows]="10" [showCurrentPageReport]="true"
+  <p-table #dt1 [value]="requests" id="tableRequetsts" responsiveLayout="stack" [paginator]="false"
+    [rows]="filteration.PageSize" [first]="filteration.PageNumber" [showCurrentPageReport]="true"
     [tableStyle]="{ 'min-width': '50rem' }" currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
               'orderNumber',
               'employeeName.name',
@@ -112,14 +115,9 @@
       <div class="custom-header-table d-flex justify-content-between align-items-center">
         <h2 class="title-table m-0">
           سجل الطلبات
-          <!-- <span class="subTitlte ml-2">(30 FLS )</span> -->
         </h2>
         <div class="custom-filteration d-flex align-items-center">
-          <!-- <span class="p-input-icon-left ml-auto">
-            <i class="pi pi-search" (click)="searchKeyword(search.value)"></i>
-            <input pInputText type="text" #search (input)="dt1.filterGlobal(search.value, 'contains')"
-              placeholder="Search..." />
-          </span> -->
+
           <button (click)="op.toggle($event)" class="btn btn-outline-primary action-button-t d-flex align-items-center">
             <i class="pi pi-filter-fill"></i>
 
@@ -207,7 +205,7 @@
                 <span>إضافة طلب</span>
               </button>
               <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                <button ngbDropdownItem (click)="requestJustification()">
+                <button ngbDropdownItem routerLink="/user/justifications">
                   <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
                       fill="none">
                       <circle cx="8" cy="8.66663" r="6" stroke="#3085FE" />
@@ -221,7 +219,7 @@
                     </svg></span>
                   طلب تبرير
                 </button>
-                <button ngbDropdownItem (click)="requestVacation()">
+                <button ngbDropdownItem routerLink="/user/vacations">
                   <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
                       fill="none">
                       <path
@@ -236,7 +234,7 @@
                     </svg></span>
                   طلب اجازة
                 </button>
-                <button ngbDropdownItem (click)="requestPermissions()"><span class="icon"><svg
+                <button ngbDropdownItem routerLink="/user/permissions"><span class="icon"><svg
                       xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
                         d="M1.3335 7.99996C1.3335 5.4858 1.3335 4.22872 2.11454 3.44767C2.89559 2.66663 4.15267 2.66663 6.66683 2.66663H9.3335C11.8477 2.66663 13.1047 2.66663 13.8858 3.44767C14.6668 4.22872 14.6668 5.4858 14.6668 7.99996V9.33329C14.6668 11.8475 14.6668 13.1045 13.8858 13.8856C13.1047 14.6666 11.8477 14.6666 9.3335 14.6666H6.66683C4.15267 14.6666 2.89559 14.6666 2.11454 13.8856C1.3335 13.1045 1.3335 11.8475 1.3335 9.33329V7.99996Z"
@@ -248,7 +246,7 @@
                       <path d="M11.3335 2.66663V1.66663" stroke="#3085FE" stroke-linecap="round" />
                       <path d="M1.6665 6H14.3332" stroke="#3085FE" stroke-linecap="round" />
                     </svg></span> طلب استئذان</button>
-                <button ngbDropdownItem (click)="requestTask()"><span class="icon"><svg
+                <button ngbDropdownItem routerLink="/user/tasks"><span class="icon"><svg
                       xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
                         d="M9.3335 4H6.66683C5.76291 4 5.02149 4 4.40626 4.0363C3.31029 4.10096 2.61478 4.28081 2.11454 4.78105C1.3335 5.5621 1.3335 6.81918 1.3335 9.33333C1.3335 11.8475 1.3335 13.1046 2.11454 13.8856C2.89559 14.6667 4.15267 14.6667 6.66683 14.6667H9.3335C11.8477 14.6667 13.1047 14.6667 13.8858 13.8856C14.6668 13.1046 14.6668 11.8475 14.6668 9.33333C14.6668 6.81918 14.6668 5.5621 13.8858 4.78105C13.3855 4.28081 12.69 4.10096 11.5941 4.0363C10.9788 4 10.2374 4 9.3335 4Z"
@@ -263,7 +261,7 @@
                       <path d="M10.6665 7.33337V8.66671" stroke="#3085FE" stroke-linecap="round" />
                     </svg></span> طلب مهمة عمل</button>
 
-                <button ngbDropdownItem (click)="requestAssignment()"><span class="icon ml-2"><svg
+                <button ngbDropdownItem routerLink="/user/assignments"><span class="icon ml-2"><svg
                       xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path fill-rule="evenodd" clip-rule="evenodd"
                         d="M2 4.5C2 4.22386 2.22386 4 2.5 4H13.8333C14.1095 4 14.3333 4.22386 14.3333 4.5C14.3333 4.77614 14.1095 5 13.8333 5H2.5C2.22386 5 2 4.77614 2 4.5ZM14.1408 7.43908C14.3586 7.60892 14.3974 7.92311 14.2276 8.14085L11.6276 11.4742C11.5348 11.5931 11.3932 11.6639 11.2424 11.6666C11.0915 11.6693 10.9475 11.6038 10.8505 11.4883L9.45048 9.8216C9.27287 9.61015 9.30029 9.29476 9.51174 9.11715C9.72318 8.93954 10.0386 8.96696 10.2162 9.1784L11.2189 10.3722L13.4391 7.52582C13.6089 7.30808 13.9231 7.26925 14.1408 7.43908ZM2 7.83333C2 7.55719 2.22386 7.33333 2.5 7.33333H7.16667C7.44281 7.33333 7.66667 7.55719 7.66667 7.83333C7.66667 8.10948 7.44281 8.33333 7.16667 8.33333H2.5C2.22386 8.33333 2 8.10948 2 7.83333ZM2 11.1667C2 10.8905 2.22386 10.6667 2.5 10.6667H7.16667C7.44281 10.6667 7.66667 10.8905 7.66667 11.1667C7.66667 11.4428 7.44281 11.6667 7.16667 11.6667H2.5C2.22386 11.6667 2 11.4428 2 11.1667Z"
@@ -336,10 +334,12 @@
               {{column.name}}
             </span>
             <div class="action-body-td">
-              <button type="button" class="btn btn-outline-secondary action-accept color-green"
-                (click)="sendRequest()"><i class="bi bi-check-circle"></i></button>
-              <button type="button" class="btn btn-outline-secondary action-close color-red"
-                (click)="reasonOfRefuse()"><i class="bi bi-x-circle"></i></button>
+              <button type="button" *ngIf="rowData.status === 0 && showActions({actionCode:4})"
+                class="btn btn-outline-secondary action-accept color-green" (click)="sendRequest(rowData)"><i
+                  class="bi bi-check-circle"></i></button>
+              <button type="button" *ngIf="rowData.status === 0 && showActions({actionCode:5})"
+                class="btn btn-outline-secondary action-close color-red" (click)="reasonOfRefuse(rowData)"><i
+                  class="bi bi-x-circle"></i></button>
 
 
 
@@ -402,14 +402,16 @@
           <div class="paginate d-flex align-items-center justify-content-end">
             <div class="NumberOfRowsPerPage">
               <span>عدد الصفوف بالصفحة:</span>
-              <p-dropdown [options]="RowsPerPage" appendTo="body" optionLabel="name"></p-dropdown>
+              <p-dropdown [options]="RowsPerPage" appendTo="body" (onChange)="numberOfRowsPerPage($event)"
+                optionLabel="name"></p-dropdown>
 
             </div>
             <div class="text-paginator d-flex align-items-center">
-              ٢ - ٧
+              {{mathRound(totalItems / filteration.PageSize)}} - {{filteration.PageNumber + 1}}
+
             </div>
-            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
-              [totalRecords]="10"></p-paginator>
+            <p-paginator (onPageChange)="onPageChange($event)" [first]="0" [rows]="filteration.PageSize"
+              [totalRecords]="totalItems"></p-paginator>
 
           </div>
         </td>

@@ -527,8 +527,8 @@ export class UsersComponent {
 
 
   onPageChange(event: any) {
-    this.first = event.first;
-    this.rows = event.rows;
+    this.filteration = { ...this.filteration, PageNumber: event.page };
+    this.getUsers(this.filteration)
   }
   minimumValidator(conInput: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {

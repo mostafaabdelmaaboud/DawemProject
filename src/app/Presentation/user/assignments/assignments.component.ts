@@ -518,8 +518,8 @@ export class AssignmentsComponent {
 
 
   onPageChange(event: any) {
-    this.first = event.first;
-    this.rows = event.rows;
+    this.filteration = { ...this.filteration, PageNumber: event.page };
+    this.getAssignments(this.filteration)
   }
   minimumValidator(conInput: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {

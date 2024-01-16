@@ -468,8 +468,8 @@ export class HolidaysComponent {
     })
   }
   onPageChange(event: any) {
-    this.first = event.first;
-    this.rows = event.rows;
+    this.filteration = { ...this.filteration, PageNumber: event.page };
+    this.getHolidays(this.filteration)
   }
   minimumValidator(conInput: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {

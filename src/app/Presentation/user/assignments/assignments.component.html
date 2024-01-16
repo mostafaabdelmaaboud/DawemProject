@@ -112,7 +112,7 @@
     </div>
   </div> -->
   <p-table #dt1 [value]="assignments" id="tableAssignment" [responsiveLayout]="opened ? 'stack' : 'scroll'"
-    [responsive]="true" [paginator]="false" [rows]="itemsPerPage" [first]="page" [rows]="10"
+    [responsive]="true" [paginator]="false" [rows]="filteration.PageSize" [first]="filteration.PageNumber"
     [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
     currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
               'orderNumber',
@@ -348,10 +348,11 @@
 
             </div>
             <div class="text-paginator d-flex align-items-center">
-              ٢ - ٧
+              {{mathRound(totalItems / filteration.PageSize)}} - {{filteration.PageNumber + 1}}
+
             </div>
-            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
-              [totalRecords]="10"></p-paginator>
+            <p-paginator (onPageChange)="onPageChange($event)" [first]="0" [rows]="filteration.PageSize"
+              [totalRecords]="totalItems"></p-paginator>
 
           </div>
         </td>
