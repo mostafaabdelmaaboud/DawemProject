@@ -34,7 +34,7 @@ export class DashboardComponent {
   headerInformations: any = {};
   leadingHeader = false;
   totalItems: number = 0;
-
+  totalItemsBestEmployees: number = 0;
   items!: MenuItem[];
   cities!: any[];
   statusOfOrders!: any[];
@@ -95,8 +95,15 @@ export class DashboardComponent {
 
   }
   employeesAttendances: any[] = [];
+  bestEmployees: any[] = [];
+
   departmentsInformations: any[] = [];
   filteration: any = {
+    PageSize: 5,
+    PageNumber: 0,
+    PagingEnabled: true
+  };
+  filterationBestEmloyees: any = {
     PageSize: 5,
     PageNumber: 0,
     PagingEnabled: true
@@ -307,6 +314,7 @@ export class DashboardComponent {
     this.getEmployeesStatus();
     this.getEmployeesAttendancesStatus(this.filteration);
     this.getDepartmentsInformations(this.filteration);
+    this.getBestEmployees(this.filterationBestEmloyees);
   }
   numberOfRowsPerPage(data: any) {
 
@@ -318,6 +326,11 @@ export class DashboardComponent {
   onPageChange(event: any) {
     this.filteration = { ...this.filteration, PageNumber: event.page };
     this.getEmployeesAttendancesStatus(this.filteration);
+
+  }
+  onPageChangeBestEmployees(event: any) {
+    this.filterationBestEmloyees = { ...this.filterationBestEmloyees, PageNumber: event.page };
+    this.getBestEmployees(this.filterationBestEmloyees);
 
   }
   mathRound(data: any) {
@@ -454,6 +467,19 @@ export class DashboardComponent {
       }
     })
   }
+  getBestEmployees(filteration: any) {
+    this.dashboardService.getBestEmployees(filteration).subscribe({
+      next: data => {
+        this.bestEmployees = data.data;
+        this.totalItemsBestEmployees = data.totalCount;
+
+      },
+      error: err => {
+
+      }
+    })
+  }
+
   getEmployeesStatus() {
     this.loadingEmployeesStatus = true;
     this.dashboardService.getEmployeesStatus().subscribe({

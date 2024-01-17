@@ -30,6 +30,15 @@ export class DashboardService {
     }
     return this.http.get<any>(`${environment.baseUrl}Dashboard/GetEmployeesAttendancesStatus`, { params: queryParams })
   }
+  getBestEmployees(filter: any) {
+    let queryParams = new HttpParams();
+    if (filter) {
+      Object.entries(filter).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}Dashboard/GetBestEmployees`, { params: queryParams })
+  }
   getDepartmentsInformations(filter: any) {
     let queryParams = new HttpParams();
     if (filter) {

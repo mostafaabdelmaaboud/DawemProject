@@ -315,7 +315,8 @@
 
             </div>
             <div class="text-paginator d-flex align-items-center">
-              ٢ - ٧
+              {{mathRound(totalItems / filteration.PageSize)}} - {{filteration.PageNumber + 1}}
+
             </div>
             <p-paginator (onPageChange)="onPageChange($event)" [first]="0" [rows]="filteration.PageSize"
               [totalRecords]="totalItems"></p-paginator>

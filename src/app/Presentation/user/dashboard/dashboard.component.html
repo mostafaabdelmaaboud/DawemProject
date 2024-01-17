@@ -112,9 +112,9 @@
   </div>
   <div class="section-three">
     <div class="row">
-      <div class="col-lg-6 col-12 sectionRight">
+      <div class="col-lg-8 col-12 sectionRight">
         <div class="row mb-3">
-          <div class="col-lg-12 mb-3 col-12 sec1">
+          <div class="col-lg-6 mb-3 col-12 sec1">
             <div class="content-StaffAttendanceStatus background-color-white box-style">
               <div class="header-section-three d-flex align-items-center justify-content-between">
                 <span class="title-section-three">حالة دوام الموظفين</span>
@@ -168,7 +168,7 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-12 col-12 sec1">
+          <div class="col-lg-6 col-12 sec1">
             <div class="content-StaffAttendanceStatus h-100 background-color-white box-style">
               <div class="header-section-three d-flex align-items-center justify-content-between">
                 <span class="title-section-three">حالة الطلبات</span>
@@ -217,7 +217,82 @@
 
             </div>
           </div> -->
-          <div class="col-lg-12 col-12 cardsTwo">
+          <div class="col-lg-8">
+            <div class="table-dashboard mb-4">
+              <div class="header-table-dashboard">
+                <div class="title-table-dashboard">
+                  <div class="content-StaffAttendanceStatus">
+                    <div class="header-section-three d-flex align-items-center">
+                      <span class="title-section-three ml-30">أفضل الموظفين بالشركة</span>
+                      <div class="field-action custom-dropdown-section">
+                        <p-dropdown [options]="cities" [(ngModel)]="selectedCity" placeholder="الأسبوع"
+                          optionLabel="name"></p-dropdown>
+
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div class="body-table-dashboard">
+                <table class="table w-100 m-0">
+
+                  <tbody>
+                    <ng-container *ngFor="let employee of bestEmployees">
+                      <tr>
+                        <td class="bestEmployeeName">
+                          <div class="d-flex align-items-center pt-1 pb-1">
+                            <span class="userImage-StaffAttendanceStatus">
+                              <img
+                                [src]="employee?.profileImagePath ? employee?.profileImagePath  : 'assets/img/l60Hf.png'"
+                                alt="student-2">
+                            </span>
+                            <div class="desc-StaffAttendanceStatus desc-table col">
+                              {{employee?.name}}
+                            </div>
+                          </div>
+
+                        </td>
+
+                        <td class="align-middle">
+
+                          {{employee?.attendanceRate}}
+                        </td>
+                      </tr>
+                    </ng-container>
+
+
+                    <tr>
+                      <td colspan="3">
+
+                        <div class="paginate paginate-bestEmployees">
+                          <div class="d-flex align-items-center">
+                            <div class="NumberOfRowsPerPage">
+                              <span>عدد الصفوف بالصفحة:</span>
+                              <p-dropdown [options]="RowsPerPage" appendTo="body"
+                                (onChange)="numberOfRowsPerPage($event)" optionLabel="name"></p-dropdown>
+                            </div>
+                            <div class="text-paginator d-flex align-items-center">
+                              {{mathRound(totalItemsBestEmployees / filterationBestEmloyees.PageSize)}} -
+                              {{filterationBestEmloyees.PageNumber + 1}}
+
+                            </div>
+
+                          </div>
+
+                          <p-paginator (onPageChange)="onPageChangeBestEmployees($event)" [first]="0"
+                            [rows]="filterationBestEmloyees.PageSize"
+                            [totalRecords]="totalItemsBestEmployees"></p-paginator>
+
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-12 cardsTwo mb-4">
             <div class="employees-dashboard h-100 d-flex flex-column justify-content-stretch align-items-stretch">
               <div class="content-card mb-3 col">
                 <div class="custom-card-dashboard h-100 d-flex flex-column">
@@ -270,7 +345,7 @@
         </div>
       </div>
 
-      <div class="col-lg-6 col-12 sectionLeft">
+      <div class="col-lg-4 col-12 sectionLeft mb-4">
         <div class="content-DepartmentsAndTeamFormation h-100 background-color-white box-style">
           <div class="header-section-three d-flex align-items-center justify-content-between">
             <span class="title-section-three">الأقسام وتكوين الفرق</span>
@@ -759,92 +834,5 @@
       </div>
     </div>
   </div>
-  <div class="table-dashboard mb-4 mt-2">
-    <div class="header-table-dashboard">
-      <div class="title-table-dashboard">
-        <div class="content-StaffAttendanceStatus">
-          <div class="header-section-three d-flex align-items-center">
-            <span class="title-section-three ml-30">أفضل الموظفين بالشركة</span>
-            <div class="field-action custom-dropdown-section">
-              <p-dropdown [options]="cities" [(ngModel)]="selectedCity" placeholder="الأسبوع"
-                optionLabel="name"></p-dropdown>
 
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-    <div class="body-table-dashboard">
-      <table class="table mt-4">
-
-        <tbody>
-          <tr>
-            <td class="col-lg-5 col">
-              <div class="d-flex align-items-center pt-1 pb-1">
-                <span class="userImage-StaffAttendanceStatus">
-                  <img src="assets/img/student-2.png" alt="student-2">
-                </span>
-                <div class="desc-StaffAttendanceStatus desc-table col">
-                  فيصل سلمان حمد عبدالعزيز
-                </div>
-              </div>
-
-            </td>
-
-            <td class="col color67748E txt-td-dashboard-center align-middle">Videos + 12 Lectures 35</td>
-            <td class="col text-point pont-color-blue point-2364C0 align-middle">
-
-              الحضور كل يوم
-            </td>
-          </tr>
-          <tr>
-            <td class="col-lg-5 col">
-              <div class="d-flex align-items-center pt-1 pb-1">
-                <span class="userImage-StaffAttendanceStatus">
-                  <img src="assets/img/student-3.png" alt="student-2">
-                </span>
-                <div class="desc-StaffAttendanceStatus desc-table col">
-                  سهيلة يوسف السباعي
-                </div>
-              </div>
-            </td>
-
-            <td class="col color67748E txt-td-dashboard-center align-middle">Videos + 12 Lectures 35</td>
-            <td class="col text-point pont-color-green align-middle">في مهمة عمل</td>
-          </tr>
-          <tr>
-            <td class="col-lg-5 col">
-              <div class="d-flex align-items-center pt-1 pb-1">
-                <span class="userImage-StaffAttendanceStatus">
-                  <img src="assets/img/student-4.png" alt="student-2">
-                </span>
-                <div class="desc-StaffAttendanceStatus desc-table col">
-                  محمد خالد سليمان
-                </div>
-              </div>
-            </td>
-
-            <td class="col color67748E txt-td-dashboard-center align-middle">Videos + 12 Lectures 35</td>
-            <td class="col text-point pont-color-blue align-middle">Only View</td>
-          </tr>
-          <tr>
-            <td class="col-lg-5 col">
-              <div class="d-flex align-items-center pt-1 pb-1">
-                <span class="userImage-StaffAttendanceStatus">
-                  <img src="assets/img/student-5.png" alt="student-2">
-                </span>
-                <div class="desc-StaffAttendanceStatus desc-table col">
-                  عائشة محمد فيصل
-                </div>
-              </div>
-            </td>
-
-            <td class="col color67748E txt-td-dashboard-center  align-middle">Videos + 12 Lectures 35</td>
-            <td class="col text-point pont-color-green align-middle">Edit Available</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
 </div>
