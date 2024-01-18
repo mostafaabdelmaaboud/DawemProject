@@ -87,15 +87,18 @@ export class LoginComponent {
       }).subscribe(
         {
           next: (res: any) => {
-
-            this.toast.success(res.message);
-            this.authService.setToken(res.data.token);
-            this.isLoading = false;
-
             let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: res.data.availablePermissions })
             localStorage.setItem("permissions", formatObjectPermissions);
+            let parseJson = JSON.parse(formatObjectPermissions);
+            if (parseJson.isAdmin || parseJson.availablePermissions.length > 0) {
+              this.authService.setToken(res.data.token);
+              this.toast.success(res.message);
+              this.router.navigate(["/user/dashboard"]);
+            } else {
+              this.toast.error("you don't have permissions");
 
-            this.router.navigate(["/user/dashboard"]);
+            }
+            this.isLoading = false;
 
             this.loading = true;
 

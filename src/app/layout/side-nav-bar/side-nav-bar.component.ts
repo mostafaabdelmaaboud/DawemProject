@@ -24,7 +24,7 @@ export class SideNavBarComponent {
   numNotification: null | string = "";
   notificationCount = 0;
   usersMe!: any;
-
+  isAdmin = true;
   private dialog = inject(MatDialog);
   private _mobileQueryListener: () => void;
   // private dialog = inject(MatDialog);
@@ -74,6 +74,8 @@ export class SideNavBarComponent {
     this.numNotification = "";
   }
   ngOnInit(): void {
+    let permission = JSON.parse(localStorage.getItem('permissions') as string)
+    this.isAdmin = permission?.isAdmin;
     if (!this.getPermissions()) {
       this.authService.logout();
     }
