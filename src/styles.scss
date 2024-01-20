@@ -7,8 +7,12 @@ body {
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900;1000&display=swap');
-// @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
 
+// @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
+@font-face {
+  font-family: 'Noto Naskh Arabic', serif;
+  src: url('assets/fonts/NotoNaskhArabic-VariableFont_wght.ttf');
+}
 
 html,
 body {
@@ -126,6 +130,11 @@ body {
 
 .w-13 {
   width: 12%;
+}
+
+.btn-outline-green {
+  border-color: green;
+  color: green;
 }
 
 .spinner-dialog {

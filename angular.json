@@ -41,7 +41,8 @@
               "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/apexcharts/dist/apexcharts.min.js"
+              "node_modules/apexcharts/dist/apexcharts.min.js",
+              "node_modules/html2canvas/dist/html2canvas.min.js"
             ]
           },
           "configurations": {

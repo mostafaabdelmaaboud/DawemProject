@@ -31,6 +31,11 @@
     "apexcharts": "^3.43.0",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.5",
+    "html2canvas": "^1.4.1",
+    "html2pdf.js": "^0.9.3",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.1",
+    "jspdf-customfonts": "^0.0.4-rc.4",
     "moment": "^2.29.4",
     "moment-hijri": "^2.1.2",
     "moment-timezone": "^0.5.43",
@@ -45,6 +50,7 @@
     "primeng": "^15.3.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
+    "xlsx": "^0.18.5",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

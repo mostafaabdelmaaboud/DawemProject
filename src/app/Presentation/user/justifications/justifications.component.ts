@@ -15,7 +15,11 @@ import { ToastrService } from 'ngx-toastr';
 import { RequestForJustificationComponent } from 'src/app/shared/components/request-for-justification/request-for-justification.component';
 import * as moment from 'moment';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
+import * as XLSX from 'xlsx';
+import * as html2pdf from 'html2pdf.js';
 
+
+// import 'jspdf-utf8'
 @Component({
   selector: 'app-justifications',
   templateUrl: './justifications.component.html',
@@ -160,6 +164,27 @@ export class JustificationsComponent {
     //Add 'implements OnInit' to the class.
 
   }
+  exportTableToExcel() {
+    let data = document.getElementById("tableJustification");
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  }
+  exportTableToPDF() {
+    let table: any = document.getElementById("tableJustification");
+
+    let option = {
+      margin: 0,
+      filename: "output.pdf",
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 8 },
+      jsPDF: { unit: "in", format: 'letter', orientation: 'portrait' }
+    }
+    html2pdf().from(table).set(option).save()
+
+  }
+
   getInformation() {
     this.spinnerCards = true;
 
@@ -291,11 +316,11 @@ export class JustificationsComponent {
       data.data.forEach((employee: any) => {
         this.justifications.push({
           id: employee.id,
-          orderNumber: employee.code,
+          orderNumber: employee.employee.code,
           employeeName: {
-            name: employee.name,
-            alt: employee.name,
-            img: employee.profileImagePath ? employee.profileImagePath : "../../../../assets/img/5034901-200.png"
+            name: employee.employee.name,
+            alt: employee.employee.name,
+            img: employee.employee.profileImagePath ? employee.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
           },
           typeOfJustification: employee.justificationTypeName,
           dateFrom: moment(new Date(employee.dateFrom)).format("MM/DD/YYYY"),
