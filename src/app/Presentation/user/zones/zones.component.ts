@@ -16,7 +16,8 @@ import { ZonesService } from './services/zones.service';
 import { AddZoneComponent } from 'src/app/shared/components/add-zone/add-zone.component';
 import { DialogZoneFileComponent } from 'src/app/shared/components/dialog-zone-file/dialog-zone-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-
+import * as XLSX from 'xlsx';
+import * as html2pdf from 'html2pdf.js';
 @Component({
   selector: 'app-zones',
   templateUrl: './zones.component.html',
@@ -145,10 +146,6 @@ export class ZonesComponent {
     this.filterForm = this.fb.group({
       FreeText: [""],
       code: [""],
-      DirectManagerId: [""],
-      JobTitleId: [""],
-      DepartmentId: [""],
-      ScheduleId: [""],
 
     });
     this.categories.push({ name: "adasd", key: "adsas" });
@@ -171,6 +168,26 @@ export class ZonesComponent {
     this.getListJobTitle();
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+
+  }
+  exportTableToExcel() {
+    let data = document.getElementById("tableZones");
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  }
+  exportTableToPDF() {
+    let table: any = document.getElementById("tableZones");
+
+    let option = {
+      margin: 0,
+      filename: "output.pdf",
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 8},
+      jsPDF: { unit: "in", format: 'letter', orientation: 'portrait' }
+    }
+    html2pdf().from(table).set(option).save()
 
   }
   showActions(data: any) {
@@ -197,35 +214,12 @@ export class ZonesComponent {
   }
   filter() {
     let filteration = { ...this.filteration }
-
-
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
-      if (key === "DepartmentId") {
-        if (value != "") {
-          filteration[key] = value.key
-        }
-      } else if (key === "JobTitleId") {
-        if (value != "") {
-          filteration[key] = value.key
-        }
-      } else if (key === "ScheduleId") {
-        if (value != "") {
-          filteration[key] = value.key
-        }
-      } else if (key === "DirectManagerId") {
-        if (value != "") {
-          filteration[key] = value.key
-        }
-      } else {
         if (value) {
           filteration[key] = value
         }
-      }
-
     })
-
     this.getZones(filteration);
-
   }
   numberOfRowsPerPage(data: any) {
 
@@ -276,10 +270,7 @@ export class ZonesComponent {
   resetFilteration() {
     this.filterForm.get("FreeText")?.setValue("");
     this.filterForm.get("code")?.setValue("");
-    this.filterForm.get("DirectManagerId")?.setValue("");
-    this.filterForm.get("JobTitleId")?.setValue("");
-    this.filterForm.get("DepartmentId")?.setValue("");
-    this.filterForm.get("ScheduleId")?.setValue("");
+
     this.filteration = {
       PageSize: 5,
       PageNumber: 0,

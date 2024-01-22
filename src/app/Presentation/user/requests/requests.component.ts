@@ -15,7 +15,8 @@ import { ToastrService } from 'ngx-toastr';
 
 import { RequestsService } from './services/requests.service';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-
+import * as XLSX from 'xlsx';
+import * as html2pdf from 'html2pdf.js';
 
 @Component({
   selector: 'app-requests',
@@ -140,16 +141,21 @@ export class RequestsComponent {
       this.opened = false;
 
     }
-    this.filterForm = this.fb.group({
-      date: [],
-      type: this.fb.group({
+    // this.filterForm = this.fb.group({
+    //   date: [],
+    //   type: this.fb.group({
 
-      }),
-      currencyCode: this.fb.group({
-      }),
-      minimum: [null, this.minimumValidator("maxmimum")
-      ],
-      maxmimum: [null, this.maximumValidator("minimum")]
+    //   }),
+    //   currencyCode: this.fb.group({
+    //   }),
+    //   minimum: [null, this.minimumValidator("maxmimum")
+    //   ],
+    //   maxmimum: [null, this.maximumValidator("minimum")]
+    // });
+    this.filterForm = this.fb.group({
+      FreeText: [""],
+      code: [""],
+
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
@@ -168,6 +174,46 @@ export class RequestsComponent {
   }
   showActions(data: any) {
     return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 22, actionCode: data.actionCode })
+  }
+  filter() {
+    let filteration = { ...this.filteration }
+    Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
+        if (value) {
+          filteration[key] = value
+        }
+    })
+    this.getRequests(filteration);
+  }
+  exportTableToExcel() {
+    let data = document.getElementById("tableRequetsts");
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  }
+  exportTableToPDF() {
+    let table: any = document.getElementById("tableRequetsts");
+
+    let option = {
+      margin: 0,
+      filename: "output.pdf",
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 8 },
+      jsPDF: { unit: "in", format: 'letter', orientation: 'portrait' }
+    }
+    html2pdf().from(table).set(option).save()
+
+  }
+  resetFilteration() {
+    this.filterForm.get("FreeText")?.setValue("");
+    this.filterForm.get("code")?.setValue("");
+
+    this.filteration = {
+      PageSize: 5,
+      PageNumber: 0,
+      PagingEnabled: true
+    };
+    this.getRequests(this.filteration);
   }
   getInformation() {
     this.spinnerCards = true;

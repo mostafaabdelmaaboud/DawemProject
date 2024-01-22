@@ -16,7 +16,8 @@ import { EmployeesService } from './services/employees.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-
+import * as XLSX from 'xlsx';
+import * as html2pdf from 'html2pdf.js';
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html',
@@ -151,10 +152,6 @@ export class EmployeesComponent {
     this.filterForm = this.fb.group({
       FreeText: [""],
       code: [""],
-      DirectManagerId: [""],
-      JobTitleId: [""],
-      DepartmentId: [""],
-      ScheduleId: [""],
 
     });
     this.categories.push({ name: "adasd", key: "adsas" });
@@ -198,6 +195,27 @@ export class EmployeesComponent {
   }
   mathRound(data: any) {
     return Math.ceil(data)
+  }
+  
+  exportTableToExcel() {
+    let data = document.getElementById("tableEmployees");
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  }
+  exportTableToPDF() {
+    let table: any = document.getElementById("tableEmployees");
+
+    let option = {
+      margin: 0,
+      filename: "output.pdf",
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 8 },
+      jsPDF: { unit: "in", format: 'letter', orientation: 'portrait' }
+    }
+    html2pdf().from(table).set(option).save()
+
   }
   filter() {
     let filteration = { ...this.filteration }

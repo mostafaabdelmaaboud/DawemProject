@@ -15,6 +15,15 @@ import { VacationsService } from './services/vacations.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
+import * as XLSX from 'xlsx';
+// import * as pdfMake from 'pdfmake/build/pdfmake';
+import autoTable from 'jspdf-autotable'
+import jsPDF from 'jspdf'
+import * as html2pdf from 'html2pdf.js';
+
+// import * as html2pdf from 'html2pdf.js';
+// import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import "jspdf/dist/polyfills.es.js";
 
 @Component({
   selector: 'app-vacations',
@@ -140,16 +149,21 @@ export class VacationsComponent {
       this.opened = false;
 
     }
-    this.filterForm = this.fb.group({
-      date: [],
-      type: this.fb.group({
+    // this.filterForm = this.fb.group({
+    //   date: [],
+    //   type: this.fb.group({
 
-      }),
-      currencyCode: this.fb.group({
-      }),
-      minimum: [null, this.minimumValidator("maxmimum")
-      ],
-      maxmimum: [null, this.maximumValidator("minimum")]
+    //   }),
+    //   currencyCode: this.fb.group({
+    //   }),
+    //   minimum: [null, this.minimumValidator("maxmimum")
+    //   ],
+    //   maxmimum: [null, this.maximumValidator("minimum")]
+    // });
+    this.filterForm = this.fb.group({
+      FreeText: [""],
+      code: [""],
+
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
@@ -224,6 +238,75 @@ export class VacationsComponent {
     this.filteration = { ...this.filteration, PageSize: data.value.code };
     this.getVacations(this.filteration)
   }
+  exportTableToExcel() {
+    let data = document.getElementById("tableVacation");
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  }
+  data = {
+    اسم: 'أحمد',
+    العمر: 25,
+    العنوان: 'العنوان هنا'
+  };
+  async exportTableToPDF() {
+    // let table: any = document.getElementById("tableVacation");
+
+    // let option = {
+    //   margin: 0,
+    //   filename: "output.pdf",
+    //   image: { type: 'jpeg', quality: 0.98 },
+    //   html2canvas: { scale: 8 },
+    //   jsPDF: { unit: "in", format: 'letter', orientation: 'portrait' }
+    // }
+    // html2pdf().from(table).set(option).save()
+
+    // pdfMake.vfs = pdfFonts.pdfMake.vfs;
+    // const documentDefinition = {
+    //   content: [
+    //     { text: 'بيانات المستخدم', style: 'header' },
+    //     this.createDataTable()
+    //   ],
+    //   styles: {
+    //     header: {
+    //       fontSize: 18,
+    //       bold: true
+    //     }
+    //   }
+    // };
+
+    // pdfMake.createPdf(documentDefinition).download('بيانات المستخدم.pdf');
+    const content = document.getElementById('tableVacation'); // قم بتغيير 'yourContentId' إلى id العنصر الذي ترغب في تصديره
+
+    const options = {
+      margin: 10,
+      filename: 'ملف.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    };
+
+    html2pdf().from(content).set(options).save()
+
+
+  }
+  createDataTable() {
+    const tableData = [
+      [{ text: 'العنوان', bold: true }, { text: 'القيمة', bold: true }],
+      ['اسم', this.data.اسم],
+      ['العمر', this.data.العمر],
+      ['العنوان', this.data.العنوان]
+    ];
+
+    return {
+      table: {
+        widths: ['*', '*'],
+        body: tableData
+      },
+      layout: 'lightHorizontalLines'
+    };
+  }
   reasonOfRefuse(data: any) {
     const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
       width: "30vw",
@@ -260,6 +343,26 @@ export class VacationsComponent {
 
 
     })
+  }
+  filter() {
+    let filteration = { ...this.filteration }
+    Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
+        if (value) {
+          filteration[key] = value
+        }
+    })
+    this.getVacations(filteration);
+  }
+  resetFilteration() {
+    this.filterForm.get("FreeText")?.setValue("");
+    this.filterForm.get("code")?.setValue("");
+
+    this.filteration = {
+      PageSize: 5,
+      PageNumber: 0,
+      PagingEnabled: true
+    };
+    this.getVacations(this.filteration);
   }
   requestVacation() {
     const dialogRefAddCurrency = this.dialog.open(RequestVacationComponent, {

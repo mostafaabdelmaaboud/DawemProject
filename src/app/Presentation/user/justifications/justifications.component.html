@@ -152,6 +152,52 @@
 
                 </h3>
                 <button class="icon-close iconCloseDialog iconCloseFilteration" type="button" (click)="op.hide()">
+                  <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+                  <i class="pi pi-times-circle"></i>
+                </button>
+              </header>
+              <form [formGroup]="filterForm" class="formFilteration">
+                <div class="sectionFive mb-3">
+                  <label for="" class="label-input mb-2">رقم الطلب</label>
+                  <div class="content-password">
+                    <input type="number" formControlName="code" pInputText placeholder="رقم الطلب" class="w-100" />
+                  </div>
+
+                </div>
+                <div class="sectionFive mb-3">
+                  <label for="" class="label-input mb-2">بحث</label>
+                  <div class="content-password">
+                    <input type="text" formControlName="FreeText" pInputText placeholder="بحث" class="w-100" />
+                  </div>
+
+                </div>
+                
+            
+
+             
+                
+
+
+              
+                <div class="footer-filter">
+                  <button type="button" class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+                    (click)="filter(); op.hide()">تصفية
+                    النتائج</button>
+
+                  <button (click)="resetFilteration()"
+                    class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16" type="button">إعادة
+                    ضبط</button>
+                </div>
+              </form>
+
+            </p-overlayPanel>
+            <!-- <p-overlayPanel #op>
+              <header class="header-filter d-flex justify-content-center align-items-center p-15 position-relative">
+                <h3 class="title-filteration m-0">
+                  تصفية النتائج
+
+                </h3>
+                <button class="icon-close iconCloseDialog iconCloseFilteration" type="button" (click)="op.hide()">
                   <i class="pi pi-times-circle"></i>
                 </button>
               </header>
@@ -204,7 +250,7 @@
                 </div>
               </form>
 
-            </p-overlayPanel>
+            </p-overlayPanel> -->
             <button *ngIf="showActions({actionCode:0})"
               class="btn btn-primary action-button-t d-flex align-items-center" (click)="requestJustification()">
               <i class="pi bi-plus-circle-fill"></i>
