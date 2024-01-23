@@ -19,7 +19,8 @@ import { AddUserComponent } from 'src/app/shared/components/add-user/add-user.co
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
 import { DialogUserFileComponent } from 'src/app/shared/components/dialog-user-file/dialog-user-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-
+import * as XLSX from 'xlsx';
+import * as html2pdf from 'html2pdf.js';
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -137,15 +138,8 @@ export class UsersComponent {
 
     }
     this.filterForm = this.fb.group({
-      date: [],
-      type: this.fb.group({
+      FreeText: [""],
 
-      }),
-      currencyCode: this.fb.group({
-      }),
-      minimum: [null, this.minimumValidator("maxmimum")
-      ],
-      maxmimum: [null, this.maximumValidator("minimum")]
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
@@ -178,6 +172,45 @@ export class UsersComponent {
 
       }
     })
+  }
+  filter() {
+    let filteration = { ...this.filteration }
+    Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
+        if (value) {
+          filteration[key] = value
+        }
+    })
+    this.getUsers(filteration);
+  }
+  exportTableToExcel() {
+    let data = document.getElementById("tableUsers");
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  }
+  exportTableToPDF() {
+    let table: any = document.getElementById("tableUsers");
+
+    let option = {
+      margin: 0,
+      filename: "output.pdf",
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 8 },
+      jsPDF: { unit: "in", format: 'letter', orientation: 'portrait' }
+    }
+    html2pdf().from(table).set(option).save()
+
+  }
+  resetFilteration() {
+    this.filterForm.get("FreeText")?.setValue("");
+
+    this.filteration = {
+      PageSize: 5,
+      PageNumber: 0,
+      PagingEnabled: true
+    };
+    this.getUsers(this.filteration);
   }
   getUsers(filteration: any) {
     this.users = [];

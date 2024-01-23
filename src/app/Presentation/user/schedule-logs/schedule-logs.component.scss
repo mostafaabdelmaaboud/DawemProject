@@ -1,0 +1,10 @@
+@media (max-width:960px) {
+    :host ::ng-deep .table-basic #tableshift .p-datatable-tfoot>tr>td {
+      display: block !important;
+    }
+  }
+  #tableshift,
+  .title-table {
+    letter-spacing: normal !important;
+  
+  }

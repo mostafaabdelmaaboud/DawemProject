@@ -25,7 +25,8 @@ import { AddVacationBalanceComponent } from 'src/app/shared/components/add-vacat
 import { DialogVacationBalanceFileComponent } from 'src/app/shared/components/dialog-vacation-balance-file/dialog-vacation-balance-file.component';
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-
+import * as XLSX from 'xlsx';
+import * as html2pdf from 'html2pdf.js';
 @Component({
   selector: 'app-vacation-balance',
   templateUrl: './vacation-balance.component.html',
@@ -149,15 +150,9 @@ export class VacationBalanceComponent {
 
     }
     this.filterForm = this.fb.group({
-      date: [],
-      type: this.fb.group({
+      FreeText: [""],
+      code: [""],
 
-      }),
-      currencyCode: this.fb.group({
-      }),
-      minimum: [null, this.minimumValidator("maxmimum")
-      ],
-      maxmimum: [null, this.maximumValidator("minimum")]
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
@@ -328,6 +323,46 @@ export class VacationBalanceComponent {
 
       }
     });
+  }
+  filter() {
+    let filteration = { ...this.filteration }
+    Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
+        if (value) {
+          filteration[key] = value
+        }
+    })
+    this.getVacations(filteration);
+  }
+  exportTableToExcel() {
+    let data = document.getElementById("tableVacations");
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  }
+  exportTableToPDF() {
+    let table: any = document.getElementById("tableVacations");
+
+    let option = {
+      margin: 0,
+      filename: "output.pdf",
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 8 },
+      jsPDF: { unit: "in", format: 'letter', orientation: 'portrait' }
+    }
+    html2pdf().from(table).set(option).save()
+
+  }
+  resetFilteration() {
+    this.filterForm.get("FreeText")?.setValue("");
+    this.filterForm.get("code")?.setValue("");
+
+    this.filteration = {
+      PageSize: 5,
+      PageNumber: 0,
+      PagingEnabled: true
+    };
+    this.getVacations(this.filteration);
   }
   dialogVacationFile(data: any) {
     const dialogRefAddCurrency = this.dialog.open(DialogVacationBalanceFileComponent, {

@@ -15,7 +15,8 @@ import { TasksService } from './services/tasks.service';
 import { DialogTaskFileComponent } from 'src/app/shared/components/dialog-task-file/dialog-task-file.component';
 import * as moment from 'moment';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-
+import * as XLSX from 'xlsx';
+import * as html2pdf from 'html2pdf.js';
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.component.html',
@@ -134,15 +135,9 @@ export class TasksComponent {
 
     }
     this.filterForm = this.fb.group({
-      date: [],
-      type: this.fb.group({
+      FreeText: [""],
+      code: [""],
 
-      }),
-      currencyCode: this.fb.group({
-      }),
-      minimum: [null, this.minimumValidator("maxmimum")
-      ],
-      maxmimum: [null, this.maximumValidator("minimum")]
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
@@ -171,6 +166,46 @@ export class TasksComponent {
 
       }
     })
+  }
+  filter() {
+    let filteration = { ...this.filteration }
+    Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
+        if (value) {
+          filteration[key] = value
+        }
+    })
+    this.getTasks(filteration);
+  }
+  exportTableToExcel() {
+    let data = document.getElementById("tablTasks");
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  }
+  exportTableToPDF() {
+    let table: any = document.getElementById("tablTasks");
+
+    let option = {
+      margin: 0,
+      filename: "output.pdf",
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 8 },
+      jsPDF: { unit: "in", format: 'letter', orientation: 'portrait' }
+    }
+    html2pdf().from(table).set(option).save()
+
+  }
+  resetFilteration() {
+    this.filterForm.get("FreeText")?.setValue("");
+    this.filterForm.get("code")?.setValue("");
+
+    this.filteration = {
+      PageSize: 5,
+      PageNumber: 0,
+      PagingEnabled: true
+    };
+    this.getTasks(this.filteration);
   }
   showActions(data: any) {
     return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 26, actionCode: data.actionCode })
