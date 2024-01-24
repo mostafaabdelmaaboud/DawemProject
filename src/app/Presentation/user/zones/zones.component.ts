@@ -216,7 +216,7 @@ export class ZonesComponent {
     let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
         if (value) {
-          filteration[key] = value
+          filteration[key] = value.trim();
         }
     })
     this.getZones(filteration);

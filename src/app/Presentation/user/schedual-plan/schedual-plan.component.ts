@@ -22,7 +22,8 @@ import { SchedualPlanService } from './services/schedual-plan.service';
 import { AddSchedualPlanComponent } from 'src/app/shared/components/add-schedual-plan/add-schedual-plan.component';
 import { DialogSchedulePlanFileComponent } from 'src/app/shared/components/dialog-schedule-plan-file/dialog-schedule-plan-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-
+import * as XLSX from 'xlsx';
+import * as html2pdf from 'html2pdf.js';
 @Component({
   selector: 'app-schedual-plan',
   templateUrl: './schedual-plan.component.html',
@@ -132,15 +133,9 @@ export class SchedualPlanComponent {
 
     }
     this.filterForm = this.fb.group({
-      date: [],
-      type: this.fb.group({
+      FreeText: [""],
+      code: [""],
 
-      }),
-      currencyCode: this.fb.group({
-      }),
-      minimum: [null, this.minimumValidator("maxmimum")
-      ],
-      maxmimum: [null, this.maximumValidator("minimum")]
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
@@ -327,6 +322,46 @@ export class SchedualPlanComponent {
         }
       }
     )
+  }
+  filter() {
+    let filteration = { ...this.filteration }
+    Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
+        if (value) {
+          filteration[key] = value.trim();
+        }
+    })
+    this.getGroups(filteration);
+  }
+  exportTableToExcel() {
+    let data = document.getElementById("tableSchedualPlan");
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  }
+  exportTableToPDF() {
+    let table: any = document.getElementById("tableSchedualPlan");
+
+    let option = {
+      margin: 0,
+      filename: "output.pdf",
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 8 },
+      jsPDF: { unit: "in", format: 'letter', orientation: 'portrait' }
+    }
+    html2pdf().from(table).set(option).save()
+
+  }
+  resetFilteration() {
+    this.filterForm.get("FreeText")?.setValue("");
+    this.filterForm.get("code")?.setValue("");
+
+    this.filteration = {
+      PageSize: 5,
+      PageNumber: 0,
+      PagingEnabled: true
+    };
+    this.getGroups(this.filteration);
   }
   editSchedualPlane(data: any) {
     const dialogRefAddCurrency = this.dialog.open(AddSchedualPlanComponent, {

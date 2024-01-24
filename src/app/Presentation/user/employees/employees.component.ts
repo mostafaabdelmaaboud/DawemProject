@@ -240,7 +240,7 @@ export class EmployeesComponent {
         }
       } else {
         if (value) {
-          filteration[key] = value
+          filteration[key] = value.trim();
         }
       }
 

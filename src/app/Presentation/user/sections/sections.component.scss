@@ -8,3 +8,8 @@
 :host ::ng-deep .p-datatable .p-datatable-thead>tr>th:last-of-type {
   width: 15%;
 }
+#tableSections,
+.title-table {
+  letter-spacing: normal !important;
+
+}
