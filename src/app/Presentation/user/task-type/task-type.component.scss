@@ -1,6 +1,6 @@
 @media (max-width:520px) {
 
-  :host ::ng-deep .table-basic #tableVacationType .p-datatable-tfoot>tr>td {
+  :host ::ng-deep .table-basic #tableTaskType .p-datatable-tfoot>tr>td {
     display: block !important;
   }
 }
@@ -15,4 +15,27 @@
 
 :host ::ng-deep .p-datatable .p-datatable-thead>tr>th:last-of-type {
   width: 15% !important;
+}
+#tableTaskTypeHidden,
+.title-table {
+  letter-spacing: normal !important;
+
+}
+.logoTable {
+  img {
+    width: 180px;
+    height: 50px;
+    object-fit: scale-down
+  }
+}
+.hideTable {
+  overflow: hidden;
+  height: 0;
+  #tableTaskTypeHidden {
+    position: relative;
+    left: -100%;
+  }
+}
+:host ::ng-deep  #tableTaskTypeHidden .p-datatable .p-datatable-header {
+  background-color: white !important;
 }

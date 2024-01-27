@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, LOCALE_ID, inject } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
+import { ChangeDetectorRef, Component,  inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -10,11 +9,13 @@ import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/t
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ToastrService } from 'ngx-toastr';
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
-import { DialogPermissionTypeFileComponent } from 'src/app/shared/components/dialog-permission-type-file/dialog-permission-type-file.component';
 import { AssignmentTypeService } from './services/assignment-type.service';
 import { RequestAssignmentTypeComponent } from 'src/app/shared/components/request-assignment-type/request-assignment-type.component';
 import { DialogAssignmentTypeFileComponent } from 'src/app/shared/components/dialog-assignment-type-file/dialog-assignment-type-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
+import * as XLSX from 'xlsx';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 @Component({
   selector: 'app-assignment-type',
   templateUrl: './assignment-type.component.html',
@@ -125,15 +126,9 @@ export class AssignmentTypeComponent {
 
     }
     this.filterForm = this.fb.group({
-      date: [],
-      type: this.fb.group({
+      FreeText: [""],
+      code: [""],
 
-      }),
-      currencyCode: this.fb.group({
-      }),
-      minimum: [null, this.minimumValidator("maxmimum")
-      ],
-      maxmimum: [null, this.maximumValidator("minimum")]
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
@@ -143,6 +138,47 @@ export class AssignmentTypeComponent {
     ];
     this.getInformation();
 
+    this.getAssignments(this.filteration);
+  }
+  filter() {
+    let filteration = { ...this.filteration }
+    Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
+      if (typeof value  === 'string') {
+        filteration[key] = value.trim();
+      } else {
+        filteration[key] = value;
+
+      }
+    })
+    this.getAssignments(filteration);
+  }
+  exportTableToExcel() {
+    let data = document.getElementById("tablePermissionTypeHidden");
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  }
+  exportTableToPDF() {
+    let table: any = document.getElementById("tablePermissionTypeHidden");
+    html2canvas(table).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
+      pdf.save('ملف_PDF.pdf');
+    });
+  
+
+  }
+  resetFilteration() {
+    this.filterForm.get("FreeText")?.setValue("");
+    this.filterForm.get("code")?.setValue("");
+
+    this.filteration = {
+      PageSize: 5,
+      PageNumber: 0,
+      PagingEnabled: true
+    };
     this.getAssignments(this.filteration);
   }
   getInformation() {

@@ -20,8 +20,26 @@
 .action-body-td {
   padding: 10px 0;
 }
-#tableVacation,
+#tableVacationHidden,
 .title-table {
   letter-spacing: normal !important;
 
+}
+.logoTable {
+  img {
+    width: 180px;
+    height: 50px;
+    object-fit: scale-down
+  }
+}
+.hideTable {
+  overflow: hidden;
+  height: 0;
+  #tableVacationHidden {
+    position: relative;
+    left: -100%;
+  }
+}
+:host ::ng-deep  #tableVacationHidden .p-datatable .p-datatable-header {
+  background-color: white !important;
 }

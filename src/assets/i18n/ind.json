@@ -16,6 +16,8 @@
   "dialogs": {
     "loading": "loading..."
   },
+  "download":"download",
+
   "primeng": {
     "dayNames": [
       "Sunday",

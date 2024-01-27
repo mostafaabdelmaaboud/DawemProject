@@ -20,6 +20,8 @@
   "dialogs": {
     "loading": "تحميل..."
   },
+  "download":"تحميل",
+
   "primeng": {
     "dayNames": [
       "الأحد",

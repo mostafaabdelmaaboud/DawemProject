@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, LOCALE_ID, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, LOCALE_ID, ViewChild, inject } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
@@ -20,13 +20,17 @@ import { ToastrService } from 'ngx-toastr';
 import { GroupsService } from './services/groups.service';
 import { DialogGroupFileComponent } from 'src/app/shared/components/dialog-group-file/dialog-group-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-
+import * as XLSX from 'xlsx';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 @Component({
   selector: 'app-groups',
   templateUrl: './groups.component.html',
   styleUrls: ['./groups.component.scss']
 })
 export class GroupsComponent {
+  @ViewChild('lastTh', { static: false }) lastTh!: ElementRef;
+
   date!: Date;
   arabic: any;
   subscription!: Subscription;
@@ -130,15 +134,9 @@ export class GroupsComponent {
 
     }
     this.filterForm = this.fb.group({
-      date: [],
-      type: this.fb.group({
+      FreeText: [""],
+      code: [""],
 
-      }),
-      currencyCode: this.fb.group({
-      }),
-      minimum: [null, this.minimumValidator("maxmimum")
-      ],
-      maxmimum: [null, this.maximumValidator("minimum")]
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
@@ -153,6 +151,47 @@ export class GroupsComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
+  }
+  filter() {
+    let filteration = { ...this.filteration }
+    Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
+      if (typeof value  === 'string') {
+        filteration[key] = value.trim();
+      } else {
+        filteration[key] = value;
+
+      }
+    })
+    this.getGroups(filteration);
+  }
+  exportTableToExcel() {
+    let data = document.getElementById("tableGroupHidden");
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  }
+  exportTableToPDF() {
+    let table: any = document.getElementById("tableGroupHidden");
+    html2canvas(table).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
+      pdf.save('ملف_PDF.pdf');
+    });
+  
+
+  }
+  resetFilteration() {
+    this.filterForm.get("FreeText")?.setValue("");
+    this.filterForm.get("code")?.setValue("");
+
+    this.filteration = {
+      PageSize: 5,
+      PageNumber: 0,
+      PagingEnabled: true
+    };
+    this.getGroups(this.filteration);
   }
   showActions(data: any) {
     return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 14, actionCode: data.actionCode })

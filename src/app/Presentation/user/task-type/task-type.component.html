@@ -103,7 +103,7 @@
     <div class="actions-table-basic">
     </div>
   </div> -->
-  <p-table #dt1 [value]="tasks" id="tableVacationType" [responsiveLayout]="opened ? 'stack' : 'scroll'"
+  <p-table #dt1 [value]="tasks" id="tableTaskType" [responsiveLayout]="opened ? 'stack' : 'scroll'"
     [responsive]="true" [paginator]="false" [rows]="itemsPerPage" [first]="page" [rows]="10"
     [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
     currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
@@ -129,12 +129,33 @@
 
             <span>تصفية النتائج</span>
           </button>
+          <button (click)="exportTableToPDF()" class="btn btn-outline-green action-button-t d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-pdf"
+              viewBox="0 0 16 16">
+              <path
+                d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1" />
+              <path
+                d="M4.603 12.087a.8.8 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.7 7.7 0 0 1 1.482-.645 20 20 0 0 0 1.062-2.227 7.3 7.3 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.187-.012.395-.047.614-.084.51-.27 1.134-.52 1.794a11 11 0 0 0 .98 1.686 5.8 5.8 0 0 1 1.334.05c.364.065.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.86.86 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.7 5.7 0 0 1-.911-.95 11.6 11.6 0 0 0-1.997.406 11.3 11.3 0 0 1-1.021 1.51c-.29.35-.608.655-.926.787a.8.8 0 0 1-.58.029m1.379-1.901q-.25.115-.459.238c-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361q.016.032.026.044l.035-.012c.137-.056.355-.235.635-.572a8 8 0 0 0 .45-.606m1.64-1.33a13 13 0 0 1 1.01-.193 12 12 0 0 1-.51-.858 21 21 0 0 1-.5 1.05zm2.446.45q.226.244.435.41c.24.19.407.253.498.256a.1.1 0 0 0 .07-.015.3.3 0 0 0 .094-.125.44.44 0 0 0 .059-.2.1.1 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a4 4 0 0 0-.612-.053zM8.078 5.8a7 7 0 0 0 .2-.828q.046-.282.038-.465a.6.6 0 0 0-.032-.198.5.5 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822q.036.167.09.346z" />
+            </svg>
+      
+            <span class="me-1">PDF</span>
+          </button>
+          <button (click)="exportTableToExcel()"
+            class="btn btn-outline-green action-button-t d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-filetype-xls" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM6.472 15.29a1.2 1.2 0 0 1-.111-.449h.765a.58.58 0 0 0 .254.384q.106.073.25.114.143.041.319.041.246 0 .413-.07a.56.56 0 0 0 .255-.193.5.5 0 0 0 .085-.29.39.39 0 0 0-.153-.326q-.152-.12-.462-.193l-.619-.143a1.7 1.7 0 0 1-.539-.214 1 1 0 0 1-.351-.367 1.1 1.1 0 0 1-.123-.524q0-.366.19-.639.19-.272.527-.422.338-.15.777-.149.457 0 .78.152.324.153.5.41.18.255.2.566h-.75a.56.56 0 0 0-.12-.258.6.6 0 0 0-.247-.181.9.9 0 0 0-.369-.068q-.325 0-.513.152a.47.47 0 0 0-.184.384q0 .18.143.3a1 1 0 0 0 .405.175l.62.143q.326.075.566.211a1 1 0 0 1 .375.358q.135.222.135.56 0 .37-.188.656a1.2 1.2 0 0 1-.539.439q-.351.158-.858.158-.381 0-.665-.09a1.4 1.4 0 0 1-.478-.252 1.1 1.1 0 0 1-.29-.375m-2.945-3.358h-.893L1.81 13.37h-.036l-.832-1.438h-.93l1.227 1.983L0 15.931h.861l.853-1.415h.035l.85 1.415h.908L2.253 13.94zm2.727 3.325H4.557v-3.325h-.79v4h2.487z" />
+            </svg>
+      
+            <span class="me-1">Excel</span>
+          </button>
           <div class="container-filteration">
             <p-overlayPanel #op>
               <header class="header-filter d-flex justify-content-center align-items-center p-15 position-relative">
                 <h3 class="title-filteration m-0">
                   تصفية النتائج
-
+      
                 </h3>
                 <button class="icon-close iconCloseDialog iconCloseFilteration" type="button" (click)="op.hide()">
                   <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
@@ -142,60 +163,39 @@
                 </button>
               </header>
               <form [formGroup]="filterForm" class="formFilteration">
-
                 <div class="sectionFive mb-3">
-                  <label for="" class="label-input mb-2">رقم الموظف</label>
+                  <label for="" class="label-input mb-2">رقم الطلب</label>
                   <div class="content-password">
-                    <input type="text" pInputText placeholder="رقم الموظف" class="w-100" />
+                    <input type="number" formControlName="code" pInputText placeholder="رقم الطلب" class="w-100" />
                   </div>
-
+      
                 </div>
                 <div class="sectionFive mb-3">
-                  <label for="" class="label-input mb-2">اسم الموظف</label>
+                  <label for="" class="label-input mb-2">بحث</label>
                   <div class="content-password">
-                    <input type="text" pInputText placeholder="اسم الموظف" class="w-100" />
+                    <input type="text" formControlName="FreeText" pInputText placeholder="بحث" class="w-100" />
                   </div>
-
+      
                 </div>
-                <div class="sectionTwo mb-3">
-                  <label class="title mb-2">نوع الاجازة</label>
-                  <div class="content-password">
-                    <p-dropdown appendTo="body" [options]="list" placeholder=" اختار نوع الاجازة"
-                      optionLabel="name"></p-dropdown>
-                  </div>
-
-                </div>
-
-                <div class="sectionThree mb-3">
-                  <label class="title mb-2">تاريخ البداية</label>
-                  <div class="content-password">
-                    <div class="content-pCalendar-default" dir="ltr">
-                      <p-calendar appendTo="body" selectionMode="range" placeholder="اختار تاريخ النهاية (من - إلي)"
-                        [readonlyInput]="true" [showIcon]="true"></p-calendar>
-                    </div>
-                  </div>
-
-                </div>
-                <div class="sectionThree mb-3">
-                  <label class="title mb-2">لتاريخ النهاية</label>
-                  <div class="content-password">
-                    <div class="content-pCalendar-default" dir="ltr">
-                      <p-calendar appendTo="body" selectionMode="range" [readonlyInput]="true"
-                        placeholder="اختار تاريخ النهاية (من - إلي)" [showIcon]="true"></p-calendar>
-                    </div>
-                  </div>
-
-                </div>
-
+                
+            
+      
+             
+                
+      
+      
+              
                 <div class="footer-filter">
-                  <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16">تصفية
+                  <button type="button" class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+                    (click)="filter(); op.hide()">تصفية
                     النتائج</button>
-                  <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
-                    type="button">إعادة
+      
+                  <button (click)="resetFilteration()"
+                    class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16" type="button">إعادة
                     ضبط</button>
                 </div>
               </form>
-
+      
             </p-overlayPanel>
             <button class="btn btn-primary action-button-t d-flex align-items-center"
               *ngIf="showActions({actionCode:0})" (click)="requestVacation()">
@@ -213,9 +213,20 @@
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th *ngFor="let column of columns">
-          {{ column.name }}
-        </th>
+        <ng-container *ngFor="let column of columns">
+   
+          <ng-container *ngIf="column.field === 'actions'">
+            <th  #lastTh>
+              {{ column.name }}
+            </th>
+          </ng-container>
+          <ng-container *ngIf="column.field != 'actions'">
+            <th [pSortableColumn]="column.field">
+
+              {{ column.name }} <p-sortIcon [field]="column.field" class="sortIcon"></p-sortIcon>
+            </th>
+          </ng-container>
+        </ng-container>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData>
@@ -355,4 +366,97 @@
       </tr>
     </ng-template>
   </p-table>
+  <div class="hideTable">
+    <p-table #dt1 [value]="tasks" id="tableTaskTypeHidden" [responsiveLayout]="opened ? 'stack' : 'scroll'"
+    [responsive]="true" [paginator]="false" [rows]="itemsPerPage" [first]="page" [rows]="10"
+    [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
+              'orderNumber',
+              'employeeName.name',
+              'typeOfRequest',
+              'date',
+              'time' ]">
+    <ng-template pTemplate="caption">
+      <div class="custom-header-table d-flex justify-content-between align-items-center">
+        <h2 class="title-table m-0">
+          انواع المهمات
+          <!-- <span class="subTitlte ml-2">(30 FLS )</span> -->
+        </h2>
+        <div class="logoTable">
+          <img  src="assets/img/Link.png" alt="logo">
+        </div>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <ng-container *ngFor="let column of columns">
+  
+          <ng-container *ngIf="column.field != 'actions'">
+            <th [pSortableColumn]="column.field">
+
+              {{ column.name }} 
+            </th>
+          </ng-container>
+        </ng-container>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData>
+      <tr *ngIf="!isLoading">
+
+        <ng-container *ngFor="let column of columns">
+
+          <ng-container *ngIf="column.field != 'actions' && column.field != 'isActive'">
+            <td>
+              <span class="p-column-title">
+                {{column.name}}
+              </span>
+              {{ rowData[column.field] }}
+            </td>
+          </ng-container>
+
+          <ng-container *ngIf="column.field === 'isActive'">
+            <td>
+              <span class="p-column-title">
+                {{column.name}}
+              </span>
+              <span>{{rowData[column.field] ? 'نشط' : 'غير نشط'}}
+              </span>
+
+            </td>
+          </ng-container>
+   
+        </ng-container>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr *ngIf="isLoading ===false">
+        <td colspan="8">
+          <div class="container-empty-data w-100 d-flex justify-content-center align-items-center">
+            <svg width="65" height="40" viewBox="0 0 65 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip0_1920_5847)">
+                <rect width="64" height="40" transform="translate(0.5)" fill="white" fill-opacity="0.01" />
+                <path
+                  d="M32.5 39.7047C50.1731 39.7047 64.5 36.5939 64.5 32.7566C64.5 28.9193 50.1731 25.8086 32.5 25.8086C14.8269 25.8086 0.5 28.9193 0.5 32.7566C0.5 36.5939 14.8269 39.7047 32.5 39.7047Z"
+                  fill="#F5F5F5" />
+                <path
+                  d="M55.5 13.6653L45.354 2.24866C44.867 1.47048 44.156 1 43.407 1H21.593C20.844 1 20.133 1.47048 19.646 2.24767L9.5 13.6663V22.8367H55.5V13.6653Z"
+                  stroke="#CED4DA" />
+                <path
+                  d="M42.113 16.8116C42.113 15.2185 43.107 13.9033 44.34 13.9023H55.5V31.9047C55.5 34.0119 54.18 35.739 52.55 35.739H12.45C10.82 35.739 9.5 34.011 9.5 31.9047V13.9023H20.66C21.893 13.9023 22.887 15.2155 22.887 16.8086V16.8304C22.887 18.4235 23.892 19.7099 25.124 19.7099H39.876C41.108 19.7099 42.113 18.4116 42.113 16.8185V16.8116Z"
+                  fill="#FAFAFA" stroke="#CED4DA" />
+              </g>
+              <defs>
+                <clipPath id="clip0_1920_5847">
+                  <rect width="64" height="40" fill="white" transform="translate(0.5)" />
+                </clipPath>
+              </defs>
+            </svg>
+            <span class="empty-table f-s-16">No Data</span>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+  </div>
 </div>

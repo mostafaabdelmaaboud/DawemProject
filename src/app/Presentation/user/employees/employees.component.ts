@@ -1,8 +1,7 @@
-import { ChangeDetectorRef, Component, Inject, LOCALE_ID, inject } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { EMPTY, Subject, Subscription, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { Subscription, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MediaMatcher } from '@angular/cdk/layout';
@@ -10,14 +9,14 @@ import { DialogAddAnEmployeeComponent } from 'src/app/shared/components/dialog-a
 import { MatDialog } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
-import { DialogRequestJustificationWithDropdownComponent } from 'src/app/shared/components/dialog-request-justification-with-dropdown/dialog-request-justification-with-dropdown.component';
 import { DialogEmployeeFileComponent } from 'src/app/shared/components/dialog-employee-file/dialog-employee-file.component';
 import { EmployeesService } from './services/employees.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 import * as XLSX from 'xlsx';
-import * as html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html',
@@ -198,23 +197,21 @@ export class EmployeesComponent {
   }
   
   exportTableToExcel() {
-    let data = document.getElementById("tableEmployees");
+    let data = document.getElementById("tableEmployeesHidden");
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, 'ExcelSheet.xlsx');
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableEmployees");
-
-    let option = {
-      margin: 0,
-      filename: "output.pdf",
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 8 },
-      jsPDF: { unit: "in", format: 'letter', orientation: 'portrait' }
-    }
-    html2pdf().from(table).set(option).save()
+    let table: any = document.getElementById("tableEmployeesHidden");
+    html2canvas(table).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
+      pdf.save('ملف_PDF.pdf');
+    });
+  
 
   }
   filter() {
@@ -239,8 +236,11 @@ export class EmployeesComponent {
           filteration[key] = value.key
         }
       } else {
-        if (value) {
+        if (typeof value  === 'string') {
           filteration[key] = value.trim();
+        } else {
+          filteration[key] = value;
+
         }
       }
 

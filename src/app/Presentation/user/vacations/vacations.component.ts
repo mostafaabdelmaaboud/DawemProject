@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, LOCALE_ID, inject } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -16,15 +15,8 @@ import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 import * as XLSX from 'xlsx';
-// import * as pdfMake from 'pdfmake/build/pdfmake';
-import autoTable from 'jspdf-autotable'
 import jsPDF from 'jspdf'
-import * as html2pdf from 'html2pdf.js';
-
-// import * as html2pdf from 'html2pdf.js';
-// import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import "jspdf/dist/polyfills.es.js";
-
+import html2canvas from 'html2canvas';
 @Component({
   selector: 'app-vacations',
   templateUrl: './vacations.component.html',
@@ -238,57 +230,28 @@ export class VacationsComponent {
     this.filteration = { ...this.filteration, PageSize: data.value.code };
     this.getVacations(this.filteration)
   }
-  exportTableToExcel() {
-    let data = document.getElementById("tableVacation");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
-  }
+ 
   data = {
     اسم: 'أحمد',
     العمر: 25,
     العنوان: 'العنوان هنا'
   };
-  async exportTableToPDF() {
-    // let table: any = document.getElementById("tableVacation");
-
-    // let option = {
-    //   margin: 0,
-    //   filename: "output.pdf",
-    //   image: { type: 'jpeg', quality: 0.98 },
-    //   html2canvas: { scale: 8 },
-    //   jsPDF: { unit: "in", format: 'letter', orientation: 'portrait' }
-    // }
-    // html2pdf().from(table).set(option).save()
-
-    // pdfMake.vfs = pdfFonts.pdfMake.vfs;
-    // const documentDefinition = {
-    //   content: [
-    //     { text: 'بيانات المستخدم', style: 'header' },
-    //     this.createDataTable()
-    //   ],
-    //   styles: {
-    //     header: {
-    //       fontSize: 18,
-    //       bold: true
-    //     }
-    //   }
-    // };
-
-    // pdfMake.createPdf(documentDefinition).download('بيانات المستخدم.pdf');
-    const content = document.getElementById('tableVacation'); // قم بتغيير 'yourContentId' إلى id العنصر الذي ترغب في تصديره
-
-    const options = {
-      margin: 10,
-      filename: 'ملف.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    };
-
-    html2pdf().from(content).set(options).save()
-
+  exportTableToExcel() {
+    let data = document.getElementById("tableVacationHidden");
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  }
+  exportTableToPDF() {
+    let table: any = document.getElementById("tableVacationHidden");
+    html2canvas(table).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
+      pdf.save('ملف_PDF.pdf');
+    });
+  
 
   }
   createDataTable() {
@@ -347,9 +310,12 @@ export class VacationsComponent {
   filter() {
     let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
-        if (value) {
-          filteration[key] = value.trim();
-        }
+      if (typeof value  === 'string') {
+        filteration[key] = value.trim();
+      } else {
+        filteration[key] = value;
+
+      }
     })
     this.getVacations(filteration);
   }

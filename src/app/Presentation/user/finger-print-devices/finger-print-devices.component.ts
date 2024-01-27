@@ -1,30 +1,21 @@
-import { ChangeDetectorRef, Component, Inject, LOCALE_ID, inject } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { AssignmentRequestComponent } from 'src/app/shared/components/assignment-request/assignment-request.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { AddShiftComponent } from 'src/app/shared/components/add-shift/add-shift.component';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
-import { EditShiftComponent } from 'src/app/shared/components/edit-shift/edit-shift.component';
-import { DeleteShiftComponent } from 'src/app/shared/components/delete-shift/delete-shift.component';
-import { AddGroupComponent } from 'src/app/shared/components/add-group/add-group.component';
-import { EditGroupComponent } from 'src/app/shared/components/edit-group/edit-group.component';
-import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { DialogGroupFileComponent } from 'src/app/shared/components/dialog-group-file/dialog-group-file.component';
-import { AddSchedualPlanComponent } from 'src/app/shared/components/add-schedual-plan/add-schedual-plan.component';
-import { DialogSchedulePlanFileComponent } from 'src/app/shared/components/dialog-schedule-plan-file/dialog-schedule-plan-file.component';
 import { FingerPrintDevicesService } from './services/finger-print-devices.service';
 import { AddFingerPrintDeviceComponent } from 'src/app/shared/components/add-finger-print-device/add-finger-print-device.component';
 import { DialogFingerPrintDeviceFileComponent } from 'src/app/shared/components/dialog-finger-print-device-file/dialog-finger-print-device-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-
+import * as XLSX from 'xlsx';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 @Component({
   selector: 'app-finger-print-devices',
   templateUrl: './finger-print-devices.component.html',
@@ -144,15 +135,9 @@ export class FingerPrintDevicesComponent {
 
     }
     this.filterForm = this.fb.group({
-      date: [],
-      type: this.fb.group({
+      FreeText: [""],
+      code: [""],
 
-      }),
-      currencyCode: this.fb.group({
-      }),
-      minimum: [null, this.minimumValidator("maxmimum")
-      ],
-      maxmimum: [null, this.maximumValidator("minimum")]
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
@@ -167,6 +152,47 @@ export class FingerPrintDevicesComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
+  }
+  filter() {
+    let filteration = { ...this.filteration }
+    Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
+      if (typeof value  === 'string') {
+        filteration[key] = value.trim();
+      } else {
+        filteration[key] = value;
+
+      }
+    })
+    this.getFingerprintDevices(filteration);
+  }
+  exportTableToExcel() {
+    let data = document.getElementById("tableFingerPrintDevicesHidden");
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  }
+  exportTableToPDF() {
+    let table: any = document.getElementById("tableFingerPrintDevicesHidden");
+    html2canvas(table).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 10, 10, 190, 80); 
+      pdf.save('ملف_PDF.pdf');
+    });
+  
+
+  }
+  resetFilteration() {
+    this.filterForm.get("FreeText")?.setValue("");
+    this.filterForm.get("code")?.setValue("");
+
+    this.filteration = {
+      PageSize: 5,
+      PageNumber: 0,
+      PagingEnabled: true
+    };
+    this.getFingerprintDevices(this.filteration);
   }
   getInformation() {
     this.spinnerCards = true;

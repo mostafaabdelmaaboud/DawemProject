@@ -8,8 +8,26 @@
 :host ::ng-deep .p-datatable .p-datatable-thead>tr>th:last-of-type {
   width: 15%;
 }
-#tablePermissions,
+#tablePermissionsHidden,
 .title-table {
   letter-spacing: normal !important;
 
+}
+.logoTable {
+  img {
+    width: 180px;
+    height: 50px;
+    object-fit: scale-down
+  }
+}
+.hideTable {
+  overflow: hidden;
+  height: 0;
+  #tablePermissionsHidden {
+    position: relative;
+    left: -100%;
+  }
+}
+:host ::ng-deep  #tablePermissionsHidden .p-datatable .p-datatable-header {
+  background-color: white !important;
 }

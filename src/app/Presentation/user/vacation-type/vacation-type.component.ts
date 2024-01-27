@@ -13,6 +13,9 @@ import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/d
 import { RequestVacationTypeComponent } from 'src/app/shared/components/request-vacation-type/request-vacation-type.component';
 import { DialogVacationTypeFileComponent } from 'src/app/shared/components/dialog-vacation-type-file/dialog-vacation-type-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
+import * as XLSX from 'xlsx';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 @Component({
   selector: 'app-vacation-type',
   templateUrl: './vacation-type.component.html',
@@ -128,15 +131,9 @@ export class VacationTypeComponent {
 
     }
     this.filterForm = this.fb.group({
-      date: [],
-      type: this.fb.group({
+      FreeText: [""],
+      code: [""],
 
-      }),
-      currencyCode: this.fb.group({
-      }),
-      minimum: [null, this.minimumValidator("maxmimum")
-      ],
-      maxmimum: [null, this.maximumValidator("minimum")]
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
@@ -164,6 +161,47 @@ export class VacationTypeComponent {
       }
     })
   }
+  filter() {
+    let filteration = { ...this.filteration }
+    Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
+      if (typeof value  === 'string') {
+        filteration[key] = value.trim();
+      } else {
+        filteration[key] = value;
+
+      } 
+    })
+    this.getVacations(filteration);
+  }
+  exportTableToExcel() {
+    let data = document.getElementById("tableVacationTypeHidden");
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  }
+  exportTableToPDF() {
+    let table: any = document.getElementById("tableVacationTypeHidden");
+    html2canvas(table).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
+      pdf.save('ملف_PDF.pdf');
+    });
+  
+
+  }
+  resetFilteration() {
+    this.filterForm.get("FreeText")?.setValue("");
+    this.filterForm.get("code")?.setValue("");
+
+    this.filteration = {
+      PageSize: 5,
+      PageNumber: 0,
+      PagingEnabled: true
+    };
+    this.getVacations(this.filteration);
+  }
   showActions(data: any) {
     return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 36, actionCode: data.actionCode })
   }
@@ -178,7 +216,7 @@ export class VacationTypeComponent {
               id: vacation.id,
               code: vacation.code,
               name: vacation.name,
-              typeName: vacation.typeName,
+              typeName: vacation.defaultTypeName,
               isActive: vacation.isActive
 
             })

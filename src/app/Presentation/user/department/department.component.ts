@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, LOCALE_ID, inject } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -15,7 +14,8 @@ import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 import * as XLSX from 'xlsx';
-import * as html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 @Component({
   selector: 'app-department',
   templateUrl: './department.component.html',
@@ -168,31 +168,32 @@ export class DepartmentComponent {
 
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableEmployment");
+    let data = document.getElementById("tableEmploymentHidden");
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, 'ExcelSheet.xlsx');
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableEmployment");
-
-    let option = {
-      margin: 0,
-      filename: "output.pdf",
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 8 },
-      jsPDF: { unit: "in", format: 'letter', orientation: 'portrait' }
-    }
-    html2pdf().from(table).set(option).save()
+    let table: any = document.getElementById("tableEmploymentHidden");
+    html2canvas(table).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
+      pdf.save('ملف_PDF.pdf');
+    });
+  
 
   }
   filter() {
     let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
-        if (value) {
-          filteration[key] = value.trim();
-        }
+      if (typeof value  === 'string') {
+        filteration[key] = value.trim();
+      } else {
+        filteration[key] = value;
+
+      }
     })
     this.getDepartment(filteration);
   }

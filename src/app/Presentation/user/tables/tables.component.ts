@@ -1,27 +1,21 @@
-import { ChangeDetectorRef, Component, Inject, LOCALE_ID, inject } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { AssignmentRequestComponent } from 'src/app/shared/components/assignment-request/assignment-request.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { AddShiftComponent } from 'src/app/shared/components/add-shift/add-shift.component';
-import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
-import { EditShiftComponent } from 'src/app/shared/components/edit-shift/edit-shift.component';
 import { DeleteShiftComponent } from 'src/app/shared/components/delete-shift/delete-shift.component';
 import { AddTableComponent } from 'src/app/shared/components/add-table/add-table.component';
-import { EditTableComponent } from 'src/app/shared/components/edit-table/edit-table.component';
 import { SchedulesService } from './services/schedules.service';
-import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { DialogScheduleFileComponent } from 'src/app/shared/components/dialog-schedule-file/dialog-schedule-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 import * as XLSX from 'xlsx';
-import * as html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 @Component({
   selector: 'app-tables',
   templateUrl: './tables.component.html',
@@ -149,30 +143,31 @@ export class TablesComponent {
   filter() {
     let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
-        if (value) {
-          filteration[key] = value.trim();
-        }
+      if (typeof value  === 'string') {
+        filteration[key] = value.trim();
+      } else {
+        filteration[key] = value;
+
+      }
     })
     this.getSchedules(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tables");
+    let data = document.getElementById("tabletablesHidden");
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, 'ExcelSheet.xlsx');
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tables");
-
-    let option = {
-      margin: 0,
-      filename: "output.pdf",
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 8 },
-      jsPDF: { unit: "in", format: 'letter', orientation: 'portrait' }
-    }
-    html2pdf().from(table).set(option).save()
+    let table: any = document.getElementById("tabletablesHidden");
+    html2canvas(table).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
+      pdf.save('ملف_PDF.pdf');
+    });
+  
 
   }
   resetFilteration() {

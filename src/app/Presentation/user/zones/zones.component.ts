@@ -1,23 +1,21 @@
-import { ChangeDetectorRef, Component, Inject, LOCALE_ID, inject } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { EMPTY, Subject, Subscription, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import {  Subscription, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
-import { DialogEmployeeFileComponent } from 'src/app/shared/components/dialog-employee-file/dialog-employee-file.component';
-import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { ZonesService } from './services/zones.service';
 import { AddZoneComponent } from 'src/app/shared/components/add-zone/add-zone.component';
 import { DialogZoneFileComponent } from 'src/app/shared/components/dialog-zone-file/dialog-zone-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 import * as XLSX from 'xlsx';
-import * as html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 @Component({
   selector: 'app-zones',
   templateUrl: './zones.component.html',
@@ -171,23 +169,21 @@ export class ZonesComponent {
 
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableZones");
+    let data = document.getElementById("tableZonesHidden");
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, 'ExcelSheet.xlsx');
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableZones");
-
-    let option = {
-      margin: 0,
-      filename: "output.pdf",
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 8},
-      jsPDF: { unit: "in", format: 'letter', orientation: 'portrait' }
-    }
-    html2pdf().from(table).set(option).save()
+    let table: any = document.getElementById("tableZonesHidden");
+    html2canvas(table).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
+      pdf.save('ملف_PDF.pdf');
+    });
+  
 
   }
   showActions(data: any) {
@@ -215,9 +211,12 @@ export class ZonesComponent {
   filter() {
     let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
-        if (value) {
-          filteration[key] = value.trim();
-        }
+      if (typeof value  === 'string') {
+        filteration[key] = value.trim();
+      } else {
+        filteration[key] = value;
+
+      }
     })
     this.getZones(filteration);
   }

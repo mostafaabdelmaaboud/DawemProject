@@ -191,9 +191,12 @@ export class JustificationsComponent {
   filter() {
     let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
-        if (value) {
-          filteration[key] = value.trim();
-        }
+      if (typeof value  === 'string') {
+        filteration[key] = value.trim();
+      } else {
+        filteration[key] = value;
+
+      }
     })
     this.getJustifications(filteration);
   }

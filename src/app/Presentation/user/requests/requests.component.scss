@@ -8,3 +8,26 @@
   letter-spacing: normal !important;
 
 }
+#tableRequetstsHidden,
+.title-table {
+  letter-spacing: normal !important;
+
+}
+.logoTable {
+  img {
+    width: 180px;
+    height: 50px;
+    object-fit: scale-down
+  }
+}
+.hideTable {
+  overflow: hidden;
+  height: 0;
+  #tableRequetstsHidden {
+    position: relative;
+    left: -100%;
+  }
+}
+:host ::ng-deep  #tableRequetstsHidden .p-datatable .p-datatable-header {
+  background-color: white !important;
+}
