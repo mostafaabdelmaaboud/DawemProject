@@ -151,7 +151,10 @@ export class EmployeesComponent {
     this.filterForm = this.fb.group({
       FreeText: [""],
       code: [""],
-
+      DirectManagerId:[""],
+      JobTitleId:[""],
+      DepartmentId:[""],
+      ScheduleId:[""]
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [

@@ -20,6 +20,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthGuard } from './guard/auth.guard';
 import { NotPermissionComponent } from '../layout/not-permission/not-permission.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -30,7 +31,7 @@ import { NotPermissionComponent } from '../layout/not-permission/not-permission.
   imports: [
     CommonModule,
     RouterModule,
-
+    FormsModule,
     HttpClientModule,
     MatToolbarModule,
     MatIconModule,

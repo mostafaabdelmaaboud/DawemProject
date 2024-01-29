@@ -108,6 +108,8 @@ export class DashboardComponent {
     PageNumber: 0,
     PagingEnabled: true
   };
+  filterationStatusOfOrders:any = {
+  }
   ngOnInit() {
     this.RowsPerPage = [
       { name: '5', code: 5 },
@@ -272,8 +274,8 @@ export class DashboardComponent {
     ];
     this.statusOfOrders = [
       { name: 'اليوم', code: 'today' },
-      { name: 'الاسبوع', code: 'week' },
-      { name: 'الشهر', code: 'month' }
+      { name: 'الشهر', code: 'month' },
+      { name: 'السنة', code: 'year' }
     ];
     this.items = [
       {
@@ -310,18 +312,33 @@ export class DashboardComponent {
       }
     ];
     this.getInformation();
-    this.getRequestsStatus();
+    this.getRequestsStatus(this.filterationStatusOfOrders);
     this.getEmployeesStatus();
     this.getEmployeesAttendancesStatus(this.filteration);
     this.getDepartmentsInformations(this.filteration);
     this.getBestEmployees(this.filterationBestEmloyees);
   }
+
+  onChangeStatusOfOrders(data:any) {
+    switch (data.value.code) {
+      case 'today':
+        this.filterationStatusOfOrders.Type = 0;
+      this.getRequestsStatus(this.filterationStatusOfOrders);
+      break;
+      case 'month':
+        this.filterationStatusOfOrders.Type = 1;
+      this.getRequestsStatus(this.filterationStatusOfOrders);
+      break;
+      case 'year':
+        this.filterationStatusOfOrders.Type = 2;
+        this.getRequestsStatus(this.filterationStatusOfOrders);
+      break;
+    }
+
+  }
   numberOfRowsPerPage(data: any) {
-
-
     this.filteration = { ...this.filteration, PageSize: data.value.code };
-
-    // this.getEmployees(this.filteration)
+    this.getEmployeesAttendancesStatus(this.filteration);
   }
   onPageChange(event: any) {
     this.filteration = { ...this.filteration, PageNumber: event.page };
@@ -336,9 +353,10 @@ export class DashboardComponent {
   mathRound(data: any) {
     return Math.ceil(data)
   }
-  getRequestsStatus() {
+  getRequestsStatus(filteration:any) {
     this.spinnerChart = true;
-    this.dashboardService.getRequestsStatus().subscribe({
+    
+    this.dashboardService.getRequestsStatus(filteration).subscribe({
       next: data => {
 
         this.chartOptions = {

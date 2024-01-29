@@ -917,11 +917,63 @@
               src="../assets/images/Frame 584.png" alt=""> -->
             <button class="toggle-asidebar" mat-button (click)="opened=!opened"><mat-icon>menu</mat-icon></button>
           </div>
-          <div style="color: #6C757D;" class="mt-0 d-flex align-items-center">
+          <div style="color: #6C757D;" class="mt-0 content-search-component position-relative d-flex align-items-center">
             <span class="p-input-icon-right inputSearch-header">
               <i class="pi pi-search"></i>
-              <input type="text" pInputText placeholder="ابحث في داوم" />
+              <input type="text" [(ngModel)]="searchInput" (input)="search()" pInputText placeholder="ابحث في داوم" />
             </span>
+            <ng-container *ngIf="showListSearch">
+              <div class="list-components"  (click)="$event.stopPropagation()">
+                <ul nz-menu nzMode="inline">
+                  <ng-container *ngIf="!isAdmin">
+                    <ng-container *ngFor="let componrnt of listComponents">
+                      <li *ngIf="componrnt.showComponent" [routerLink]="componrnt.routerLink" (click)="showListSearch = false;searchInput = ''">
+                        <span class="text-sidebar">{{componrnt.name}}</span>
+                      </li>
+                    </ng-container>
+                  </ng-container>
+                  <ng-container *ngIf="isAdmin">
+                    <ng-container *ngFor="let componrnt of listComponents">
+                      <li [routerLink]="componrnt.routerLink" (click)="showListSearch = false; searchInput = ''">
+                        <span class="text-sidebar">{{componrnt.name}}</span>
+                      </li>
+                    </ng-container>
+                  </ng-container>
+                  <li nz-menu-item class="users-sidebar">
+      
+                    <div class="users d-flex align-items-center">
+                      <ul class="list-unstyled ul-users p-0 m-0 d-flex">
+      
+                        <li class="user">
+                          <img src="assets/img/noti1.png" alt="noti1">
+                        </li>
+                        <li class="user">
+                          <img src="assets/img/noti2.png" alt="noti2">
+                        </li>
+                        <li class="user">
+                          <img src="assets/img/noti3.png" alt="noti3">
+                        </li>
+                        <li class="user">
+                          <img src="assets/img/noti4.png" alt="noti4">
+                        </li>
+                        <li class="user">
+                          <img src="assets/img/noti5.png" alt="noti5">
+                        </li>
+                        <li class="user">
+                          <img src="assets/img/noti6.png" alt="noti6">
+                        </li>
+                        <li class="add">
+                          +
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="hideListComponents" (click)="showListSearch = false;"></div>
+
+            </ng-container>
+            
           </div>
         </div>
         <div class="section-left-sidebar d-flex">
@@ -965,12 +1017,12 @@
                 ngbDropdownToggle>
                 <div class="content-profile d-flex align-items-center">
                   <div class="nameShow">
-                    <span class="d-block">فيصل حمدان</span>
-                    <span class="d-block">صفحة المسئول</span>
+                    <span class="d-block">{{profile?.name ? profile?.name : 'لا يوجد'}}</span>
+                    <span class="d-block">{{profile?.jobTitleName ? profile?.jobTitleName : 'لا يوجد'}}</span>
                     <!-- {{usersMe?.firstName | slice:0:1}}.{{usersMe?.familyName}} -->
                   </div>
                   <ng-container>
-                    <img style="width: 2em;height: 2em;" src="assets/img/profileImg.png">
+                    <img style="width: 2em;height: 2em;" [src]="profile?.profileImagePath ? profile?.profileImagePath :  'assets/img/l60Hf.png'">
 
                   </ng-container>
                 </div>

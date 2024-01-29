@@ -15,11 +15,21 @@ export class DashboardService {
   getEmployeesAttendancesInformations() {
     return this.http.get<any>(`${environment.baseUrl}Dashboard/GetEmployeesAttendancesInformations`).pipe(map(data => data.data))
   }
-  getRequestsStatus() {
-    return this.http.get<any>(`${environment.baseUrl}Dashboard/GetRequestsStatus`).pipe(map(data => data.data))
+  getRequestsStatus(filter: any) {
+    let queryParams = new HttpParams();
+    if (filter) {
+      Object.entries(filter).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}Dashboard/GetRequestsStatus`, { params: queryParams }).pipe(map(data => data.data))
   }
   getEmployeesStatus() {
     return this.http.get<any>(`${environment.baseUrl}Dashboard/GetEmployeesStatus`).pipe(map(data => data.data))
+  }
+  getInformationProfile() {
+    return this.http.get<any>(`${environment.baseUrl}EmployeeDashboard/GetHeaderInformations`).pipe(map(data => data.data))
+
   }
   getEmployeesAttendancesStatus(filter: any) {
     let queryParams = new HttpParams();
