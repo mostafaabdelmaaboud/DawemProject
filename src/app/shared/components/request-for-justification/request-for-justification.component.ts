@@ -93,9 +93,7 @@ export class RequestForJustificationComponent {
     radioButtons: ["false"],
     ForEmployee: [false],
     JustificationTypeId: ['', Validators.required],
-    dateTask: [null, Validators.required],
-    Notes: [null, Validators.required],
-
+    dateTask: [null, Validators.required]
   });
   AttachmentsFiles: any[] = [];
   requiredCommercialRegFiles = false;
@@ -217,7 +215,7 @@ export class RequestForJustificationComponent {
       }
       if (!this.editjustification) {
         this.loading = false;
-
+        this.addBranchGroupForm.addControl("Notes", this.fb.control(null, Validators.required))
       }
 
     })
@@ -322,7 +320,6 @@ export class RequestForJustificationComponent {
     // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
   }
   request() {
-
     if (this.addBranchGroupForm.value.dateTask != null) {
       if (this.addBranchGroupForm.value.dateTask[1] === null) {
         this.dateTaskMultiple = true;

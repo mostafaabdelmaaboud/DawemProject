@@ -225,7 +225,7 @@
                     <div class="header-section-three d-flex align-items-center">
                       <span class="title-section-three ml-30">أفضل الموظفين بالشركة</span>
                       <div class="field-action custom-dropdown-section">
-                        <p-dropdown [options]="cities" [(ngModel)]="selectedCity" placeholder="الأسبوع"
+                        <p-dropdown [options]="bestEmployeesList" (onChange)="onChangeBestEmployees($event)" [(ngModel)]="selectedCity" placeholder="الأسبوع"
                           optionLabel="name"></p-dropdown>
 
                       </div>
@@ -302,7 +302,7 @@
                       employeesStatus?.availableCount : 0}}</span>
                     <span class="icon-card-dashboard">
                       <div class="field-action field-action-employee">
-                        <button type="button" class="btn btn-outline-secondary button-border-67748E">عرض الكل</button>
+                        <button type="button" class="btn btn-outline-secondary button-border-67748E" (click)="navigateEmployeesStatus('Available', employeesStatus?.availableCount)">عرض الكل</button>
                       </div>
                     </span>
                   </div>
@@ -318,7 +318,7 @@
                       employeesStatus?.inTaskOrAssignmentCount : 0}}</span>
                     <span class="icon-card-dashboard">
                       <div class="field-action field-action-employee">
-                        <button type="button" class="btn btn-outline-secondary button-border-67748E">عرض الكل</button>
+                        <button type="button" class="btn btn-outline-secondary button-border-67748E" (click)="navigateEmployeesStatus('InTaskOrAssignment', employeesStatus?.inTaskOrAssignmentCount)">عرض الكل</button>
                       </div>
                     </span>
                   </div>
@@ -334,7 +334,7 @@
                       employeesStatus?.inVacationOrOutsideCount : 0}}</span>
                     <span class="icon-card-dashboard">
                       <div class="field-action field-action-employee">
-                        <button type="button" class="btn btn-outline-secondary button-border-67748E">عرض الكل</button>
+                        <button type="button" class="btn btn-outline-secondary button-border-67748E" (click)="navigateEmployeesStatus('InVacationOrOutside', employeesStatus?.inVacationOrOutsideCount)">عرض الكل</button>
                       </div>
                     </span>
                   </div>
@@ -350,7 +350,7 @@
           <div class="header-section-three d-flex align-items-center justify-content-between">
             <span class="title-section-three">الأقسام وتكوين الفرق</span>
             <div class="field-action">
-              <button type="button" class="btn btn-outline-secondary button-border-67748E">عرض الكل</button>
+              <button type="button" class="btn btn-outline-secondary button-border-67748E" routerLink="/user/sections">عرض الكل</button>
             </div>
           </div>
           <div class="body-DepartmentsAndTeamFormation">
@@ -448,7 +448,7 @@
                       </div>
                     </div>
                     <div class="left-StaffAttendanceStatus">
-                      <button type="button" class="btn btn-primary">إضافة موظف</button>
+                      <button type="button" class="btn btn-primary" routerLink="/user/employees">إضافة موظف</button>
                     </div>
                   </div>
                 </li>

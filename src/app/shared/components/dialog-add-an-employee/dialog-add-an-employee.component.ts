@@ -122,16 +122,16 @@ export class DialogAddAnEmployeeComponent {
     ScheduleId: ['', Validators.required],
     isActive: [false],
     name: ['', Validators.required],
-    employeeNumber: ['', Validators.required],
+    employeeNumber: ['', [Validators.required, Validators.min(0)]],
     JobTitleId: ['', Validators.required],
     DepartmentId: ['', Validators.required],
     JoiningDate: ['', Validators.required],
     directManager: ['', Validators.required],
-    mobileNumber: ['', Validators.required],
+    mobileNumber: ['', [Validators.required, Validators.pattern(/^(\+\d{1,3}[- ]?)?\d{8,}$/)]],
     email: ['', [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
     address: ['', Validators.required],
     fieldDisabled: [''],
-    AnnualVacationBalance: ['', Validators.required]
+    AnnualVacationBalance: ['', [Validators.required, Validators.min(0)]]
   });
   uploadedFiles: any[] = [];
   requiredCommercialRegFiles = false;
@@ -393,7 +393,10 @@ export class DialogAddAnEmployeeComponent {
       this.submitClicked.emit({ ...this.addBranchGroupForm.value, files: this.uploadedFiles });
       // this.dialogRef.close(true);
     } else {
+      this.getControl("name")?.markAsDirty();
+      this.getControl("employeeNumber")?.markAsDirty();
 
+      
       this.getControl("fieldFirst")?.markAsDirty();
       this.getControl("JobTitleId")?.markAsDirty();
       this.getControl("DepartmentId")?.markAsDirty();

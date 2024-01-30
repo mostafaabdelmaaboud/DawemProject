@@ -16,7 +16,8 @@ import { RequestForJustificationComponent } from 'src/app/shared/components/requ
 import * as moment from 'moment';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 import * as XLSX from 'xlsx';
-import * as html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 // import 'jspdf-utf8'
 @Component({
@@ -68,6 +69,7 @@ export class JustificationsComponent {
   ];
   justifications: any = [];
   private justificationsService = inject(JustificationsService);
+  defaultRowPerPage = { name: '5', code: 5 };
 
   isLoading = true;
 
@@ -153,11 +155,9 @@ export class JustificationsComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '1', code: '1' },
-      { name: '2', code: '2' },
-      { name: '3', code: '3' },
-      { name: '4', code: '4' },
-      { name: '5', code: '5' }
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
+
     ];
 
     this.getInformation();
@@ -169,23 +169,21 @@ export class JustificationsComponent {
 
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableJustification");
+    let data = document.getElementById("tableJustificationHidden");
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, 'ExcelSheet.xlsx');
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableJustification");
-
-    let option = {
-      margin: 0,
-      filename: "output.pdf",
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 8 },
-      jsPDF: { unit: "in", format: 'letter', orientation: 'portrait' }
-    }
-    html2pdf().from(table).set(option).save()
+    let table: any = document.getElementById("tableJustificationHidden");
+    html2canvas(table).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
+      pdf.save('ملف_PDF.pdf');
+    });
+  
 
   }
   filter() {

@@ -73,6 +73,7 @@ export class RequestsComponent {
   requests: any = [];
 
   isLoading = true;
+  defaultRowPerPage = { name: '5', code: 5 };
 
 
   filteration: any = {
@@ -160,10 +161,8 @@ export class RequestsComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
-
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
     ];
 
     this.getInformation();

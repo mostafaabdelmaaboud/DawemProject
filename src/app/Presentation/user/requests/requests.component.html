@@ -348,6 +348,12 @@
     <ng-template pTemplate="header">
       <tr>
         <ng-container *ngFor="let column of columns">
+          <ng-container *ngIf="column.field === 'orderNumber'">
+            <th class="w-14" pSortableColumn="orderNumber">
+
+              {{ column.name }} <p-sortIcon field="orderNumber"></p-sortIcon>
+            </th>
+          </ng-container>
           <ng-container *ngIf="column.field === 'employeeName'">
             <th pSortableColumn="employeeName.name">
 
@@ -360,7 +366,7 @@
               {{ column.name }}
             </th>
           </ng-container>
-          <ng-container *ngIf="column.field != 'employeeName' && column.field != 'actions'">
+          <ng-container *ngIf="column.field != 'employeeName' && column.field != 'orderNumber'  && column.field != 'actions'">
             <th [pSortableColumn]="column.field">
 
               {{ column.name }} <p-sortIcon [field]="column.field"></p-sortIcon>
@@ -484,7 +490,7 @@
           <div class="paginate d-flex align-items-center justify-content-end">
             <div class="NumberOfRowsPerPage">
               <span>عدد الصفوف بالصفحة:</span>
-              <p-dropdown [options]="RowsPerPage" appendTo="body" (onChange)="numberOfRowsPerPage($event)"
+              <p-dropdown [options]="RowsPerPage" [(ngModel)]="defaultRowPerPage" appendTo="body" (onChange)="numberOfRowsPerPage($event)"
                 optionLabel="name"></p-dropdown>
 
             </div>

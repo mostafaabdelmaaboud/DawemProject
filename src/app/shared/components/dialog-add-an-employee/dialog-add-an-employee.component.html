@@ -63,6 +63,10 @@
             *ngIf="getControl('employeeNumber')?.hasError('required') && getControl('employeeNumber')?.dirty">
             {{data!['validationtitleJobNumber']|translate}}
           </div>
+          <div class="alert alert-danger"
+          *ngIf="getControl('employeeNumber')?.hasError('min') && getControl('employeeNumber')?.dirty">
+          أقل رقم 0
+        </div>
         </div>
         <!--End Custom Validators-->
       </div>
@@ -164,6 +168,10 @@
             *ngIf="getControl('mobileNumber')?.hasError('required') && getControl('mobileNumber')?.dirty">
             {{data!['validationtitleMobileNumber']|translate}}
           </div>
+          <div class="alert alert-danger"
+          *ngIf="getControl('mobileNumber')?.hasError('pattern') && getControl('mobileNumber')?.dirty">
+          رقم الهاتف غير صحيح
+        </div>
         </div>
         <!--End Custom Validators-->
       </div>
@@ -334,6 +342,10 @@
             *ngIf="getControl('AnnualVacationBalance')?.hasError('required') && getControl('AnnualVacationBalance')?.dirty">
             {{data!['validationtitleNotes']|translate}}
           </div>
+          <div class="alert alert-danger"
+          *ngIf="getControl('AnnualVacationBalance')?.hasError('min') && getControl('AnnualVacationBalance')?.dirty">
+          أقل رقم 0
+        </div>
         </div>
         <!--End Custom Validators-->
       </div>

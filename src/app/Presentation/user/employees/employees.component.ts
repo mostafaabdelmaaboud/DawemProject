@@ -17,6 +17,7 @@ import { PermissionsUserService } from 'src/app/shared/services/permissions-user
 import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html',
@@ -29,6 +30,8 @@ export class EmployeesComponent {
   itemsPerPage = 5;
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
+  private route = inject(ActivatedRoute);
+
   list: any[] = [
     { name: "نسيان تسجيل حضور", key: "1" },
     { name: "نسيان تسجيل انصراف", key: "2" },
@@ -36,15 +39,16 @@ export class EmployeesComponent {
     { name: "تسجيل انصراف خاطئ", key: "4" }
 
   ];
+
   listDepratment: any[] = [];
   listSchedules: any[] = [];
   listJobTitle: any[] = [];
 
-
+  defaultRowPerPage = { name: '5', code: 5 };
 
   columns: any[] = [
     {
-      name: "رقم الطلب",
+      name: "رقم الموظف",
       field: "orderNumber",
     },
     {
@@ -158,9 +162,8 @@ export class EmployeesComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
 
     ];
 
@@ -171,10 +174,18 @@ export class EmployeesComponent {
     })
     this.getInformation();
 
-    this.getEmployees(this.filteration);
     this.getListDepartment();
     this.getListSchedules();
     this.getListJobTitle();
+    if (this.route.snapshot.queryParamMap.get("Status")) {
+      let status = this.route.snapshot.queryParamMap.get("Status") as string;
+      this.filteration.Status = status;
+      this.getEmployees(this.filteration);
+
+    } else {
+      this.getEmployees(this.filteration);
+
+    }
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
@@ -265,6 +276,7 @@ export class EmployeesComponent {
     this.employeesService.listEmployees(filteration).subscribe(data => {
 
       data.data.forEach((employee: any) => {
+
         this.employees.push({
           id: employee.id,
           orderNumber: employee.code,
@@ -276,7 +288,7 @@ export class EmployeesComponent {
           },
           section: employee?.dapartmentName ? employee?.dapartmentName : "لا يوجد",
           joiningDate: employee?.joiningDate ? moment(employee.joiningDate).format("DD/MM/YYYY") : "لا يوجد",
-          vacationsBalance: employee?.annualVacationBalance ? employee.annualVacationBalance : "لا يوجد",
+          vacationsBalance: employee?.annualVacationBalance ? employee.annualVacationBalance : "0",
           attendanceForTheMonth: "لا يوجد"
         })
       });
@@ -442,7 +454,6 @@ export class EmployeesComponent {
 
           },
           error: err => {
-            dialogRefAddCurrency.close();
 
             dialogRefAddCurrency.componentInstance.submitted = true;
 
@@ -469,29 +480,21 @@ export class EmployeesComponent {
     })
   }
   getListSchedules() {
-
     this.employeesService.getScheduleForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe(data => {
-
-
       data?.data?.forEach((jobTitle: any) => {
         this.listSchedules.push({ name: jobTitle.name, key: jobTitle.id })
       });
     })
   }
   getListJobTitle() {
-
     this.employeesService.getJobTitles({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe(data => {
-
-
       data?.data?.forEach((jobTitle: any) => {
         this.listJobTitle.push({ name: jobTitle.name, key: jobTitle.id })
       });
     })
   }
   lastSearchQuery = "";
-
   searchDropdown(data: any, type: string) {
-
     switch (type) {
       case 'JobTitleId':
         if (data || data === "") {
@@ -506,7 +509,6 @@ export class EmployeesComponent {
                 });
               });
           }
-
         }
         break;
       case 'DirectManagerId':
@@ -523,16 +525,11 @@ export class EmployeesComponent {
                 });
 
               });
-
           }
-
-
         }
-
         break;
       case 'DepartmentId':
         if (data || data === "") {
-
           if (data !== this.lastSearchQuery) {
             this.lastSearchQuery = data;
             this.employeesService.getDepartmentForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
@@ -542,11 +539,8 @@ export class EmployeesComponent {
                 res?.data?.forEach((jobTitle: any) => {
                   this.listDepratment.push({ name: jobTitle.name, key: jobTitle.id })
                 });
-
               });
-
           }
-
         }
         break;
       case 'ScheduleId':
@@ -561,12 +555,9 @@ export class EmployeesComponent {
                   this.listSchedules.push({ name: jobTitle.name, key: jobTitle.id })
                 });
               });
-
           }
         }
-
         break;
-
       default:
         break;
     }

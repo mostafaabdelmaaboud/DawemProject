@@ -10,6 +10,7 @@ import {
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DashboardService } from './services/dashboard.service';
 import * as moment from 'moment';
+import { Router } from '@angular/router';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -26,6 +27,7 @@ export class DashboardComponent {
   @ViewChild("chart") chart!: ChartComponent;
   @ViewChild("chartCandlestick") chartCandl!: ChartComponent;
   private dashboardService = inject(DashboardService);
+  router = inject(Router)
   public chartOptions!: any;
   public chartCandlestick!: any;
   mobileQuery: MediaQueryList;
@@ -37,6 +39,8 @@ export class DashboardComponent {
   totalItemsBestEmployees: number = 0;
   items!: MenuItem[];
   cities!: any[];
+  bestEmployeesList!: any[];
+
   statusOfOrders!: any[];
   selectedCity!: any;
 
@@ -272,6 +276,12 @@ export class DashboardComponent {
       { name: 'Istanbul', code: 'IST' },
       { name: 'Paris', code: 'PRS' }
     ];
+    
+    this.bestEmployeesList = [
+      { name: 'اليوم', code: 'today' },
+      { name: 'الشهر', code: 'month' },
+      { name: 'السنة', code: 'year' }
+    ];
     this.statusOfOrders = [
       { name: 'اليوم', code: 'today' },
       { name: 'الشهر', code: 'month' },
@@ -332,6 +342,23 @@ export class DashboardComponent {
       case 'year':
         this.filterationStatusOfOrders.Type = 2;
         this.getRequestsStatus(this.filterationStatusOfOrders);
+      break;
+    }
+
+  }
+  onChangeBestEmployees(data:any) {
+    switch (data.value.code) {
+      case 'today':
+        this.filterationBestEmloyees.Type = 0;
+      this.getBestEmployees(this.filterationBestEmloyees);
+      break;
+      case 'month':
+        this.filterationBestEmloyees.Type = 1;
+      this.getBestEmployees(this.filterationBestEmloyees);
+      break;
+      case 'year':
+        this.filterationBestEmloyees.Type = 2;
+        this.getBestEmployees(this.filterationBestEmloyees);
       break;
     }
 
@@ -497,7 +524,12 @@ export class DashboardComponent {
       }
     })
   }
+  navigateEmployeesStatus(status:any, value:any) {
+    if(value > 0) {
+      this.router.navigate(['/user/employees'], {queryParams:{Status:status}})
 
+    }
+  }
   getEmployeesStatus() {
     this.loadingEmployeesStatus = true;
     this.dashboardService.getEmployeesStatus().subscribe({
