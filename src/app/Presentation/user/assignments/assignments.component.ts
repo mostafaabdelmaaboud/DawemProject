@@ -103,6 +103,8 @@ export class AssignmentsComponent {
   opened = false;
   cards!: any;
   spinnerCards = false;
+  defaultRowPerPage = { name: '5', code: 5 };
+
   private _mobileQueryListener: () => void;
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
@@ -149,10 +151,8 @@ export class AssignmentsComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
-
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
     ];
 
     this.getInformation();
@@ -169,9 +169,14 @@ export class AssignmentsComponent {
     let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
       if (typeof value  === 'string') {
-        filteration[key] = value.trim();
+        if(value != "") {
+          filteration[key] = value.trim();
+        }
       } else {
-        filteration[key] = value;
+        if(value >=0) {
+          filteration[key] = value;
+
+        }
 
       }
     })
@@ -231,7 +236,7 @@ export class AssignmentsComponent {
         this.assignments.push({
           id: assignment.id,
           status: assignment.status,
-          orderNumber: assignment.employee.code,
+          orderNumber: assignment.code,
           employeeName: {
             name: assignment.employee.name,
             alt: assignment.employee.name,

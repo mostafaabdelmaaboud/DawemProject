@@ -316,6 +316,11 @@
               {{ column.name }} <p-sortIcon [field]="column.field"></p-sortIcon>
             </th>
           </ng-container>
+          <ng-container *ngIf="column.field === 'joiningDate'">
+            <th class="w-14" [pSortableColumn]="column.field">
+              {{ column.name }} 
+            </th>
+          </ng-container>
 
           <ng-container *ngIf="column.field === 'section'">
             <th class="w-15" [pSortableColumn]="column.field">
@@ -328,7 +333,7 @@
             </th>
           </ng-container>
           <ng-container
-            *ngIf="column.field != 'employeeName' && column.field != 'actions' && column.field != 'orderNumber' && column.field != 'section' && column.field != 'vacationsBalance'">
+            *ngIf="column.field != 'employeeName' && column.field != 'actions' && column.field != 'joiningDate' && column.field != 'orderNumber' && column.field != 'section' && column.field != 'vacationsBalance'">
             <th [pSortableColumn]="column.field">
               {{ column.name }} <p-sortIcon [field]="column.field"></p-sortIcon>
             </th>
@@ -476,6 +481,12 @@
               {{ column.name }} 
             </th>
           </ng-container>
+          <ng-container *ngIf="column.field === 'joiningDate'">
+            <th class="w-14" [pSortableColumn]="column.field">
+              {{ column.name }} 
+            </th>
+          </ng-container>
+          
           <ng-container *ngIf="column.field === 'vacationsBalance'">
             <th class="w-15" [pSortableColumn]="column.field">
               {{ column.name }}
@@ -489,7 +500,7 @@
           </ng-container>
   
           <ng-container
-            *ngIf="column.field != 'employeeName' && column.field != 'actions' && column.field != 'orderNumber' && column.field != 'section' && column.field != 'vacationsBalance'">
+            *ngIf="column.field != 'employeeName' && column.field != 'actions' && column.field != 'joiningDate' && column.field != 'orderNumber' && column.field != 'section' && column.field != 'vacationsBalance'">
             <th [pSortableColumn]="column.field">
               {{ column.name }} 
             </th>

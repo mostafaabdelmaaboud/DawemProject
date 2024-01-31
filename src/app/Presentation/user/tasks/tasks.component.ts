@@ -44,8 +44,12 @@ export class TasksComponent {
       field: "task"
     },
     {
-      name: "التاريخ",
-      field: "date"
+      name: "تاريخ البداية",
+      field: "dateFrom"
+    },
+    {
+      name: "تاريخ النهاية",
+      field: "dateTo"
     },
     {
       name: "حاله الطلب",
@@ -94,6 +98,8 @@ export class TasksComponent {
   mobileQuery: MediaQueryList;
   opened = false;
   cards!: any;
+  defaultRowPerPage = { name: '5', code: 5 };
+
   spinnerCards = false;
   private _mobileQueryListener: () => void;
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
@@ -141,9 +147,8 @@ export class TasksComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
 
     ];
     this.getInformation();
@@ -170,10 +175,16 @@ export class TasksComponent {
   filter() {
     let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
+      
       if (typeof value  === 'string') {
-        filteration[key] = value.trim();
+        if(value != "") {
+          filteration[key] = value.trim();
+        }
       } else {
-        filteration[key] = value;
+        if(value >=0) {
+          filteration[key] = value;
+
+        }
 
       }
     })
@@ -227,7 +238,9 @@ export class TasksComponent {
             img: employee.employee.profileImagePath ? employee.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
           },
           task: employee.taskTypeName,
-          date: moment(new Date(employee.dateFrom)).format("MM/DD/YYYY"),
+          dateFrom: moment(new Date(employee.dateFrom)).format("MM/DD/YYYY"),
+          dateTo: moment(new Date(employee.dateTo)).format("MM/DD/YYYY"),
+
           statusName: employee.statusName ? employee.statusName : "لا يوجد"
         })
       });

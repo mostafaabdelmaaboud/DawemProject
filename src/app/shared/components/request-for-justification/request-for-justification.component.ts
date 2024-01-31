@@ -325,12 +325,8 @@ export class RequestForJustificationComponent {
         this.dateTaskMultiple = true;
       } else {
         this.dateTaskMultiple = false;
-
       }
     }
-
-
-
     if (this.addBranchGroupForm.valid && !this.dateTaskMultiple) {
       this.submitted = false;
       this.submitClicked.emit({ ...this.addBranchGroupForm.value, files: this.AttachmentsFiles });
@@ -338,12 +334,8 @@ export class RequestForJustificationComponent {
     } else {
       this.getControl("JustificationTypeId")?.markAsDirty();
       this.getControl("dateTask")?.markAsDirty();
-
       this.getControl("Notes")?.markAsDirty();
-
-
     }
-
   }
   close(): void {
     this.dialogRef.close(false);

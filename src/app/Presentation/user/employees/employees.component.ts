@@ -68,10 +68,6 @@ export class EmployeesComponent {
       field: "vacationsBalance"
     },
     {
-      name: "الحضور للشهر",
-      field: "attendanceForTheMonth"
-    },
-    {
       name: "الإجراء",
       field: "actions"
     }
@@ -251,10 +247,15 @@ export class EmployeesComponent {
         }
       } else {
         if (typeof value  === 'string') {
-          filteration[key] = value.trim();
+          if(value != "") {
+            filteration[key] = value.trim();
+          }
         } else {
-          filteration[key] = value;
-
+          if(value >=0) {
+            filteration[key] = value;
+  
+          }
+  
         }
       }
 
@@ -288,8 +289,7 @@ export class EmployeesComponent {
           },
           section: employee?.dapartmentName ? employee?.dapartmentName : "لا يوجد",
           joiningDate: employee?.joiningDate ? moment(employee.joiningDate).format("DD/MM/YYYY") : "لا يوجد",
-          vacationsBalance: employee?.annualVacationBalance ? employee.annualVacationBalance : "0",
-          attendanceForTheMonth: "لا يوجد"
+          vacationsBalance: employee?.annualVacationBalance ? employee.annualVacationBalance : "0"
         })
       });
       this.totalItems = data.totalCount

@@ -143,12 +143,17 @@ export class TaskTypeComponent {
   filter() {
     let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
-        if (typeof value  === 'string') {
+      if (typeof value  === 'string') {
+        if(value != "") {
           filteration[key] = value.trim();
-        } else {
+        }
+      } else {
+        if(value >=0) {
           filteration[key] = value;
 
         }
+
+      }
     })
     this.getTasks(filteration);
   }

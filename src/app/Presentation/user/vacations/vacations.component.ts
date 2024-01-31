@@ -56,8 +56,8 @@ export class VacationsComponent {
       field: "reason"
     },
     {
-      name: "رصيد الاجازات",
-      field: "vacationsBalance"
+      name: "الرصيد بعد الطلب",
+      field: "balanceAfterRequest"
     },
     {
       name: "الإجراء",
@@ -104,6 +104,8 @@ export class VacationsComponent {
     { name: "تسجيل انصراف خاطئ", key: "4" }
 
   ];
+  defaultRowPerPage = { name: '5', code: 5 };
+
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService, private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
@@ -159,10 +161,8 @@ export class VacationsComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
-
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
     ];
     this.getInformation();
     this.getVacations(this.filteration);
@@ -206,9 +206,12 @@ export class VacationsComponent {
                 img: vacation.employee?.profileImagePath ? vacation.employee?.profileImagePath : "../../../../assets/img/5034901-200.png"
               },
               kindOfHoliday: vacation.vacationTypeName,
+
+              
               beginning: moment(new Date(vacation.dateFrom)).format("MM/DD/YYYY"),
               final: moment(new Date(vacation.dateTo)).format("MM/DD/YYYY"),
-              vacationsBalance: 9,
+              balanceAfterRequest: vacation.balanceAfterRequest,
+
               reason: vacation.statusName
 
             })
@@ -311,9 +314,14 @@ export class VacationsComponent {
     let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
       if (typeof value  === 'string') {
-        filteration[key] = value.trim();
+        if(value != "") {
+          filteration[key] = value.trim();
+        }
       } else {
-        filteration[key] = value;
+        if(value >=0) {
+          filteration[key] = value;
+
+        }
 
       }
     })
@@ -432,7 +440,7 @@ export class VacationsComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestVacationComponent, {
       width: "50vw",
       data: {
-        title: "طلب اجازة",
+        title: "تعديل اجازة",
         setAsNecessary: "تعيين كضرورية",
         titleVacationTypeId: "نوع الاجازة <span class='color-red'>*</span>",
         placeholderVacationTypeId: " برجاء اختيار نوع الاجازة",
@@ -458,7 +466,7 @@ export class VacationsComponent {
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData = new FormData();
       if (result.ForEmployee) {
-        formData.append("UpdateRequestTaskModelString", JSON.stringify({
+        formData.append("UpdateRequestVacationModelString", JSON.stringify({
           id: data.id,
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
@@ -469,12 +477,12 @@ export class VacationsComponent {
         }));
 
       } else {
-        formData.append("UpdateRequestTaskModelString", JSON.stringify({
+        formData.append("UpdateRequestVacationModelString", JSON.stringify({
           id: data.id,
 
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
-          TaskTypeId: result.TaskTypeId.key,
+          VacationTypeId: result.VacationTypeId.key,
           DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
           DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY")
         }));

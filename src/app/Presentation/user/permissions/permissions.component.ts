@@ -44,6 +44,10 @@ export class PermissionsComponent {
       field: "typeOfPermission"
     },
     {
+      name: "حالة الطلب",
+      field: "statusName"
+    },
+    {
       name: "البداية",
       field: "dateFrom"
     },
@@ -177,9 +181,14 @@ export class PermissionsComponent {
     let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
       if (typeof value  === 'string') {
-        filteration[key] = value.trim();
+        if(value != "") {
+          filteration[key] = value.trim();
+        }
       } else {
-        filteration[key] = value;
+        if(value >=0) {
+          filteration[key] = value;
+
+        }
 
       }
     })
@@ -228,6 +237,9 @@ export class PermissionsComponent {
             alt: permission.employee.name,
             img: permission.employee.profileImagePath ? permission.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
           },
+          
+          statusName: permission.statusName,
+
           typeOfPermission: permission.permissionTypeName,
           dateFrom: moment(new Date(permission.dateFrom)).format("MM/DD/YYYY"),
           dateTo: moment(new Date(permission.dateTo)).format("MM/DD/YYYY"),
@@ -293,13 +305,13 @@ export class PermissionsComponent {
         titlePermissionTypeId: "نوع الاستئذان <span class='color-red'>*</span>",
         placeholderPermissionTypeId: " برجاء اختيار نوع الاستئذان",
         PermissionTypeIdValidation: "نوع الاستئذان مطلوب",
-        titleCalendar: "تاريخ الاجازة <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ الاجازة",
+        titleCalendar: "تاريخ الأستئذان <span class='color-red'>*</span>",
+        placeholderCalendar: "تاريخ الأستئذان",
         titleNotes: "الملاحظات <span class='color-red'>*</span>",
         placeholdeNotes: "الملاحظات",
         NotesValidation: "الملاحظات مطلوب",
 
-        dateTaskValidation: "تاريخ الاجازة مطلوب",
+        dateTaskValidation: "تاريخ الأستئذان مطلوب",
         labelRadioButton: "صاحب الطلب",
         firstRadio: "لنفسي",
         secondRadio: "لموظف",
@@ -395,18 +407,18 @@ export class PermissionsComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestForPermissionComponent, {
       width: "50vw",
       data: {
-        title: "طلب استئذان",
+        title: "تعديل استئذان",
         setAsNecessary: "تعيين كضرورية",
         titlePermissionTypeId: "نوع الاستئذان <span class='color-red'>*</span>",
         placeholderPermissionTypeId: " برجاء اختيار نوع الاستئذان",
         PermissionTypeIdValidation: "نوع الاستئذان مطلوب",
-        titleCalendar: "تاريخ الاجازة <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ الاجازة",
+        titleCalendar: "تاريخ الأستئذان <span class='color-red'>*</span>",
+        placeholderCalendar: "تاريخ الأستئذان",
         titleNotes: "الملاحظات <span class='color-red'>*</span>",
         placeholdeNotes: "الملاحظات",
         NotesValidation: "الملاحظات مطلوب",
 
-        dateTaskValidation: "تاريخ الاجازة مطلوب",
+        dateTaskValidation: "تاريخ الأستئذان مطلوب",
         labelRadioButton: "صاحب الطلب",
         firstRadio: "لنفسي",
         secondRadio: "لموظف",
@@ -501,7 +513,7 @@ export class PermissionsComponent {
   }
   dialogPermissionFile(data: any) {
     const dialogRefAddCurrency = this.dialog.open(DialogPermissionFileComponent, {
-      width: "40vw",
+      width: "60vw",
       data: {
         title: "ملف الاستئذانات"
       },

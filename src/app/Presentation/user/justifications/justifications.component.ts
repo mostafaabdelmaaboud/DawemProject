@@ -190,9 +190,14 @@ export class JustificationsComponent {
     let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
       if (typeof value  === 'string') {
-        filteration[key] = value.trim();
+        if(value != "") {
+          filteration[key] = value.trim();
+        }
       } else {
-        filteration[key] = value;
+        if(value >=0) {
+          filteration[key] = value;
+
+        }
 
       }
     })
@@ -266,8 +271,8 @@ export class JustificationsComponent {
           ForEmployee: result.ForEmployee,
           EmployeeId: result.EmployeeId.key,
           JustificationTypeId: result.JustificationTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY")
+          DateFrom: moment(result.dateTask[0]).format("MM/DD/YYYY"),
+          DateTo: moment(result.dateTask[1]).format("MM/DD/YYYY")
         }));
 
       } else {
@@ -276,8 +281,8 @@ export class JustificationsComponent {
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           JustificationTypeId: result.JustificationTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY")
+          DateFrom: moment(result.dateTask[0]).format("MM/DD/YYYY"),
+          DateTo: moment(result.dateTask[1]).format("MM/DD/YYYY")
 
         }));
       }
@@ -287,7 +292,6 @@ export class JustificationsComponent {
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
-
       this.justificationsService.updateJustification(formData).subscribe(
         {
           next: (data: any) => {

@@ -36,7 +36,7 @@
       <label class="title">الملفات</label>
       <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length">
         <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
-          <div>
+          <div class="imageProfile">
             <img [src]="file.imageSrc" width="50" alt="">
 
           </div>
@@ -69,6 +69,13 @@
         {{info?.dateTo ? info?.dateTo : "لا يوجد"}}
       </div>
     </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">حاله الطلب</label>
+      <div class="content-password">
+        {{info?.statusName ? info?.statusName : "لا يوجد"}}
+      </div>
+    </div>
+    
 
     <div class="sectionTwo mb-3 line-bellow">
       <label class="title">الملاحظات</label>

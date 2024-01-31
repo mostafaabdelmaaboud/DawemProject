@@ -82,7 +82,7 @@ export class RequestVacationComponent {
   listEmployees: any[] = [
   ];
   loading = false;
-  private employeesService = inject(EmployeesService);
+  private employeesService = inject(EmployeesService);3
 
   @Input() editVacation!: boolean;
   addBranchGroupForm: FormGroup = this.fb.group({
@@ -308,9 +308,6 @@ export class RequestVacationComponent {
 
       }
     }
-
-
-
     if (this.addBranchGroupForm.valid && !this.dateTaskMultiple && this.submitted) {
       this.submitted = false;
       this.submitClicked.emit({ ...this.addBranchGroupForm.value, files: this.AttachmentsFiles });
@@ -318,7 +315,11 @@ export class RequestVacationComponent {
     } else {
       this.getControl("VacationTypeId")?.markAsDirty();
       this.getControl("dateTask")?.markAsDirty();
+      if(this.toggleForEmployee) {
+        this.getControl("EmployeeId")?.markAsDirty();
 
+        
+      }
 
     }
 
