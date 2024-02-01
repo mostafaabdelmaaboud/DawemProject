@@ -317,8 +317,6 @@ export class RequestVacationComponent {
       this.getControl("dateTask")?.markAsDirty();
       if(this.toggleForEmployee) {
         this.getControl("EmployeeId")?.markAsDirty();
-
-        
       }
 
     }

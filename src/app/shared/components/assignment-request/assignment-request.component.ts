@@ -122,7 +122,7 @@ export class AssignmentRequestComponent {
       this.list = [];
       this.workTeamList = [];
       this.listEmployees = [];
-
+      
       data.vacationTypeForDropDown?.data?.forEach((jobTitle: any) => {
         this.list.push({ name: jobTitle.name, key: jobTitle.id })
       });
@@ -151,28 +151,19 @@ export class AssignmentRequestComponent {
                 });
               }
               this.addBranchGroupForm.get("IsNecessary")?.setValue(data.isNecessary);
-
               if (data.forEmployee) {
                 this.addBranchGroupForm.addControl("EmployeeId", this.fb.control("", [Validators.required]));
                 this.addBranchGroupForm.get("ForEmployee")?.setValue(data.forEmployee);
                 this.addBranchGroupForm.get("radioButtons")?.setValue("true");
-
                 this.toggleForEmployee = true;
-
-
-
-
               } else {
-
                 this.toggleForEmployee = false;
                 this.addBranchGroupForm.get("radioButtons")?.setValue("false");
-
                 this.addBranchGroupForm.removeControl("EmployeeId");
                 this.addBranchGroupForm.get("ForEmployee")?.setValue(data.forEmployee);
-
               }
-
-              this.assignmentsService.assignmentTypeDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.permissionTypeId }).subscribe(dataDropdown => {
+              
+              this.assignmentsService.assignmentTypeDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.assignmentTypeId }).subscribe(dataDropdown => {
 
                 this.list = []
 
@@ -318,18 +309,14 @@ export class AssignmentRequestComponent {
     // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
   }
   request() {
-
+    
     if (this.addBranchGroupForm.value.dateTask != null) {
       if (this.addBranchGroupForm.value.dateTask[1] === null) {
         this.dateTaskMultiple = true;
       } else {
         this.dateTaskMultiple = false;
-
       }
     }
-
-
-
     if (this.addBranchGroupForm.valid && !this.dateTaskMultiple && this.submitted) {
       this.submitted = false;
       this.submitClicked.emit({ ...this.addBranchGroupForm.value, files: this.AttachmentsFiles });

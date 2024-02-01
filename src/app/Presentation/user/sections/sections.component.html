@@ -91,20 +91,10 @@
         </div>
       </div>
     </div>
-
-
-
-
-
-
-
-
-
   </div>
   <div class="spinner spinner-cards d-flex justify-content-center align-items-center" *ngIf="spinnerCards">
     <mat-spinner></mat-spinner>
   </div>
-
 </div>
 <div class="table-basic">
   <!-- <div class="header-table-basic">
@@ -238,6 +228,13 @@
               {{ column.name }} <p-sortIcon field="numberOfEmployeesInDepartment"></p-sortIcon>
             </th>
           </ng-container>
+          
+          <ng-container *ngIf="column.field === 'departmentName'">
+            <th class="w-14" pSortableColumn="departmentName">
+
+              {{ column.name }} <p-sortIcon field="departmentName"></p-sortIcon>
+            </th>
+          </ng-container>
           <ng-container *ngIf="column.field === 'headOfDepartment'">
             <th class="w-14" pSortableColumn="headOfDepartment.name">
 
@@ -249,7 +246,7 @@
               {{ column.name }}
             </th>
           </ng-container>
-          <ng-container *ngIf="column.field != 'orderNumber' && column.field != 'headOfDepartment' && column.field != 'numberOfEmployeesInDepartment' && column.field != 'actions'">
+          <ng-container *ngIf="column.field != 'orderNumber' && column.field != 'headOfDepartment' && column.field != 'departmentName' && column.field != 'numberOfEmployeesInDepartment' && column.field != 'actions'">
             <th [pSortableColumn]="column.field">
 
               {{ column.name }} <p-sortIcon [field]="column.field"></p-sortIcon>

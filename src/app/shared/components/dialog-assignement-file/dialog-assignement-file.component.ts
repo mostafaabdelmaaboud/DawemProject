@@ -81,16 +81,13 @@ export class DialogAssignementFileComponent {
                 this.employeesService.downloadImage(attachment.filePath).subscribe(response => {
                   const blob = new Blob([response]);
                   const file = new File([blob], attachment.fileName);
-
                   this.AttachmentsFiles.push({ imageSrc: attachment.filePath, fileUpload: file, detailsImage: true });
                 });
               });
             }
             this.info.dateFrom = moment(new Date(this.info.dateFrom)).format("MM/DD/YYYY");
-            this.info.dateFrom = moment(new Date(this.info.dateTo)).format("MM/DD/YYYY");
-
+            this.info.dateTo = moment(new Date(this.info.dateTo)).format("MM/DD/YYYY");
             this.loading = false;
-
           },
           error: err => {
             this.loading = false;

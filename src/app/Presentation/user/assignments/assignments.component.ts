@@ -339,13 +339,13 @@ export class AssignmentsComponent {
         titleAssignmentTypeId: "نوع التكليف <span class='color-red'>*</span>",
         placeholderAssignmentTypeId: " برجاء اختيار نوع التكليف",
         AssignmentTypeIdValidation: "نوع التكليف مطلوب",
-        titleCalendar: "تاريخ الاجازة <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ الاجازة",
+        titleCalendar: "تاريخ التكليف <span class='color-red'>*</span>",
+        placeholderCalendar: "تاريخ التكليف",
         titleNotes: "الملاحظات <span class='color-red'>*</span>",
         placeholdeNotes: "الملاحظات",
         NotesValidation: "الملاحظات مطلوب",
 
-        dateTaskValidation: "تاريخ الاجازة مطلوب",
+        dateTaskValidation: "تاريخ التكليف مطلوب",
         labelRadioButton: "صاحب الطلب",
         firstRadio: "لنفسي",
         secondRadio: "لموظف",
@@ -392,7 +392,6 @@ export class AssignmentsComponent {
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
-
       this.assignmentsService.createAssignment(formData).subscribe(
         {
           next: (data: any) => {
@@ -446,13 +445,13 @@ export class AssignmentsComponent {
         titleAssignmentTypeId: "نوع التكليف <span class='color-red'>*</span>",
         placeholderAssignmentTypeId: " برجاء اختيار نوع التكليف",
         AssignmentTypeIdValidation: "نوع التكليف مطلوب",
-        titleCalendar: "تاريخ الاجازة <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ الاجازة",
+        titleCalendar: "تاريخ التكليف <span class='color-red'>*</span>",
+        placeholderCalendar: "تاريخ التكليف",
         titleNotes: "الملاحظات <span class='color-red'>*</span>",
         placeholdeNotes: "الملاحظات",
         NotesValidation: "الملاحظات مطلوب",
 
-        dateTaskValidation: "تاريخ الاجازة مطلوب",
+        dateTaskValidation: "تاريخ التكليف مطلوب",
         labelRadioButton: "صاحب الطلب",
         firstRadio: "لنفسي",
         secondRadio: "لموظف",
