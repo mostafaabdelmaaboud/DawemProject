@@ -79,6 +79,8 @@ export class SectionsComponent {
     itemsPerPage: 10,
     currentPage: 1,
   };
+  defaultRowPerPage = { name: '5', code: 5 };
+
   totalItems: number = 0;
   first: number = 0;
   rows: number = 10;
@@ -133,10 +135,8 @@ export class SectionsComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
-
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
     ];
 
     this.sections = [
@@ -530,8 +530,9 @@ export class SectionsComponent {
     })
   }
   onPageChange(event: any) {
-    this.first = event.first;
-    this.rows = event.rows;
+
+    this.filteration = { ...this.filteration, PageNumber: event.page };
+    this.getSection(this.filteration)
   }
   minimumValidator(conInput: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {

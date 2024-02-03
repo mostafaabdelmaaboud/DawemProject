@@ -245,6 +245,16 @@ export class SideNavBarComponent {
           name: this.componentName({screenCode:33}),
           routerLink:'/user/taskType',
           showComponent: this.showComponent({screenCode:33})
+        },
+        {
+          name: this.componentName({screenCode:33}),
+          routerLink:'/user/summons',
+          showComponent: this.showComponent({screenCode:33})
+        },
+        {
+          name: this.componentName({screenCode:33}),
+          routerLink:'/user/sanctions',
+          showComponent: this.showComponent({screenCode:33})
         }
       ]
       this.cloneArrayComponents = [...this.listComponents];
@@ -360,6 +370,7 @@ export class SideNavBarComponent {
           routerLink:'/user/fingerPrintDevice',
           showComponent: true
         },
+      
         {
           name: 'أنواع التكليفات',
           routerLink:'/user/assignmentType',
@@ -383,6 +394,16 @@ export class SideNavBarComponent {
         {
           name: 'أنواع المهمات',
           routerLink:'/user/taskType',
+          showComponent: true
+        },
+          {
+          name: "الاستدعاءات",
+          routerLink:'/user/summons',
+          showComponent: true
+        },
+        {
+          name: "الجزاءات",
+          routerLink:'/user/sanctions',
           showComponent: true
         }
       ]

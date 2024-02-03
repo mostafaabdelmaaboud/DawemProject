@@ -37,6 +37,16 @@ const routes: Routes = [
         canActivate: [PermissionGuard]
       },
       {
+        path: "summons",
+        loadChildren: () => import('./summons/summons.module').then((m) => m.SummonsModule),
+        canActivate: [PermissionGuard]
+      },
+      {
+        path: "sanctions",
+        loadChildren: () => import('./sanctions/sanctions.module').then((m) => m.SanctionsModule),
+        canActivate: [PermissionGuard]
+      },
+      {
         path: "justificationsType",
         loadChildren: () => import('./justifications-type/justifications-type.module').then((m) => m.JustificationsTypeModule),
         canActivate: [PermissionGuard]
