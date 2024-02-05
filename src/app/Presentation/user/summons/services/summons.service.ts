@@ -15,11 +15,11 @@ export class SummonsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}SchedulePlan/Get`, { params: queryParams })
+    return this.http.get<any>(`${environment.baseUrl}Summon/Get`, { params: queryParams })
   }
   getInformation(): Observable<any> {
 
-    return this.http.get<any>(`${environment.baseUrl}SchedulePlan/GetSchedulePlansInformations`).pipe(map(data => data.data));
+    return this.http.get<any>(`${environment.baseUrl}Summon/GetSummonsInformations`).pipe(map(data => data.data));
   }
   GetForDropDown(params: any) {
     let queryParams = new HttpParams();
@@ -76,7 +76,7 @@ export class SummonsService {
     }
     return this.http.get<any>(`${environment.baseUrl}Department/GetForDropDown`, { params: queryParams })
   }
-  schedualForDropdown(params: any) {
+  sanctionForDropdown(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -92,7 +92,7 @@ export class SummonsService {
         }
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}Schedule/GetForDropDown`, { params: queryParams })
+    return this.http.get<any>(`${environment.baseUrl}Sanction/GetForDropDown`, { params: queryParams })
   }
   GetForDropDownEmployee(params: any) {
     let queryParams = new HttpParams();
@@ -122,7 +122,7 @@ export class SummonsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.put<any>(`${environment.baseUrl}Group/enable`, {}, { params: queryParams })
+    return this.http.put<any>(`${environment.baseUrl}Summon/enable`, {}, { params: queryParams })
   }
 
 
@@ -134,19 +134,19 @@ export class SummonsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.put<any>(`${environment.baseUrl}Group/disable`, {}, { params: queryParams })
+    return this.http.put<any>(`${environment.baseUrl}Summon/disable`, {}, { params: queryParams })
   }
   createSummon(data: any) {
 
-    return this.http.post<any>(`${environment.baseUrl}SchedulePlan/Create`, data)
+    return this.http.post<any>(`${environment.baseUrl}Summon/Create`, data)
 
   }
   updateSummon(data: any) {
 
-    return this.http.put<any>(`${environment.baseUrl}SchedulePlan/Update`, data)
+    return this.http.put<any>(`${environment.baseUrl}Summon/Update`, data)
 
   }
-  schedualPlanGetById(params: any) {
+  summonGetById(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -154,9 +154,9 @@ export class SummonsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}SchedulePlan/GetById`, { params: queryParams }).pipe(map(data => data.data))
+    return this.http.get<any>(`${environment.baseUrl}Summon/GetById`, { params: queryParams }).pipe(map(data => data.data))
   }
-  schedualPlanGetInfo(params: any) {
+  summonGetInfo(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -164,6 +164,6 @@ export class SummonsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}SchedulePlan/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
+    return this.http.get<any>(`${environment.baseUrl}Summon/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
   }
 }

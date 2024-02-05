@@ -99,7 +99,7 @@
   
       </div>
     </div> -->
-    <p-table #dt1 [value]="schedualPlan" id="tableSanctions" [responsiveLayout]="opened ? 'stack' : 'scroll'"
+    <p-table #dt1 [value]="sanactions" id="tableSanctions" [responsiveLayout]="opened ? 'stack' : 'scroll'"
       [responsive]="true" [paginator]="false" [rows]="filteration.PageSize" [first]="filteration.PageNumber" [rows]="10"
       [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
       currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
@@ -194,10 +194,10 @@
   
               </p-overlayPanel>
               <button class="btn btn-primary action-button-t d-flex align-items-center"
-                *ngIf="showActions({actionCode:0})" (click)="addSchedualPlane()">
+                *ngIf="showActions({actionCode:0})" (click)="addSanction()">
                 <i class="pi bi-plus-circle-fill"></i>
   
-                <span>إضافة عقوبة </span>
+                <span>إضافة جزاء </span>
               </button>
               <!--
               <button (click)="op.toggle($event)" class="btn button-filter-table">
@@ -264,7 +264,7 @@
               </span>
               <div class="action-body-td">
                 <button type="button" *ngIf="showActions({actionCode:1})"
-                  class="btn btn-outline-secondary action-accept color-green" (click)="editSchedualPlane(rowData)"><i
+                  class="btn btn-outline-secondary action-accept color-green" (click)="editSanction(rowData)"><i
                     class="bi bi-pencil-square"></i></button>
   
   
@@ -272,7 +272,7 @@
                   (click)="deleteRow(rowData)"><i class="bi bi-trash3-fill"></i>
                 </button> -->
                 <button type="button" *ngIf="showActions({actionCode:3})"
-                  class="btn btn-outline-secondary action-close color-blue" (click)="dialogGroupFile(rowData)"><i
+                  class="btn btn-outline-secondary action-close color-blue" (click)="dialogFile(rowData)"><i
                     class="bi bi-person-vcard"></i></button>
                 <ng-container *ngIf="rowData.isActive">
                   <button type="button" *ngIf="showActions({actionCode:7})" class="btn btn-outline-secondary action-close color-red"
@@ -362,7 +362,7 @@
       </ng-template>
     </p-table>
     <div class="hideTable">
-      <p-table #dt1 [value]="schedualPlan" id="tableSanctionsHidden" [responsiveLayout]="opened ? 'stack' : 'scroll'"
+      <p-table #dt1 [value]="sanactions" id="tableSanctionsHidden" [responsiveLayout]="opened ? 'stack' : 'scroll'"
       [responsive]="true" [paginator]="false" [rows]="filteration.PageSize" [first]="filteration.PageNumber" [rows]="10"
       [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
       currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[

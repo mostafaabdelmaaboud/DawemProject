@@ -1,0 +1,278 @@
+<div class="container-Dialog">
+    <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+      <h3 class="title-Dialog m-0">
+        {{data!['title']|translate}}
+  
+      </h3>
+      <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+        <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+        <i class="pi pi-times-circle"></i>
+      </button>
+    </header>
+    <div class="body-dialog p-15 f-s-16">
+      <form [formGroup]="addBranchGroupForm">
+        <div class="section1 mb-3">
+          <label class="title">{{data!['setAsActive']|translate}}</label>
+          <p-inputSwitch formControlName="isActive"></p-inputSwitch>
+        </div>
+        <div class="section1 mb-3">
+            <label class="title">لكل الموظفين</label>
+            <p-inputSwitch formControlName="forAllEmployees"></p-inputSwitch>
+          </div>
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12">
+              <ng-container *ngIf="editSummon">
+                <div class="field-disabled mb-3 readOnly">
+                  <label for="" class="label-input mb-2" [innerHTML]="data!['titleFieldDisabled']|translate"></label>
+                  <div class="content-password">
+                    <input type="text" pInputText formControlName="fieldDisabled" [readOnly]="true"
+                      [placeholder]="data!['placeholdeieldDisabled']|translate" class="w-100" />
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="!forAllEmployees">
+                <div class="sectionFive mb-3">
+                    <label class="title">{{data!['labelRadioButton']|translate}}</label>
+      
+                    <div class="container-radio-button">
+                      <mat-radio-group aria-label="Select an option" color="primary" formControlName="forType">
+                        <mat-radio-button value="0">{{data!['firstRadio']|translate}}
+                        </mat-radio-button>
+                        <mat-radio-button value="1">{{data!['secondRadio']|translate}}</mat-radio-button>
+                        <mat-radio-button value="2">{{data!['thirdRadio']|translate}}</mat-radio-button>
+      
+                      </mat-radio-group>
+                    </div>
+      
+                  </div>
+      
+                  <div class="sectionTwo mb-3" *ngIf="employeeIdToggle">
+                    <label class="title">{{data!['titleEmployeeId']|translate}} <span class="color-red">*</span></label>
+                    <div class="content-password">
+                      <p-multiSelect [options]="listEmployeeId" appendTo="body" [filter]="false" formControlName="Employees"
+                      [placeholder]="data!['placeholdeEmployeeId']|translate" optionLabel="name">
+                      <ng-template pTemplate="header">
+                        <span class="p-input-icon-left input-search-dropdown">
+          
+                          <i class="pi pi-search" (click)="searchDropdown(searchEmployeeId.value, 'Employees')"></i>
+                          <input type="text" placeholder="بحث" pInputText #searchEmployeeId />
+                        </span>
+                      </ng-template>
+                      <ng-template let-option pTemplate="item">
+                        {{ option.name }}
+                      </ng-template>
+                    </p-multiSelect>
+                    </div>
+                    <!--Start Custom Validators-->
+                    <div class="container-alerts mt-2" *ngIf="getControl('Employees')?.errors">
+                      <div class="alert alert-danger"
+                        *ngIf="getControl('Employees')?.hasError('required') && getControl('Employees')?.dirty">
+                        {{data!['ValidationEmployeeId']|translate}}
+      
+                      </div>
+                    </div>
+                    <!--End Custom Validators-->
+                  </div>
+                  <div class="sectionTwo mb-3" *ngIf="groupIdToggle">
+                    <label class="title">{{data!['titleGroupId']|translate}} <span class="color-red">*</span></label>
+                    <div class="content-password">
+                      <p-multiSelect [options]="listGroupId" appendTo="body" [filter]="false" formControlName="Groups"
+                      [placeholder]="data!['placeholdeGroupId']|translate" optionLabel="name">
+                      <ng-template pTemplate="header">
+                        <span class="p-input-icon-left input-search-dropdown">
+          
+                          <i class="pi pi-search" (click)="searchDropdown(searchGroupId.value, 'Groups')"></i>
+                          <input type="text" placeholder="بحث" pInputText #searchGroupId />
+                        </span>
+                      </ng-template>
+                      <ng-template let-option pTemplate="item">
+                        {{ option.name }}
+                      </ng-template>
+                    </p-multiSelect>
+                    </div>
+                    <!--Start Custom Validators-->
+                    <div class="container-alerts mt-2" *ngIf="getControl('Groups')?.errors">
+                      <div class="alert alert-danger"
+                        *ngIf="getControl('Groups')?.hasError('required') && getControl('Groups')?.dirty">
+                        {{data!['ValidationGroupId']|translate}}
+      
+                      </div>
+                    </div>
+                    <!--End Custom Validators-->
+                  </div>
+                  <div class="sectionTwo mb-3" *ngIf="departmentIdToggle">
+                    <label class="title">{{data!['titleDepartmentId']|translate}} <span class="color-red">*</span></label>
+                    <div class="content-password">
+                      <p-multiSelect [options]="listDepartmentId" appendTo="body" [filter]="false" formControlName="Departments"
+                      [placeholder]="data!['placeholdeGroupId']|translate" optionLabel="name">
+                      <ng-template pTemplate="header">
+                        <span class="p-input-icon-left input-search-dropdown">
+          
+                          <i class="pi pi-search" (click)="searchDropdown(searchDepartmentId.value, 'Departments')"></i>
+                          <input type="text" placeholder="بحث" pInputText #searchDepartmentId />
+                        </span>
+                      </ng-template>
+                      <ng-template let-option pTemplate="item">
+                        {{ option.name }}
+                      </ng-template>
+                    </p-multiSelect>
+                    </div>
+                    <!--Start Custom Validators-->
+                    <div class="container-alerts mt-2" *ngIf="getControl('Departments')?.errors">
+                      <div class="alert alert-danger"
+                        *ngIf="getControl('Departments')?.hasError('required') && getControl('Departments')?.dirty">
+                        {{data!['ValidationDepartmentId']|translate}}
+      
+                      </div>
+                    </div>
+                    <!--End Custom Validators-->
+                  </div>
+              </ng-container>
+          
+  
+              <div class="sectionTwo mb-3">
+                <label class="title">{{data!['titleSanaction']|translate}} <span class="color-red">*</span></label>
+                <div class="content-password">
+                  <!-- <p-dropdown appendTo="body" formControlName="Sanctions" appendTo="body" [options]="listSanctions"
+                    [placeholder]="data!['placeholdeSanaction']|translate" optionLabel="name">
+                    <ng-template pTemplate="header">
+                      <span class="p-input-icon-left input-search-dropdown">
+  
+                        <i class="pi pi-search" (click)="searchDropdown(searchSanctions, 'Sanctions')"></i>
+                        <input type="text" placeholder="بحث" pInputText #searchSanctions />
+                      </span>
+                    </ng-template>
+                    <ng-template let-option pTemplate="item">
+                      {{ option.name }}
+                    </ng-template>
+                  </p-dropdown> -->
+                  <p-multiSelect [options]="listSanctions" appendTo="body" [filter]="false" formControlName="Sanctions"
+                  [placeholder]="data!['placeholdeSanaction']|translate" optionLabel="name">
+                  <ng-template pTemplate="header">
+                    <span class="p-input-icon-left input-search-dropdown">
+      
+                      <i class="pi pi-search" (click)="searchDropdown(searchSanctions.value, 'Sanctions')"></i>
+                      <input type="text" placeholder="بحث" pInputText #searchSanctions />
+                    </span>
+                  </ng-template>
+                  <ng-template let-option pTemplate="item">
+                    {{ option.name }}
+                  </ng-template>
+                </p-multiSelect>
+                </div>
+                <!--Start Custom Validators-->
+                <div class="container-alerts mt-2" *ngIf="getControl('Sanctions')?.errors">
+                  <div class="alert alert-danger"
+                    *ngIf="getControl('Sanctions')?.hasError('required') && getControl('Sanctions')?.dirty">
+                    {{data!['ValidationSanaction']|translate}}
+  
+                  </div>
+                </div>
+                <!--End Custom Validators-->
+              </div>
+              <div class="sectionFive  mb-3">
+                <div class="sectionThree">
+                  <label class="title">تاريخ ووقت الاستدعاء <span class="color-red">*</span></label>
+                  <div class="content-password">
+                    <div class="content-pCalendar-default" dir="ltr">
+                      <p-calendar formControlName="dateAndTime" [showTime]="true" [showSeconds]="true" appendTo="body"
+                        placeholder="تاريخ ووقت الاستدعاء" [showIcon]="true"></p-calendar>
+                    </div>
+                  </div>
+                  <!--Start Custom Validators-->
+                  <div class="container-alerts mt-2" *ngIf="getControl('dateAndTime')?.errors">
+                    <div class="alert alert-danger"
+                      *ngIf="getControl('dateAndTime')?.hasError('required') && getControl('dateAndTime')?.dirty">
+                      {{data!['validationCalendar']|translate}}
+                    </div>
+                  </div>
+                  <!--End Custom Validators-->
+                </div>
+              </div>
+              <ng-container>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-lg-6 col-12">
+                            <div class="sectionTwo mb-3">
+                                <label for="" class="label-input mb-2" >الوقت المسموح <span class="color-red">*</span></label>
+                                <div class="content-password">
+                                  <input type="number" pInputText formControlName="allowedTime" 
+                                    placeholder="الوقت المسموح" class="w-100" />
+                                </div>
+                                <!--Start Custom Validators-->
+                                <div class="container-alerts mt-2" *ngIf="getControl('allowedTime')?.errors">
+                                    <div class="alert alert-danger"
+                                    *ngIf="getControl('allowedTime')?.hasError('required') && getControl('allowedTime')?.dirty">
+                                    {{data!['validationCalendar']|translate}}
+                                    </div>
+                                    <div class="alert alert-danger"
+                                    *ngIf="getControl('allowedTime')?.hasError('min') && getControl('allowedTime')?.dirty">
+                                   اقل رقم 1
+                                    </div>
+                                </div>
+                            <!--End Custom Validators-->
+                              </div>
+                        </div>
+                        <div class="col-lg-6 col-12">
+                            <div class="sectionTwo mb-3">
+                                <label class="title">انواع الوقت <span class="color-red">*</span></label>
+                                <div class="content-password">
+                                    <p-dropdown appendTo="body" formControlName="TimeType" appendTo="body" [options]="listTimeType"
+                                [placeholder]="data!['placeholdeSanaction']|translate" optionLabel="name">
+                                <ng-template pTemplate="header">
+                                <span class="p-input-icon-left input-search-dropdown">
+            
+                                    <i class="pi pi-search" (click)="searchDropdown(searchSanctions, 'Sanctions')"></i>
+                                    <input type="text" placeholder="بحث" pInputText #searchSanctions />
+                                </span>
+                                </ng-template>
+                                <ng-template let-option pTemplate="item">
+                                {{ option.name }}
+                                </ng-template>
+                            </p-dropdown> 
+                                    </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+              </ng-container>
+              <div class="sectionTwo mb-3" >
+                <label class="title">طرق التنبية <span class="color-red">*</span></label>
+                <div class="content-password">
+                  <p-multiSelect [options]="listnotifyWays" appendTo="body" [filter]="false" formControlName="notifyWays"
+                  placeholder="طرق التنبية" optionLabel="name">
+                  <ng-template let-option pTemplate="item">
+                    {{ option.name }}
+                  </ng-template>
+                </p-multiSelect>
+                </div>
+                <!--Start Custom Validators-->
+                <div class="container-alerts mt-2" *ngIf="getControl('notifyWays')?.errors">
+                  <div class="alert alert-danger"
+                    *ngIf="getControl('notifyWays')?.hasError('required') && getControl('notifyWays')?.dirty">
+                    طرق التنبية مطلوب
+                  </div>
+                </div>
+                <!--End Custom Validators-->
+              </div>
+            </div>
+          </div>
+        </div>
+  
+      </form>
+    </div>
+    <footer class="footer-dialog p-15 d-flex justify-content-end">
+      <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+        (click)="request()">{{submitted
+        ?
+        (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+      <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
+        (click)="close()">{{data!['titleClose']|translate}}</button>
+    </footer>
+  </div>
+  <div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+  </div>

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/core/auth/services/auth-service.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DropdownModule } from 'primeng/dropdown';
@@ -10,15 +10,9 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CalendarModule } from "primeng/calendar";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { SchedulesService } from 'src/app/Presentation/user/tables/services/schedules.service';
 import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { GroupsService } from 'src/app/Presentation/user/groups/services/groups.service';
-import { TreeModule } from 'primeng/tree';
-import { TreeNode } from 'primeng/api';
-import { SectionsService } from 'src/app/Presentation/user/sections/services/sections.service';
 import { MatRadioModule } from '@angular/material/radio';
-import { EmployeesService } from 'src/app/Presentation/user/employees/services/employees.service';
 import { SchedualPlanService } from 'src/app/Presentation/user/schedual-plan/services/schedual-plan.service';
 
 interface addBranchesInputsProps {
@@ -177,9 +171,10 @@ export class AddSchedualPlanComponent {
             this.listScheduleId.push({ name: day.name, key: day.id });
 
           });
-          this.loading = false;
+          this.loading = true;
 
           if (this.editSchedualPlan) {
+            
             this.schedualPlanService.schedualPlanGetById({ schedulePlanId: this.id }).subscribe(
               {
                 next: data => {

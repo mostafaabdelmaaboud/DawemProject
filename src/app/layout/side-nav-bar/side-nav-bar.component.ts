@@ -247,14 +247,14 @@ export class SideNavBarComponent {
           showComponent: this.showComponent({screenCode:33})
         },
         {
-          name: this.componentName({screenCode:33}),
+          name: this.componentName({screenCode:39}),
           routerLink:'/user/summons',
-          showComponent: this.showComponent({screenCode:33})
+          showComponent: this.showComponent({screenCode:39})
         },
         {
-          name: this.componentName({screenCode:33}),
+          name: this.componentName({screenCode:38}),
           routerLink:'/user/sanctions',
-          showComponent: this.showComponent({screenCode:33})
+          showComponent: this.showComponent({screenCode:38})
         }
       ]
       this.cloneArrayComponents = [...this.listComponents];

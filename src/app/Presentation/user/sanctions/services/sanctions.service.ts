@@ -8,18 +8,18 @@ import { environment } from 'src/environments/environment';
 })
 export class SanctionsService {
   constructor(private http: HttpClient) { }
-  listSchedualPlan(filter: any): Observable<any> {
+  listSanctions(filter: any): Observable<any> {
     let queryParams = new HttpParams();
     if (filter) {
       Object.entries(filter).forEach(([key, value]: any) => {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}SchedulePlan/Get`, { params: queryParams })
+    return this.http.get<any>(`${environment.baseUrl}Sanction/Get`, { params: queryParams })
   }
   getInformation(): Observable<any> {
 
-    return this.http.get<any>(`${environment.baseUrl}SchedulePlan/GetSchedulePlansInformations`).pipe(map(data => data.data));
+    return this.http.get<any>(`${environment.baseUrl}Sanction/GetSanctionsInformations`).pipe(map(data => data.data));
   }
   GetForDropDown(params: any) {
     let queryParams = new HttpParams();
@@ -114,7 +114,7 @@ export class SanctionsService {
     return this.http.get<any>(`${environment.baseUrl}Employee/GetForDropDown`, { params: queryParams })
 
   }
-  enabledSchedualPlan(params: any) {
+  enabledSanction(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -122,11 +122,11 @@ export class SanctionsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.put<any>(`${environment.baseUrl}Group/enable`, {}, { params: queryParams })
+    return this.http.put<any>(`${environment.baseUrl}Sanction/enable`, {}, { params: queryParams })
   }
 
 
-  disabledSchedualPlan(params: any) {
+  disabledSanction(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -134,19 +134,19 @@ export class SanctionsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.put<any>(`${environment.baseUrl}Group/disable`, {}, { params: queryParams })
+    return this.http.put<any>(`${environment.baseUrl}Sanction/disable`, {}, { params: queryParams })
   }
-  createSchedualPlan(data: any) {
+  createSanction(data: any) {
 
-    return this.http.post<any>(`${environment.baseUrl}SchedulePlan/Create`, data)
-
-  }
-  updateSchedualPlan(data: any) {
-
-    return this.http.put<any>(`${environment.baseUrl}SchedulePlan/Update`, data)
+    return this.http.post<any>(`${environment.baseUrl}Sanction/Create`, data)
 
   }
-  schedualPlanGetById(params: any) {
+  updateSanction(data: any) {
+
+    return this.http.put<any>(`${environment.baseUrl}Sanction/Update`, data)
+
+  }
+  sanctionGetById(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -154,9 +154,9 @@ export class SanctionsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}SchedulePlan/GetById`, { params: queryParams }).pipe(map(data => data.data))
+    return this.http.get<any>(`${environment.baseUrl}Sanction/GetById`, { params: queryParams }).pipe(map(data => data.data))
   }
-  schedualPlanGetInfo(params: any) {
+  sanctionGetInfo(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -164,6 +164,6 @@ export class SanctionsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}SchedulePlan/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
+    return this.http.get<any>(`${environment.baseUrl}Sanction/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
   }
 }

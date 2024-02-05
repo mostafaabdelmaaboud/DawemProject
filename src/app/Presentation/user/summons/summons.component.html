@@ -99,7 +99,7 @@
   
       </div>
     </div> -->
-    <p-table #dt1 [value]="schedualPlan" id="tableSummons" [responsiveLayout]="opened ? 'stack' : 'scroll'"
+    <p-table #dt1 [value]="summons" id="tableSummons" [responsiveLayout]="opened ? 'stack' : 'scroll'"
       [responsive]="true" [paginator]="false" [rows]="filteration.PageSize" [first]="filteration.PageNumber" [rows]="10"
       [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
       currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
@@ -194,7 +194,7 @@
   
               </p-overlayPanel>
               <button class="btn btn-primary action-button-t d-flex align-items-center"
-                *ngIf="showActions({actionCode:0})" (click)="addSchedualPlane()">
+                *ngIf="showActions({actionCode:0})" (click)="addSummon()">
                 <i class="pi bi-plus-circle-fill"></i>
   
                 <span>إضافة استدعاء</span>
@@ -264,7 +264,7 @@
               </span>
               <div class="action-body-td">
                 <button type="button" *ngIf="showActions({actionCode:1})"
-                  class="btn btn-outline-secondary action-accept color-green" (click)="editSchedualPlane(rowData)"><i
+                  class="btn btn-outline-secondary action-accept color-green" (click)="editSummon(rowData)"><i
                     class="bi bi-pencil-square"></i></button>
   
   
@@ -362,7 +362,7 @@
       </ng-template>
     </p-table>
     <div class="hideTable">
-      <p-table #dt1 [value]="schedualPlan" id="tableSummonsHidden" [responsiveLayout]="opened ? 'stack' : 'scroll'"
+      <p-table #dt1 [value]="summons" id="tableSummonsHidden" [responsiveLayout]="opened ? 'stack' : 'scroll'"
       [responsive]="true" [paginator]="false" [rows]="filteration.PageSize" [first]="filteration.PageNumber" [rows]="10"
       [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
       currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[

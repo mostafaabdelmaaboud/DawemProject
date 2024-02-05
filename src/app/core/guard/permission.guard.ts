@@ -120,9 +120,9 @@ export class PermissionGuard implements CanActivate {
 
 
     } else if (state.url.includes("summons")) {
-      return this.permissionsUserService.checkPermission({ type: "component", screenCode: 33 });
+      return this.permissionsUserService.checkPermission({ type: "component", screenCode: 39 });
     } else if (state.url.includes("sanctions")) {
-      return this.permissionsUserService.checkPermission({ type: "component", screenCode: 33 });
+      return this.permissionsUserService.checkPermission({ type: "component", screenCode: 38 });
     }
     else {
       return false;

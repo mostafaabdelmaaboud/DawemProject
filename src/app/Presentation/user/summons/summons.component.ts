@@ -17,6 +17,8 @@ import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { SummonsService } from './services/summons.service';
+import { AddSummonComponent } from 'src/app/shared/components/add-summon/add-summon.component';
+import { DialogSummonFileComponent } from 'src/app/shared/components/dialog-summon-file/dialog-summon-file.component';
 @Component({
   selector: 'app-summons',
   templateUrl: './summons.component.html',
@@ -32,29 +34,24 @@ export class SummonsComponent {
   private summonsService = inject(SummonsService);
   columns: any[] = [
     {
-      name: "رقم الجدولة",
+      name: "رقم الاستدعاء",
       field: "code",
     },
     {
-      name: "اسم الجدولة",
-      field: "scheduleName",
+      name: "نوع الاستدعاء",
+      field: "forTypeName",
     },
     {
-      name: "نوع الجدولة",
-      field: "schedulePlanTypeName"
+      name: "تاريخ ووقت الاستدعاء",
+      field: "dateAndTime"
     },
-    {
-      name: "التاريخ",
-      field: "dateFrom"
-    },
-
     {
       name: "الإجراء",
       field: "actions"
     }
 
   ];
-  schedualPlan: any = [];
+  summons: any = [];
   isLoading = true;
   filteration: any = {
     PageSize: 5,
@@ -92,11 +89,11 @@ export class SummonsComponent {
     this._mobileQueryListener = () => {
       if (this.mobileQuery.matches) {
         this.opened = true;
-        this.schedualPlan = this.schedualPlan;
+        this.summons = this.summons;
         changeDetectorRef.detectChanges();
       } else {
         this.opened = false;
-        this.schedualPlan = this.schedualPlan;
+        this.summons = this.summons;
         changeDetectorRef.detectChanges();
       }
     };
@@ -156,22 +153,17 @@ export class SummonsComponent {
     return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 30, actionCode: data.actionCode })
   }
   getSummons(filteration: any) {
-    this.schedualPlan = [];
+    this.summons = [];
     this.isLoading = true;
-
     this.summonsService.listSummons(filteration).subscribe(data => {
+      data.data.forEach((summon: any) => {
+        this.summons.push({
+          id: summon.id,
+          code: summon.code,
+          forTypeName: summon.forTypeName,
+          dateAndTime: moment(new Date(summon.dateAndTime)).format("MMMM Do YYYY, h:mm:ss a") ,
 
-      data.data.forEach((schedualPlan: any) => {
-
-
-        this.schedualPlan.push({
-          id: schedualPlan.id,
-          code: schedualPlan.code,
-          scheduleName: schedualPlan.scheduleName,
-          schedulePlanTypeName: schedualPlan.schedulePlanTypeName,
-          dateFrom: moment(new Date(schedualPlan.dateFrom)).format("MM/DD/YYYY"),
-
-          isActive: schedualPlan.isActive
+          isActive: summon.isActive
         })
       });
       this.totalItems = data.totalCount
@@ -179,73 +171,58 @@ export class SummonsComponent {
 
     })
   }
-  addSchedualPlane() {
-    const dialogRefAddCurrency = this.dialog.open(AddSchedualPlanComponent, {
+  addSummon() {
+    const dialogRefAddCurrency = this.dialog.open(AddSummonComponent, {
       width: "70vw",
       data: {
-        title: "اضافه جدولة",
+        title: "اضافه استدعاء",
         setAsActive: "تعيين كنشط",
-
         titleDepartmentId: "نوع القسم",
         placeholdeDepartmentId: "نوع القسم",
         ValidationDepartmentId: "نوع القسم مطلوب",
-
-
-        labelRadioButton: "نوع الجدولة",
-        firstRadio: "لموظف",
-        secondRadio: "لجروب",
-        thirdRadio: "لقسم",
-
+        labelRadioButton: "نوع الاستدعاء",
+        firstRadio: "لموظفين",
+        secondRadio: "لجروبات",
+        thirdRadio: "لاقسام",
         titleEmployeeId: "نوع الموظف",
         placeholdeEmployeeId: "نوع الموظف",
         ValidationEmployeeId: "نوع الموظف مطلوب",
-
-
-        titleScheduleId: "جدول الدوام",
-        placeholdeScheduleId: "جدول الدوام",
-        ValidationScheduleId: "جدول الدوام مطلوب",
-
+        titleSanaction: "الجزاءات",
+        placeholdeSanaction: "الجزاءات",
+        ValidationSanaction: "الجزاءات مطلوب",
         titleCalendar: "التاريخ",
         placeholderCalendar: "اختار التاريخ",
         validationCalendar: "التاريخ مطلوب",
-
         titleGroupId: "نواب الجروب",
         placeholdeGroupId: "نواب الجروب",
         ValidationGroupId: "نواب الجروب مطلوب",
-
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        ValidationNotes: "الملاحظات مطلةب",
-
         titleClose: "تراجع",
-        buttonSend: "إضافة جدولة"
+        buttonSend: "إضافة استدعاء"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editSchedualPlan = false;
-
+    dialogRefAddCurrency.componentInstance.editSummon = false;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
-
       formData.isActive = result.isActive;
-
-      formData.SchedulePlanType = Number(result.SchedulePlanType);
-      formData.EmployeeId = result.EmployeeId ? result.EmployeeId.key : null;
-      formData.GroupId = result.GroupId ? result.GroupId.key : null;
-      formData.DepartmentId = result.DepartmentId ? result.DepartmentId.key : null;
-      formData.ScheduleId = result.ScheduleId.key;
-      formData.DateFrom = moment(new Date(result.DateFrom)).format("DD/MM/YYYY");
-      formData.notes = result.notes;
-
-
-
-
+      if(!result.forAllEmployees) {
+        formData.forType = Number(result.forType);
+        formData.Employees = result.Employees ? result.Employees.map((list: any) => list.key) : null;
+        formData.Groups =  result.Groups ? result.Groups.map((list: any) => list.key)  : null; 
+        formData.Departments = result.Departments ? result.Departments.map((list: any) => list.key) : null;
+      }
+      formData.Sanctions = result.Sanctions.map((list: any) => list.key);
+      formData.allowedTime = result.allowedTime;
+      formData.TimeType = result.TimeType.key;
+      formData.notifyWays = result.notifyWays.map((list: any) => list.key);
+      formData.DateAndTime = moment(result.dateAndTime).format("YYYY-MM-DD hh:mm");
+      
+      dialogRefAddCurrency.componentInstance.loading = true;
       this.summonsService.createSummon(formData).subscribe(
         {
           next: data => {
-
-
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
 
@@ -254,7 +231,7 @@ export class SummonsComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الجدولة"
+                buttonSend: "طلبات الاستدعاءات"
               },
             });
             this.getSummons(this.filteration);
@@ -272,6 +249,7 @@ export class SummonsComponent {
           },
           error: err => {
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
           }
         }
@@ -284,17 +262,17 @@ export class SummonsComponent {
     });
   }
   dialogGroupFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogSchedulePlanFileComponent, {
+    const dialogRefAddCurrency = this.dialog.open(DialogSummonFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف الجدولة"
+        title: "ملف الاستدعاء"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id
   }
   enabledRow(data: any) {
 
-    this.summonsService.enabledSummon({ groupId: data.id }).subscribe(
+    this.summonsService.enabledSummon({ summonId: data.id }).subscribe(
       {
         next: res => {
 
@@ -353,77 +331,69 @@ export class SummonsComponent {
     };
     this.getSummons(this.filteration);
   }
-  editSchedualPlane(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddSchedualPlanComponent, {
+  editSummon(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(AddSummonComponent, {
       width: "70vw",
       data: {
-        title: "تعديل الجدولة",
+        title: "تعديل الاستدعاء",
         setAsActive: "تعيين كنشط",
-
         titleDepartmentId: "نوع القسم",
         placeholdeDepartmentId: "نوع القسم",
         ValidationDepartmentId: "نوع القسم مطلوب",
-
-
-        labelRadioButton: "نوع الجدولة",
-        firstRadio: "لموظف",
-        secondRadio: "لجروب",
-        thirdRadio: "لقسم",
-
+        labelRadioButton: "نوع الاستدعاء",
+        firstRadio: "لموظفين",
+        titleFieldDisabled:"الكود",
+        secondRadio: "لجروبات",
+        thirdRadio: "لاقسام",
         titleEmployeeId: "نوع الموظف",
         placeholdeEmployeeId: "نوع الموظف",
         ValidationEmployeeId: "نوع الموظف مطلوب",
-
-
-        titleScheduleId: "جدول الدوام",
-        placeholdeScheduleId: "جدول الدوام",
-        ValidationScheduleId: "جدول الدوام مطلوب",
-
+        titleSanaction: "الجزاءات",
+        placeholdeSanaction: "الجزاءات",
+        ValidationSanaction: "الجزاءات مطلوب",
         titleCalendar: "التاريخ",
         placeholderCalendar: "اختار التاريخ",
         validationCalendar: "التاريخ مطلوب",
-
         titleGroupId: "نواب الجروب",
         placeholdeGroupId: "نواب الجروب",
         ValidationGroupId: "نواب الجروب مطلوب",
-
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        ValidationNotes: "الملاحظات مطلةب",
-
         titleClose: "تراجع",
-        buttonSend: "تعديل الجدولة"
+        buttonSend: "حفظ الاستدعاء"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editSchedualPlan = true;
-
+    dialogRefAddCurrency.componentInstance.editSummon = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
-
-      formData.id = data.row;
-
+      formData.id = data.id;
       formData.isActive = result.isActive;
+      if(!result.forAllEmployees) {
+        formData.forType = Number(result.forType);
+        formData.Employees = result.Employees ? result.Employees.map((list: any) => list.key) : null;
+        formData.Groups =  result.Groups ? result.Groups.map((list: any) => list.key)  : null; 
+        formData.Departments = result.Departments ? result.Departments.map((list: any) => list.key) : null;
+      }
 
-      formData.SchedulePlanType = Number(result.SchedulePlanType);
-      formData.EmployeeId = result.EmployeeId ? result.EmployeeId.key : null;
-      formData.GroupId = result.GroupId ? result.GroupId.key : null;
-      formData.DepartmentId = result.DepartmentId ? result.DepartmentId.key : null;
-      formData.ScheduleId = result.ScheduleId.key;
-      formData.DateFrom = moment(new Date(result.DateFrom)).format("DD/MM/YYYY");
-      formData.notes = result.notes;
+      formData.Sanctions = result.Sanctions.map((list: any) => list.key);
+      formData.allowedTime = result.allowedTime;
+      formData.TimeType = result.TimeType.key;
 
+      formData.notifyWays = result.notifyWays.map((list: any) => list.key);
 
+      formData.DateAndTime = moment(result.dateAndTime).format("YYYY-MM-DD hh:mm");
+      
+      dialogRefAddCurrency.componentInstance.loading = true;
 
-
+      
       this.summonsService.updateSummon(formData).subscribe(
         {
           next: data => {
 
 
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
 
@@ -432,7 +402,7 @@ export class SummonsComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الجدولة"
+                buttonSend: "طلبات الاستدعاءات"
               },
             });
             this.getSummons(this.filteration);
@@ -450,6 +420,7 @@ export class SummonsComponent {
           },
           error: err => {
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
           }
         }
@@ -461,6 +432,7 @@ export class SummonsComponent {
       }
     });
   }
+
   mathRound(data: any) {
     return Math.ceil(data)
   }
@@ -475,12 +447,12 @@ export class SummonsComponent {
     const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
       width: "30vw",
       data: {
-        title: "متأكد من تعليق المجموعة؟",
-        message: "برجاء توضيح السبب إن أمكن ليظهر للمجموعة عند محاولة تسجيل الدخول",
+        title: "متأكد من تعليق الاستدعاء؟",
+        message: "برجاء توضيح السبب إن أمكن ليظهر للاستدعاء عند محاولة تسجيل الدخول",
         titleReasonOfRefuse: "سبب التعليق",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض ليظهر للمجموعة",
+        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض ليظهر للاستدعاء",
         titleClose: "تراجع",
-        buttonSend: "تعليق المجموعة"
+        buttonSend: "تعليق الاستدعاء"
       },
     });
     reasonOfRefuseDialog.componentInstance.submitted = true;
@@ -518,39 +490,6 @@ export class SummonsComponent {
   onPageChange(event: any) {
     this.filteration = { ...this.filteration, PageNumber: event.page };
     this.getSummons(this.filteration)
-  }
-  minimumValidator(conInput: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const value: string = control.value;
-      let checkMin = true;
-      if (value != null) {
-
-        if (this.filterForm.get(conInput)?.dirty && !this.filterForm.get(conInput)?.hasError('required')) {
-          if (value > this.filterForm.get(conInput)?.value) {
-            checkMin = false;
-          }
-        }
-      }
-      // const hasNumber = /\d/.test(value);
-      return checkMin ? null : { numberIsBig: true };
-
-    };
-  }
-  maximumValidator(conInput: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const value: string = control.value;
-      let checkMin = true;
-
-      if (value != null) {
-        if (this.filterForm.get(conInput)?.dirty && !this.filterForm.get(conInput)?.hasError('required')) {
-          if (value < this.filterForm.get(conInput)?.value) {
-            checkMin = false;
-          }
-        }
-      }
-      // const hasNumber = /\d/.test(value);
-      return checkMin ? null : { numberIsLess: true };
-    };
   }
 
   changeLang(lang: string) {

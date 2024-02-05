@@ -17,6 +17,8 @@ import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { SanctionsService } from './services/sanctions.service';
+import { AddSanctionComponent } from 'src/app/shared/components/add-sanction/add-sanction.component';
+import { DialogSanctionFileComponent } from 'src/app/shared/components/dialog-sanction-file/dialog-sanction-file.component';
 @Component({
   selector: 'app-sanctions',
   templateUrl: './sanctions.component.html',
@@ -32,29 +34,20 @@ export class SanctionsComponent {
   private sanctionsService = inject(SanctionsService);
   columns: any[] = [
     {
-      name: "رقم الجدولة",
+      name: "رقم الجزاء",
       field: "code",
     },
     {
-      name: "اسم الجدولة",
-      field: "scheduleName",
+      name: "الأسم",
+      field: "name",
     },
-    {
-      name: "نوع الجدولة",
-      field: "schedulePlanTypeName"
-    },
-    {
-      name: "التاريخ",
-      field: "dateFrom"
-    },
-
     {
       name: "الإجراء",
       field: "actions"
     }
 
   ];
-  schedualPlan: any = [];
+  sanactions: any = [];
   isLoading = true;
   filteration: any = {
     PageSize: 5,
@@ -92,11 +85,11 @@ export class SanctionsComponent {
     this._mobileQueryListener = () => {
       if (this.mobileQuery.matches) {
         this.opened = true;
-        this.schedualPlan = this.schedualPlan;
+        this.sanactions = this.sanactions;
         changeDetectorRef.detectChanges();
       } else {
         this.opened = false;
-        this.schedualPlan = this.schedualPlan;
+        this.sanactions = this.sanactions;
         changeDetectorRef.detectChanges();
       }
     };
@@ -156,22 +149,19 @@ export class SanctionsComponent {
     return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 30, actionCode: data.actionCode })
   }
   getSummons(filteration: any) {
-    this.schedualPlan = [];
+    this.sanactions = [];
     this.isLoading = true;
 
-    this.sanctionsService.listSchedualPlan(filteration).subscribe(data => {
+    this.sanctionsService.listSanctions(filteration).subscribe(data => {
 
-      data.data.forEach((schedualPlan: any) => {
+      data.data.forEach((sanaction: any) => {
 
-
-        this.schedualPlan.push({
-          id: schedualPlan.id,
-          code: schedualPlan.code,
-          scheduleName: schedualPlan.scheduleName,
-          schedulePlanTypeName: schedualPlan.schedulePlanTypeName,
-          dateFrom: moment(new Date(schedualPlan.dateFrom)).format("MM/DD/YYYY"),
-
-          isActive: schedualPlan.isActive
+        
+        this.sanactions.push({
+          id: sanaction.id,
+          code: sanaction.code,
+          name: sanaction.name,
+          isActive: sanaction.isActive
         })
       });
       this.totalItems = data.totalCount
@@ -179,68 +169,28 @@ export class SanctionsComponent {
 
     })
   }
-  addSchedualPlane() {
-    const dialogRefAddCurrency = this.dialog.open(AddSchedualPlanComponent, {
+  addSanction() {
+    const dialogRefAddCurrency = this.dialog.open(AddSanctionComponent, {
       width: "70vw",
       data: {
-        title: "اضافه جدولة",
+        title: "اضافه جزاء",
+        titleFieldDisabled:"الكود",
         setAsActive: "تعيين كنشط",
-
-        titleDepartmentId: "نوع القسم",
-        placeholdeDepartmentId: "نوع القسم",
-        ValidationDepartmentId: "نوع القسم مطلوب",
-
-
-        labelRadioButton: "نوع الجدولة",
-        firstRadio: "لموظف",
-        secondRadio: "لجروب",
-        thirdRadio: "لقسم",
-
-        titleEmployeeId: "نوع الموظف",
-        placeholdeEmployeeId: "نوع الموظف",
-        ValidationEmployeeId: "نوع الموظف مطلوب",
-
-
-        titleScheduleId: "جدول الدوام",
-        placeholdeScheduleId: "جدول الدوام",
-        ValidationScheduleId: "جدول الدوام مطلوب",
-
-        titleCalendar: "التاريخ",
-        placeholderCalendar: "اختار التاريخ",
-        validationCalendar: "التاريخ مطلوب",
-
-        titleGroupId: "نواب الجروب",
-        placeholdeGroupId: "نواب الجروب",
-        ValidationGroupId: "نواب الجروب مطلوب",
-
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        ValidationNotes: "الملاحظات مطلةب",
-
         titleClose: "تراجع",
-        buttonSend: "إضافة جدولة"
+        buttonSend: "إضافة جزاء"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editSchedualPlan = false;
+    dialogRefAddCurrency.componentInstance.editSanction = false;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
 
       formData.isActive = result.isActive;
-
-      formData.SchedulePlanType = Number(result.SchedulePlanType);
-      formData.EmployeeId = result.EmployeeId ? result.EmployeeId.key : null;
-      formData.GroupId = result.GroupId ? result.GroupId.key : null;
-      formData.DepartmentId = result.DepartmentId ? result.DepartmentId.key : null;
-      formData.ScheduleId = result.ScheduleId.key;
-      formData.DateFrom = moment(new Date(result.DateFrom)).format("DD/MM/YYYY");
-      formData.notes = result.notes;
-
-
-
-
-      this.sanctionsService.createSchedualPlan(formData).subscribe(
+      formData.name = result.name;
+      formData.warningMessage = result.warningMessage;
+      
+      this.sanctionsService.createSanction(formData).subscribe(
         {
           next: data => {
 
@@ -283,18 +233,84 @@ export class SanctionsComponent {
       }
     });
   }
-  dialogGroupFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogSchedulePlanFileComponent, {
+  editSanction(data: any)  {
+    const dialogRefAddCurrency = this.dialog.open(AddSanctionComponent, {
+      width: "70vw",
+      data: {
+        title: "تعديل الجزاء",
+        titleFieldDisabled:"الكود",
+
+        setAsActive: "تعيين كنشط",
+        titleClose: "تراجع",
+        buttonSend: "حفظ الجزاء"
+      },
+    });
+    dialogRefAddCurrency.componentInstance.submitted = true;
+    dialogRefAddCurrency.componentInstance.editSanction = true;
+    dialogRefAddCurrency.componentInstance.id = data.id;
+
+    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+      let formData: any = {};
+      formData.id = data.id;
+      formData.isActive = result.isActive;
+      formData.name = result.name;
+      formData.warningMessage = result.warningMessage;
+      
+      this.sanctionsService.updateSanction(formData).subscribe(
+        {
+          next: data => {
+
+
+            dialogRefAddCurrency.componentInstance.submitted = true;
+
+            dialogRefAddCurrency.close();
+
+            const succressDialog = this.dialog.open(ToastSuccessComponent, {
+              width: "30vw",
+              data: {
+                title: "تم ارسال طلبك",
+                message: data.message,
+                buttonSend: "طلبات الجدولة"
+              },
+            });
+            this.getSummons(this.filteration);
+            setTimeout(() => {
+              succressDialog.close();
+
+            }, 2000);
+
+            succressDialog.componentInstance.submitted = true;
+            succressDialog.componentInstance.submitClicked.subscribe(result => {
+              succressDialog.close();
+
+            })
+
+          },
+          error: err => {
+            dialogRefAddCurrency.componentInstance.submitted = true;
+
+          }
+        }
+      )
+    });
+    dialogRefAddCurrency.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+  dialogFile(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(DialogSanctionFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف الجدولة"
+        title: "ملف الجزاء"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id
   }
   enabledRow(data: any) {
 
-    this.sanctionsService.enabledSchedualPlan({ groupId: data.id }).subscribe(
+    this.sanctionsService.enabledSanction({ sanctionId: data.id }).subscribe(
       {
         next: res => {
 
@@ -353,114 +369,7 @@ export class SanctionsComponent {
     };
     this.getSummons(this.filteration);
   }
-  editSchedualPlane(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddSchedualPlanComponent, {
-      width: "70vw",
-      data: {
-        title: "تعديل الجدولة",
-        setAsActive: "تعيين كنشط",
 
-        titleDepartmentId: "نوع القسم",
-        placeholdeDepartmentId: "نوع القسم",
-        ValidationDepartmentId: "نوع القسم مطلوب",
-
-
-        labelRadioButton: "نوع الجدولة",
-        firstRadio: "لموظف",
-        secondRadio: "لجروب",
-        thirdRadio: "لقسم",
-
-        titleEmployeeId: "نوع الموظف",
-        placeholdeEmployeeId: "نوع الموظف",
-        ValidationEmployeeId: "نوع الموظف مطلوب",
-
-
-        titleScheduleId: "جدول الدوام",
-        placeholdeScheduleId: "جدول الدوام",
-        ValidationScheduleId: "جدول الدوام مطلوب",
-
-        titleCalendar: "التاريخ",
-        placeholderCalendar: "اختار التاريخ",
-        validationCalendar: "التاريخ مطلوب",
-
-        titleGroupId: "نواب الجروب",
-        placeholdeGroupId: "نواب الجروب",
-        ValidationGroupId: "نواب الجروب مطلوب",
-
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        ValidationNotes: "الملاحظات مطلةب",
-
-        titleClose: "تراجع",
-        buttonSend: "تعديل الجدولة"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editSchedualPlan = true;
-
-    dialogRefAddCurrency.componentInstance.id = data.id;
-
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData: any = {};
-
-      formData.id = data.row;
-
-      formData.isActive = result.isActive;
-
-      formData.SchedulePlanType = Number(result.SchedulePlanType);
-      formData.EmployeeId = result.EmployeeId ? result.EmployeeId.key : null;
-      formData.GroupId = result.GroupId ? result.GroupId.key : null;
-      formData.DepartmentId = result.DepartmentId ? result.DepartmentId.key : null;
-      formData.ScheduleId = result.ScheduleId.key;
-      formData.DateFrom = moment(new Date(result.DateFrom)).format("DD/MM/YYYY");
-      formData.notes = result.notes;
-
-
-
-
-      this.sanctionsService.updateSchedualPlan(formData).subscribe(
-        {
-          next: data => {
-
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
-            dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات الجدولة"
-              },
-            });
-            this.getSummons(this.filteration);
-            setTimeout(() => {
-              succressDialog.close();
-
-            }, 2000);
-
-            succressDialog.componentInstance.submitted = true;
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-              succressDialog.close();
-
-            })
-
-          },
-          error: err => {
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
-          }
-        }
-      )
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
-
-      }
-    });
-  }
   mathRound(data: any) {
     return Math.ceil(data)
   }
@@ -475,18 +384,18 @@ export class SanctionsComponent {
     const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
       width: "30vw",
       data: {
-        title: "متأكد من تعليق المجموعة؟",
-        message: "برجاء توضيح السبب إن أمكن ليظهر للمجموعة عند محاولة تسجيل الدخول",
+        title: "متأكد من تعليق الجزاء؟",
+        message: "برجاء توضيح السبب إن أمكن ليظهر للجزاء عند محاولة تسجيل الدخول",
         titleReasonOfRefuse: "سبب التعليق",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض ليظهر للمجموعة",
+        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض ليظهر للجزاء",
         titleClose: "تراجع",
-        buttonSend: "تعليق المجموعة"
+        buttonSend: "تعليق الجزاء"
       },
     });
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
-      this.sanctionsService.disabledSchedualPlan({ Id: data.id, DisableReason: result.notes }).subscribe(
+      this.sanctionsService.disabledSanction({ Id: data.id, DisableReason: result.notes }).subscribe(
         {
           next: res => {
 

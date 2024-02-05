@@ -198,7 +198,7 @@ export class SchedualPlanComponent {
         titleDepartmentId: "نوع القسم",
         placeholdeDepartmentId: "نوع القسم",
         ValidationDepartmentId: "نوع القسم مطلوب",
-
+        titleFieldDisabled:"الكود",
 
         labelRadioButton: "نوع الجدولة",
         firstRadio: "لموظف",
@@ -368,7 +368,7 @@ export class SchedualPlanComponent {
       data: {
         title: "تعديل الجدولة",
         setAsActive: "تعيين كنشط",
-
+        titleFieldDisabled:"الكود",
         titleDepartmentId: "نوع القسم",
         placeholdeDepartmentId: "نوع القسم",
         ValidationDepartmentId: "نوع القسم مطلوب",
