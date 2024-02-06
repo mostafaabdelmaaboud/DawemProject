@@ -10,38 +10,49 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
+import { AddSchedualPlanComponent } from 'src/app/shared/components/add-schedual-plan/add-schedual-plan.component';
+import { DialogSchedulePlanFileComponent } from 'src/app/shared/components/dialog-schedule-plan-file/dialog-schedule-plan-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { SummonsService } from './services/summons.service';
 import { AddSummonComponent } from 'src/app/shared/components/add-summon/add-summon.component';
 import { DialogSummonFileComponent } from 'src/app/shared/components/dialog-summon-file/dialog-summon-file.component';
+import { SummonMissingLogsService } from './services/summon-missing-logs.service';
+import { DialogSummonMissingLogsComponent } from 'src/app/shared/components/dialog-summon-missing-logs/dialog-summon-missing-logs.component';
 @Component({
-  selector: 'app-summons',
-  templateUrl: './summons.component.html',
-  styleUrls: ['./summons.component.scss']
+  selector: 'app-summon-missing-logs',
+  templateUrl: './summon-missing-logs.component.html',
+  styleUrls: ['./summon-missing-logs.component.scss']
 })
-export class SummonsComponent {
+export class SummonMissingLogsComponent {
   date!: Date;
   arabic: any;
   subscription!: Subscription;
   itemsPerPage = 5;
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
-  private summonsService = inject(SummonsService);
+  private summonMissingLogsService = inject(SummonMissingLogsService);
   columns: any[] = [
     {
-      name: "رقم الاستدعاء",
+      name: "رقم الموظف",
       field: "code",
     },
     {
-      name: "نوع الاستدعاء",
-      field: "forTypeName",
+      name: "اسم الموظف",
+      field: "employeeName",
+    },
+    {
+      name: "رقم الاستدعاء",
+      field: "summonCode",
     },
     {
       name: "تاريخ ووقت الاستدعاء",
-      field: "dateAndTime"
+      field: "summonDate"
+    },
+    {
+      name: "تم التنبية",
+      field: "doneNotify"
     },
     {
       name: "الإجراء",
@@ -132,7 +143,7 @@ export class SummonsComponent {
   }
   getInformation() {
     this.spinnerCards = true;
-    this.summonsService.getInformation().subscribe({
+    this.summonMissingLogsService.getInformation().subscribe({
       next: data => {
 
         this.cards = {
@@ -153,13 +164,16 @@ export class SummonsComponent {
   getSummons(filteration: any) {
     this.summons = [];
     this.isLoading = true;
-    this.summonsService.listSummons(filteration).subscribe(data => {
+    this.summonMissingLogsService.listSummons(filteration).subscribe(data => {
+  
       data.data.forEach((summon: any) => {
         this.summons.push({
           id: summon.id,
           code: summon.code,
-          forTypeName: summon.forTypeName,
-          dateAndTime: moment(new Date(summon.dateAndTime)).format("MMMM Do YYYY, h:mm:ss a") ,
+          summonCode: summon.summonCode,
+          employeeName: summon.employeeName,
+          summonDate: moment(new Date(summon.summonDate)).format("MMMM Do YYYY, h:mm:ss a") ,
+          doneNotify: summon.doneNotify ? 'نعم' : 'لا',
 
           isActive: summon.isActive
         })
@@ -216,7 +230,7 @@ export class SummonsComponent {
       formData.DateAndTime = moment(result.dateAndTime).format("YYYY-MM-DD hh:mm");
       
       dialogRefAddCurrency.componentInstance.loading = true;
-      this.summonsService.createSummon(formData).subscribe(
+      this.summonMissingLogsService.createSummon(formData).subscribe(
         {
           next: data => {
             dialogRefAddCurrency.componentInstance.submitted = true;
@@ -260,17 +274,17 @@ export class SummonsComponent {
     });
   }
   dialogGroupFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogSummonFileComponent, {
+    const dialogRefAddCurrency = this.dialog.open(DialogSummonMissingLogsComponent, {
       width: "40vw",
       data: {
-        title: "ملف الاستدعاء"
+        title: "ملف سجلات التخلف عن الإستدعاء"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id
   }
   enabledRow(data: any) {
 
-    this.summonsService.enabledSummon({ summonId: data.id }).subscribe(
+    this.summonMissingLogsService.enabledSummon({ summonId: data.id }).subscribe(
       {
         next: res => {
 
@@ -301,14 +315,14 @@ export class SummonsComponent {
     this.getSummons(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableSummonsHidden");
+    let data = document.getElementById("tableSummonsMissingLogsHidden");
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, 'ExcelSheet.xlsx');
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableSummonsHidden");
+    let table: any = document.getElementById("tableSummonsMissingLogsHidden");
     html2canvas(table).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF();
@@ -385,7 +399,7 @@ export class SummonsComponent {
       dialogRefAddCurrency.componentInstance.loading = true;
 
       
-      this.summonsService.updateSummon(formData).subscribe(
+      this.summonMissingLogsService.updateSummon(formData).subscribe(
         {
           next: data => {
 
@@ -456,7 +470,7 @@ export class SummonsComponent {
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
-      this.summonsService.disabledSummon({ Id: data.id, DisableReason: result.notes }).subscribe(
+      this.summonMissingLogsService.disabledSummon({ Id: data.id, DisableReason: result.notes }).subscribe(
         {
           next: res => {
 

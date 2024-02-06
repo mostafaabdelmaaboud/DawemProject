@@ -247,6 +247,7 @@ export class TablesComponent {
 
       let formData: any = {};
       formData.name = result.tableName;
+      formData.isActive = true;
       formData.scheduleDays = [];
       result?.weekDays?.forEach((day: any) => {
         if (day.weekDayValue.key != undefined) {
@@ -341,6 +342,8 @@ export class TablesComponent {
 
       let formData: any = {};
       formData.name = result.tableName;
+      formData.isActive = true;
+
       formData.scheduleDays = [];
       result?.weekDays?.forEach((day: any) => {
         formData.scheduleDays.push({ WeekDay: day.weekDay, ShiftId: day.weekDayValue.key, id: day.id })

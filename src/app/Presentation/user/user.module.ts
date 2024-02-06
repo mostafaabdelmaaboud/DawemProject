@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SideNavBarComponent } from 'src/app/layout/side-nav-bar/side-nav-bar.component';
 import { CoreModule } from 'src/app/core/core.module';
 import { PermissionGuard } from 'src/app/core/guard/permission.guard';
+import { SummonMissingLogsComponent } from './summon-missing-logs/summon-missing-logs.component';
 
 
 const routes: Routes = [
@@ -41,6 +42,12 @@ const routes: Routes = [
         loadChildren: () => import('./summons/summons.module').then((m) => m.SummonsModule),
         canActivate: [PermissionGuard]
       },
+      {
+        path: "summonMissingLogs",
+        loadChildren: () => import('./summon-missing-logs/summon-missing-logs.module').then((m) => m.SummonMissingLogsModule),
+        canActivate: [PermissionGuard]
+      },
+      
       {
         path: "sanctions",
         loadChildren: () => import('./sanctions/sanctions.module').then((m) => m.SanctionsModule),

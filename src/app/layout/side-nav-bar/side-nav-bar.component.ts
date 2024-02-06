@@ -255,7 +255,13 @@ export class SideNavBarComponent {
           name: this.componentName({screenCode:38}),
           routerLink:'/user/sanctions',
           showComponent: this.showComponent({screenCode:38})
-        }
+        },
+        {
+          name: this.componentName({screenCode:40}),
+          routerLink:'/user/summonMissingLogs',
+          showComponent: this.showComponent({screenCode:40})
+        },
+        
       ]
       this.cloneArrayComponents = [...this.listComponents];
     } else {
@@ -405,7 +411,13 @@ export class SideNavBarComponent {
           name: "الجزاءات",
           routerLink:'/user/sanctions',
           showComponent: true
+        },
+        {
+          name: "سجلات التخلف عن الإستدعاء",
+          routerLink:'/user/summonMissingLogs',
+          showComponent: true
         }
+        
       ]
       this.cloneArrayComponents = [...this.listComponents];
 
