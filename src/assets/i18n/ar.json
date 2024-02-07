@@ -11,11 +11,35 @@
     "signIn": "تسجيل الدخول ",
     "Copyrights": "حقوق الطبع والنشر 2023 لشركه داوم - جميع الحقوق محفوظة",
     "WeNeedHelp": "نحتاج مساعده ",
-    "loading": "تحميل"
+    "loading": "تحميل",
+    "createANewAccount":"تسجيل الدخول",
+    "iForgotTheSecretNumber":"نسيت الرقم السري؟"
   },
   "signup": {
     "signup": "إنشاء حساب",
-    "signupToContinue": "قم بي إنشاء الحساب للمتابعه"
+    "signupToContinue": "قم بي إنشاء الحساب للمتابعه",
+    "name":"الأسم",
+    "enterTheName":"ادخال الأسم",
+    "nameIsRequired":"الأسم مطلوب",
+    "companyName":"اسم الشركه",
+    "enterTheCompanyName":"ادخال اسم الشركه",
+    "companyNameIsRequired":"اسم الشركه مطلوب",
+    "country":"الدولة",
+    "pleaseCountryIsRequired":"برجاء الدولة مطلوب",
+    "companyAddress":"عنوان الشركه",
+    "enterCompanyAddress":"ادخال عنوان الشركه",
+    "companyAddressIsRequired":"عنوان الشركه مطلوب",
+    "companyEmail":"بريد الألكتروني للشركه",
+    "companyEmailIsRequired":"بريد الألكتروني للشركه مطلوب",
+    "confirmPassword":"تأكيد كلمة المرور",
+    "confirmPasswordIsRequired":"تأكيد كلمة المرور مطلوبة",
+    "userEmail":"بريد الألكتروني للمستخدم",
+    "userEmailIsRequired":"بريد الألكتروني المستخدم مطلوب",
+    "userPhoneNumber":"رقم الهاتف للمستخدم",
+    "userPhoneNumberIsRequired":"رقم الهاتف للمستخدم مطلوب",
+    "iAgreeToTheTermsAndConditions":"موافق علي الشروط والاحكام",
+    "termsAndConditionsAreRequired":"الشروط والأحكام مطلوبة",
+    "phoneNumberIsIncorrect":"رقم الهاتف غير صحيح"
   },
   "dialogs": {
     "loading": "تحميل..."

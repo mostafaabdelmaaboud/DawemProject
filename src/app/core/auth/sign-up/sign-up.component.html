@@ -50,17 +50,17 @@
               <div class="row">
                 <div class="col-md-6 col-12">
                   <div class="sectionFive mb-3">
-                    <label for="" class="label-input mb-2">الأسم <span class="color-red">*</span></label>
+                    <label for="" class="label-input mb-2">{{'signup.name' | translate}} <span class="color-red">*</span></label>
 
                     <!--Start Custom Validators-->
                     <div class="content-input position-relative">
                       <div class="content-password">
-                        <input type="text" pInputText formControlName="name" placeholder="ادخال الأسم" class="w-100" />
+                        <input type="text" pInputText formControlName="name" [placeholder]="'signup.enterTheName' | translate" class="w-100" />
                       </div>
                       <div class="container-alerts" *ngIf="getControl('name')?.errors">
                         <div class="alert alert-danger"
                           *ngIf="getControl('name')?.hasError('required') && getControl('name')?.dirty">
-                          الأسم مطلوب
+                          {{'signup.nameIsRequired' | translate}} 
                         </div>
                       </div>
                     </div>
@@ -70,17 +70,17 @@
                 </div>
                 <div class="col-md-6 col-12">
                   <div class="sectionFive mb-3">
-                    <label for="" class="label-input mb-2">اسم الشركه <span class="color-red">*</span></label>
+                    <label for="" class="label-input mb-2">{{'signup.companyName' | translate}} <span class="color-red">*</span></label>
                     <div class="content-input position-relative">
                       <div class="content-password">
-                        <input type="text" pInputText formControlName="companyName" placeholder="ادخال اسم الشركه"
+                        <input type="text" pInputText formControlName="companyName" [placeholder]="'signup.enterTheCompanyName' | translate"
                           class="w-100" />
                       </div>
                       <!--Start Custom Validators-->
                       <div class="container-alerts" *ngIf="getControl('companyName')?.errors">
                         <div class="alert alert-danger"
                           *ngIf="getControl('companyName')?.hasError('required') && getControl('companyName')?.dirty">
-                          اسم الشركه مطلوب
+                          {{'signup.companyNameIsRequired' | translate}}
                         </div>
                       </div>
                       <!--End Custom Validators-->
@@ -90,17 +90,17 @@
                 </div>
                 <div class="col-md-6 col-12">
                   <div class="sectionTwo mb-3">
-                    <label class="title">الدولة <span class="color-red">*</span></label>
+                    <label class="label-input mb-2">{{'signup.country' | translate}} <span class="color-red">*</span></label>
                     <div class="content-input position-relative">
                       <div class="content-password">
                         <p-dropdown appendTo="body" [options]="general" formControlName="companyCountryId"
-                          placeholder="الدولة" optionLabel="name"></p-dropdown>
+                          [placeholder]="'signup.country' | translate" optionLabel="name"></p-dropdown>
                       </div>
                       <!--Start Custom Validators-->
                       <div class="container-alerts" *ngIf="getControl('companyCountryId')?.errors">
                         <div class="alert alert-danger"
                           *ngIf="getControl('companyCountryId')?.hasError('required') && getControl('companyCountryId')?.dirty">
-                          برجاء الدولة مطلوب
+                          {{'signup.pleaseCountryIsRequired' | translate}}
                         </div>
                       </div>
                       <!--End Custom Validators-->
@@ -110,17 +110,17 @@
                 </div>
                 <div class="col-md-6 col-12">
                   <div class="sectionFive mb-3">
-                    <label for="" class="label-input mb-2">عنوان الشركه <span class="color-red">*</span></label>
+                    <label for="" class="label-input mb-2">{{'signup.companyAddress' | translate}} <span class="color-red">*</span></label>
                     <div class="content-input position-relative">
                       <div class="content-password">
-                        <input type="text" pInputText formControlName="companyAddress" placeholder="ادخال عنوان الشركه"
+                        <input type="text" pInputText formControlName="companyAddress" [placeholder]="'signup.enterCompanyAddress' | translate"
                           class="w-100" />
                       </div>
                       <!--Start Custom Validators-->
                       <div class="container-alerts" *ngIf="getControl('companyAddress')?.errors">
                         <div class="alert alert-danger"
                           *ngIf="getControl('companyAddress')?.hasError('required') && getControl('companyAddress')?.dirty">
-                          عنوان الشركه مطلوب
+                          {{'signup.companyAddressIsRequired' | translate}}
                         </div>
                       </div>
                       <!--End Custom Validators-->
@@ -130,18 +130,18 @@
                 </div>
                 <div class="col-md-6 col-12">
                   <div class="sectionFive mb-3">
-                    <label for="" class="label-input mb-2">بريد الألكتروني للشركه <span
+                    <label for="" class="label-input mb-2">{{'signup.companyEmail' | translate}} <span
                         class="color-red">*</span></label>
                     <div class="content-input position-relative">
                       <div class="content-password">
                         <input type="text" pInputText formControlName="companyEmail"
-                          placeholder="بريد الألكتروني للشركه " class="w-100" />
+                          [placeholder]="'signup.companyEmail' | translate" class="w-100" />
                       </div>
                       <!--Start Custom Validators-->
                       <div class="container-alerts" *ngIf="getControl('companyEmail')?.errors">
                         <div class="alert alert-danger"
                           *ngIf="getControl('companyEmail')?.hasError('required') && getControl('companyEmail')?.dirty">
-                          بريد الألكتروني للشركه مطلوب
+                          {{'signup.companyEmailIsRequired' | translate}}
                         </div>
                       </div>
                       <!--End Custom Validators-->
@@ -151,7 +151,7 @@
                 </div>
                 <div class="col-md-6 col-12">
                   <div class="section-field c-f">
-                    <label class="mb-2 d-block f-s-16 label-form">{{'login.password' | translate}}<span
+                    <label class="mb-2 d-block f-s-16 label-form">{{'login.password' | translate}} <span
                         class="color-red ml-2">*</span></label>
                     <div class="content-input position-relative">
                       <span class="p-input-icon-right w-100 field-password">
@@ -184,13 +184,13 @@
                 </div>
                 <div class="col-md-6 col-12">
                   <div class="section-field c-f">
-                    <label class="mb-2 d-block f-s-16 label-form">تأكيد كلمة المرور<span
+                    <label class="mb-2 d-block f-s-16 label-form">{{'signup.confirmPassword' | translate}} <span
                         class="color-red ml-2">*</span></label>
                     <div class="content-input position-relative">
                       <span class="p-input-icon-right w-100 field-password">
                         <i class="pi pi-lock"></i>
                         <input [type]="toggleConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword"
-                          class="w-100" pInputText placeholder="تأكيد كلمة المرور" />
+                          class="w-100" pInputText [placeholder]="'signup.confirmPassword' | translate" />
                         <span (click)="toggleConfirmPassword = !toggleConfirmPassword">
                           <i class=" pi pi-eye" *ngIf="toggleConfirmPassword"></i>
                           <i class=" pi pi-eye-slash" *ngIf="!toggleConfirmPassword"></i>
@@ -203,7 +203,7 @@
                         </div>
                         <div class="alert alert-danger"
                           *ngIf="getControl('confirmPassword')?.hasError('passwordMismatch') && !getControl('confirmPassword')?.hasError('required')">
-                          تأكيد كلمة المرور
+                           {{'signup.confirmPasswordIsRequired' | translate}}
                         </div>
                       </div>
                       <!-- <div class="container-alerts mb-2"
@@ -224,18 +224,18 @@
                 </div>
                 <div class="col-md-6 col-12">
                   <div class="sectionFive mb-3">
-                    <label for="" class="label-input mb-2">بريد الألكتروني للمستخدم <span
+                    <label for="" class="label-input mb-2">{{'signup.userEmail' | translate}} <span
                         class="color-red">*</span></label>
                     <div class="content-input position-relative">
                       <div class="content-password">
                         <input type="text" pInputText formControlName="userEmail"
-                          placeholder="بريد الألكتروني للمستخدم " class="w-100" />
+                          [placeholder]="'signup.userEmail' | translate" class="w-100" />
                       </div>
                       <!--Start Custom Validators-->
                       <div class="container-alerts" *ngIf="getControl('userEmail')?.errors">
                         <div class="alert alert-danger"
                           *ngIf="getControl('userEmail')?.hasError('required') && getControl('userEmail')?.dirty">
-                          بريد الألكتروني للمستخدم مطلوب
+                          {{'signup.userEmailIsRequired' | translate}} 
                         </div>
                       </div>
                       <!--End Custom Validators-->
@@ -245,17 +245,21 @@
                 </div>
                 <div class="col-md-6 col-12">
                   <div class="sectionFive mb-3">
-                    <label for="" class="label-input mb-2">رقم الهاتف للمستخدم <span class="color-red">*</span></label>
+                    <label for="" class="label-input mb-2">{{'signup.userPhoneNumber' | translate}} <span class="color-red">*</span></label>
                     <div class="content-input position-relative">
                       <div class="content-password">
                         <input type="text" pInputText formControlName="userMobileNumber"
-                          placeholder="رقم الهاتف للمستخدم" class="w-100" />
+                          [placeholder]="'signup.userPhoneNumber' | translate" class="w-100" />
                       </div>
                       <div class="container-alerts" *ngIf="getControl('userMobileNumber')?.errors">
                         <div class="alert alert-danger"
                           *ngIf="getControl('userMobileNumber')?.hasError('required') && getControl('userMobileNumber')?.dirty">
-                          رقم الهاتف للمستخدم مطلوب
+                          {{'signup.userPhoneNumberIsRequired' | translate}}
                         </div>
+                        <div class="alert alert-danger"
+                        *ngIf="getControl('userMobileNumber')?.hasError('pattern') && getControl('userMobileNumber')?.dirty">
+                        {{'signup.phoneNumberIsIncorrect' | translate}}
+                      </div>
                       </div>
                     </div>
 
@@ -265,14 +269,14 @@
                 <div class="col-md-12 col-12">
                   <div class="sectionFive mb-3">
 
-                    <label for="sdad" class="mb-0 ml-15">موافق علي الشروط والاحكام</label>
+                    <label for="sdad" class="mb-0 ml-15">{{'signup.iAgreeToTheTermsAndConditions' | translate}}</label>
 
                     <p-checkbox name="category" [value]="true" formControlName="agreed" inputId="sdad"></p-checkbox>
                     {{getControl('agreed')?.value}}
                     <!--Start Custom Validators-->
                     <div class="alert alert-danger mt-3"
                       *ngIf="getControl('agreed')?.hasError('required') && getControl('agreed')?.dirty">
-                      الشروط والأحكام مطلوبة
+                      {{'signup.termsAndConditionsAreRequired' | translate}}
                     </div>
 
                     <!--End Custom Validators-->
@@ -283,12 +287,12 @@
             </div>
 
 
-            <button class="btn btn-primary w-100 button-submit">{{loading ? ('login.signIn' | translate) :
+            <button class="btn btn-primary w-100 button-submit">{{loading ? ('signup.signup' | translate) :
               ('login.loading' | translate) + '....'}}</button>
           </form>
           <div class="footer-form">
-            <span class="section-footer-login-left" routerLink="/login">تسجيل الدخول</span>
-            <span class="section-footer-login-right">نسيت الرقم السري؟</span>
+            <span class="section-footer-login-left" routerLink="/login"> {{'login.signIn' | translate}}</span>
+            <span class="section-footer-login-right">{{'login.iForgotTheSecretNumber' | translate}}</span>
           </div>
         </div>
       </div>

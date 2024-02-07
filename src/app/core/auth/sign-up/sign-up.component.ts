@@ -25,7 +25,7 @@ export class SignUpComponent {
     confirmPassword: ["", [Validators.required, Validators.minLength(5), , this.passwordMatchValidator()]],
 
     userEmail: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
-    userMobileNumber: ["", Validators.required],
+    userMobileNumber: ["", [Validators.required, Validators.pattern(/^(\+\d{1,3}[- ]?)?\d{8,}$/)]],
     agreed: [, Validators.required],
 
   });
@@ -60,12 +60,22 @@ export class SignUpComponent {
       error: err => {
 
       }
-    })
+    });
     if (this.currentLang === undefined || this.currentLang === null) {
+      this.countries = [
+        { name: 'السعودية', code: 'AR' },
+        { name: 'الولايات المتحدة', code: 'US' },
+        { name: 'الهند', code: 'IN' }
+      ];
       this.selectedCountry = { name: 'السعودية', code: 'AR' };
       document.documentElement.setAttribute('lang', 'ar');
       this.translate.use("ar");
     } else {
+      this.countries = [
+        { name: 'Egypt', code: 'AR' },
+        { name: 'United States', code: 'US' },
+        { name: 'India', code: 'IN' }
+      ];
       if (this.currentLang == "ar") {
         this.selectedCountry = { name: 'Egypt', code: 'AR' };
         document.documentElement.setAttribute('lang', 'ar');

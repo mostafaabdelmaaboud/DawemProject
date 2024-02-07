@@ -29,17 +29,22 @@ export class LoginComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.countries = [
-      { name: 'السعودية', code: 'AR' },
-      { name: 'الولايات المتحدة', code: 'US' },
-      { name: 'الهند', code: 'IN' }
-    ];
 
     if (this.currentLang === undefined || this.currentLang === null) {
+      this.countries = [
+        { name: 'السعودية', code: 'AR' },
+        { name: 'الولايات المتحدة', code: 'US' },
+        { name: 'الهند', code: 'IN' }
+      ];
       this.selectedCountry = { name: 'السعودية', code: 'AR' };
       document.documentElement.setAttribute('lang', 'ar');
       this.translate.use("ar");
     } else {
+      this.countries = [
+        { name: 'Egypt', code: 'AR' },
+        { name: 'United States', code: 'US' },
+        { name: 'India', code: 'IN' }
+      ];
       if (this.currentLang == "ar") {
         this.selectedCountry = { name: 'Egypt', code: 'AR' };
         document.documentElement.setAttribute('lang', 'ar');
@@ -54,6 +59,7 @@ export class LoginComponent {
         document.documentElement.setAttribute('lang', 'en');
         this.translate.use("ind");
       }
+
     }
   }
   changeLanguage(lang: any) {
@@ -92,7 +98,8 @@ export class LoginComponent {
             let parseJson = JSON.parse(formatObjectPermissions);
             if (parseJson.isAdmin || parseJson.availablePermissions.length > 0) {
               this.authService.setToken(res.data.token);
-              this.toast.success(res.message);
+              this.toast.success(res.message,"", {timeOut: 1000});
+              
               this.router.navigate(["/user/dashboard"]);
             } else {
               this.toast.error("you don't have permissions");

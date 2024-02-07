@@ -11,7 +11,36 @@
     "signIn": "sign in",
     "Copyrights": "Copyright 2023 Daum Company - All rights reserved",
     "WeNeedHelp": "We need help",
-    "loading": "loading"
+    "loading": "loading",
+    "createANewAccount":"create a new account",
+    "iForgotTheSecretNumber":"i forgot the secret number?"
+  },
+  "signup": {
+    "signup": "sign up",
+    "signupToContinue": "sign up to continue",
+    "name":"name",
+    "enterTheName":"Enter the name",
+    "nameIsRequired":"name is required",
+    "companyName":"company name",
+    "enterTheCompanyName":"enter the company name",
+    "companyNameIsRequired":"company name is required",
+    "country":"country",
+    "pleaseCountryIsRequired":"please country is required",
+    "companyAddress":"company address",
+    "enterCompanyAddress":"enter company address",
+    "companyAddressIsRequired":"company address is required",
+    "companyEmail":"company email",
+    "companyEmailIsRequired":"company email is required",
+    "confirmPassword":"confirm password",
+    "confirmPasswordIsRequired":"confirm password is required",
+    "userEmail":"user email",
+    "userEmailIsRequired":"user email is required",
+    "userPhoneNumber":"user phone number",
+    "userPhoneNumberIsRequired":"user phone number is required",
+    "iAgreeToTheTermsAndConditions":"i agree to the terms and conditions",
+    "termsAndConditionsAreRequired":"terms and conditions are required",
+    "phoneNumberIsIncorrect":"Phone number is incorrect"
+
   },
   "dialogs": {
     "loading": "loading..."
@@ -74,8 +103,8 @@
       "Nov",
       "Dec"
     ],
-    "am": "صباحًا",
-    "pm": "مساءً",
+    "am": "AM",
+    "pm": "PM",
     "today": "Today",
     "weekHeader": "Wk"
   }

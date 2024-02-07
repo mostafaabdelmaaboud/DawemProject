@@ -280,7 +280,7 @@ export class EmployeesComponent {
 
         this.employees.push({
           id: employee.id,
-          orderNumber: employee.code,
+          orderNumber: employee.employeeNumber,
           isActive: employee.isActive,
           employeeName: {
             name: employee?.name ? employee?.name : "لا يوجد",
@@ -573,7 +573,7 @@ export class EmployeesComponent {
         secondRadio: "دوام جزئي",
         thirdRadio: "دوام حر / شيفت",
         titleFieldDisabled: "كود الموظف",
-        code: "#001093",
+        code: data.orderNumber,
         JobNumber: "الرقم الوظيفي <span class='color-red'>*</span>",
         placeholdeJobNumber: "الرقم الوظيفي",
         validationtitleJobNumber: "الرقم الوظيفي مطلوب",
