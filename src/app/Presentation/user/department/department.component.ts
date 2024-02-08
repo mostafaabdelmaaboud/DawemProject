@@ -13,9 +13,10 @@ import { DepartmentService } from './services/department.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-department',
   templateUrl: './department.component.html',
@@ -168,11 +169,33 @@ export class DepartmentComponent {
 
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableEmploymentHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[8]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'الحضور والانصراف',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+ 
+    let formatTable = this.department.map(department => {
+      return {
+        orderNumber: department.orderNumber,
+        name: department.name,
+        date: department.date,
+        audience: department.audience,
+        dismissing: department.dismissing,
+        status: department.status,
+        timeGap: department.timeGap,
+        zone: department.zone,
+
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableEmploymentHidden");

@@ -15,9 +15,9 @@ import { ToastrService } from 'ngx-toastr';
 
 import { RequestsService } from './services/requests.service';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
 
 @Component({
   selector: 'app-requests',
@@ -193,11 +193,32 @@ export class RequestsComponent {
     this.getRequests(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableRequetstsHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[5]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'الطلبات',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+ 
+    let formatTable = this.requests.map(request => {
+      return {
+        orderNumber: request.orderNumber,
+        employeeName: request.employeeName.name,
+        requestTypeName: request.requestTypeName,
+        date: request.date,
+
+        statusName: request.statusName
+
+      }
+    })
+
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableRequetstsHidden");

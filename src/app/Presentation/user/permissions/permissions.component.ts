@@ -14,9 +14,10 @@ import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { DialogPermissionFileComponent } from 'src/app/shared/components/dialog-permission-file/dialog-permission-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-permissions',
   templateUrl: './permissions.component.html',
@@ -195,11 +196,31 @@ export class PermissionsComponent {
     this.getPermissions(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tablePermissionHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[6]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'طلبات الأذونات',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    debugger;
+    let formatTable = this.permissions.map(permission => {
+      
+      return {
+        orderNumber: permission.orderNumber,
+        employeeName: permission.employeeName.name,
+        typeOfPermission: permission.typeOfPermission,
+        statusName: permission.statusName,
+        dateFrom: permission.dateFrom,
+        dateTo: permission.dateTo
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tablePermissionHidden");

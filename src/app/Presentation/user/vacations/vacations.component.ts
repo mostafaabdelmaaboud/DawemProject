@@ -14,9 +14,10 @@ import { VacationsService } from './services/vacations.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-vacations',
   templateUrl: './vacations.component.html',
@@ -240,11 +241,33 @@ export class VacationsComponent {
     العنوان: 'العنوان هنا'
   };
   exportTableToExcel() {
-    let data = document.getElementById("tableVacationHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  
+    let columns = [...this.columns];
+    delete columns[7]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'طلبات الأجازات',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.vacations.map(vacation => {
+      
+      return {
+        orderNumber: vacation.orderNumber,
+        employeeName: vacation.employeeName.name,
+        kindOfHoliday: vacation.kindOfHoliday,
+        beginning: vacation.beginning,
+        final: vacation.final,
+        reason: vacation.reason,
+        balanceAfterRequest: vacation.balanceAfterRequest
+
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableVacationHidden");

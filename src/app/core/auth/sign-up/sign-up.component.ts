@@ -47,18 +47,14 @@ export class SignUpComponent {
       { name: 'الولايات المتحدة', code: 'US' },
       { name: 'الهند', code: 'IN' }
     ];
-
-
     this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
       next: data => {
         this.general = [];
         data.forEach((country: any) => {
           this.general.push({ name: country.globalName, id: country.id })
         });
-
       },
       error: err => {
-
       }
     });
     if (this.currentLang === undefined || this.currentLang === null) {

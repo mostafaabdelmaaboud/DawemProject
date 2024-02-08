@@ -43,6 +43,7 @@
     "ng-apexcharts": "^1.8.0",
     "ng-zorro-antd": "^15.1.0",
     "ngx-cookie-service": "^15.0.0",
+    "ngx-csv": "^0.3.2",
     "ngx-google-places-autocomplete-esb": "^15.0.0-beta2",
     "ngx-pagination": "^6.0.3",
     "ngx-toastr": "^17.0.2",

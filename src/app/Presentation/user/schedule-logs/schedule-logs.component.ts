@@ -11,9 +11,10 @@ import { ToastrService } from 'ngx-toastr';
 import { ScheduleLogsService } from './services/schedule-logs.service';
 import { DialogScheduleLogFileComponent } from 'src/app/shared/components/dialog-schedule-log-file/dialog-schedule-log-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-schedule-logs',
   templateUrl: './schedule-logs.component.html',
@@ -189,11 +190,28 @@ export class ScheduleLogsComponent {
     this.getSchedules(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableshiftHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[4]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'سجلات خطط الجدولة',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    debugger;
+    let formatTable = this.schedules.map(schedule => {
+      return {
+        scheduleName: schedule.scheduleName,
+        schedulePlanTypeName: schedule.schedulePlanTypeName,
+        applyDate: schedule.applyDate,
+        employeesNumberAppliedOn: schedule.employeesNumberAppliedOn
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableshiftHidden");

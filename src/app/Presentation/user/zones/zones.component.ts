@@ -13,9 +13,10 @@ import { ZonesService } from './services/zones.service';
 import { AddZoneComponent } from 'src/app/shared/components/add-zone/add-zone.component';
 import { DialogZoneFileComponent } from 'src/app/shared/components/dialog-zone-file/dialog-zone-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-zones',
   templateUrl: './zones.component.html',
@@ -169,11 +170,30 @@ export class ZonesComponent {
 
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableZonesHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+ 
+    let columns = [...this.columns];
+    delete columns[5]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'المناطق',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.zones.map(zone => {
+      
+      return {
+        zoneNumber: zone.zoneNumber,
+        zoneName: zone.zoneName,
+        Latit: zone.Latit,
+        Long: zone.Long,
+        Radius: zone.Radius
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableZonesHidden");

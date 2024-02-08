@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -14,9 +13,9 @@ import { AddUserPermissionComponent } from 'src/app/shared/components/add-user-p
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
 import { DialogUserPermissionFileComponent } from 'src/app/shared/components/dialog-user-permission-file/dialog-user-permission-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
 @Component({
   selector: 'app-user-permissions',
   templateUrl: './user-permissions.component.html',
@@ -206,11 +205,29 @@ export class UserPermissionsComponent {
     this.getPermissions(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tablePermissionsHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[4]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'الصلاحيات',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    debugger;
+    let formatTable = this.permissions.map(permission => {
+      
+      return {
+        code: permission.code,
+        forTypeName: permission.forTypeName,
+        roleOrUserName: permission.roleOrUserName,
+        allowedScreensCount: permission.allowedScreensCount
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tablePermissionsHidden");

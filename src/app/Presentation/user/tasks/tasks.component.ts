@@ -14,9 +14,10 @@ import { TasksService } from './services/tasks.service';
 import { DialogTaskFileComponent } from 'src/app/shared/components/dialog-task-file/dialog-task-file.component';
 import * as moment from 'moment';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.component.html',
@@ -191,11 +192,29 @@ export class TasksComponent {
     this.getTasks(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableTasksHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[6]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'طلبات المهمات',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.tasks.map(task => {
+      return {
+        orderNumber: task.orderNumber,
+        employeeName: task.employeeName.name,
+        task: task.task,
+        dateFrom: task.dateFrom,
+        dateTo: task.dateTo,
+        statusName: task.statusName,
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableTasksHidden");

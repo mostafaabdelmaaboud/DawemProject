@@ -1,12 +1,10 @@
-import { ChangeDetectorRef, Component, Inject, LOCALE_ID, inject } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { RequestJustificationComponent } from 'src/app/shared/components/request-justification/request-justification.component';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
@@ -15,11 +13,9 @@ import { ToastrService } from 'ngx-toastr';
 import { RequestForJustificationComponent } from 'src/app/shared/components/request-for-justification/request-for-justification.component';
 import * as moment from 'moment';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-
-// import 'jspdf-utf8'
+import { ngxCsv } from 'ngx-csv/ngx-csv';
 @Component({
   selector: 'app-justifications',
   templateUrl: './justifications.component.html',
@@ -169,11 +165,32 @@ export class JustificationsComponent {
 
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableJustificationHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+
+    let columns = [...this.columns];
+    delete columns[5]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'طلبات التبريرات',
+      useBom: true,
+      header: 'th { font-weight: bold; }',
+      headers: columns.map((column:any) => column.name)
+    };
+    debugger;
+    let formatTable = this.justifications.map(justification => {
+      
+      return {
+        orderNumber: justification.orderNumber,
+        employeeName: justification.employeeName.name,
+        typeOfJustification: justification.typeOfJustification,
+        dateFrom: justification.dateFrom,
+        dateTo: justification.dateTo
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableJustificationHidden");

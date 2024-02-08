@@ -14,9 +14,10 @@ import { AddVacationBalanceComponent } from 'src/app/shared/components/add-vacat
 import { DialogVacationBalanceFileComponent } from 'src/app/shared/components/dialog-vacation-balance-file/dialog-vacation-balance-file.component';
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-vacation-balance',
   templateUrl: './vacation-balance.component.html',
@@ -331,11 +332,30 @@ export class VacationBalanceComponent {
     this.getVacations(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableVacationsHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[6]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'أرصدة الأجازات',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.Vacations.map(Vacation => {
+      
+      return {
+        code: Vacation.code,
+        employeeName: Vacation.employeeName,
+        vacationTypeName: Vacation.vacationTypeName,
+        balance: Vacation.balance,
+        remainingBalance: Vacation.remainingBalance,
+        year: Vacation.year
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableVacationsHidden");

@@ -13,9 +13,10 @@ import { AddUserComponent } from 'src/app/shared/components/add-user/add-user.co
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
 import { DialogUserFileComponent } from 'src/app/shared/components/dialog-user-file/dialog-user-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -186,11 +187,30 @@ export class UsersComponent {
     this.getUsers(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableUsersHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+   
+    let columns = [...this.columns];
+    delete columns[4]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'المستخدمين',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    debugger;
+    let formatTable = this.users.map(user => {
+      
+      return {
+        code: user.code,
+        name: user.name.name,
+        isAdmin: user.isAdmin ? 'نعم' : 'لا',
+        isActive: user.isActive ? 'نعم' : 'لا'
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableUsersHidden");

@@ -14,16 +14,18 @@ import { EmployeesService } from './services/employees.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ActivatedRoute } from '@angular/router';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html',
   styleUrls: ['./employees.component.scss']
 })
 export class EmployeesComponent {
+  
   date!: Date;
   arabic: any;
   subscription!: Subscription;
@@ -207,11 +209,33 @@ export class EmployeesComponent {
   }
   
   exportTableToExcel() {
-    let data = document.getElementById("tableEmployeesHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[5]
+
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'الموظفين',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+ 
+    let formatTable = this.employees.map(employee => {
+      return {
+        orderNumber: employee.orderNumber,
+        employeeName: employee.employeeName.name,
+        section: employee.section,
+        joiningDate: employee.joiningDate,
+
+        vacationsBalance: employee.vacationsBalance
+
+      }
+    })
+
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableEmployeesHidden");
