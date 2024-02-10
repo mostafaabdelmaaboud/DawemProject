@@ -8,17 +8,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
-import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { AddSchedualPlanComponent } from 'src/app/shared/components/add-schedual-plan/add-schedual-plan.component';
-import { DialogSchedulePlanFileComponent } from 'src/app/shared/components/dialog-schedule-plan-file/dialog-schedule-plan-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { SanctionsService } from './services/sanctions.service';
 import { AddSanctionComponent } from 'src/app/shared/components/add-sanction/add-sanction.component';
 import { DialogSanctionFileComponent } from 'src/app/shared/components/dialog-sanction-file/dialog-sanction-file.component';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-sanctions',
   templateUrl: './sanctions.component.html',
@@ -151,12 +149,8 @@ export class SanctionsComponent {
   getSummons(filteration: any) {
     this.sanactions = [];
     this.isLoading = true;
-
     this.sanctionsService.listSanctions(filteration).subscribe(data => {
-
       data.data.forEach((sanaction: any) => {
-
-        
         this.sanactions.push({
           id: sanaction.id,
           code: sanaction.code,
@@ -166,7 +160,6 @@ export class SanctionsComponent {
       });
       this.totalItems = data.totalCount
       this.isLoading = false;
-
     })
   }
   addSanction() {
@@ -341,11 +334,26 @@ export class SanctionsComponent {
     this.getSummons(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableSanctionsHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[2]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'الجزاءات',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.sanactions.map(sanaction => {
+      
+      return {
+        code: sanaction.code,
+        name: sanaction.name
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableSanctionsHidden");

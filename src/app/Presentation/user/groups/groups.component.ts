@@ -1,28 +1,22 @@
-import { ChangeDetectorRef, Component, ElementRef, Inject, LOCALE_ID, ViewChild, inject } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { AssignmentRequestComponent } from 'src/app/shared/components/assignment-request/assignment-request.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { AddShiftComponent } from 'src/app/shared/components/add-shift/add-shift.component';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
-import { EditShiftComponent } from 'src/app/shared/components/edit-shift/edit-shift.component';
-import { DeleteShiftComponent } from 'src/app/shared/components/delete-shift/delete-shift.component';
 import { AddGroupComponent } from 'src/app/shared/components/add-group/add-group.component';
-import { EditGroupComponent } from 'src/app/shared/components/edit-group/edit-group.component';
-import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { GroupsService } from './services/groups.service';
 import { DialogGroupFileComponent } from 'src/app/shared/components/dialog-group-file/dialog-group-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-groups',
   templateUrl: './groups.component.html',
@@ -170,11 +164,28 @@ export class GroupsComponent {
     this.getGroups(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableGroupHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[4]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'المجموعات',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.groups.map(group => {
+      
+      return {
+        groupNumber: group.groupNumber,
+        groupName: group.groupName,
+        groupStaff: group.groupStaff.name,
+        numberOfEmployeesInTheGroup: group.numberOfEmployeesInTheGroup
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableGroupHidden");

@@ -15,9 +15,10 @@ import { HolidaysService } from './services/holidays.service';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-holidays',
   templateUrl: './holidays.component.html',
@@ -174,22 +175,19 @@ export class HolidaysComponent {
     this.holidays = [];
     this.isLoading = true;
     this.holidaysService.listHolidays(filteration).subscribe(data => {
-      data.data.forEach((اholiday: any) => {
-        ;
+      data.data.forEach((holiday: any) => {
         this.holidays.push({
-          id: اholiday.id,
-          code: اholiday.code,
-          name: اholiday.name,
-          isActive: اholiday.isActive,
-          dateType: اholiday.dateType,
-          startDate: اholiday.startDate,
-          endDate: اholiday.endDate,
+          id: holiday.id,
+          code: holiday.code,
+          name: holiday.name,
+          isActive: holiday.isActive,
+          dateType: holiday.dateType,
+          startDate: holiday.startDate,
+          endDate: holiday.endDate,
         })
       });
       this.totalItems = data.totalCount
       this.isLoading = false;
-
-
     })
   }
   mathRound(data: any) {
@@ -310,11 +308,29 @@ export class HolidaysComponent {
     this.getHolidays(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableHolidaysHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[5]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'العطلات الرسمية',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.holidays.map(holiday => {
+      
+      return {
+        code: holiday.code,
+        name: holiday.name,
+        dateType: holiday.dateType,
+        startDate: holiday.startDate,
+        endDate: holiday.endDate
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableHolidaysHidden");

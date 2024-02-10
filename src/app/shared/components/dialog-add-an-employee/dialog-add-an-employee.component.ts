@@ -113,6 +113,9 @@ export class DialogAddAnEmployeeComponent {
   @Input() workScheduleList: any[] = [];
   @Input() editEmployee!: boolean;
   @Input() id!: string;
+  @Input() departmentID!: any;
+
+  
   listDirectManager: any[] = [];
 
 
@@ -266,7 +269,23 @@ export class DialogAddAnEmployeeComponent {
       }
       if (!this.editEmployee) {
         this.loading = false;
+        
+        if(this.departmentID >= 0) {
+          
+          this.employeesService.getDepartmentForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, id: this.departmentID }).subscribe(dataDropdown => {
 
+            this.sectionList = []
+            
+            dataDropdown.data?.forEach((insideData: any) => {
+              this.sectionList.push({ name: insideData.name, key: insideData.id })
+            });
+            let sectionList = this.sectionList.findIndex(job => job.key === this.departmentID);
+            if (sectionList >= 0) {
+              this.addBranchGroupForm.get("DepartmentId")?.setValue(this.sectionList[sectionList]);
+            }
+          });
+        }
+     
       }
 
     })
@@ -388,6 +407,7 @@ export class DialogAddAnEmployeeComponent {
   }
 
   request() {
+    
     if (this.addBranchGroupForm.valid && this.submitted) {
       this.submitted = false;
       this.submitClicked.emit({ ...this.addBranchGroupForm.value, files: this.uploadedFiles });

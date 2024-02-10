@@ -39,9 +39,6 @@ export class ZonesComponent {
   listDepratment: any[] = [];
   listSchedules: any[] = [];
   listJobTitle: any[] = [];
-
-
-
   columns: any[] = [
     {
       name: "#",

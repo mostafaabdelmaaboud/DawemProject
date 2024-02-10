@@ -11,12 +11,13 @@ import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dia
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { SummonsService } from './services/summons.service';
 import { AddSummonComponent } from 'src/app/shared/components/add-summon/add-summon.component';
 import { DialogSummonFileComponent } from 'src/app/shared/components/dialog-summon-file/dialog-summon-file.component';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-summons',
   templateUrl: './summons.component.html',
@@ -301,11 +302,26 @@ export class SummonsComponent {
     this.getSummons(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableSummonsHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[3]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'الاستدعاءات',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.summons.map(summon => {
+      return {
+        code: summon.code,
+        forTypeName: summon.forTypeName,
+        dateAndTime: summon.dateAndTime
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableSummonsHidden");

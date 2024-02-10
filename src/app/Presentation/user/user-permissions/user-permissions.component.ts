@@ -217,7 +217,6 @@ export class UserPermissionsComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    debugger;
     let formatTable = this.permissions.map(permission => {
       
       return {

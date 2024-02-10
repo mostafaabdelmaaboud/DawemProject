@@ -420,7 +420,7 @@ export class EmployeesComponent {
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData = new FormData();
-
+      moment.locale("en"); 
       formData.append("CreateEmployeeModelString", JSON.stringify({
         IsActive: result.isActive,
         AttendanceType: Number(result.AttendanceType),
@@ -653,6 +653,8 @@ export class EmployeesComponent {
     dialogRefAddCurrency.componentInstance.id = data.id;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData = new FormData();
+      moment.locale("en"); 
+
       formData.append("UpdateEmployeeModelString", JSON.stringify({
         id: data.id,
         IsActive: result.isActive,

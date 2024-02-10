@@ -13,9 +13,10 @@ import { SchedulesService } from './services/schedules.service';
 import { ToastrService } from 'ngx-toastr';
 import { DialogScheduleFileComponent } from 'src/app/shared/components/dialog-schedule-file/dialog-schedule-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-tables',
   templateUrl: './tables.component.html',
@@ -44,13 +45,10 @@ export class TablesComponent {
       name: "موظفين الجدول",
       field: "tableStaff"
     },
-
-
     {
       name: "الإجراء",
       field: "actions"
     }
-
   ];
   schedules: any = [];
 
@@ -158,11 +156,26 @@ export class TablesComponent {
     this.getSchedules(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tabletablesHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[3]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'الجدولة',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.schedules.map(schedule => {
+      return {
+        tableNumber: schedule.tableNumber,
+        tableName: schedule.tableName,
+        tableStaff: schedule.tableStaff
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tabletablesHidden");

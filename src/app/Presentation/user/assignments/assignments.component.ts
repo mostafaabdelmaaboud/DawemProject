@@ -14,9 +14,10 @@ import * as moment from 'moment';
 import { AssignmentsService } from './services/assignments.service';
 import { ToastrService } from 'ngx-toastr';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-assignments',
   templateUrl: './assignments.component.html',
@@ -183,11 +184,31 @@ export class AssignmentsComponent {
     this.getAssignments(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableAssignmentHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[6]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'طلبات التكليفات',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.assignments.map(assignment => {
+      
+      return {
+        orderNumber: assignment.orderNumber,
+        employeeName: assignment.employeeName.name,
+        assignmentTypeName: assignment.assignmentTypeName,
+        dateFrom: assignment.dateFrom,
+        dateTo: assignment.dateTo,
+        statusName: assignment.statusName
+
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableAssignmentHidden");

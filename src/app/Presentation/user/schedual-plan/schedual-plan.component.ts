@@ -14,9 +14,10 @@ import { SchedualPlanService } from './services/schedual-plan.service';
 import { AddSchedualPlanComponent } from 'src/app/shared/components/add-schedual-plan/add-schedual-plan.component';
 import { DialogSchedulePlanFileComponent } from 'src/app/shared/components/dialog-schedule-plan-file/dialog-schedule-plan-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-schedual-plan',
   templateUrl: './schedual-plan.component.html',
@@ -334,11 +335,28 @@ export class SchedualPlanComponent {
     this.getGroups(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableSchedualPlanHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[4]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'خطط الجدولة',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.schedualPlan.map(schedualPlan => {
+      
+      return {
+        code: schedualPlan.code,
+        scheduleName: schedualPlan.scheduleName,
+        schedulePlanTypeName: schedualPlan.schedulePlanTypeName,
+        dateFrom: schedualPlan.dateFrom
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableSchedualPlanHidden");

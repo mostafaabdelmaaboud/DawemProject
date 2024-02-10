@@ -11,6 +11,10 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { DashboardService } from './services/dashboard.service';
 import * as moment from 'moment';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogAddAnEmployeeComponent } from 'src/app/shared/components/dialog-add-an-employee/dialog-add-an-employee.component';
+import { EmployeesService } from '../employees/services/employees.service';
+import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -26,6 +30,8 @@ export type ChartOptions = {
 export class DashboardComponent {
   @ViewChild("chart") chart!: ChartComponent;
   @ViewChild("chartCandlestick") chartCandl!: ChartComponent;
+  private dialog = inject(MatDialog);
+
   private dashboardService = inject(DashboardService);
   router = inject(Router)
   public chartOptions!: any;
@@ -40,6 +46,7 @@ export class DashboardComponent {
   items!: MenuItem[];
   cities!: any[];
   bestEmployeesList!: any[];
+  private employeesService = inject(EmployeesService);
 
   statusOfOrders!: any[];
   selectedCity!: any;
@@ -489,6 +496,147 @@ export class DashboardComponent {
 
       }
     })
+  }
+
+  addAnEmployee(data:any) {
+    const dialogRefAddCurrency = this.dialog.open(DialogAddAnEmployeeComponent, {
+      width: "50vw",
+      data: {
+        title: "إضافة موظف",
+        setAsNecessary: "تعيين كنشط",
+        labelRadioButtonFirst: "نوع الدوام",
+        firstRadio: "دوام كامل",
+        secondRadio: "دوام جزئي",
+        thirdRadio: "دوام حر / شيفت",
+        titleFieldDisabled: "كود الموظف",
+        code: "#001093",
+        JobNumber: "الرقم الوظيفي <span class='color-red'>*</span>",
+        placeholdeJobNumber: "الرقم الوظيفي",
+        validationtitleJobNumber: "الرقم الوظيفي مطلوب",
+        directManager: "المدير المباشر <span class='color-red'>*</span>",
+        placeholdeDirectManager: "المدير المباشر",
+        validationtitleDirectManager: "المدير المباشر مطلوب",
+        email: "البريد الالكتروني <span class='color-red'>*</span>",
+        placeholdeEmail: "البريد الالكتروني",
+        validationtitleEmail: "البريد الالكتروني مطلوب",
+        validationtitleEmailPattern: "البريد الالكتروني غير صحيح",
+
+        address: "العنوان <span class='color-red'>*</span>",
+        placeholdeAddress: "العنوان",
+        validationtitleAddress: "العنوان مطلوب",
+        mobileNumber: "رقم الهاتف <span class='color-red'>*</span>",
+        placeholdeMobileNumber: "رقم الهاتف",
+        validationtitleMobileNumber: "رقم الهاتف مطلوب",
+        titleWorkSchedule: "جدول الدوام <span class='color-red'>*</span>",
+        placeholderWorkSchedule: " اختار جدول الدوام",
+        validationtitleWorkSchedule: "جدول الدوام مطلوب",
+        fieldFirst: "اسم الموظف <span class='color-red'>*</span>",
+        placeholdefieldFirst: "اسم الموظف",
+        validationtitlefieldFirst: "اسم الموظف مطلوب",
+        titleDropdownFirst: "المسمى الوظيفي <span class='color-red'>*</span>",
+        placeholderDropdownFirst: " اختار المسمى الوظيفي",
+        validationtitleDropdownFirst: "المسمي الوظفس مطلوب",
+        titleDropdownSecond: "القسم <span class='color-red'>*</span>",
+        validationtitleDropdownSecond: " اختار القسم مطلوب",
+        placeholderDropdown: " اختار القسم",
+        titleCalendar: "تاريخ الالتحاق <span class='color-red'>*</span>",
+        validationCalendar: "تاريخ الالتحاق مطلوب",
+        uploadFile: "ارفاق ملف",
+        chooseLabel: "اختار الملف ليتم رفعه",
+        labelEmployeeName: "نوع الموظف",
+        firstRadioEmployeeName: "عسكري",
+        secondRadioEmployeeName: "مدني",
+        thirdRadioEmployeeName: "تعاقد مباشر",
+        thirdRadioFour: "تعاقد شركات",
+        placeholderCalendar: "اختار التاريخ",
+        labelRadioButtonSecond: "نوع الشيفت",
+        firstRadiTwo: "صباحي",
+        secondRadioTwo: "مسائي",
+        thirdRadioTwo: "ليلي",
+        titleNotes: "رصيد الاجازات <span class='color-red'>*</span>",
+        placeholdeNotes: "رصيد الاجازات",
+        validationtitleNotes: "برجاء كتابة رصيد الاجازات هنا",
+        buttonSend: "إضافة الموظف",
+        titleClose: "تراجع"
+      },
+    });
+    dialogRefAddCurrency.componentInstance.submitted = true;
+    // dialogRefAddCurrency.componentInstance.list = this.categories;
+    dialogRefAddCurrency.componentInstance.editEmployee = false;
+    dialogRefAddCurrency.componentInstance.departmentID = data.id;
+
+    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+      let formData = new FormData();
+      moment.locale("en"); 
+      formData.append("CreateEmployeeModelString", JSON.stringify({
+        IsActive: result.isActive,
+        AttendanceType: Number(result.AttendanceType),
+        name: result.name,
+        DirectManagerId: result.directManager.key,
+        email: result.email,
+        address: result.address,
+        EmployeeType: Number(result.employeeType),
+        employeeNumber: result.employeeNumber,
+
+        mobileNumber: result.mobileNumber,
+        JobTitleId: result.JobTitleId.key,
+        DepartmentId: result.DepartmentId.key,
+        JoiningDate: moment(result.JoiningDate).format("MM/DD/YYYY"),
+        ScheduleId: result.ScheduleId.key,
+        AnnualVacationBalance: result.AnnualVacationBalance
+
+      }));
+
+      result.files.forEach((file: any) => {
+        formData.append("ProfileImageFile", file.fileUpload, file.fileUpload.name);
+      });
+      dialogRefAddCurrency.componentInstance.submitted = false;
+
+      this.employeesService.createEmployee(formData).subscribe(
+        {
+          next: data => {
+
+            dialogRefAddCurrency.componentInstance.submitted = true;
+
+            dialogRefAddCurrency.close();
+
+            const succressDialog = this.dialog.open(ToastSuccessComponent, {
+              width: "30vw",
+              data: {
+                title: "تم ارسال طلبك",
+                message: data.message,
+                buttonSend: "طلبات الموظفين"
+              },
+            });
+            setTimeout(() => {
+              succressDialog.close();
+
+            }, 2000);
+
+            succressDialog.componentInstance.submitted = true;
+            succressDialog.componentInstance.submitClicked.subscribe(result => {
+
+
+              succressDialog.close();
+
+            })
+
+          },
+          error: err => {
+
+            dialogRefAddCurrency.componentInstance.submitted = true;
+
+          }
+        }
+      )
+
+
+    });
+    dialogRefAddCurrency.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
   }
   isSameDay(date1: Date, date2: Date): boolean {
     return (

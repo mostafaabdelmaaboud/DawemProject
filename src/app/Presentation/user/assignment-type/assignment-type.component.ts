@@ -13,9 +13,10 @@ import { AssignmentTypeService } from './services/assignment-type.service';
 import { RequestAssignmentTypeComponent } from 'src/app/shared/components/request-assignment-type/request-assignment-type.component';
 import { DialogAssignmentTypeFileComponent } from 'src/app/shared/components/dialog-assignment-type-file/dialog-assignment-type-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-assignment-type',
   templateUrl: './assignment-type.component.html',
@@ -150,19 +151,32 @@ export class AssignmentTypeComponent {
       } else {
         if(value >=0) {
           filteration[key] = value;
-
         }
-
       }
     })
     this.getAssignments(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tablePermissionTypeHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[3]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'أنواع التكليفات',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.assignments.map(assignment => {
+      return {
+        code: assignment.code,
+        name: assignment.name,
+        isActive: assignment.isActive ? 'نشط' : 'غير نشط'
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tablePermissionTypeHidden");
@@ -218,7 +232,6 @@ export class AssignmentTypeComponent {
               code: vacation.code,
               name: vacation.name,
               isActive: vacation.isActive
-
             })
           });
           this.totalItems = data.totalCount

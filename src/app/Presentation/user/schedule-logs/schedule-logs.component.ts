@@ -202,7 +202,6 @@ export class ScheduleLogsComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    debugger;
     let formatTable = this.schedules.map(schedule => {
       return {
         scheduleName: schedule.scheduleName,

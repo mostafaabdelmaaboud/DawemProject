@@ -179,7 +179,6 @@ export class JustificationsComponent {
       header: 'th { font-weight: bold; }',
       headers: columns.map((column:any) => column.name)
     };
-    debugger;
     let formatTable = this.justifications.map(justification => {
       
       return {
@@ -361,7 +360,7 @@ export class JustificationsComponent {
       data.data.forEach((employee: any) => {
         this.justifications.push({
           id: employee.id,
-          orderNumber: employee.employee.code,
+          orderNumber: employee.code,
           employeeName: {
             name: employee.employee.name,
             alt: employee.employee.name,

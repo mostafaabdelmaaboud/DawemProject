@@ -13,9 +13,10 @@ import { PermissionTypeService } from './services/permission-type.service';
 import { RequestPermissionTypeComponent } from 'src/app/shared/components/request-permission-type/request-permission-type.component';
 import { DialogPermissionTypeFileComponent } from 'src/app/shared/components/dialog-permission-type-file/dialog-permission-type-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-permission-type',
   templateUrl: './permission-type.component.html',
@@ -174,11 +175,27 @@ export class PermissionTypeComponent {
     this.getPermissions(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tablePermissionTypeHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[3]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'أنواع الأذونات',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.permissions.map(permission => {
+      
+      return {
+        code: permission.code,
+        name: permission.name,
+        isActive: permission.isActive ? 'نشط' : 'غير نشط'
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tablePermissionTypeHidden");

@@ -200,7 +200,6 @@ export class UsersComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    debugger;
     let formatTable = this.users.map(user => {
       
       return {

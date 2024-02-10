@@ -13,9 +13,10 @@ import { DialogTaskTypeFileComponent } from 'src/app/shared/components/dialog-ta
 import { RequestTaskTypeComponent } from 'src/app/shared/components/request-task-type/request-task-type.component';
 import { TaskTypeService } from './services/task-type.service';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-task-type',
   templateUrl: './task-type.component.html',
@@ -158,12 +159,28 @@ export class TaskTypeComponent {
     this.getTasks(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableTaskTypeHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[3]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'أنواع المهمات',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.tasks.map(task => {
+      return {
+        code: task.code,
+        name: task.name,
+        isActive: task.isActive ? 'نشط' : 'غير نشط'
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
+
   exportTableToPDF() {
     let table: any = document.getElementById("tableTaskTypeHidden");
     html2canvas(table).then((canvas) => {

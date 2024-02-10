@@ -13,9 +13,10 @@ import { JustificationsTypeService } from './services/justifications-type.servic
 import { RequestJustificationTypeComponent } from 'src/app/shared/components/request-justification-type/request-justification-type.component';
 import { DialogJustificationTypeFileComponent } from 'src/app/shared/components/dialog-justification-type-file/dialog-justification-type-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-justifications-type',
   templateUrl: './justifications-type.component.html',
@@ -158,11 +159,26 @@ export class JustificationsTypeComponent {
     this.getJustifications(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableJustificationTypeHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[3]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'أنواع التبريرات',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.justifications.map(justification => {
+      return {
+        code: justification.code,
+        name: justification.name,
+        isActive: justification.isActive ? 'نشط' : 'غير نشط'
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableJustificationTypeHidden");

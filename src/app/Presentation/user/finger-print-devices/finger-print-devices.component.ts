@@ -13,9 +13,10 @@ import { FingerPrintDevicesService } from './services/finger-print-devices.servi
 import { AddFingerPrintDeviceComponent } from 'src/app/shared/components/add-finger-print-device/add-finger-print-device.component';
 import { DialogFingerPrintDeviceFileComponent } from 'src/app/shared/components/dialog-finger-print-device-file/dialog-finger-print-device-file.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
-import * as XLSX from 'xlsx';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
+
 @Component({
   selector: 'app-finger-print-devices',
   templateUrl: './finger-print-devices.component.html',
@@ -36,8 +37,6 @@ export class FingerPrintDevicesComponent {
       name: "رقم الجهاز",
       field: "code",
     },
-
-
     {
       name: "اسم الجهاز",
       field: "name",
@@ -163,19 +162,36 @@ export class FingerPrintDevicesComponent {
       } else {
         if(value >=0) {
           filteration[key] = value;
-
         }
-
       }
     })
     this.getFingerprintDevices(filteration);
   }
   exportTableToExcel() {
-    let data = document.getElementById("tableFingerPrintDevicesHidden");
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(data);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+    let columns = [...this.columns];
+    delete columns[6]
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      showTitle: true,
+      title: 'أجهزة البصمة',
+      useBom: true,
+      headers: columns.map((column:any) => column.name)
+    };
+    let formatTable = this.fingerPrintDevices.map(fingerPrintDevice => {
+      
+      return {
+        code: fingerPrintDevice.code,
+        name: fingerPrintDevice.name,
+        ipAddress: fingerPrintDevice.ipAddress,
+        portNumber: fingerPrintDevice.portNumber,
+        model: fingerPrintDevice.model,
+        serialNumber: fingerPrintDevice.serialNumber
+      }
+    })
+    new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableFingerPrintDevicesHidden");
