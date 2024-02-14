@@ -16,6 +16,8 @@ import { PermissionsUserService } from 'src/app/shared/services/permissions-user
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
+import { DialogDepartmentFileComponent } from 'src/app/shared/components/dialog-department-file/dialog-department-file.component';
+import { DialogCloseRadioButtonsComponent } from 'src/app/shared/components/dialog-close-radio-buttons/dialog-close-radio-buttons.component';
 
 @Component({
   selector: 'app-department',
@@ -63,11 +65,6 @@ export class DepartmentComponent {
       name: "الفرق",
       field: "timeGap"
     },
-    {
-      name: "المكان",
-      field: "zone"
-    },
-
     {
       name: "الإجراء",
       field: "actions"
@@ -190,8 +187,7 @@ export class DepartmentComponent {
         audience: department.audience,
         dismissing: department.dismissing,
         status: department.status,
-        timeGap: department.timeGap,
-        zone: department.zone,
+        timeGap: department.timeGap
 
       }
     })
@@ -255,6 +251,16 @@ export class DepartmentComponent {
       }
     })
   }
+  dialogEmployeeFile(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(DialogDepartmentFileComponent, {
+      width: "40vw",
+      data: {
+        title: "ملف الحضور والانصراف"
+      },
+    });
+    dialogRefAddCurrency.componentInstance.id = data.id
+
+  }
   getDepartment(filteration: any) {
     this.department = [];
     this.isLoading = true;
@@ -268,8 +274,7 @@ export class DepartmentComponent {
           audience: attendacne.checkInTime.replaceAll(' ', '') ? attendacne.checkInTime : "لا يوجد",
           dismissing: attendacne.checkOutTime.replaceAll(' ', '') ? attendacne.checkOutTime : "لا يوجد",
           status: attendacne.status,
-          timeGap: attendacne.timeGap,
-          zone: attendacne.zoneName
+          timeGap: attendacne.timeGap
         })
       });
 
@@ -400,12 +405,12 @@ export class DepartmentComponent {
     });
   }
   deleteRow(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
-      width: "30vw",
+    const reasonOfRefuseDialog = this.dialog.open(DialogCloseRadioButtonsComponent, {
+      width: "50vw",
       data: {
         title: "متأكد من حذف الحضور والانصراف؟",
         message: "برجاء توضيح السبب إن أمكن ليظهر للموظف كتنبيه في التطبيق",
-        titleReasonOfRefuse: "سبب الحذف",
+        titleReasonOfRefuse: "طريقة الحذف",
         placeholdeReasonOfRefuse: "برجاء كتابة سبب الحذف ان امكن",
         titleClose: "تراجع",
         buttonSend: "حذف"
@@ -414,21 +419,23 @@ export class DepartmentComponent {
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
-      // this.departmentService.deleteAttendance({ departmentid: data.id }).subscribe(
-      //   {
-      //     next: res => {
+      
+      this.departmentService.deleteAttendance({ Id: data.id, Type:Number(result.type) }).subscribe(
+        {
+          next: res => {
+            
 
-      //       this.toast.success(res.message);
-      //       reasonOfRefuseDialog.componentInstance.submitted = true;
-      //       this.getDepartment(this.filteration);
-      //       reasonOfRefuseDialog.close();
-      //     },
-      //     error: err => {
-      //       reasonOfRefuseDialog.componentInstance.submitted = true;
+            this.toast.success(res.message);
+            reasonOfRefuseDialog.componentInstance.submitted = true;
+            this.getDepartment(this.filteration);
+            reasonOfRefuseDialog.close();
+          },
+          error: err => {
+            reasonOfRefuseDialog.componentInstance.submitted = true;
 
-      //     }
-      //   }
-      // )
+          }
+        }
+      )
 
     })
   }

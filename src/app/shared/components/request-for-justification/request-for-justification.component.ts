@@ -93,6 +93,7 @@ export class RequestForJustificationComponent {
     radioButtons: ["false"],
     ForEmployee: [false],
     JustificationTypeId: ['', Validators.required],
+    Notes: ['', Validators.required],
     dateTask: [null, Validators.required]
   });
   AttachmentsFiles: any[] = [];
@@ -320,6 +321,7 @@ export class RequestForJustificationComponent {
     // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
   }
   request() {
+    
     if (this.addBranchGroupForm.value.dateTask != null) {
       if (this.addBranchGroupForm.value.dateTask[1] === null) {
         this.dateTaskMultiple = true;

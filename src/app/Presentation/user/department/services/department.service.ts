@@ -30,6 +30,16 @@ export class DepartmentService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.delete<any>(`${environment.baseUrl}Department/delete`, { params: queryParams })
+    return this.http.delete<any>(`${environment.baseUrl}EmployeeAttendance/delete`, { params: queryParams })
+  }
+  departmentGetInfo(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}EmployeeAttendance/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
   }
 }

@@ -489,6 +489,7 @@ export class DashboardComponent {
             }
           }
         });
+        moment.locale("en");
         this.totalItems = data.totalCount;
 
       },

@@ -1,0 +1,79 @@
+<div class="container-Dialog">
+    <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+      <h3 class="title-Dialog m-0">
+        {{data!['title']|translate}}
+      </h3>
+      <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+        <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+        <i class="pi pi-times-circle"></i>
+      </button>
+    </header>
+    <div class="body-dialog p-15 f-s-16">
+      <!-- <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">الرقم الوظيفي</label>
+        <div class="content-password">
+          {{info?.employeeNumber ? info?.employeeNumber : "لا يوجد"}}
+        </div>
+  
+      </div> -->
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">اسم الموظف</label>
+        <div class="content-password">
+          {{info?.employeeName ? info?.employeeName : "لا يوجد"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">التاريخ</label>
+        <div class="content-password">
+          {{info?.date ? info?.date : "لا يوجد"}}
+        </div>
+      </div>
+   
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">وقت الحضور</label>
+        <div class="content-password">
+          {{info?.checkInTime ? info?.checkInTime : "لا يوجد"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">وقت الخروج</label>
+        <div class="content-password">
+          {{info?.checkOutTime ? info?.checkOutTime : "لا يوجد"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">الحالة</label>
+        <div class="content-password">
+          {{info?.status ? info?.status : "لا يوجد"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">الفرق</label>
+        <div class="content-password">
+          {{info?.timeGap ? info?.timeGap : "لا يوجد"}}
+        </div>
+      </div>
+ 
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">البصمة</label>
+        <ng-container *ngFor="let finger of info.fingerprints">
+            <div class="content-password">
+                <span class="d-block">طريقه التعرف : {{finger?.recognitionWay ? finger?.recognitionWay : "لا يوجد"}}</span>
+                <span class="d-block">الوقت : {{finger?.time ? finger?.time : "لا يوجد"}}</span>
+                <span class="d-block">النوع : {{finger?.type ? finger?.type : "لا يوجد"}}</span>
+                <span class="d-block">مكان البصمة : {{finger?.zoneName ? finger?.zoneName : "لا يوجد"}}</span>
+              </div>
+        </ng-container>
+        <ng-container *ngIf="info.fingerprints.length ===0">
+            <div class="content-password">لا يوجد</div>
+        </ng-container>
+        
+
+      </div>
+    </div>
+  
+  </div>
+  
+  <div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+  </div>
