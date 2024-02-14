@@ -167,7 +167,7 @@ export class DepartmentComponent {
   }
   exportTableToExcel() {
     let columns = [...this.columns];
-    delete columns[8]
+    delete columns[7]
     var options = { 
       fieldSeparator: ',',
       quoteStrings: '"',
