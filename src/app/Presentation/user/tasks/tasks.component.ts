@@ -249,7 +249,7 @@ export class TasksComponent {
 
         this.tasks.push({
           id: employee.id,
-          orderNumber: employee.employee.code ? employee.employee.code : "لا يوجد",
+          orderNumber: employee.code ? employee.code : "لا يوجد",
           status: employee.status,
           employeeName: {
             name: employee.employee.name,

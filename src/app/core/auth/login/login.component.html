@@ -4,8 +4,8 @@
     </div>
     <div class="container-login d-flex justify-content-between align-items-center col-lg-8 col-12 position-relative">
       <div class="card d-flex justify-content-center change-language">
-        <p-dropdown [options]="countries" [(ngModel)]="selectedCountry" (onChange)="changeLanguage($event)"
-          optionLabel="name" placeholder="Select a Country">
+          <p-dropdown [options]="countries" [(ngModel)]="selectedCountry" (onChange)="changeLanguage($event)"
+          optionLabel="name">
           <ng-template pTemplate="selectedItem">
             <ng-container *ngIf="selectedCountry.code !='AR'">
               <div class="d-flex align-items-center gap-2" *ngIf="selectedCountry">
@@ -38,6 +38,8 @@
             </ng-container>
           </ng-template>
         </p-dropdown>
+        
+  
       </div>
       <div class="content-login">
         <div class="header text-center">

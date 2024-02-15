@@ -199,7 +199,7 @@ export class VacationsComponent {
           data.data.forEach((vacation: any) => {
             this.vacations.push({
               id: vacation.id,
-              orderNumber: vacation.employee?.code ? vacation.employee?.code : "لا يوجد",
+              orderNumber: vacation?.code ? vacation?.code : "لا يوجد",
               status: vacation.status,
               employeeName: {
                 name: vacation.employee?.name ? vacation.employee?.name : "لا يوجد",

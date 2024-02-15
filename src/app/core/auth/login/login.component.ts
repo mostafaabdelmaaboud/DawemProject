@@ -1,5 +1,5 @@
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { ToastService } from 'src/app/shared/services/toast.service';
@@ -23,12 +23,18 @@ export class LoginComponent {
   loading: boolean = true;
   isLoading = false;
   private router = inject(Router)
-  selectedCountry: any = { name: 'السعودية', code: 'AR' };
-  constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService) {
+  selectedCountry: any;
+  constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService, private cd:ChangeDetectorRef) {
   }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+    // this.countries = [
+    //   { name: 'السعودية', code: 'AR' },
+    //   { name: 'الولايات المتحدة', code: 'US' },
+    //   { name: 'الهند', code: 'IN' }
+    // ];
+    // this.selectedCountry = { name: 'السعودية', code: 'AR' };
 
     if (this.currentLang === undefined || this.currentLang === null) {
       this.countries = [
@@ -40,45 +46,87 @@ export class LoginComponent {
       document.documentElement.setAttribute('lang', 'ar');
       this.translate.use("ar");
     } else {
-      this.countries = [
-        { name: 'Egypt', code: 'AR' },
-        { name: 'United States', code: 'US' },
-        { name: 'India', code: 'IN' }
-      ];
+
+   
+      this.selectedCountry = { name: 'Egypt', code: 'AR' };
+
       if (this.currentLang == "ar") {
-        this.selectedCountry = { name: 'Egypt', code: 'AR' };
         document.documentElement.setAttribute('lang', 'ar');
         this.translate.use("ar");
+        this.countries = [
+          { name: 'السعودية', code: 'AR' },
+          { name: 'الولايات المتحدة', code: 'US' },
+          { name: 'الهند', code: 'IN' }
+        ];
+        this.selectedCountry = { name: 'السعودية', code: 'AR' };
+
       }
       else if (this.currentLang == "en") {
         this.selectedCountry = { name: 'United States', code: 'US' };
         document.documentElement.setAttribute('lang', 'en');
         this.translate.use("en");
+        this.countries = [
+          { name: 'United States', code: 'US' },
+          { name: 'Egypt', code: 'AR' },
+          { name: 'India', code: 'IN' }
+        ];
+        this.selectedCountry = { name: 'United States', code: 'US' };
       } else if (this.currentLang == "ind") {
         this.selectedCountry = { name: 'India', code: 'IN' };
         document.documentElement.setAttribute('lang', 'en');
         this.translate.use("ind");
+        this.countries = [
+          { name: 'India', code: 'IN' },
+
+          { name: 'Egypt', code: 'AR' },
+          { name: 'United States', code: 'US' }
+        ];
+        this.selectedCountry = { name: 'India', code: 'IN' };
+
       }
 
     }
   }
   changeLanguage(lang: any) {
-    lang.value;
+    this.countries = [];
     if (lang.value.code === "US") {
       document.documentElement.setAttribute('lang', 'en');
       localStorage.setItem("lang", "en");
       this.translate.use("en");
+      this.countries = [
+        { name: 'United States', code: 'US' },
+        { name: 'Egypt', code: 'AR' },
+        { name: 'India', code: 'IN' }
+      ];
+ 
+      let findIndexCountry =  this.countries.findIndex(country =>country.code == "US" )
+      this.selectedCountry = this.countries[findIndexCountry];
     } else if (lang.value.code == "AR") {
       document.documentElement.setAttribute('lang', 'ar');
       localStorage.setItem("lang", "ar");
       this.translate.use("ar");
+      this.countries = [
+        { name: 'السعودية', code: 'AR' },
+        { name: 'الولايات المتحدة', code: 'US' },
+        { name: 'الهند', code: 'IN' }
+      ];
+      let findIndexCountry =  this.countries.findIndex(country =>country.code == "AR" )
+      this.selectedCountry = this.countries[findIndexCountry];
+
     } else if (lang.value.code == "IN") {
       document.documentElement.setAttribute('lang', 'en');
       localStorage.setItem("lang", "ind");
-
       this.translate.use("ind");
+      this.countries = [
+        { name: 'India', code: 'IN' },
 
+        { name: 'Egypt', code: 'AR' },
+        { name: 'United States', code: 'US' }
+      ];
+      let findIndexCountry =  this.countries.findIndex(country =>country.code == "IN" )
+      this.selectedCountry = this.countries[findIndexCountry];
     }
+    this.cd.detectChanges();
   }
   submit() {
 

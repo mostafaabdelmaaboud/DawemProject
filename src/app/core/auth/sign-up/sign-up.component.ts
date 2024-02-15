@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../services/auth-service.service';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-sign-up',
@@ -67,24 +68,42 @@ export class SignUpComponent {
       document.documentElement.setAttribute('lang', 'ar');
       this.translate.use("ar");
     } else {
-      this.countries = [
-        { name: 'Egypt', code: 'AR' },
-        { name: 'United States', code: 'US' },
-        { name: 'India', code: 'IN' }
-      ];
+   
       if (this.currentLang == "ar") {
         this.selectedCountry = { name: 'Egypt', code: 'AR' };
         document.documentElement.setAttribute('lang', 'ar');
         this.translate.use("ar");
+        this.countries = [
+          { name: 'السعودية', code: 'AR' },
+          { name: 'الولايات المتحدة', code: 'US' },
+          { name: 'الهند', code: 'IN' }
+        ];
+        this.selectedCountry = { name: 'السعودية', code: 'AR' };
+
       }
       else if (this.currentLang == "en") {
         this.selectedCountry = { name: 'United States', code: 'US' };
         document.documentElement.setAttribute('lang', 'en');
+
         this.translate.use("en");
+        this.countries = [
+          { name: 'United States', code: 'US' },
+          { name: 'Egypt', code: 'AR' },
+          { name: 'India', code: 'IN' }
+        ];
+        this.selectedCountry = { name: 'United States', code: 'US' };
+
       } else if (this.currentLang == "ind") {
         this.selectedCountry = { name: 'India', code: 'IN' };
         document.documentElement.setAttribute('lang', 'en');
         this.translate.use("ind");
+        this.countries = [
+          { name: 'India', code: 'IN' },
+          { name: 'Egypt', code: 'AR' },
+          { name: 'United States', code: 'US' }
+        ];
+        this.selectedCountry = { name: 'India', code: 'IN' };
+
       }
     }
   }
@@ -105,16 +124,64 @@ export class SignUpComponent {
       document.documentElement.setAttribute('lang', 'en');
       localStorage.setItem("lang", "en");
       this.translate.use("en");
+      this.countries = [
+        { name: 'United States', code: 'US' },
+        { name: 'Egypt', code: 'AR' },
+        { name: 'India', code: 'IN' }
+      ];
+      
+      let findIndexCountry =  this.countries.findIndex(country =>country.code == "US" )
+      this.selectedCountry = this.countries[findIndexCountry];
     } else if (lang.value.code == "AR") {
       document.documentElement.setAttribute('lang', 'ar');
       localStorage.setItem("lang", "ar");
       this.translate.use("ar");
+      this.countries = [
+        { name: 'السعودية', code: 'AR' },
+        { name: 'الولايات المتحدة', code: 'US' },
+        { name: 'الهند', code: 'IN' }
+      ];
+      let findIndexCountry =  this.countries.findIndex(country =>country.code == "AR" )
+      this.selectedCountry = this.countries[findIndexCountry];
     } else if (lang.value.code == "IN") {
       document.documentElement.setAttribute('lang', 'en');
       localStorage.setItem("lang", "ind");
-
       this.translate.use("ind");
 
+      this.countries = [
+        { name: 'India', code: 'IN' },
+        { name: 'Egypt', code: 'AR' },
+        { name: 'United States', code: 'US' }
+      ];
+      let findIndexCountry =  this.countries.findIndex(country =>country.code == "IN" )
+      this.selectedCountry = this.countries[findIndexCountry];
+
+    }
+  }
+  lastSearchQuery = "";
+
+  searchDropdown(data: any, type: string) {
+
+    switch (type) {
+      case 'companyCountryId':
+        if (data || data === "") {
+          if (data !== this.lastSearchQuery) {
+            this.lastSearchQuery = data;
+            this.authService.getCountries({PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+              debounceTime(300),
+              distinctUntilChanged()).subscribe((res: any) => {
+                this.general = [];
+                res.forEach((country: any) => {
+                  this.general.push({ name: country.globalName, id: country.id })
+                });
+              });
+          }
+
+        }
+        break;
+
+      default:
+        break;
     }
   }
   submit() {

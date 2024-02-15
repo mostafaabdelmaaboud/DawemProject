@@ -43,6 +43,7 @@ export class DashboardComponent {
   leadingHeader = false;
   totalItems: number = 0;
   totalItemsBestEmployees: number = 0;
+  totalItemsDepartments: number = 0;
   items!: MenuItem[];
   cities!: any[];
   bestEmployeesList!: any[];
@@ -119,6 +120,12 @@ export class DashboardComponent {
     PageNumber: 0,
     PagingEnabled: true
   };
+  filterationDepartments: any = {
+    PageSize: 5,
+    PageNumber: 0,
+    PagingEnabled: true
+  };
+  
   filterationStatusOfOrders:any = {
   }
   ngOnInit() {
@@ -332,7 +339,7 @@ export class DashboardComponent {
     this.getRequestsStatus(this.filterationStatusOfOrders);
     this.getEmployeesStatus();
     this.getEmployeesAttendancesStatus(this.filteration);
-    this.getDepartmentsInformations(this.filteration);
+    this.getDepartmentsInformations(this.filterationDepartments);
     this.getBestEmployees(this.filterationBestEmloyees);
   }
 
@@ -382,6 +389,11 @@ export class DashboardComponent {
   onPageChangeBestEmployees(event: any) {
     this.filterationBestEmloyees = { ...this.filterationBestEmloyees, PageNumber: event.page };
     this.getBestEmployees(this.filterationBestEmloyees);
+
+  }
+  onPageChangeDepartments(event: any) {
+    this.filterationDepartments = { ...this.filterationDepartments, PageNumber: event.page };
+    this.getDepartmentsInformations(this.filterationDepartments);
 
   }
   mathRound(data: any) {
@@ -490,7 +502,7 @@ export class DashboardComponent {
           }
         });
         moment.locale("en");
-        this.totalItems = data.totalCount;
+        this.totalItemsDepartments = data.totalCount;
 
       },
       error: err => {
