@@ -93,6 +93,7 @@ export class RequestForPermissionComponent {
     ForEmployee: [false],
     PermissionTypeId: ['', Validators.required],
     dateTask: [null, Validators.required],
+    time: [null, Validators.required],
     Notes: [null, Validators.required],
   });
   AttachmentsFiles: any[] = [];
@@ -198,7 +199,7 @@ export class RequestForPermissionComponent {
                 }
               });
               this.addBranchGroupForm.get("dateTask")?.setValue([new Date(data.dateFrom), new Date(data.dateTo)]);
-
+              this.addBranchGroupForm.get("time")?.setValue(new Date(data.dateFrom));
               this.addBranchGroupForm.get("Notes")?.setValue(data?.notes);
 
               this.loading = false;
@@ -336,6 +337,8 @@ export class RequestForPermissionComponent {
     } else {
       this.getControl("PermissionTypeId")?.markAsDirty();
       this.getControl("dateTask")?.markAsDirty();
+      this.getControl("time")?.markAsDirty();
+
       this.getControl("Notes")?.markAsDirty();
 
 

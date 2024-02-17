@@ -48,7 +48,7 @@ export class LoginComponent {
     } else {
 
    
-      this.selectedCountry = { name: 'Egypt', code: 'AR' };
+      this.selectedCountry = { name: 'Saudi Arabia', code: 'AR' };
 
       if (this.currentLang == "ar") {
         document.documentElement.setAttribute('lang', 'ar');
@@ -67,7 +67,7 @@ export class LoginComponent {
         this.translate.use("en");
         this.countries = [
           { name: 'United States', code: 'US' },
-          { name: 'Egypt', code: 'AR' },
+          { name: 'Saudi Arabia', code: 'AR' },
           { name: 'India', code: 'IN' }
         ];
         this.selectedCountry = { name: 'United States', code: 'US' };
@@ -78,7 +78,7 @@ export class LoginComponent {
         this.countries = [
           { name: 'India', code: 'IN' },
 
-          { name: 'Egypt', code: 'AR' },
+          { name: 'Saudi Arabia', code: 'AR' },
           { name: 'United States', code: 'US' }
         ];
         this.selectedCountry = { name: 'India', code: 'IN' };
@@ -95,7 +95,7 @@ export class LoginComponent {
       this.translate.use("en");
       this.countries = [
         { name: 'United States', code: 'US' },
-        { name: 'Egypt', code: 'AR' },
+        { name: 'Saudi Arabia', code: 'AR' },
         { name: 'India', code: 'IN' }
       ];
  
@@ -120,7 +120,7 @@ export class LoginComponent {
       this.countries = [
         { name: 'India', code: 'IN' },
 
-        { name: 'Egypt', code: 'AR' },
+        { name: 'Saudi Arabia', code: 'AR' },
         { name: 'United States', code: 'US' }
       ];
       let findIndexCountry =  this.countries.findIndex(country =>country.code == "IN" )

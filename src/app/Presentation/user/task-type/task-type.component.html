@@ -350,7 +350,7 @@
           <div class="paginate d-flex align-items-center justify-content-end">
             <div class="NumberOfRowsPerPage">
               <span>عدد الصفوف بالصفحة:</span>
-              <p-dropdown [options]="RowsPerPage" appendTo="body" (onChange)="numberOfRowsPerPage($event)"
+              <p-dropdown [options]="RowsPerPage" [(ngModel)]="defaultRowPerPage" appendTo="body" (onChange)="numberOfRowsPerPage($event)"
                 optionLabel="name"></p-dropdown>
 
             </div>

@@ -39,9 +39,11 @@ export class ZonesComponent {
   listDepratment: any[] = [];
   listSchedules: any[] = [];
   listJobTitle: any[] = [];
+  defaultRowPerPage = { name: '5', code: 5 };
+
   columns: any[] = [
     {
-      name: "#",
+      name: "كود المنطقة",
       field: "zoneNumber",
     },
     {
@@ -146,9 +148,8 @@ export class ZonesComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
 
     ];
 
@@ -504,15 +505,15 @@ export class ZonesComponent {
       data: {
         title: "تعديل المنطقة",
         setAsNecessary: "تعيين كنشط",
-        titleFieldDisabled: "كود الموظف",
+        titleFieldDisabled: "كود المنطقة",
         code: data.code,
-
         radiusNumber: "المسافه <span class='color-red'>*</span>",
         placeholdeRadius: "المسافه",
         validationtitleRadius: "المسافه مطلوب",
         fieldFirst: "اسم الزون <span class='color-red'>*</span>",
         placeholdefieldFirst: "اسم الزون",
         validationtitlefieldFirst: "اسم الزون مطلوب",
+        
         buttonSend: "تعديل المنطقة",
         titleClose: "تراجع"
       },

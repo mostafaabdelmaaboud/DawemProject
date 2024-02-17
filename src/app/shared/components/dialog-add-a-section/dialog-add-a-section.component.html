@@ -34,7 +34,7 @@
                   class="w-100" />
               </div>
               <!--Start Custom Validators-->
-              <div class="container-alerts" *ngIf="getControl('name')?.errors">
+              <div class="container-alerts mt-2" *ngIf="getControl('name')?.errors">
                 <div class="alert alert-danger"
                   *ngIf="getControl('name')?.hasError('required') && getControl('name')?.dirty">
                   {{data!['validationtitleShift']|translate}}
@@ -60,7 +60,7 @@
                 </p-dropdown>
               </div>
               <!--Start Custom Validators-->
-              <div class="container-alerts" *ngIf="getControl('parentId')?.errors">
+              <div class="container-alerts mt-2" *ngIf="getControl('parentId')?.errors">
                 <div class="alert alert-danger"
                   *ngIf="getControl('parentId')?.hasError('required') && getControl('parentId')?.dirty">
                   {{data!['validationtitlePermanentType']|translate}}
@@ -87,7 +87,7 @@
                 </p-dropdown>
               </div>
               <!--Start Custom Validators-->
-              <div class="container-alerts" *ngIf="getControl('managerId')?.errors">
+              <div class="container-alerts mt-2" *ngIf="getControl('managerId')?.errors">
                 <div class="alert alert-danger"
                   *ngIf="getControl('managerId')?.hasError('required') && getControl('managerId')?.dirty">
                   {{data!['validationtitleManagerId']|translate}}
@@ -147,7 +147,7 @@
               <div class="container-alerts mt-2" *ngIf="getControl('zoneIds')?.errors">
                 <div class="alert alert-danger"
                   *ngIf="getControl('zoneIds')?.hasError('required') && getControl('zoneIds')?.dirty">
-                  {{data!['validationtitleNotes']|translate}}
+                  {{data!['validationtitleZone']|translate}}
 
                 </div>
               </div>

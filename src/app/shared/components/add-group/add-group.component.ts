@@ -47,6 +47,7 @@ interface DataDialog {
   ValidationDeputyDirector: string;
   titleZone: string;
   placeholderZone: string;
+  validationtitleZone: string;
 
   validationtitleNotes: string;
 
@@ -97,7 +98,7 @@ export class AddGroupComponent {
     groupName: ['', Validators.required],
     groupEmployees: ['', Validators.required],
     groupManager: ["", Validators.required],
-    zoneIds: [''],
+    zoneIds: ['', Validators.required],
 
     deputyDirector: ["", Validators.required],
 
@@ -405,7 +406,9 @@ export class AddGroupComponent {
       this.getControl("groupEmployees")?.markAsDirty();
       this.getControl("groupManager")?.markAsDirty();
       this.getControl("deputyDirector")?.markAsDirty();
+      this.getControl("zoneIds")?.markAsDirty();
 
+      
 
 
     }

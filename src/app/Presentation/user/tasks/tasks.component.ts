@@ -315,8 +315,8 @@ export class TasksComponent {
           ForEmployee: result.ForEmployee,
           EmployeeId: result.EmployeeId.key,
           TaskTypeId: result.TaskTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
           TaskEmployeeIds: result.TaskEmployeeIds.map((id: any) => id.key),
           Notes: result.Notes
         }));
@@ -326,8 +326,8 @@ export class TasksComponent {
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           TaskTypeId: result.TaskTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
           TaskEmployeeIds: result.TaskEmployeeIds.map((id: any) => id.key),
           Notes: result.Notes
         }));
@@ -340,6 +340,7 @@ export class TasksComponent {
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
 
       this.tasksService.updateTask(formData).subscribe(
         {
@@ -347,6 +348,7 @@ export class TasksComponent {
 
 
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
 
@@ -376,8 +378,8 @@ export class TasksComponent {
 
           },
           error: err => {
-
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
           }
         }
@@ -553,8 +555,8 @@ export class TasksComponent {
           EmployeeId: result.EmployeeId.key,
 
           TaskTypeId: result.TaskTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
           TaskEmployeeIds: result.TaskEmployeeIds.map((id: any) => id.key),
           Notes: result.Notes
         }));
@@ -564,8 +566,8 @@ export class TasksComponent {
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           TaskTypeId: result.TaskTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
           TaskEmployeeIds: result.TaskEmployeeIds.map((id: any) => id.key),
           Notes: result.Notes
         }));
@@ -574,6 +576,7 @@ export class TasksComponent {
         formData.append("Attachments", file.fileUpload, file.fileUpload.name);
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
 
       this.tasksService.createTask(formData).subscribe(
         {
@@ -581,6 +584,7 @@ export class TasksComponent {
 
 
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
 
@@ -610,8 +614,8 @@ export class TasksComponent {
 
           },
           error: err => {
-
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
           }
         }

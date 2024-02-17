@@ -32,6 +32,7 @@ export class ShiftsComponent {
   private dialog = inject(MatDialog);
   private shiftsService = inject(ShiftsService);
 
+  defaultRowPerPage = { name: '5', code: 5 };
 
   columns: any[] = [
     {
@@ -141,9 +142,8 @@ export class ShiftsComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
 
     ];
 
@@ -294,7 +294,7 @@ export class ShiftsComponent {
         title: "إضافة وردية",
 
         titleShift: "اسم الوردية <span class='color-red'>*</span>",
-        placeholdeShift: "اسم القسم",
+        placeholdeShift: "اسم الوردية",
         validationtitleShift: "اسم القسم مطلوب",
         titlePermanentType: "نوع الدوام <span class='color-red'>*</span>",
         placeholderPermanentType: " اختار نوع الدوام",
@@ -340,7 +340,7 @@ export class ShiftsComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الموظفين"
+                buttonSend: "الورديات"
               },
             });
             this.getShifts(this.filteration);
@@ -383,7 +383,7 @@ export class ShiftsComponent {
         titleFieldDisabled: "رقم الوردية",
         placeholdeieldDisabled: "رقم الوردية",
         titleShift: "اسم الوردية <span class='color-red'>*</span>",
-        placeholdeShift: "اسم القسم",
+        placeholdeShift: "اسم الوردية",
         validationtitleShift: "اسم القسم مطلوب",
         titlePermanentType: "نوع الدوام <span class='color-red'>*</span>",
         placeholderPermanentType: " اختار نوع الدوام",
@@ -432,7 +432,7 @@ export class ShiftsComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الموظفين"
+                buttonSend: "الورديات"
               },
             });
             this.getShifts(this.filteration);

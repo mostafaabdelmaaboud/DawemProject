@@ -29,7 +29,7 @@ export class VacationTypeComponent {
   itemsPerPage = 5;
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
-
+  defaultRowPerPage = { name: '5', code: 5 };
   columns: any[] = [
     {
       name: "رقم الاجازة",
@@ -138,9 +138,9 @@ export class VacationTypeComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
+
     ];
     this.getInformation();
 
@@ -265,8 +265,6 @@ export class VacationTypeComponent {
       width: "30vw",
       data: {
         title: "هل متأكد من حذف الطلب؟",
-        message: "برجاء توضيح السبب إن أمكن",
-
         titleClose: "تراجع",
         buttonSend: "حذف"
       },
@@ -329,7 +327,7 @@ export class VacationTypeComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الاجازات"
+                buttonSend: "انواع الاجازات"
 
               },
             });
@@ -399,7 +397,7 @@ export class VacationTypeComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الاجازات"
+                buttonSend: "انواع الاجازات"
 
               },
             });

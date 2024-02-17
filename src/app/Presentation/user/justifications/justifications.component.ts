@@ -261,7 +261,6 @@ export class JustificationsComponent {
         titleNotes: "الملاحظات <span class='color-red'>*</span>",
         placeholdeNotes: "الملاحظات",
         NotesValidation: "الملاحظات مطلوب",
-
         dateTaskValidation: "تاريخ الاجازة مطلوب",
         labelRadioButton: "صاحب الطلب",
         firstRadio: "لنفسي",
@@ -287,8 +286,9 @@ export class JustificationsComponent {
           ForEmployee: result.ForEmployee,
           EmployeeId: result.EmployeeId.key,
           JustificationTypeId: result.JustificationTypeId.key,
-          DateFrom: moment(result.dateTask[0]).format("MM/DD/YYYY"),
-          DateTo: moment(result.dateTask[1]).format("MM/DD/YYYY")
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss")
+          
         }));
 
       } else {
@@ -297,8 +297,8 @@ export class JustificationsComponent {
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           JustificationTypeId: result.JustificationTypeId.key,
-          DateFrom: moment(result.dateTask[0]).format("MM/DD/YYYY"),
-          DateTo: moment(result.dateTask[1]).format("MM/DD/YYYY")
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss")
 
         }));
       }
@@ -308,12 +308,15 @@ export class JustificationsComponent {
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
+
       this.justificationsService.updateJustification(formData).subscribe(
         {
           next: (data: any) => {
 
 
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
 
@@ -341,6 +344,7 @@ export class JustificationsComponent {
           error: (err: any) => {
 
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
           }
         }
@@ -421,18 +425,20 @@ export class JustificationsComponent {
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
+
     dialogRefAddCurrency.componentInstance.editjustification = false;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData = new FormData();
+      
       if (result.ForEmployee) {
         formData.append("CreateRequestJustificationModelString", JSON.stringify({
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           EmployeeId: result.EmployeeId.key,
           JustificationTypeId: result.JustificationTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY")
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss")
         }));
 
       } else {
@@ -440,8 +446,8 @@ export class JustificationsComponent {
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           JustificationTypeId: result.JustificationTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY")
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss")
 
         }));
       }
@@ -451,6 +457,7 @@ export class JustificationsComponent {
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
 
       this.justificationsService.createJustification(formData).subscribe(
         {
@@ -458,6 +465,7 @@ export class JustificationsComponent {
 
 
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
 
@@ -476,7 +484,6 @@ export class JustificationsComponent {
               succressDialog.close();
 
             }, 2000);
-            succressDialog.componentInstance.submitted = true;
             succressDialog.componentInstance.submitClicked.subscribe(result => {
               succressDialog.close();
             })
@@ -485,6 +492,7 @@ export class JustificationsComponent {
           error: (err: any) => {
 
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
           }
         }

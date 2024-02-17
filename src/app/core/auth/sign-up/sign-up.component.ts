@@ -70,7 +70,7 @@ export class SignUpComponent {
     } else {
    
       if (this.currentLang == "ar") {
-        this.selectedCountry = { name: 'Egypt', code: 'AR' };
+        this.selectedCountry = { name: 'Saudi Arabia', code: 'AR' };
         document.documentElement.setAttribute('lang', 'ar');
         this.translate.use("ar");
         this.countries = [
@@ -88,7 +88,7 @@ export class SignUpComponent {
         this.translate.use("en");
         this.countries = [
           { name: 'United States', code: 'US' },
-          { name: 'Egypt', code: 'AR' },
+          { name: 'Saudi Arabia', code: 'AR' },
           { name: 'India', code: 'IN' }
         ];
         this.selectedCountry = { name: 'United States', code: 'US' };
@@ -99,7 +99,7 @@ export class SignUpComponent {
         this.translate.use("ind");
         this.countries = [
           { name: 'India', code: 'IN' },
-          { name: 'Egypt', code: 'AR' },
+          { name: 'Saudi Arabia', code: 'AR' },
           { name: 'United States', code: 'US' }
         ];
         this.selectedCountry = { name: 'India', code: 'IN' };
@@ -126,7 +126,7 @@ export class SignUpComponent {
       this.translate.use("en");
       this.countries = [
         { name: 'United States', code: 'US' },
-        { name: 'Egypt', code: 'AR' },
+        { name: 'Saudi Arabia', code: 'AR' },
         { name: 'India', code: 'IN' }
       ];
       
@@ -150,7 +150,7 @@ export class SignUpComponent {
 
       this.countries = [
         { name: 'India', code: 'IN' },
-        { name: 'Egypt', code: 'AR' },
+        { name: 'Saudi Arabia', code: 'AR' },
         { name: 'United States', code: 'US' }
       ];
       let findIndexCountry =  this.countries.findIndex(country =>country.code == "IN" )

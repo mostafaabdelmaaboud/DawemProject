@@ -84,6 +84,10 @@
             *ngIf="getControl('radius')?.hasError('required') && getControl('radius')?.dirty">
             {{data!['validationtitleRadius']|translate}}
           </div>
+          <div class="alert alert-danger"
+          *ngIf="getControl('radius')?.hasError('min') && getControl('radius')?.dirty">
+          اقل رقم 0
+        </div>
         </div>
       </div>
 

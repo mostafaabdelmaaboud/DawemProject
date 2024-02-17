@@ -16,6 +16,7 @@ import { EmployeesService } from 'src/app/Presentation/user/employees/services/e
 import { PermissionsService } from 'src/app/Presentation/user/permissions/services/permissions.service';
 import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { JustificationsService } from 'src/app/Presentation/user/justifications/services/justifications.service';
+import * as moment from 'moment';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -94,7 +95,8 @@ export class RequestForJustificationComponent {
     ForEmployee: [false],
     JustificationTypeId: ['', Validators.required],
     Notes: ['', Validators.required],
-    dateTask: [null, Validators.required]
+    dateTask: [null, Validators.required],
+    time:[null, Validators.required]
   });
   AttachmentsFiles: any[] = [];
   requiredCommercialRegFiles = false;
@@ -202,6 +204,8 @@ export class RequestForJustificationComponent {
                 }
               });
               this.addBranchGroupForm.get("dateTask")?.setValue([new Date(data.dateFrom), new Date(data.dateTo)]);
+              this.addBranchGroupForm.get("time")?.setValue(new Date(data.dateFrom));
+
               this.addBranchGroupForm.get("Notes")?.setValue(data?.notes);
 
 
@@ -241,6 +245,7 @@ export class RequestForJustificationComponent {
 
 
     })
+
   }
   getControl(controlName: string) {
     return this.addBranchGroupForm?.get(controlName);
@@ -336,6 +341,9 @@ export class RequestForJustificationComponent {
     } else {
       this.getControl("JustificationTypeId")?.markAsDirty();
       this.getControl("dateTask")?.markAsDirty();
+      this.getControl("time")?.markAsDirty();
+
+      
       this.getControl("Notes")?.markAsDirty();
     }
   }

@@ -35,7 +35,7 @@ export class SectionsComponent {
 
   columns: any[] = [
     {
-      name: "رقم الموظف",
+      name: "كود القسم",
       field: "orderNumber",
     },
     {
@@ -260,7 +260,7 @@ export class SectionsComponent {
                 alt: section?.manager?.managerName ? section?.manager?.managerName : "لا",
                 img: section?.manager?.profileImagePath ? section?.manager?.profileImagePath : "../../../../assets/img/5034901-200.png"
               },
-              numberOfEmployeesInDepartment: section?.numberOfEmployees ? section?.numberOfEmployees : "لا يوجد"
+              numberOfEmployeesInDepartment: section?.numberOfEmployees ? section?.numberOfEmployees : "0"
             })
           });
           this.totalItems = data.totalCount

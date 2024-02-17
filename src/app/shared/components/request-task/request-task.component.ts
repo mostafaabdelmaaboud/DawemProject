@@ -91,6 +91,7 @@ export class RequestTaskComponent {
     TaskTypeId: ['', Validators.required],
     dateTask: [null, Validators.required],
     TaskEmployeeIds: [""],
+    time:[null, Validators.required],
     Notes: ['']
   });
   AttachmentsFiles: any[] = [];
@@ -223,6 +224,8 @@ export class RequestTaskComponent {
               });
 
               this.addBranchGroupForm.get("dateTask")?.setValue([new Date(data.dateFrom), new Date(data.dateTo)]);
+              this.addBranchGroupForm.get("time")?.setValue(new Date(data.dateFrom));
+
               this.addBranchGroupForm.get("Notes")?.setValue(data.notes);
 
               //
@@ -427,6 +430,7 @@ export class RequestTaskComponent {
     } else {
       this.getControl("TaskTypeId")?.markAsDirty();
       this.getControl("dateTask")?.markAsDirty();
+      this.getControl("time")?.markAsDirty();
 
     }
 

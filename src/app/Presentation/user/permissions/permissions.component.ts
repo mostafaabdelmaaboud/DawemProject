@@ -356,8 +356,8 @@ export class PermissionsComponent {
           ForEmployee: result.ForEmployee,
           EmployeeId: result.EmployeeId.key,
           PermissionTypeId: result.PermissionTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
           Notes: result.Notes
         }));
 
@@ -366,8 +366,8 @@ export class PermissionsComponent {
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           PermissionTypeId: result.PermissionTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
           Notes: result.Notes
 
         }));
@@ -378,6 +378,7 @@ export class PermissionsComponent {
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
 
       this.permissionsService.createPermission(formData).subscribe(
         {
@@ -385,6 +386,7 @@ export class PermissionsComponent {
 
 
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
 
@@ -412,6 +414,7 @@ export class PermissionsComponent {
           error: (err: any) => {
 
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
           }
         }
@@ -463,8 +466,8 @@ export class PermissionsComponent {
           ForEmployee: result.ForEmployee,
           EmployeeId: result.EmployeeId.key,
           PermissionTypeId: result.PermissionTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
           Notes: result.Notes
         }));
 
@@ -474,8 +477,8 @@ export class PermissionsComponent {
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           PermissionTypeId: result.PermissionTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
           Notes: result.Notes
 
         }));
@@ -486,6 +489,7 @@ export class PermissionsComponent {
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
 
       this.permissionsService.updatePermission(formData).subscribe(
         {
@@ -493,6 +497,7 @@ export class PermissionsComponent {
 
 
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
 
@@ -520,6 +525,7 @@ export class PermissionsComponent {
           error: (err: any) => {
 
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
           }
         }

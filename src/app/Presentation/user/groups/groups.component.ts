@@ -36,7 +36,7 @@ export class GroupsComponent {
 
   columns: any[] = [
     {
-      name: "رقم المجموعة",
+      name: "كود المجموعة",
       field: "groupNumber",
     },
     {
@@ -44,7 +44,7 @@ export class GroupsComponent {
       field: "groupName",
     },
     {
-      name: "رئيس المجموعة",
+      name: "مدير المجموعة",
       field: "groupStaff"
     },
     {
@@ -323,7 +323,7 @@ export class GroupsComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الموظفين"
+                buttonSend: "طلبات المجموعات"
               },
             });
             this.getGroups(this.filteration);
@@ -356,7 +356,7 @@ export class GroupsComponent {
     const dialogRefAddCurrency = this.dialog.open(DialogGroupFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف الوردية"
+        title: "ملف المجموعة"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id
@@ -444,7 +444,7 @@ export class GroupsComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الموظفين"
+                buttonSend: "طلبات المجموعات"
               },
             });
             this.getGroups(this.filteration);

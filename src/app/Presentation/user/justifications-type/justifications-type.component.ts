@@ -29,6 +29,7 @@ export class JustificationsTypeComponent {
   itemsPerPage = 5;
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
+  defaultRowPerPage = { name: '5', code: 5 };
 
   columns: any[] = [
     {
@@ -133,9 +134,9 @@ export class JustificationsTypeComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
+
     ];
     this.getInformation();
 
@@ -259,8 +260,6 @@ export class JustificationsTypeComponent {
       width: "30vw",
       data: {
         title: "هل متأكد من حذف الطلب؟",
-        message: "برجاء توضيح السبب إن أمكن",
-
         titleClose: "تراجع",
         buttonSend: "حذف"
       },
@@ -323,7 +322,7 @@ export class JustificationsTypeComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الاستئذانات"
+                buttonSend: "انواع التبريرات"
 
               },
             });
@@ -392,8 +391,7 @@ export class JustificationsTypeComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الاجازات"
-
+                buttonSend: "انواع التبريرات"
               },
             });
             this.getJustifications(this.filteration);

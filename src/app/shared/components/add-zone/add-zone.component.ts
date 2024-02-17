@@ -187,7 +187,7 @@ export class AddZoneComponent {
     isActive: [false],
     fieldDisabled: [''],
     name: ['', Validators.required],
-    radius: ['', Validators.required],
+    radius: ['', [Validators.required, Validators.min(0)]],
     latitude: ['', Validators.required],
     longitude: ['', Validators.required]
   });

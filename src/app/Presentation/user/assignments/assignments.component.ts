@@ -391,8 +391,8 @@ export class AssignmentsComponent {
           ForEmployee: result.ForEmployee,
           EmployeeId: result.EmployeeId.key,
           AssignmentTypeId: result.AssignmentTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
           Notes: result.Notes
         }));
 
@@ -401,8 +401,8 @@ export class AssignmentsComponent {
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           AssignmentTypeId: result.AssignmentTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
           Notes: result.Notes
 
         }));
@@ -413,12 +413,15 @@ export class AssignmentsComponent {
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
+
       this.assignmentsService.createAssignment(formData).subscribe(
         {
           next: (data: any) => {
 
 
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
 
@@ -446,6 +449,7 @@ export class AssignmentsComponent {
           error: (err: any) => {
 
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
           }
         }
@@ -461,7 +465,7 @@ export class AssignmentsComponent {
     const dialogRefAddCurrency = this.dialog.open(AssignmentRequestComponent, {
       width: "50vw",
       data: {
-        title: "طلب تكليف",
+        title: "تعديل تكليف",
         setAsNecessary: "تعيين كضرورية",
         titleAssignmentTypeId: "نوع التكليف <span class='color-red'>*</span>",
         placeholderAssignmentTypeId: " برجاء اختيار نوع التكليف",
@@ -471,7 +475,6 @@ export class AssignmentsComponent {
         titleNotes: "الملاحظات <span class='color-red'>*</span>",
         placeholdeNotes: "الملاحظات",
         NotesValidation: "الملاحظات مطلوب",
-
         dateTaskValidation: "تاريخ التكليف مطلوب",
         labelRadioButton: "صاحب الطلب",
         firstRadio: "لنفسي",
@@ -497,8 +500,8 @@ export class AssignmentsComponent {
           ForEmployee: result.ForEmployee,
           EmployeeId: result.EmployeeId.key,
           AssignmentTypeId: result.AssignmentTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
           Notes: result.Notes
         }));
 
@@ -508,8 +511,8 @@ export class AssignmentsComponent {
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           AssignmentTypeId: result.AssignmentTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM/DD/YYYY"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM/DD/YYYY"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
           Notes: result.Notes
 
         }));
@@ -520,23 +523,20 @@ export class AssignmentsComponent {
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
 
       this.assignmentsService.updateAssignment(formData).subscribe(
         {
           next: (data: any) => {
-
-
             dialogRefAddCurrency.componentInstance.submitted = true;
-
+            dialogRefAddCurrency.componentInstance.loading = false;
             dialogRefAddCurrency.close();
-
             const succressDialog = this.dialog.open(ToastSuccessComponent, {
               width: "30vw",
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
                 buttonSend: "طلبات التكليفات"
-
               },
             });
             this.getAssignments(this.filteration);
@@ -552,8 +552,8 @@ export class AssignmentsComponent {
 
           },
           error: (err: any) => {
-
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
           }
         }

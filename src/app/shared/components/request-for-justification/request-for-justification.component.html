@@ -85,7 +85,7 @@
 
       <div class="col-12  mb-3">
         <div class="row">
-          <div class="col">
+          <div class="col-lg-6 col-12">
             <div class="sectionThree">
               <label class="title" [innerHTML]="data!['titleCalendar']|translate"></label>
               <div class="content-password">
@@ -113,7 +113,25 @@
               <!--End Custom Validators-->
             </div>
           </div>
-
+          <div class="col-lg-6 col-12">
+            <div class="sectionThree">
+              <label class="title" >وقت الاجازة <span class="color-red">*</span></label>
+              <div class="content-password">
+                <div class="content-pCalendar-default" dir="ltr">
+                  <p-calendar formControlName="time" appendTo="body" [timeOnly]="true"
+                    placeholder="وقت الاجازة" [showTime]="true" [showSeconds]="true" [showIcon]="true"></p-calendar>
+                </div>
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('time')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('time')?.hasError('required') && getControl('time')?.dirty">
+                 وقت الاجازة مطلوب  
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+          </div>
         </div>
       </div>
 

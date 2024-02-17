@@ -32,7 +32,7 @@ export class AssignmentTypeComponent {
 
   columns: any[] = [
     {
-      name: "رقم الاستئذان",
+      name: "رقم التكليف",
       field: "code",
     },
     {
@@ -52,6 +52,7 @@ export class AssignmentTypeComponent {
   assignments: any = [];
 
   isLoading = true;
+  defaultRowPerPage = { name: '5', code: 5 };
 
   filteration: any = {
     PageSize: 5,
@@ -133,9 +134,9 @@ export class AssignmentTypeComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
+
     ];
     this.getInformation();
 
@@ -256,8 +257,6 @@ export class AssignmentTypeComponent {
       width: "30vw",
       data: {
         title: "هل متأكد من حذف الطلب؟",
-        message: "برجاء توضيح السبب إن أمكن",
-
         titleClose: "تراجع",
         buttonSend: "حذف"
       },
@@ -320,7 +319,7 @@ export class AssignmentTypeComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الاستئذانات"
+                buttonSend: "انواع التكليفات"
 
               },
             });
@@ -389,7 +388,7 @@ export class AssignmentTypeComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات التكليفات"
+                buttonSend: "انواع التكليفات"
 
               },
             });
