@@ -286,8 +286,8 @@ export class JustificationsComponent {
           ForEmployee: result.ForEmployee,
           EmployeeId: result.EmployeeId.key,
           JustificationTypeId: result.JustificationTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss")
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss")
           
         }));
 
@@ -297,8 +297,8 @@ export class JustificationsComponent {
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           JustificationTypeId: result.JustificationTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss")
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss")
 
         }));
       }
@@ -437,8 +437,8 @@ export class JustificationsComponent {
           ForEmployee: result.ForEmployee,
           EmployeeId: result.EmployeeId.key,
           JustificationTypeId: result.JustificationTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss")
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss")
         }));
 
       } else {
@@ -446,8 +446,8 @@ export class JustificationsComponent {
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           JustificationTypeId: result.JustificationTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss")
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss")
 
         }));
       }

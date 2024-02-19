@@ -26,13 +26,22 @@
     </div>
 
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">المهمة</label>
+      <label class="title">فريق العمل</label>
+      <ng-container *ngFor="let task of info?.taskEmployees">
+        <div class="content-password">
+          {{task}}
+        </div>
+      </ng-container>
+      <ng-container *ngIf="info?.taskEmployees?.length === 0">لا يوجد</ng-container>
+      
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">نوع المهمة</label>
       <div class="content-password">
         {{info?.taskTypeName ? info?.taskTypeName : "لا يوجد"}}
       </div>
 
     </div>
-
     <div class="sectionTwo mb-3 line-bellow">
       <label class="title">التاريخ</label>
       <div class="content-password">

@@ -99,6 +99,7 @@ export class AddSanctionComponent {
   addBranchGroupForm: FormGroup = this.fb.group({
     isActive: [false],
     fieldDisabled: [""],
+    type:["0"],
     name: ['', Validators.required],
     warningMessage: ['', Validators.required],
   });
@@ -120,16 +121,11 @@ export class AddSanctionComponent {
       this.sanctionsService.sanctionGetById({ sanctionId: this.id }).subscribe(
         {
           next: data => {
-
-            // SchedulePlanType: ['0', Validators.required],
-            //   EmployeeId: ['', Validators.required],
-
-            //     ScheduleId: ["", Validators.required],
-            //       DateFrom: ['', Validators.required],
-            //         notes: ["", Validators.required],
             this.getControl("isActive")?.setValue(data.isActive);
             this.getControl("name")?.setValue(data.name);
             this.getControl("warningMessage")?.setValue(data.warningMessage);
+            this.getControl("type")?.setValue(data.type.toString());
+
             this.getControl("fieldDisabled")?.setValue(data.code);
             this.loading = false;
           },
@@ -163,6 +159,8 @@ export class AddSanctionComponent {
  
       this.getControl("name")?.markAsDirty();
       this.getControl("warningMessage")?.markAsDirty();
+      this.getControl("type")?.markAsDirty();
+
     }
 
   }

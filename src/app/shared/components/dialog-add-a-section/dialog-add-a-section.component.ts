@@ -489,9 +489,8 @@ export class DialogAddASectionComponent {
     // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
   }
   request() {
-    this.submitClicked.emit(this.addBranchGroupForm.value);
 
-    if (this.addBranchGroupForm.valid) {
+    if (this.addBranchGroupForm.valid && this.submitted) {
       this.submitted = false;
       this.submitClicked.emit(this.addBranchGroupForm.value);
       // this.dialogRef.close(true);

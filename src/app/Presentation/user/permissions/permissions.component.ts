@@ -356,8 +356,8 @@ export class PermissionsComponent {
           ForEmployee: result.ForEmployee,
           EmployeeId: result.EmployeeId.key,
           PermissionTypeId: result.PermissionTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
           Notes: result.Notes
         }));
 
@@ -366,8 +366,8 @@ export class PermissionsComponent {
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           PermissionTypeId: result.PermissionTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
           Notes: result.Notes
 
         }));
@@ -466,8 +466,8 @@ export class PermissionsComponent {
           ForEmployee: result.ForEmployee,
           EmployeeId: result.EmployeeId.key,
           PermissionTypeId: result.PermissionTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
           Notes: result.Notes
         }));
 
@@ -477,8 +477,8 @@ export class PermissionsComponent {
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           PermissionTypeId: result.PermissionTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("hh:mm:ss"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
           Notes: result.Notes
 
         }));

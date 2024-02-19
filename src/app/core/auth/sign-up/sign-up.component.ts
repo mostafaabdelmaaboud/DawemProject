@@ -52,7 +52,7 @@ export class SignUpComponent {
       next: data => {
         this.general = [];
         data.forEach((country: any) => {
-          this.general.push({ name: country.globalName, id: country.id })
+          this.general.push({ name: country.name, id: country.id })
         });
       },
       error: err => {
@@ -172,7 +172,7 @@ export class SignUpComponent {
               distinctUntilChanged()).subscribe((res: any) => {
                 this.general = [];
                 res.forEach((country: any) => {
-                  this.general.push({ name: country.globalName, id: country.id })
+                  this.general.push({ name: country.name, id: country.id })
                 });
               });
           }

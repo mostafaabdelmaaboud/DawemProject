@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Input, Output, inject } from '@angular/core';
+import { Component, Inject, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/core/auth/services/auth-service.service';
@@ -11,10 +11,9 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { CalendarModule } from "primeng/calendar";
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { EmployeesService } from 'src/app/Presentation/user/employees/services/employees.service';
 import * as moment from 'moment';
-import { VacationsService } from 'src/app/Presentation/user/vacations/services/vacations.service';
-import { VacationTypeService } from 'src/app/Presentation/user/vacation-type/services/vacation-type.service';
+
+import { TaskTypeService } from 'src/app/Presentation/user/task-type/services/task-type.service';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -46,14 +45,13 @@ interface UploadEvent {
 })
 export class DialogTaskTypeFileComponent {
   loading = false;
-  private vacationsService = inject(VacationTypeService);
+  private taskTypeService = inject(TaskTypeService);
 
   @Input() submitted!: boolean;
   info!: any;
   @Input() id!: any;
   AttachmentsFiles: any[] = [];
 
-  private employeesService = inject(EmployeesService);
 
   constructor(
     public dialogRef: MatDialogRef<DialogTaskTypeFileComponent>,
@@ -70,7 +68,7 @@ export class DialogTaskTypeFileComponent {
 
     if (this.id) {
 
-      this.vacationsService.vacationGetInfo({ VacationTypeId: this.id }).subscribe(
+      this.taskTypeService.taskGetInfo({ taskTypeid: this.id }).subscribe(
         {
 
           next: data => {

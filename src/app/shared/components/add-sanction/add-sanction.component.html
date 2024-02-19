@@ -18,6 +18,19 @@
         <div class="col-12">
           <div class="row">
             <div class="col-12">
+              <div class="sectionFive mb-3">
+                <label class="title">نوع الجزاء</label>
+  
+                <div class="container-radio-button">
+                  <mat-radio-group aria-label="Select an option" color="primary" formControlName="type">
+                    <mat-radio-button value="0">تنبيه
+                    </mat-radio-button>
+                    <mat-radio-button value="1">الغاء بصمة اليوم</mat-radio-button>
+  
+                  </mat-radio-group>
+                </div>
+  
+              </div>
               <ng-container *ngIf="editSanction">
                 <div class="field-disabled mb-3 readOnly">
                   <label for="" class="label-input mb-2" [innerHTML]="data!['titleFieldDisabled']|translate"></label>

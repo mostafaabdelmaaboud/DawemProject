@@ -333,6 +333,8 @@ export class SectionsComponent {
           formData.zoneIds.push(direct.key);
         });
       }
+      dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
 
       this.sectionsService.createSection(formData).subscribe(
         {
@@ -340,6 +342,7 @@ export class SectionsComponent {
 
 
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
 
@@ -366,6 +369,7 @@ export class SectionsComponent {
           },
           error: err => {
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
           }
         }
@@ -438,13 +442,15 @@ export class SectionsComponent {
           formData.zoneIds.push(direct.key);
         });
       }
-
+      dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
       this.sectionsService.updateSection(formData).subscribe(
         {
           next: data => {
 
 
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
 
@@ -471,6 +477,7 @@ export class SectionsComponent {
           },
           error: err => {
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
           }
         }

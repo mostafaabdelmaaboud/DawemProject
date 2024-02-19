@@ -322,8 +322,8 @@ export class ShiftsComponent {
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
 
       let formData = result;
-      formData.checkInTime = moment(result.checkInTime).format("hh:mm:ss");
-      formData.checkOutTime = moment(result.checkOutTime).format("hh:mm:ss")
+      formData.checkInTime = moment(result.checkInTime).format("HH:mm:ss");
+      formData.checkOutTime = moment(result.checkOutTime).format("HH:mm:ss")
       formData.timePeriod = Number(formData.timePeriod);
       formData.isActive = true;
 
@@ -413,8 +413,8 @@ export class ShiftsComponent {
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
 
       let formData = result;
-      formData.checkInTime = moment(result.checkInTime).format("hh:mm:ss");
-      formData.checkOutTime = moment(result.checkOutTime).format("hh:mm:ss")
+      formData.checkInTime = moment(result.checkInTime).format("HH:mm:ss");
+      formData.checkOutTime = moment(result.checkOutTime).format("HH:mm:ss")
       formData.timePeriod = Number(formData.timePeriod);
       formData.isActive = true;
       formData.id = data.id;

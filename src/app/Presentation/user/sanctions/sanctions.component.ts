@@ -182,16 +182,13 @@ export class SanctionsComponent {
       formData.isActive = result.isActive;
       formData.name = result.name;
       formData.warningMessage = result.warningMessage;
-      
+      formData.type = Number(result.type);
+
       this.sanctionsService.createSanction(formData).subscribe(
         {
           next: data => {
-
-
             dialogRefAddCurrency.componentInstance.submitted = true;
-
             dialogRefAddCurrency.close();
-
             const succressDialog = this.dialog.open(ToastSuccessComponent, {
               width: "30vw",
               data: {
@@ -248,7 +245,8 @@ export class SanctionsComponent {
       formData.isActive = result.isActive;
       formData.name = result.name;
       formData.warningMessage = result.warningMessage;
-      
+      formData.type = Number(result.type);
+
       this.sanctionsService.updateSanction(formData).subscribe(
         {
           next: data => {
