@@ -12,11 +12,13 @@
   width: 2.8rem;
   height: 1.46rem;
 }
-
-:host ::ng-deep .p-dropdown {
+.code {
+  height: 97%;
+}
+:host ::ng-deep .p-dropdown,
+:host ::ng-deep .p-multiselect {
   width: 100% !important;
 }
-
 
 :host ::ng-deep .p-calendar {
   width: 100%;

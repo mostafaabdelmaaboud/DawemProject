@@ -338,12 +338,12 @@
               {{column.name}}
             </span>
             <div class="action-body-td">
-              <button *ngIf="showActions({actionCode:1})" type="button"
+              <button *ngIf="rowData.status === 0 && showActions({actionCode:1})" type="button"
                 class="btn btn-outline-secondary action-accept color-green" (click)="editJustification(rowData)"><i
                   class="bi bi-pencil-square"></i></button>
-              <button *ngIf="showActions({actionCode:4})" type="button" (click)="sendRequest(rowData)"
+              <button *ngIf="rowData.status === 0 && showActions({actionCode:4})" type="button" (click)="sendRequest(rowData)"
                 class="btn btn-outline-secondary action-accept color-green"><i class="bi bi-check-circle"></i></button>
-              <button *ngIf="showActions({actionCode:5})" type="button" (click)="reasonOfRefuse(rowData)"
+              <button *ngIf="rowData.status === 0 && showActions({actionCode:5})" type="button" (click)="reasonOfRefuse(rowData)"
                 class="btn btn-outline-secondary action-close color-red"><i class="bi bi-x-circle"></i></button>
 
 

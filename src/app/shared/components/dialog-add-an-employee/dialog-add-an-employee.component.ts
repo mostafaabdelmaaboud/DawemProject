@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/core/auth/services/auth-service.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CalendarModule } from "primeng/calendar";
@@ -13,6 +13,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EmployeesService } from 'src/app/Presentation/user/employees/services/employees.service';
 import { EMPTY, Subject, combineLatest, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { SectionsService } from 'src/app/Presentation/user/sections/services/sections.service';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -97,13 +99,14 @@ interface UploadEvent {
 @Component({
   selector: 'app-dialog-add-an-employee',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatRadioModule, MatProgressSpinnerModule, ReactiveFormsModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
+  imports: [CommonModule, FormsModule, MatRadioModule, MatProgressSpinnerModule,MultiSelectModule, ReactiveFormsModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
   templateUrl: './dialog-add-an-employee.component.html',
   styleUrls: ['./dialog-add-an-employee.component.scss']
 })
 export class DialogAddAnEmployeeComponent {
   loading = false;
   private employeesService = inject(EmployeesService);
+  private sectionsService = inject(SectionsService);
 
   @Output() submitClicked = new EventEmitter<any>();
   @Input() submitted!: boolean;
@@ -114,9 +117,11 @@ export class DialogAddAnEmployeeComponent {
   @Input() editEmployee!: boolean;
   @Input() id!: string;
   @Input() departmentID!: any;
+  code="+966";
 
   
   listDirectManager: any[] = [];
+  listZones: any[] = [];
 
 
   addBranchGroupForm: FormGroup = this.fb.group({
@@ -130,11 +135,13 @@ export class DialogAddAnEmployeeComponent {
     DepartmentId: ['', Validators.required],
     JoiningDate: ['', Validators.required],
     directManager: ['', Validators.required],
-    mobileNumber: ['', [Validators.required, Validators.pattern(/^(\+\d{1,3}[- ]?)?\d{8,}$/)]],
+    mobileNumber: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
     address: ['', Validators.required],
     fieldDisabled: [''],
-    AnnualVacationBalance: ['', [Validators.required, Validators.min(0)]]
+    AnnualVacationBalance: ['', [Validators.required, Validators.min(0)]],
+    zoneIds: ['', Validators.required]
+
   });
   uploadedFiles: any[] = [];
   requiredCommercialRegFiles = false;
@@ -142,6 +149,7 @@ export class DialogAddAnEmployeeComponent {
     public dialogRef: MatDialogRef<DialogAddAnEmployeeComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
+    public translate: TranslateService,
     private fb: FormBuilder
   ) {
     this.dialogRef.disableClose = true;
@@ -149,6 +157,24 @@ export class DialogAddAnEmployeeComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+    if (this.translate.currentLang == "ar") {
+     
+      this.addBranchGroupForm.get("mobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
+      this.code= "+966";
+
+    }
+    else if (this.translate.currentLang == "en") {
+
+      this.addBranchGroupForm.get("mobileNumber")?.setValidators([Validators.required,Validators.pattern(/^\d{3}-\d{3}-\d{4}$/)])
+      this.code= "+1";
+
+    } else if (this.translate.currentLang == "ind") {
+
+      this.addBranchGroupForm.get("mobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
+
+      this.code= "+91";
+
+    }
     if (this.data?.code) {
       this.addBranchGroupForm.get("fieldDisabled")?.setValue(this.data?.code);
     }
@@ -159,20 +185,28 @@ export class DialogAddAnEmployeeComponent {
     let employeesService = this.employeesService.getJobTitles({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let departmentGetForDropDown = this.employeesService.getDepartmentForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let scheduleForDropDown = this.employeesService.getScheduleForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+    let GetForDropDownZones = this.sectionsService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
 
 
     combineLatest({
       employeeForDropDown,
       employeesService,
       departmentGetForDropDown,
+      GetForDropDownZones,
+
       scheduleForDropDown
     }).subscribe(data => {
       this.jobTitleFirst = [];
       this.sectionList = [];
       this.workScheduleList = [];
+      this.listZones = [];
+
       this.listDirectManager = [];
       data.employeeForDropDown?.data?.forEach((jobTitle: any) => {
         this.listDirectManager.push({ name: jobTitle.name, key: jobTitle.id })
+      });
+      data.GetForDropDownZones?.data?.forEach((day: any) => {
+        this.listZones.push({ name: day.name, key: day.id });
       });
       data.employeesService?.data?.forEach((jobTitle: any) => {
         this.jobTitleFirst.push({ name: jobTitle.name, key: jobTitle.id })
@@ -222,7 +256,20 @@ export class DialogAddAnEmployeeComponent {
 
               this.addBranchGroupForm.get("employeeType")?.setValue(data.employeeType.toString());
               this.addBranchGroupForm.get("employeeNumber")?.setValue(data.employeeNumber);
+              data?.zoneIds?.forEach((zone: any) => {
 
+                let indexZones = this.listZones.findIndex(list => list.key === zone);
+
+
+                if (indexZones >= 0) {
+                  if (Array.isArray(this.getControl("zoneIds")?.value)) {
+                    this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }, ...this.getControl("zoneIds")?.value]));
+                  } else {
+                    this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }]));
+                  }
+                }
+
+              });
 
               this.employeesService.getJobTitles({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.jobTitleId }).subscribe(dataDropdown => {
 
@@ -365,7 +412,27 @@ export class DialogAddAnEmployeeComponent {
         }
 
         break;
-
+        case 'zoneIds':
+          if (data || data === "") {
+            if (data !== this.lastSearchQuery) {
+              this.lastSearchQuery = data;
+              this.sectionsService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+                debounceTime(300),
+                distinctUntilChanged()).subscribe((res: any) => {
+                  this.listZones = [];
+                  res.data?.forEach((day: any) => {
+  
+  
+                    this.listZones.push({ name: day.name, key: day.id });
+  
+                  });
+  
+  
+                });
+            }
+  
+          }
+          break;
       default:
         break;
     }
@@ -415,21 +482,16 @@ export class DialogAddAnEmployeeComponent {
     } else {
       this.getControl("name")?.markAsDirty();
       this.getControl("employeeNumber")?.markAsDirty();
-
-      
       this.getControl("fieldFirst")?.markAsDirty();
       this.getControl("JobTitleId")?.markAsDirty();
       this.getControl("DepartmentId")?.markAsDirty();
       this.getControl("JoiningDate")?.markAsDirty();
       this.getControl("ScheduleId")?.markAsDirty(); this.getControl("directManager")?.markAsDirty();
-
       this.getControl("mobileNumber")?.markAsDirty();
-
       this.getControl("email")?.markAsDirty();
       this.getControl("address")?.markAsDirty();
-
+      this.getControl("zoneIds")?.markAsDirty();
       this.getControl("AnnualVacationBalance")?.markAsDirty();
-
     }
 
   }

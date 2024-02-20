@@ -33,7 +33,9 @@ export class SideNavBarComponent {
   public permissionsService = inject(PermissionsService);
   public dashboardService = inject(DashboardService);
   profile:any = {}
-  
+  countries!: any[];
+  selectedCountry: any;
+
   constructor(private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     public translateService: TranslateService,
     public authService: AuthService,
@@ -83,6 +85,56 @@ export class SideNavBarComponent {
     let permission = JSON.parse(localStorage.getItem('permissions') as string)
     this.isAdmin = permission?.isAdmin;
 
+    if (this.currentLang === undefined || this.currentLang === null) {
+      this.countries = [
+        { name: 'السعودية', code: 'AR' },
+        { name: 'الولايات المتحدة', code: 'US' },
+        { name: 'الهند', code: 'IN' }
+      ];
+      this.selectedCountry = { name: 'السعودية', code: 'AR' };
+      document.documentElement.setAttribute('lang', 'ar');
+      this.translateService.use("ar");
+    } else {
+
+   
+      this.selectedCountry = { name: 'Saudi Arabia', code: 'AR' };
+
+      if (this.currentLang == "ar") {
+        document.documentElement.setAttribute('lang', 'ar');
+        this.translateService.use("ar");
+        this.countries = [
+          { name: 'السعودية', code: 'AR' },
+          { name: 'الولايات المتحدة', code: 'US' },
+          { name: 'الهند', code: 'IN' }
+        ];
+        this.selectedCountry = { name: 'السعودية', code: 'AR' };
+
+      }
+      else if (this.currentLang == "en") {
+        this.selectedCountry = { name: 'United States', code: 'US' };
+        document.documentElement.setAttribute('lang', 'en');
+        this.translateService.use("en");
+        this.countries = [
+          { name: 'United States', code: 'US' },
+          { name: 'Saudi Arabia', code: 'AR' },
+          { name: 'India', code: 'IN' }
+        ];
+        this.selectedCountry = { name: 'United States', code: 'US' };
+      } else if (this.currentLang == "ind") {
+        this.selectedCountry = { name: 'India', code: 'IN' };
+        document.documentElement.setAttribute('lang', 'en');
+        this.translateService.use("ind");
+        this.countries = [
+          { name: 'India', code: 'IN' },
+
+          { name: 'Saudi Arabia', code: 'AR' },
+          { name: 'United States', code: 'US' }
+        ];
+        this.selectedCountry = { name: 'India', code: 'IN' };
+
+      }
+
+    }
     if (!this.getPermissions()) {
       this.authService.logout();
     }
@@ -455,7 +507,46 @@ export class SideNavBarComponent {
     }
  
   }
+  changeLanguage(lang: any) {
+    this.countries = [];
+    if (lang.value.code === "US") {
+      document.documentElement.setAttribute('lang', 'en');
+      localStorage.setItem("lang", "en");
+      this.translateService.use("en");
+      this.countries = [
+        { name: 'United States', code: 'US' },
+        { name: 'Saudi Arabia', code: 'AR' },
+        { name: 'India', code: 'IN' }
+      ];
+ 
+      let findIndexCountry =  this.countries.findIndex(country =>country.code == "US" )
+      this.selectedCountry = this.countries[findIndexCountry];
+    } else if (lang.value.code == "AR") {
+      document.documentElement.setAttribute('lang', 'ar');
+      localStorage.setItem("lang", "ar");
+      this.translateService.use("ar");
+      this.countries = [
+        { name: 'السعودية', code: 'AR' },
+        { name: 'الولايات المتحدة', code: 'US' },
+        { name: 'الهند', code: 'IN' }
+      ];
+      let findIndexCountry =  this.countries.findIndex(country =>country.code == "AR" )
+      this.selectedCountry = this.countries[findIndexCountry];
 
+    } else if (lang.value.code == "IN") {
+      document.documentElement.setAttribute('lang', 'en');
+      localStorage.setItem("lang", "ind");
+      this.translateService.use("ind");
+      this.countries = [
+        { name: 'India', code: 'IN' },
+
+        { name: 'Saudi Arabia', code: 'AR' },
+        { name: 'United States', code: 'US' }
+      ];
+      let findIndexCountry =  this.countries.findIndex(country =>country.code == "IN" )
+      this.selectedCountry = this.countries[findIndexCountry];
+    }
+  }
   SelectedLang(event: any) {
     this.Newlang = event.target.value;
     this.translateService.use(this.Newlang);

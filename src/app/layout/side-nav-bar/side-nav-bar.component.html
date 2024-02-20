@@ -978,6 +978,7 @@
               <i class="pi pi-search"></i>
               <input type="text" [(ngModel)]="searchInput" (input)="search()" pInputText placeholder="ابحث في داوم" />
             </span>
+        
             <ng-container *ngIf="showListSearch">
               <div class="list-components"  (click)="$event.stopPropagation()">
                 <ul nz-menu nzMode="inline">
@@ -1033,6 +1034,43 @@
           </div>
         </div>
         <div class="section-left-sidebar d-flex">
+          <div class="localization">
+            <p-dropdown [options]="countries" [(ngModel)]="selectedCountry" (onChange)="changeLanguage($event)"
+            optionLabel="name">
+            <ng-template pTemplate="selectedItem">
+              <ng-container *ngIf="selectedCountry.code !='AR'">
+                <div class="d-flex align-items-center gap-2" *ngIf="selectedCountry">
+                  <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                    [class]="'flag flag-' + selectedCountry.code.toLowerCase()" style="width: 18px" />
+                  <div>{{ selectedCountry.name }}</div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="selectedCountry.code ==='AR'">
+                <div class="d-flex align-items-center gap-2" *ngIf="selectedCountry">
+                  <img src="assets/img/flag-400.png" style="width: 18px" />
+                  <div>{{ selectedCountry.name }}</div>
+                </div>
+              </ng-container>
+  
+            </ng-template>
+            <ng-template let-country pTemplate="item">
+              <ng-container *ngIf="country.code != 'AR'">
+                <div class="d-flex align-items-center gap-2">
+                  <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                    [class]="'flag flag-' + country.code.toLowerCase()" style="width: 18px" />
+                  <div>{{ country.name }}</div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="country.code === 'AR'">
+                <div class="d-flex align-items-center gap-2">
+                  <img src="assets/img/flag-400.png" style="width: 18px" />
+                  <div>{{ country.name }}</div>
+                </div>
+              </ng-container>
+            </ng-template>
+          </p-dropdown>
+          </div>
+   
           <div class="users users-header d-flex align-items-center">
             <ul class="list-unstyled ul-users p-0 m-0 d-flex">
 

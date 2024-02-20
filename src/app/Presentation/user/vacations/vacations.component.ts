@@ -33,8 +33,12 @@ export class VacationsComponent {
 
   columns: any[] = [
     {
-      name: "رقم الموظف",
+      name: "رقم الطلب",
       field: "orderNumber",
+    },
+    {
+      name: "رقم الوظيفي",
+      field: "employeeCode",
     },
     {
       name: "اسم الموظف",
@@ -206,15 +210,12 @@ export class VacationsComponent {
                 alt: vacation.employee?.name ? vacation.employee?.name : "لا يوجد",
                 img: vacation.employee?.profileImagePath ? vacation.employee?.profileImagePath : "../../../../assets/img/5034901-200.png"
               },
+              employeeCode: vacation.employee?.code,
               kindOfHoliday: vacation.vacationTypeName,
-
-              
               beginning: moment(new Date(vacation.dateFrom)).format("MM/DD/YYYY"),
               final: moment(new Date(vacation.dateTo)).format("MM/DD/YYYY"),
               balanceAfterRequest: vacation.balanceAfterRequest,
-
               reason: vacation.statusName
-
             })
           });
           this.totalItems = data.totalCount

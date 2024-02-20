@@ -21,6 +21,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { AuthGuard } from './guard/auth.guard';
 import { NotPermissionComponent } from '../layout/not-permission/not-permission.component';
 import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { FormsModule } from '@angular/forms';
     MatToolbarModule,
     MatIconModule,
     NgbDropdownModule,
+    DropdownModule,
     ScrollingModule,
     MatSidenavModule,
     MatDialogModule,

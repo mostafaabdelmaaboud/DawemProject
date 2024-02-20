@@ -26,10 +26,11 @@ export class SignUpComponent {
     confirmPassword: ["", [Validators.required, Validators.minLength(5), , this.passwordMatchValidator()]],
 
     userEmail: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
-    userMobileNumber: ["", [Validators.required, Validators.pattern(/^(\+\d{1,3}[- ]?)?\d{8,}$/)]],
+    userMobileNumber: ["", [Validators.required]],
     agreed: [, Validators.required],
 
   });
+  code="+966";
   private authService = inject(AuthService);
   currentLang = localStorage.getItem("lang");
   countries!: any[];
@@ -64,6 +65,8 @@ export class SignUpComponent {
         { name: 'الولايات المتحدة', code: 'US' },
         { name: 'الهند', code: 'IN' }
       ];
+      this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{8}$/)])
+      this.code= "+966";
       this.selectedCountry = { name: 'السعودية', code: 'AR' };
       document.documentElement.setAttribute('lang', 'ar');
       this.translate.use("ar");
@@ -79,6 +82,8 @@ export class SignUpComponent {
           { name: 'الهند', code: 'IN' }
         ];
         this.selectedCountry = { name: 'السعودية', code: 'AR' };
+        this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
+        this.code= "+966";
 
       }
       else if (this.currentLang == "en") {
@@ -92,6 +97,8 @@ export class SignUpComponent {
           { name: 'India', code: 'IN' }
         ];
         this.selectedCountry = { name: 'United States', code: 'US' };
+        this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required,Validators.pattern(/^\d{3}-\d{3}-\d{4}$/)])
+        this.code= "+1";
 
       } else if (this.currentLang == "ind") {
         this.selectedCountry = { name: 'India', code: 'IN' };
@@ -103,6 +110,9 @@ export class SignUpComponent {
           { name: 'United States', code: 'US' }
         ];
         this.selectedCountry = { name: 'India', code: 'IN' };
+        this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
+
+        this.code= "+91";
 
       }
     }
@@ -129,9 +139,13 @@ export class SignUpComponent {
         { name: 'Saudi Arabia', code: 'AR' },
         { name: 'India', code: 'IN' }
       ];
-      
       let findIndexCountry =  this.countries.findIndex(country =>country.code == "US" )
       this.selectedCountry = this.countries[findIndexCountry];
+      this.FormGroup.get("userMobileNumber")?.reset();
+      this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required,Validators.pattern(/^\d{3}-\d{3}-\d{4}$/)])
+
+      this.code= "+1";
+
     } else if (lang.value.code == "AR") {
       document.documentElement.setAttribute('lang', 'ar');
       localStorage.setItem("lang", "ar");
@@ -143,6 +157,11 @@ export class SignUpComponent {
       ];
       let findIndexCountry =  this.countries.findIndex(country =>country.code == "AR" )
       this.selectedCountry = this.countries[findIndexCountry];
+      this.FormGroup.get("userMobileNumber")?.reset();
+
+      this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{8}$/)])
+      this.code= "+966";
+ 
     } else if (lang.value.code == "IN") {
       document.documentElement.setAttribute('lang', 'en');
       localStorage.setItem("lang", "ind");
@@ -155,7 +174,10 @@ export class SignUpComponent {
       ];
       let findIndexCountry =  this.countries.findIndex(country =>country.code == "IN" )
       this.selectedCountry = this.countries[findIndexCountry];
+      this.FormGroup.get("userMobileNumber")?.reset();
 
+      this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
+      this.code= "+91";
     }
   }
   lastSearchQuery = "";

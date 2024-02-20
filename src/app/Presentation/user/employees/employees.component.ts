@@ -420,7 +420,15 @@ export class EmployeesComponent {
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData = new FormData();
+      let formDataObject: any = {};
+
       moment.locale("en"); 
+      formDataObject.zoneIds = [];
+      if (result?.zoneIds?.length > 0) {
+        result?.zoneIds?.forEach((direct: any) => {
+          formDataObject.zoneIds.push(direct.key);
+        });
+      }
       formData.append("CreateEmployeeModelString", JSON.stringify({
         IsActive: result.isActive,
         AttendanceType: Number(result.AttendanceType),
@@ -430,7 +438,7 @@ export class EmployeesComponent {
         address: result.address,
         EmployeeType: Number(result.employeeType),
         employeeNumber: result.employeeNumber,
-
+        zoneIds:formDataObject.zoneIds,
         mobileNumber: result.mobileNumber,
         JobTitleId: result.JobTitleId.key,
         DepartmentId: result.DepartmentId.key,
@@ -653,8 +661,16 @@ export class EmployeesComponent {
     dialogRefAddCurrency.componentInstance.id = data.id;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData = new FormData();
+      let formDataObject: any = {};
+
       moment.locale("en"); 
 
+      formDataObject.zoneIds = [];
+      if (result?.zoneIds?.length > 0) {
+        result?.zoneIds?.forEach((direct: any) => {
+          formDataObject.zoneIds.push(direct.key);
+        });
+      }
       formData.append("UpdateEmployeeModelString", JSON.stringify({
         id: data.id,
         IsActive: result.isActive,
@@ -666,6 +682,7 @@ export class EmployeesComponent {
         mobileNumber: result.mobileNumber,
         EmployeeType: Number(result.employeeType),
         employeeNumber: result.employeeNumber,
+        zoneIds:formDataObject.zoneIds,
         JobTitleId: result.JobTitleId.key,
         ProfileImageName: result.files[0]?.fileUpload?.name ? result.files[0]?.fileUpload?.name : "",
         DepartmentId: result.DepartmentId.key,

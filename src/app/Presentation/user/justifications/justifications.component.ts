@@ -37,8 +37,12 @@ export class JustificationsComponent {
   ];
   columns: any[] = [
     {
-      name: "رقم الموظف",
+      name: "رقم الطلب",
       field: "orderNumber",
+    },
+    {
+      name: "الرقم الوظيفي",
+      field: "employeeCode",
     },
     {
       name: "اسم الموظف",
@@ -256,12 +260,12 @@ export class JustificationsComponent {
         titlePermissionTypeId: "نوع التبرير <span class='color-red'>*</span>",
         placeholderPermissionTypeId: " برجاء اختيار نوع التبرير",
         PermissionTypeIdValidation: "نوع التبرير مطلوب",
-        titleCalendar: "تاريخ الاجازة <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ الاجازة",
+        titleCalendar: "تاريخ التبرير <span class='color-red'>*</span>",
+        placeholderCalendar: "تاريخ التبرير",
         titleNotes: "الملاحظات <span class='color-red'>*</span>",
         placeholdeNotes: "الملاحظات",
         NotesValidation: "الملاحظات مطلوب",
-        dateTaskValidation: "تاريخ الاجازة مطلوب",
+        dateTaskValidation: "تاريخ التبرير مطلوب",
         labelRadioButton: "صاحب الطلب",
         firstRadio: "لنفسي",
         secondRadio: "لموظف",
@@ -370,7 +374,9 @@ export class JustificationsComponent {
             alt: employee.employee.name,
             img: employee.employee.profileImagePath ? employee.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
           },
+          employeeCode:employee.employee.code,
           typeOfJustification: employee.justificationTypeName,
+          status:employee.status,
           dateFrom: moment(new Date(employee.dateFrom)).format("MM/DD/YYYY"),
           dateTo: moment(new Date(employee.dateTo)).format("MM/DD/YYYY"),
         })
@@ -406,13 +412,13 @@ export class JustificationsComponent {
         titlePermissionTypeId: "نوع التبرير <span class='color-red'>*</span>",
         placeholderPermissionTypeId: " برجاء اختيار نوع التبرير",
         PermissionTypeIdValidation: "نوع التبرير مطلوب",
-        titleCalendar: "تاريخ الاجازة <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ الاجازة",
+        titleCalendar: "تاريخ التبرير <span class='color-red'>*</span>",
+        placeholderCalendar: "تاريخ التبرير",
         titleNotes: "الملاحظات <span class='color-red'>*</span>",
         placeholdeNotes: "الملاحظات",
         NotesValidation: "الملاحظات مطلوب",
 
-        dateTaskValidation: "تاريخ الاجازة مطلوب",
+        dateTaskValidation: "تاريخ التبرير مطلوب",
         labelRadioButton: "صاحب الطلب",
         firstRadio: "لنفسي",
         secondRadio: "لموظف",

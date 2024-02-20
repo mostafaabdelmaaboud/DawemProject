@@ -105,7 +105,7 @@
               <div class="container-alerts mt-2"
                 *ngIf="dateTaskMultiple &&  !getControl('dateTask')?.hasError('required')">
                 <div class="alert alert-danger">
-                  تاريخ الاجازة متعدد
+                  تاريخ التبرير متعدد
 
                 </div>
 
@@ -115,7 +115,7 @@
           </div>
           <div class="col-lg-6 col-12">
             <div class="sectionThree">
-              <label class="title" >وقت الاجازة <span class="color-red">*</span></label>
+              <label class="title" >وقت التبرير <span class="color-red">*</span></label>
               <div class="content-password">
                 <div class="content-pCalendar-default" dir="ltr">
                   <p-calendar formControlName="time" appendTo="body" [timeOnly]="true"
@@ -126,7 +126,7 @@
               <div class="container-alerts mt-2" *ngIf="getControl('time')?.errors">
                 <div class="alert alert-danger"
                   *ngIf="getControl('time')?.hasError('required') && getControl('time')?.dirty">
-                 وقت الاجازة مطلوب  
+                 وقت التبرير مطلوب  
                 </div>
               </div>
               <!--End Custom Validators-->

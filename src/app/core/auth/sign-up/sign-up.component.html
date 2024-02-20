@@ -258,9 +258,10 @@
                   <div class="sectionFive mb-3">
                     <label for="" class="label-input mb-2">{{'signup.userPhoneNumber' | translate}} <span class="color-red">*</span></label>
                     <div class="content-input position-relative">
-                      <div class="content-password">
+                      <div class="content-password position-relative code-phone">
                         <input type="text" pInputText formControlName="userMobileNumber"
                           [placeholder]="'signup.userPhoneNumber' | translate" class="w-100" />
+                          <span class="code">{{code}}</span>
                       </div>
                       <div class="container-alerts" *ngIf="getControl('userMobileNumber')?.errors">
                         <div class="alert alert-danger"

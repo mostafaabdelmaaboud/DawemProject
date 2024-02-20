@@ -65,6 +65,17 @@
       </div>
     </div>
     <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">المناطق</label>
+      <ng-container *ngFor="let zone of info.zones">
+        <div class="content-password">
+          {{zone}}
+  
+        </div>
+      </ng-container>
+      <ng-container *ngIf="info.zones.length === 0">لا يوجد</ng-container>
+  
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
       <label class="title">تاريخ الالتحاق</label>
       <div class="content-password">
         {{info?.joiningDate ? info?.joiningDate: "لا يوجد"}}

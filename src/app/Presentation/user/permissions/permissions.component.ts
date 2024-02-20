@@ -33,8 +33,12 @@ export class PermissionsComponent {
 
   columns: any[] = [
     {
-      name: "رقم الموظف",
+      name: "رقم الطلب",
       field: "orderNumber",
+    },
+    {
+      name: "رقم الوظيفي",
+      field: "employeeCode",
     },
     {
       name: "اسم الموظف",
@@ -257,7 +261,8 @@ export class PermissionsComponent {
             alt: permission.employee.name,
             img: permission.employee.profileImagePath ? permission.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
           },
-          
+          employeeCode: permission.employee?.code,
+
           statusName: permission.statusName,
 
           typeOfPermission: permission.permissionTypeName,
