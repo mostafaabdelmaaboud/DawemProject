@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/core/auth/services/auth-service.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CalendarModule } from "primeng/calendar";
@@ -104,6 +104,7 @@ export class AddUserComponent {
   @Input() workTeamList: any[] = [
   ];
   @Input() id!: string;
+  code="+966";
 
   listEmployees: any[] = [
   ];
@@ -119,7 +120,7 @@ export class AddUserComponent {
     ConfirmPassword: ["", [Validators.required, Validators.minLength(5), , this.passwordMatchValidator()]],
 
     MobileNumber: ["", Validators.required],
-    Roles: [""],
+    Roles: ["", Validators.required],
 
     EmployeeId: ["", Validators.required],
     IsAdmin: [false],
@@ -136,15 +137,37 @@ export class AddUserComponent {
     public dialogRef: MatDialogRef<AddUserComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    public translate: TranslateService,
+
   ) {
     this.dialogRef.disableClose = true;
   }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+    this.addBranchGroupForm.get("MobileNumber")?.setValue("");
+    this.addBranchGroupForm.get("Password")?.setValue("");
     this.loading = true;
+    if (this.translate.currentLang == "ar") {
+     
+      this.addBranchGroupForm.get("MobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
+      this.code= "+966";
 
+    }
+    else if (this.translate.currentLang == "en") {
+
+      this.addBranchGroupForm.get("MobileNumber")?.setValidators([Validators.required,Validators.pattern(/^\d{3}-\d{3}-\d{4}$/)])
+      this.code= "+1";
+
+    } else if (this.translate.currentLang == "ind") {
+
+      this.addBranchGroupForm.get("MobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
+
+      this.code= "+91";
+
+    }
+   
     let rolesDropDown = this.usersService.getRolesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let employeeForDropDown = this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     combineLatest({

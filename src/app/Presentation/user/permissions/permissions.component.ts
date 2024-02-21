@@ -56,7 +56,10 @@ export class PermissionsComponent {
       name: "البداية",
       field: "dateFrom"
     },
-
+    {
+      name: "لمده الأستئذان",
+      field: "period"
+    },
     {
       name: "النهاية",
       field: "dateTo"
@@ -201,7 +204,7 @@ export class PermissionsComponent {
   }
   exportTableToExcel() {
     let columns = [...this.columns];
-    delete columns[6]
+    delete columns[8]
     var options = { 
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -256,6 +259,7 @@ export class PermissionsComponent {
           id: permission.id,
           status: permission.status,
           orderNumber: permission.employee.code,
+          period:permission.period,
           employeeName: {
             name: permission.employee.name,
             alt: permission.employee.name,

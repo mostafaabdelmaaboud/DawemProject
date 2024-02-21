@@ -39,8 +39,12 @@ export class AssignmentsComponent {
   ];
   columns: any[] = [
     {
-      name: "رقم الموظف",
+      name: "رقم الطلب",
       field: "orderNumber",
+    },
+    {
+      name: "رقم الوظيفي",
+      field: "employeeCode",
     },
     {
       name: "اسم الموظف",
@@ -49,6 +53,10 @@ export class AssignmentsComponent {
     {
       name: "نوع التكليف",
       field: "assignmentTypeName"
+    },
+    {
+      name: "لوقت التكليف",
+      field: "assignmentTime"
     },
     {
       name: "البداية",
@@ -185,7 +193,7 @@ export class AssignmentsComponent {
   }
   exportTableToExcel() {
     let columns = [...this.columns];
-    delete columns[6]
+    delete columns[8]
     var options = { 
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -251,18 +259,21 @@ export class AssignmentsComponent {
   getAssignments(filteration: any) {
     this.assignments = [];
     this.isLoading = true;
+
     this.assignmentsService.listAssignment(filteration).subscribe(data => {
       data?.data?.forEach((assignment: any) => {
-
         this.assignments.push({
           id: assignment.id,
           status: assignment.status,
           orderNumber: assignment.code,
+          employeeCode:assignment.employee.code,
           employeeName: {
             name: assignment.employee.name,
             alt: assignment.employee.name,
             img: assignment.employee.profileImagePath ? assignment.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
           },
+          assignmentTime:moment(new Date(assignment.dateFrom)).format("hh:mm:ss a"),
+
           assignmentTypeName: assignment.assignmentTypeName,
           statusName: assignment.statusName,
           dateFrom: moment(new Date(assignment.dateFrom)).format("MM/DD/YYYY"),

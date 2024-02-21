@@ -90,7 +90,7 @@ export class RequestTaskComponent {
     ForEmployee: [false],
     TaskTypeId: ['', Validators.required],
     dateTask: [null, Validators.required],
-    TaskEmployeeIds: [""],
+    TaskEmployeeIds: ["", Validators.required],
     time:[null, Validators.required],
     Notes: ['']
   });
@@ -113,7 +113,15 @@ export class RequestTaskComponent {
 
     let taskTypeForDropDown = this.tasksService.taskTypeDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let employeeForDropDown = this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-
+    this.addBranchGroupForm.get("dateTask")?.valueChanges.subscribe(data => {
+      if (data != null) {
+        if (data[1] === null) {
+          this.dateTaskMultiple = true;
+        } else {
+          this.dateTaskMultiple = false;
+        }
+      }
+    })
     combineLatest({
       taskTypeForDropDown,
       employeeForDropDown
@@ -415,6 +423,7 @@ export class RequestTaskComponent {
     // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
   }
   request() {
+
     if (this.addBranchGroupForm.value.dateTask != null) {
       if (this.addBranchGroupForm.value.dateTask[1] === null) {
         this.dateTaskMultiple = true;
@@ -423,7 +432,7 @@ export class RequestTaskComponent {
       }
     }
 
-    if (this.addBranchGroupForm.valid && !this.dateTaskMultiple) {
+    if (this.addBranchGroupForm.valid && this.submitted && !this.dateTaskMultiple) {
       this.submitted = false;
       this.submitClicked.emit({ ...this.addBranchGroupForm.value, files: this.AttachmentsFiles });
       // this.dialogRef.close(true);
@@ -431,6 +440,7 @@ export class RequestTaskComponent {
       this.getControl("TaskTypeId")?.markAsDirty();
       this.getControl("dateTask")?.markAsDirty();
       this.getControl("time")?.markAsDirty();
+      this.getControl("TaskEmployeeIds")?.markAsDirty();
 
     }
 

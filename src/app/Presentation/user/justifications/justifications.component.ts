@@ -171,7 +171,7 @@ export class JustificationsComponent {
   exportTableToExcel() {
 
     let columns = [...this.columns];
-    delete columns[5]
+    delete columns[6]
     var options = { 
       fieldSeparator: ',',
       quoteStrings: '"',

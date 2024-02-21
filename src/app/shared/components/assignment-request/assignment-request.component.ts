@@ -113,7 +113,15 @@ export class AssignmentRequestComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.loading = true;
-
+    this.addBranchGroupForm.get("dateTask")?.valueChanges.subscribe(data => {
+      if (data != null) {
+        if (data[1] === null) {
+          this.dateTaskMultiple = true;
+        } else {
+          this.dateTaskMultiple = false;
+        }
+      }
+    })
     let vacationTypeForDropDown = this.assignmentsService.assignmentTypeDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let employeeForDropDown = this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     combineLatest({
@@ -327,7 +335,10 @@ export class AssignmentRequestComponent {
       this.getControl("dateTask")?.markAsDirty();
       this.getControl("time")?.markAsDirty();
       this.getControl("Notes")?.markAsDirty();
+      this.getControl("AssignmentTypeId")?.markAsDirty();
+      this.getControl("EmployeeId")?.markAsDirty();
 
+      
 
 
     }

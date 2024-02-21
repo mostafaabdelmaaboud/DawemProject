@@ -33,8 +33,12 @@ export class TasksComponent {
 
   columns: any[] = [
     {
-      name: "رقم الموظف",
+      name: "رقم الطلب",
       field: "orderNumber",
+    },
+    {
+      name: "رقم الوظيفي",
+      field: "employeeCode",
     },
     {
       name: "اسم الموظف",
@@ -43,6 +47,10 @@ export class TasksComponent {
     {
       name: "المهمة",
       field: "task"
+    },
+    {
+      name: "لوقت المهمة",
+      field: "taskTime"
     },
     {
       name: "تاريخ البداية",
@@ -193,7 +201,7 @@ export class TasksComponent {
   }
   exportTableToExcel() {
     let columns = [...this.columns];
-    delete columns[6]
+    delete columns[8]
     var options = { 
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -251,11 +259,13 @@ export class TasksComponent {
           id: employee.id,
           orderNumber: employee.code ? employee.code : "لا يوجد",
           status: employee.status,
+          employeeCode:employee.employee.code,
           employeeName: {
             name: employee.employee.name,
             alt: employee.employee.name,
             img: employee.employee.profileImagePath ? employee.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
           },
+          taskTime:moment(new Date(employee.dateFrom)).format("hh:mm:ss a"),
           task: employee.taskTypeName,
           dateFrom: moment(new Date(employee.dateFrom)).format("MM/DD/YYYY"),
           dateTo: moment(new Date(employee.dateTo)).format("MM/DD/YYYY"),
@@ -288,7 +298,7 @@ export class TasksComponent {
         secondRadio: "لموظف",
         timeAttendance: "وقت مهمة العمل",
         placeholdertimeAttendance: "وقت مهمة العمل",
-        titleWorkTeam: "فريق العمل",
+        titleWorkTeam: "فريق العمل <span class='color-red'>*</span>",
         titleEmployeeId: "الموظف <span class='color-red'>*</span>",
         placeholderEmployeeId: "الموظف",
         EmployeeIdValidation: "الموظف مطلوب",
@@ -528,7 +538,7 @@ export class TasksComponent {
         secondRadio: "لموظف",
         timeAttendance: "وقت مهمة العمل",
         placeholdertimeAttendance: "وقت مهمة العمل",
-        titleWorkTeam: "فريق العمل",
+        titleWorkTeam: "فريق العمل <span class='color-red'>*</span>",
         titleEmployeeId: "الموظف <span class='color-red'>*</span>",
         placeholderEmployeeId: "الموظف",
         EmployeeIdValidation: "الموظف مطلوب",

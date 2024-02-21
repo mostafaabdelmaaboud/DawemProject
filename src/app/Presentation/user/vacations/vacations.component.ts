@@ -244,7 +244,7 @@ export class VacationsComponent {
   exportTableToExcel() {
   
     let columns = [...this.columns];
-    delete columns[7]
+    delete columns[8]
     var options = { 
       fieldSeparator: ',',
       quoteStrings: '"',
