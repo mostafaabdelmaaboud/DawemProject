@@ -179,7 +179,12 @@ export class TablesComponent {
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tabletablesHidden");
-    html2canvas(table).then((canvas) => {
+    
+    html2canvas(table,  {
+      scale: 3,
+      width: table.offsetWidth,
+      height: table.offsetHeight, 
+  }).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF();
       pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
@@ -271,6 +276,8 @@ export class TablesComponent {
 
         }
       });
+      dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
 
       this.schedulesService.createSchedule(formData).subscribe(
         {
@@ -278,11 +285,13 @@ export class TablesComponent {
 
             if (data?.state === 2) {
               dialogRefAddCurrency.componentInstance.submitted = true;
+              dialogRefAddCurrency.componentInstance.loading = false;
 
               this.toast.error(data?.message);
 
             } else {
               dialogRefAddCurrency.componentInstance.submitted = true;
+              dialogRefAddCurrency.componentInstance.loading = false;
 
               dialogRefAddCurrency.close();
 
@@ -291,7 +300,7 @@ export class TablesComponent {
                 data: {
                   title: "تم ارسال طلبك",
                   message: data.message,
-                  buttonSend: "طلبات الموظفين"
+                  buttonSend: "الجدولة"
                 },
               });
               this.getSchedules(this.filteration);
@@ -312,6 +321,7 @@ export class TablesComponent {
           },
           error: err => {
             dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
 
           }
         }
@@ -352,54 +362,47 @@ export class TablesComponent {
     // dialogRefAddCurrency.componentInstance.list = this.categories;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-
+      
       let formData: any = {};
       formData.name = result.tableName;
       formData.isActive = true;
-
       formData.scheduleDays = [];
       result?.weekDays?.forEach((day: any) => {
-        formData.scheduleDays.push({ WeekDay: day.weekDay, ShiftId: day.weekDayValue.key, id: day.id })
-
+        if (day.weekDayValue.key != undefined) {
+          formData.scheduleDays.push({ WeekDay: day.weekDay, ShiftId: day.weekDayValue.key })
+        } else {
+          formData.scheduleDays.push({ WeekDay: day.weekDay, ShiftId: null })
+        }
       });
       formData.id = data.id;
+      dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
       this.schedulesService.updateSchedule(formData).subscribe(
         {
           next: data => {
-
-
             dialogRefAddCurrency.componentInstance.submitted = true;
-
+            dialogRefAddCurrency.componentInstance.loading = false;
             dialogRefAddCurrency.close();
-
             const succressDialog = this.dialog.open(ToastSuccessComponent, {
               width: "30vw",
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الموظفين"
+                buttonSend: "الجدولة"
               },
             });
             this.getSchedules(this.filteration);
-
             setTimeout(() => {
               succressDialog.close();
-
             }, 2000);
-
             succressDialog.componentInstance.submitted = true;
             succressDialog.componentInstance.submitClicked.subscribe(result => {
-
-
               succressDialog.close();
-
             })
-
           },
           error: err => {
-
             dialogRefAddCurrency.componentInstance.submitted = true;
-
+            dialogRefAddCurrency.componentInstance.loading = false;
           }
         }
       )

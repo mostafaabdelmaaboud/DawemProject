@@ -53,6 +53,10 @@ export class JustificationsComponent {
       field: "typeOfJustification"
     },
     {
+      name: "حالة الطلب للتبرير",
+      field: "statusName"
+    },
+    {
       name: "البدايه",
       field: "dateFrom"
     },
@@ -171,7 +175,7 @@ export class JustificationsComponent {
   exportTableToExcel() {
 
     let columns = [...this.columns];
-    delete columns[6]
+    delete columns[7]
     var options = { 
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -374,6 +378,7 @@ export class JustificationsComponent {
             alt: employee.employee.name,
             img: employee.employee.profileImagePath ? employee.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
           },
+          statusName:employee.statusName,
           employeeCode:employee.employee.code,
           typeOfJustification: employee.justificationTypeName,
           status:employee.status,

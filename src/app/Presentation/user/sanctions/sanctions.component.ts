@@ -194,7 +194,7 @@ export class SanctionsComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الجدولة"
+                buttonSend: "الجزاءات"
               },
             });
             this.getSummons(this.filteration);
@@ -261,7 +261,7 @@ export class SanctionsComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الجدولة"
+                buttonSend: "الجزاءات"
               },
             });
             this.getSummons(this.filteration);

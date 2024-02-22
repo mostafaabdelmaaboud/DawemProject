@@ -65,7 +65,7 @@ export class SignUpComponent {
         { name: 'الولايات المتحدة', code: 'US' },
         { name: 'الهند', code: 'IN' }
       ];
-      this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{8}$/)])
+      this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{9}$/)])
       this.code= "+966";
       this.selectedCountry = { name: 'السعودية', code: 'AR' };
       document.documentElement.setAttribute('lang', 'ar');
@@ -82,7 +82,7 @@ export class SignUpComponent {
           { name: 'الهند', code: 'IN' }
         ];
         this.selectedCountry = { name: 'السعودية', code: 'AR' };
-        this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
+        this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{9}$/)])
         this.code= "+966";
 
       }
@@ -159,7 +159,7 @@ export class SignUpComponent {
       this.selectedCountry = this.countries[findIndexCountry];
       this.FormGroup.get("userMobileNumber")?.reset();
 
-      this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{8}$/)])
+      this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{9}$/)])
       this.code= "+966";
  
     } else if (lang.value.code == "IN") {
@@ -222,7 +222,7 @@ export class SignUpComponent {
         confirmPassword: this.FormGroup.value.confirmPassword,
 
         userEmail: this.FormGroup.value.userEmail,
-        userMobileNumber: this.FormGroup.value.userMobileNumber,
+        userMobileNumber: this.code + this.FormGroup.value.userMobileNumber,
         agreed: this.FormGroup.value.agreed ? this.FormGroup.value.agreed[0] : false,
       };
 

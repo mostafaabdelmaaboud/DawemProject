@@ -17,9 +17,12 @@
   }
   .hideTable {
     overflow: hidden;
+    width: 1316px;
     height: 0;
     #tableshiftHidden {
       position: relative;
+      width: 1316px;
+
       left: -100%;
     }
   }

@@ -439,7 +439,8 @@ export class EmployeesComponent {
         EmployeeType: Number(result.employeeType),
         employeeNumber: result.employeeNumber,
         zoneIds:formDataObject.zoneIds,
-        mobileNumber: result.mobileNumber,
+        mobileNumber: dialogRefAddCurrency.componentInstance.code + result.mobileNumber,
+        
         JobTitleId: result.JobTitleId.key,
         DepartmentId: result.DepartmentId.key,
         JoiningDate: moment(result.JoiningDate).format("MM/DD/YYYY"),
@@ -679,7 +680,7 @@ export class EmployeesComponent {
         DirectManagerId: result.directManager.key,
         email: result.email,
         address: result.address,
-        mobileNumber: result.mobileNumber,
+        mobileNumber: dialogRefAddCurrency.componentInstance.code+ result.mobileNumber,
         EmployeeType: Number(result.employeeType),
         employeeNumber: result.employeeNumber,
         zoneIds:formDataObject.zoneIds,

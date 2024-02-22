@@ -197,7 +197,7 @@ export class SchedualPlanComponent {
         setAsActive: "تعيين كنشط",
 
         titleDepartmentId: "نوع القسم",
-        placeholdeDepartmentId: "نوع القسم",
+        placeholdeDepartmentId: "اسم القسم",
         ValidationDepartmentId: "نوع القسم مطلوب",
         titleFieldDisabled:"الكود",
 
@@ -206,9 +206,9 @@ export class SchedualPlanComponent {
         secondRadio: "لجروب",
         thirdRadio: "لقسم",
 
-        titleEmployeeId: "نوع الموظف",
-        placeholdeEmployeeId: "نوع الموظف",
-        ValidationEmployeeId: "نوع الموظف مطلوب",
+        titleEmployeeId: "اسم الموظف",
+        placeholdeEmployeeId: "اسم الموظف",
+        ValidationEmployeeId: "اسم الموظف مطلوب",
 
 
         titleScheduleId: "جدول الدوام",
@@ -220,8 +220,8 @@ export class SchedualPlanComponent {
         validationCalendar: "التاريخ مطلوب",
 
         titleGroupId: "نواب الجروب",
-        placeholdeGroupId: "نواب الجروب",
-        ValidationGroupId: "نواب الجروب مطلوب",
+        placeholdeGroupId: "اسم الجروب",
+        ValidationGroupId: "اسم الجروب مطلوب",
 
         titleNotes: "الملاحظات <span class='color-red'>*</span>",
         placeholdeNotes: "الملاحظات",
@@ -388,8 +388,8 @@ export class SchedualPlanComponent {
         setAsActive: "تعيين كنشط",
         titleFieldDisabled:"الكود",
         titleDepartmentId: "نوع القسم",
-        placeholdeDepartmentId: "نوع القسم",
-        ValidationDepartmentId: "نوع القسم مطلوب",
+        placeholdeDepartmentId: "اسم القسم",
+        ValidationDepartmentId: "اسم القسم مطلوب",
 
 
         labelRadioButton: "نوع الجدولة",
@@ -398,8 +398,8 @@ export class SchedualPlanComponent {
         thirdRadio: "لقسم",
 
         titleEmployeeId: "نوع الموظف",
-        placeholdeEmployeeId: "نوع الموظف",
-        ValidationEmployeeId: "نوع الموظف مطلوب",
+        placeholdeEmployeeId: "اسم الموظف",
+        ValidationEmployeeId: "اسم الموظف مطلوب",
 
 
         titleScheduleId: "جدول الدوام",
@@ -411,8 +411,8 @@ export class SchedualPlanComponent {
         validationCalendar: "التاريخ مطلوب",
 
         titleGroupId: "نواب الجروب",
-        placeholdeGroupId: "نواب الجروب",
-        ValidationGroupId: "نواب الجروب مطلوب",
+        placeholdeGroupId: "اسم الجروب",
+        ValidationGroupId: "اسم الجروب مطلوب",
 
         titleNotes: "الملاحظات <span class='color-red'>*</span>",
         placeholdeNotes: "الملاحظات",

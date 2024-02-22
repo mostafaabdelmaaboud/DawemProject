@@ -151,7 +151,7 @@ export class AddUserComponent {
     this.loading = true;
     if (this.translate.currentLang == "ar") {
      
-      this.addBranchGroupForm.get("MobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
+      this.addBranchGroupForm.get("MobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{9}$/)])
       this.code= "+966";
 
     }

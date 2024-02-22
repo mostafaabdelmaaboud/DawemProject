@@ -214,7 +214,11 @@ export class ScheduleLogsComponent {
   }
   exportTableToPDF() {
     let table: any = document.getElementById("tableshiftHidden");
-    html2canvas(table).then((canvas) => {
+    html2canvas(table, {
+        scale: 3,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF();
       pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 

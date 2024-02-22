@@ -151,8 +151,12 @@ export class AddTableComponent {
 
 
                           let getshifts = this.list[getIndexList]?.data.findIndex((shift: any) => shift?.key === day.shiftId);
+                          
+                          if(getshifts >=0) {
+                            this.getFormArray().at(i).get("weekDayValue")?.setValue(this.list[getIndexList]?.data[getshifts]);
 
-                          this.getFormArray().at(i).get("weekDayValue")?.setValue(this.list[getIndexList]?.data[getshifts]);
+                          }
+                
 
                           (this.getFormArray().at(i) as FormGroup).addControl("id", new FormControl(day.id));
                         }
@@ -228,8 +232,8 @@ export class AddTableComponent {
 
   request() {
 
-
-    if (this.addBranchGroupForm.valid) {
+    
+    if (this.addBranchGroupForm.valid && this.submitted) {
       this.submitted = false;
       this.submitClicked.emit(this.addBranchGroupForm.value);
       // this.dialogRef.close(true);

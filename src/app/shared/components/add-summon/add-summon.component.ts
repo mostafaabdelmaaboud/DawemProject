@@ -147,7 +147,7 @@ this.listTimeType = [
   { name: "ساعه", key: 2 }
 ]
 this.listnotifyWays = [
-  { name: "تنبيه علي البرنامج", key: 0 },
+  { name: "تنبيه عن طريق رسالة", key: 0 },
   { name: "تنبيه علي البريد الالكتروني", key: 1 }
 ]
   this.addBranchGroupForm.get("TimeType")?.setValue({ name: "ثانيه", key: 0 });

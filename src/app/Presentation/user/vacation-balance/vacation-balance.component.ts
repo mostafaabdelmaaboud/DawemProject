@@ -210,8 +210,8 @@ export class VacationBalanceComponent {
         setAsActive: "تعيين كنشط",
 
         titleDepartmentId: "نوع القسم",
-        placeholdeDepartmentId: "نوع القسم",
-        ValidationDepartmentId: "نوع القسم مطلوب",
+        placeholdeDepartmentId: "اسم القسم",
+        ValidationDepartmentId: "اسم القسم مطلوب",
 
 
         labelRadioButton: "نوع الاجازة",
@@ -220,8 +220,8 @@ export class VacationBalanceComponent {
         thirdRadio: "لقسم",
 
         titleEmployeeId: "نوع الموظف",
-        placeholdeEmployeeId: "نوع الموظف",
-        ValidationEmployeeId: "نوع الموظف مطلوب",
+        placeholdeEmployeeId: "اسم الموظف",
+        ValidationEmployeeId: "اسم الموظف مطلوب",
 
 
         titleVacationType: " نوع الأجازة الافتراضي",
@@ -233,8 +233,8 @@ export class VacationBalanceComponent {
         validationCalendar: "التاريخ مطلوب",
 
         titleGroupId: "نواب الجروب",
-        placeholdeGroupId: "نواب الجروب",
-        ValidationGroupId: "نواب الجروب مطلوب",
+        placeholdeGroupId: "اسم الجروب",
+        ValidationGroupId: "اسم الجروب مطلوب",
 
         titleBalance: "رصيد الاجازات",
         placeholderBalance: "برجاء اختيار رصيد الاجازات",
@@ -428,8 +428,8 @@ export class VacationBalanceComponent {
         setAsActive: "تعيين كنشط",
 
         titleDepartmentId: "نوع القسم",
-        placeholdeDepartmentId: "نوع القسم",
-        ValidationDepartmentId: "نوع القسم مطلوب",
+        placeholdeDepartmentId: "اسم القسم",
+        ValidationDepartmentId: "اسم القسم مطلوب",
 
 
         labelRadioButton: "نوع الاجازة",
@@ -438,8 +438,8 @@ export class VacationBalanceComponent {
         thirdRadio: "لقسم",
 
         titleEmployeeId: "نوع الموظف",
-        placeholdeEmployeeId: "نوع الموظف",
-        ValidationEmployeeId: "نوع الموظف مطلوب",
+        placeholdeEmployeeId: "اسم الموظف",
+        ValidationEmployeeId: "اسم الموظف مطلوب",
 
 
         titleVacationType: " نوع الأجازة الافتراضي",
@@ -451,8 +451,8 @@ export class VacationBalanceComponent {
         validationCalendar: "التاريخ مطلوب",
 
         titleGroupId: "نواب الجروب",
-        placeholdeGroupId: "نواب الجروب",
-        ValidationGroupId: "نواب الجروب مطلوب",
+        placeholdeGroupId: "اسم الجروب",
+        ValidationGroupId: "اسم الجروب مطلوب",
 
         titleBalance: "رصيد الاجازات",
         placeholderBalance: "برجاء اختيار رصيد الاجازات",

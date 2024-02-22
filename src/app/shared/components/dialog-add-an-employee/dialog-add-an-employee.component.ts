@@ -159,7 +159,7 @@ export class DialogAddAnEmployeeComponent {
     //Add 'implements OnInit' to the class.
     if (this.translate.currentLang == "ar") {
      
-      this.addBranchGroupForm.get("mobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
+      this.addBranchGroupForm.get("mobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{9}$/)])
       this.code= "+966";
 
     }
@@ -225,12 +225,16 @@ export class DialogAddAnEmployeeComponent {
             next: data => {
 
               if (data?.profileImagePath) {
-                this.employeesService.downloadImage(data.profileImagePath).subscribe(response => {
-                  const blob = new Blob([response]);
-                  const file = new File([blob], data.profileImageName);
+                this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: {
+                  name:data.profileImageName
+                }, detailsImage: true });
 
-                  this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: file, detailsImage: true });
-                });
+                // this.employeesService.downloadImage(data.profileImagePath).subscribe(response => {
+                //   const blob = new Blob([response]);
+                //   const file = new File([blob], data.profileImageName);
+
+                //   this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: file, detailsImage: true });
+                // });
               }
 
               this.addBranchGroupForm.get("isActive")?.setValue(data.isActive);
@@ -402,9 +406,9 @@ export class DialogAddAnEmployeeComponent {
             this.employeesService.getScheduleForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.sectionList = [];
+                this.workScheduleList = [];
                 res?.data?.forEach((jobTitle: any) => {
-                  this.sectionList.push({ name: jobTitle.name, key: jobTitle.id })
+                  this.workScheduleList.push({ name: jobTitle.name, key: jobTitle.id })
                 });
               });
           }
