@@ -46,6 +46,10 @@ export class UserPermissionsComponent {
       field: "roleOrUserName",
     },
     {
+      name: "الحالة",
+      field: "isActive"
+    },
+    {
       name: "عدد الشاشات المسموح بها",
       field: "allowedScreensCount"
     },
@@ -167,20 +171,16 @@ export class UserPermissionsComponent {
   getPermissions(filteration: any) {
     this.permissions = [];
     this.isLoading = true;
-
     this.userPermissionsService.listPermissions(filteration).subscribe(data => {
-
       data.data.forEach((permission: any) => {
-
-
         this.permissions.push({
           id: permission.id,
           code: permission.code,
           roleOrUserName: permission.roleOrUserName,
           forTypeName: permission.forTypeName,
           allowedScreensCount: permission.allowedScreensCount,
-          isActive: permission.isActive
-        })
+          isActive: permission.isActive ? "نشط" : 'غير نشط'
+        });
       });
       this.totalItems = data.totalCount
       this.isLoading = false;
@@ -259,12 +259,12 @@ export class UserPermissionsComponent {
         title: "اضافه صلاحية",
         setAsActive: "تعيين كنشط",
         labelRadioButton: "النوع",
-        firstRadio: "الصلاحية",
+        firstRadio: "المنصب",
         secondRadio: "مستخدم",
 
-        titleRoleId: "نوع الصلاحية",
-        placeholdeRoleId: "نوع الصلاحية",
-        ValidationRoleId: "نوع الصلاحية مطلوب",
+        titleRoleId: "نوع المنصب",
+        placeholdeRoleId: "نوع المنصب",
+        ValidationRoleId: "نوع المنصب مطلوب",
 
         titleUserId: "نوع المستخدم",
         placeholdeUserId: "نوع المستخدم",
@@ -384,12 +384,12 @@ export class UserPermissionsComponent {
         title: "تعديل صلاحية",
         setAsActive: "تعيين كنشط",
         labelRadioButton: "النوع",
-        firstRadio: "الصلاحية",
+        firstRadio: "المنصب",
         secondRadio: "مستخدم",
 
-        titleRoleId: "نوع الصلاحية",
-        placeholdeRoleId: "نوع الصلاحية",
-        ValidationRoleId: "نوع الصلاحية مطلوب",
+        titleRoleId: "نوع المنصب",
+        placeholdeRoleId: "نوع المنصب",
+        ValidationRoleId: "نوع المنصب مطلوب",
 
         titleUserId: "نوع المستخدم",
         placeholdeUserId: "نوع المستخدم",

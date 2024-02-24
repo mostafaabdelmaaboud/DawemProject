@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { Subject, Subscription, debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DialogAddAnEmployeeComponent } from 'src/app/shared/components/dialog-add-an-employee/dialog-add-an-employee.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
 import { DialogEmployeeFileComponent } from 'src/app/shared/components/dialog-employee-file/dialog-employee-file.component';
@@ -76,6 +76,7 @@ export class EmployeesComponent {
 
   ];
   employees: any = [];
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   isLoading = true;
   listDirectManager: any[] = [];
@@ -148,7 +149,6 @@ export class EmployeesComponent {
       this.opened = true;
     } else {
       this.opened = false;
-
     }
     this.filterForm = this.fb.group({
       FreeText: [""],
@@ -164,7 +164,69 @@ export class EmployeesComponent {
       { name: '5', code: 5 }
 
     ];
-
+    this.translate.get("employees").subscribe(data => {
+      this.columns = [
+        {
+          name: data.employeeNumber,
+          field: "orderNumber",
+        },
+        {
+          name: data.employeeName,
+          field: "employeeName",
+        },
+        {
+          name: data.section,
+          field: "section"
+        },
+        {
+          name: data.joiningDate,
+          field: "joiningDate"
+        },
+        {
+          name: data.vacationsBalance,
+          field: "vacationsBalance"
+        },
+        {
+          name: data.action,
+          field: "actions"
+        }
+    
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("employees").subscribe(data => {
+        this.columns = [
+          {
+            name: data.employeeNumber,
+            field: "orderNumber",
+          },
+          {
+            name: data.employeeName,
+            field: "employeeName",
+          },
+          {
+            name: data.section,
+            field: "section"
+          },
+          {
+            name: data.joiningDate,
+            field: "joiningDate"
+          },
+          {
+            name: data.vacationsBalance,
+            field: "vacationsBalance"
+          },
+          {
+            name: data.action,
+            field: "actions"
+          }
+      
+        ];
+      })
+      // this.subscription = this.translate.stream('primeng').subscribe(data => {
+      //   this.config.setTranslation(data);
+      // });  
+    })
     this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe(res => {
       res?.data?.forEach((jobTitle: any) => {
         this.listDirectManager.push({ name: jobTitle.name, key: jobTitle.id })
@@ -353,67 +415,71 @@ export class EmployeesComponent {
     this.getEmployees(this.filteration);
   }
   addAnEmployee() {
-    const dialogRefAddCurrency = this.dialog.open(DialogAddAnEmployeeComponent, {
-      width: "50vw",
-      data: {
-        title: "إضافة موظف",
-        setAsNecessary: "تعيين كنشط",
-        labelRadioButtonFirst: "نوع الدوام",
-        firstRadio: "دوام كامل",
-        secondRadio: "دوام جزئي",
-        thirdRadio: "دوام حر / شيفت",
-        titleFieldDisabled: "كود الموظف",
-        code: "#001093",
-        JobNumber: "الرقم الوظيفي <span class='color-red'>*</span>",
-        placeholdeJobNumber: "الرقم الوظيفي",
-        validationtitleJobNumber: "الرقم الوظيفي مطلوب",
-        directManager: "المدير المباشر <span class='color-red'>*</span>",
-        placeholdeDirectManager: "المدير المباشر",
-        validationtitleDirectManager: "المدير المباشر مطلوب",
-        email: "البريد الالكتروني <span class='color-red'>*</span>",
-        placeholdeEmail: "البريد الالكتروني",
-        validationtitleEmail: "البريد الالكتروني مطلوب",
-        validationtitleEmailPattern: "البريد الالكتروني غير صحيح",
+    let dialogRefAddCurrency!:MatDialogRef<DialogAddAnEmployeeComponent, any>;
+    this.translate.get("employees").subscribe(data => {
+      dialogRefAddCurrency = this.dialog.open(DialogAddAnEmployeeComponent, {
+        width: "50vw",
+        data: {
+          title: data.addAnEmployee,
+          setAsNecessary: data.setAsActive,
+          labelRadioButtonFirst: data.performanceType,
+          firstRadio: data.fullTime,
+          secondRadio: "دوام جزئي",
+          thirdRadio: "دوام حر / شيفت",
+          titleFieldDisabled: "كود الموظف",
+          code: "#001093",
+          JobNumber: "الرقم الوظيفي <span class='color-red'>*</span>",
+          placeholdeJobNumber: "الرقم الوظيفي",
+          validationtitleJobNumber: "الرقم الوظيفي مطلوب",
+          directManager: "المدير المباشر <span class='color-red'>*</span>",
+          placeholdeDirectManager: "المدير المباشر",
+          validationtitleDirectManager: "المدير المباشر مطلوب",
+          email: "البريد الالكتروني <span class='color-red'>*</span>",
+          placeholdeEmail: "البريد الالكتروني",
+          validationtitleEmail: "البريد الالكتروني مطلوب",
+          validationtitleEmailPattern: "البريد الالكتروني غير صحيح",
+  
+          address: "العنوان <span class='color-red'>*</span>",
+          placeholdeAddress: "العنوان",
+          validationtitleAddress: "العنوان مطلوب",
+          mobileNumber: "رقم الهاتف <span class='color-red'>*</span>",
+          placeholdeMobileNumber: "رقم الهاتف",
+          validationtitleMobileNumber: "رقم الهاتف مطلوب",
+          titleWorkSchedule: "جدول الدوام <span class='color-red'>*</span>",
+          placeholderWorkSchedule: " اختار جدول الدوام",
+          validationtitleWorkSchedule: "جدول الدوام مطلوب",
+          fieldFirst: "اسم الموظف <span class='color-red'>*</span>",
+          placeholdefieldFirst: "اسم الموظف",
+          validationtitlefieldFirst: "اسم الموظف مطلوب",
+          titleDropdownFirst: "المسمى الوظيفي <span class='color-red'>*</span>",
+          placeholderDropdownFirst: " اختار المسمى الوظيفي",
+          validationtitleDropdownFirst: "المسمي الوظفس مطلوب",
+          titleDropdownSecond: "القسم <span class='color-red'>*</span>",
+          validationtitleDropdownSecond: " اختار القسم مطلوب",
+          placeholderDropdown: " اختار القسم",
+          titleCalendar: "تاريخ الالتحاق <span class='color-red'>*</span>",
+          validationCalendar: "تاريخ الالتحاق مطلوب",
+          uploadFile: "ارفاق ملف",
+          chooseLabel: "اختار الملف ليتم رفعه",
+          labelEmployeeName: "نوع الموظف",
+          firstRadioEmployeeName: "عسكري",
+          secondRadioEmployeeName: "مدني",
+          thirdRadioEmployeeName: "تعاقد مباشر",
+          thirdRadioFour: "تعاقد شركات",
+          placeholderCalendar: "اختار التاريخ",
+          labelRadioButtonSecond: "نوع الشيفت",
+          firstRadiTwo: "صباحي",
+          secondRadioTwo: "مسائي",
+          thirdRadioTwo: "ليلي",
+          titleNotes: "رصيد الاجازات <span class='color-red'>*</span>",
+          placeholdeNotes: "رصيد الاجازات",
+          validationtitleNotes: "برجاء كتابة رصيد الاجازات هنا",
+          buttonSend: "إضافة الموظف",
+          titleClose: "تراجع"
+        },
+      });
+    })
 
-        address: "العنوان <span class='color-red'>*</span>",
-        placeholdeAddress: "العنوان",
-        validationtitleAddress: "العنوان مطلوب",
-        mobileNumber: "رقم الهاتف <span class='color-red'>*</span>",
-        placeholdeMobileNumber: "رقم الهاتف",
-        validationtitleMobileNumber: "رقم الهاتف مطلوب",
-        titleWorkSchedule: "جدول الدوام <span class='color-red'>*</span>",
-        placeholderWorkSchedule: " اختار جدول الدوام",
-        validationtitleWorkSchedule: "جدول الدوام مطلوب",
-        fieldFirst: "اسم الموظف <span class='color-red'>*</span>",
-        placeholdefieldFirst: "اسم الموظف",
-        validationtitlefieldFirst: "اسم الموظف مطلوب",
-        titleDropdownFirst: "المسمى الوظيفي <span class='color-red'>*</span>",
-        placeholderDropdownFirst: " اختار المسمى الوظيفي",
-        validationtitleDropdownFirst: "المسمي الوظفس مطلوب",
-        titleDropdownSecond: "القسم <span class='color-red'>*</span>",
-        validationtitleDropdownSecond: " اختار القسم مطلوب",
-        placeholderDropdown: " اختار القسم",
-        titleCalendar: "تاريخ الالتحاق <span class='color-red'>*</span>",
-        validationCalendar: "تاريخ الالتحاق مطلوب",
-        uploadFile: "ارفاق ملف",
-        chooseLabel: "اختار الملف ليتم رفعه",
-        labelEmployeeName: "نوع الموظف",
-        firstRadioEmployeeName: "عسكري",
-        secondRadioEmployeeName: "مدني",
-        thirdRadioEmployeeName: "تعاقد مباشر",
-        thirdRadioFour: "تعاقد شركات",
-        placeholderCalendar: "اختار التاريخ",
-        labelRadioButtonSecond: "نوع الشيفت",
-        firstRadiTwo: "صباحي",
-        secondRadioTwo: "مسائي",
-        thirdRadioTwo: "ليلي",
-        titleNotes: "رصيد الاجازات <span class='color-red'>*</span>",
-        placeholdeNotes: "رصيد الاجازات",
-        validationtitleNotes: "برجاء كتابة رصيد الاجازات هنا",
-        buttonSend: "إضافة الموظف",
-        titleClose: "تراجع"
-      },
-    });
     dialogRefAddCurrency.componentInstance.submitted = true;
     // dialogRefAddCurrency.componentInstance.list = this.categories;
     dialogRefAddCurrency.componentInstance.editEmployee = false;
@@ -831,6 +897,10 @@ export class EmployeesComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 
 }

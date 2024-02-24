@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { AssignmentRequestComponent } from 'src/app/shared/components/assignment-request/assignment-request.component';
@@ -68,14 +68,9 @@ export class RequestsComponent {
     }
 
   ];
-
-
   requests: any = [];
-
   isLoading = true;
   defaultRowPerPage = { name: '5', code: 5 };
-
-
   filteration: any = {
     PageSize: 5,
     PageNumber: 0,
@@ -95,7 +90,6 @@ export class RequestsComponent {
     currentPage: 1,
   };
   private requestsService = inject(RequestsService)
-
   totalItems: number = 0;
   first: number = 0;
   rows: number = 10;
@@ -105,11 +99,14 @@ export class RequestsComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+  destroy$: Subject<boolean> = new Subject<boolean>();
+  currentLang = localStorage.getItem("lang");
+  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, 
+    media: MediaMatcher, public translate: TranslateService,
+     private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
-
     this._mobileQueryListener = () => {
       if (this.mobileQuery.matches) {
         this.opened = true;
@@ -118,22 +115,18 @@ export class RequestsComponent {
       } else {
         this.opened = false;
         this.requests = this.requests;
-
         changeDetectorRef.detectChanges();
-
       }
-
-
-
     };
     this.mobileQuery.addListener(this._mobileQueryListener);
     translate.addLangs(['ar', 'en']);
     translate.setDefaultLang('ar');
     const browserLang: any = translate.getBrowserLang();
     let lang = browserLang.match(/ar|en/) ? browserLang : 'ar';
-
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
+
     });
   }
   ngOnInit(): void {
@@ -143,6 +136,72 @@ export class RequestsComponent {
       this.opened = false;
 
     }
+    this.translate.get("requests").subscribe(data => {
+      this.columns= [
+        {
+          name: data.employeeNumber,
+          field: "orderNumber",
+        },
+        {
+          name: data.employeeName,
+          field: "employeeName",
+        },
+        {
+          name: data.typeOfRequest,
+          field: "requestTypeName"
+        },
+        {
+          name: data.theDate,
+          field: "date"
+        },
+        {
+          name: data.requestStatus,
+          field: "statusName"
+        },
+        {
+          name: data.action,
+          field: "actions"
+        }
+    
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("requests").subscribe(data => {
+        this.columns= [
+          {
+            name: data.employeeNumber,
+            field: "orderNumber",
+          },
+          {
+            name: data.employeeName,
+            field: "employeeName",
+          },
+          {
+            name: data.typeOfRequest,
+            field: "requestTypeName"
+          },
+      
+          {
+            name: data.theDate,
+            field: "date"
+          },
+      
+          {
+            name: data.requestStatus,
+            field: "statusName"
+          },
+      
+          {
+            name: data.action,
+            field: "actions"
+          }
+      
+        ];
+      })
+      // this.subscription = this.translate.stream('primeng').subscribe(data => {
+      //   this.config.setTranslation(data);
+      // });  
+    })
     // this.filterForm = this.fb.group({
     //   date: [],
     //   type: this.fb.group({
@@ -456,6 +515,10 @@ export class RequestsComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 
 }

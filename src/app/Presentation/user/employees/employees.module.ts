@@ -8,6 +8,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { MatRadioModule } from '@angular/material/radio';
 import { HttpClientModule } from '@angular/common/http';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { HttpClientModule } from '@angular/common/http';
     EmployeesRoutingModule,
     HttpClientModule,
     MatDialogModule,
+    TranslateModule,
     InputSwitchModule,
     MatRadioModule,
     SharedModule

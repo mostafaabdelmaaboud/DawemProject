@@ -35,9 +35,10 @@ export class SideNavBarComponent {
   profile:any = {}
   countries!: any[];
   selectedCountry: any;
+  sideNavPosition: "start" | "end" = 'end';
 
   constructor(private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
-    public translateService: TranslateService,
+    public translate: TranslateService,
     public authService: AuthService,
     private permissionsUserService: PermissionsUserService) {
     this.mobileQuery = media.matchMedia('(max-width: 1050px)');
@@ -87,52 +88,58 @@ export class SideNavBarComponent {
 
     if (this.currentLang === undefined || this.currentLang === null) {
       this.countries = [
-        { name: 'السعودية', code: 'AR' },
-        { name: 'الولايات المتحدة', code: 'US' },
-        { name: 'الهند', code: 'IN' }
+        { name: 'عربي', code: 'AR' },
+        { name: 'انجليزي', code: 'US' }
+        // { name: 'الهند', code: 'IN' }
       ];
-      this.selectedCountry = { name: 'السعودية', code: 'AR' };
+      this.selectedCountry = { name: 'عربي', code: 'AR' };
       document.documentElement.setAttribute('lang', 'ar');
-      this.translateService.use("ar");
+      this.translate.use("ar");
+      this.sideNavPosition="end";
+
     } else {
 
    
-      this.selectedCountry = { name: 'Saudi Arabia', code: 'AR' };
+      this.selectedCountry = { name: 'arabic', code: 'AR' };
 
       if (this.currentLang == "ar") {
         document.documentElement.setAttribute('lang', 'ar');
-        this.translateService.use("ar");
+        this.translate.use("ar");
         this.countries = [
-          { name: 'السعودية', code: 'AR' },
-          { name: 'الولايات المتحدة', code: 'US' },
-          { name: 'الهند', code: 'IN' }
+          { name: 'عربي', code: 'AR' },
+          { name: 'انجليزي', code: 'US' }
+          // { name: 'الهند', code: 'IN' }
         ];
-        this.selectedCountry = { name: 'السعودية', code: 'AR' };
+        this.selectedCountry = { name: 'عربي', code: 'AR' };
+        this.sideNavPosition="end";
 
       }
       else if (this.currentLang == "en") {
-        this.selectedCountry = { name: 'United States', code: 'US' };
+        this.selectedCountry = { name: 'english', code: 'US' };
         document.documentElement.setAttribute('lang', 'en');
-        this.translateService.use("en");
+        this.translate.use("en");
         this.countries = [
-          { name: 'United States', code: 'US' },
-          { name: 'Saudi Arabia', code: 'AR' },
-          { name: 'India', code: 'IN' }
+          { name: 'english', code: 'US' },
+          { name: 'arabic', code: 'AR' }
+          // { name: 'India', code: 'IN' }
         ];
-        this.selectedCountry = { name: 'United States', code: 'US' };
-      } else if (this.currentLang == "ind") {
-        this.selectedCountry = { name: 'India', code: 'IN' };
-        document.documentElement.setAttribute('lang', 'en');
-        this.translateService.use("ind");
-        this.countries = [
-          { name: 'India', code: 'IN' },
+        this.selectedCountry = { name: 'english', code: 'US' };
+        this.sideNavPosition="start";
 
-          { name: 'Saudi Arabia', code: 'AR' },
-          { name: 'United States', code: 'US' }
-        ];
-        this.selectedCountry = { name: 'India', code: 'IN' };
+      } 
+      // else if (this.currentLang == "ind") {
+      //   this.selectedCountry = { name: 'India', code: 'IN' };
+      //   document.documentElement.setAttribute('lang', 'en');
+      //   this.translate.use("ind");
+      //   this.countries = [
+      //     { name: 'India', code: 'IN' },
 
-      }
+      //     { name: 'arabic', code: 'AR' },
+      //     { name: 'english', code: 'US' }
+      //   ];
+      //   this.selectedCountry = { name: 'India', code: 'IN' };
+
+      // }
 
     }
     if (!this.getPermissions()) {
@@ -512,44 +519,50 @@ export class SideNavBarComponent {
     if (lang.value.code === "US") {
       document.documentElement.setAttribute('lang', 'en');
       localStorage.setItem("lang", "en");
-      this.translateService.use("en");
+      this.translate.use("en");
       this.countries = [
-        { name: 'United States', code: 'US' },
-        { name: 'Saudi Arabia', code: 'AR' },
-        { name: 'India', code: 'IN' }
+        { name: 'english', code: 'US' },
+        { name: 'arabic', code: 'AR' }
+        // { name: 'India', code: 'IN' }
       ];
- 
+
+      // this.opened=!this.opened;
       let findIndexCountry =  this.countries.findIndex(country =>country.code == "US" )
       this.selectedCountry = this.countries[findIndexCountry];
+      this.sideNavPosition="start";
+
     } else if (lang.value.code == "AR") {
       document.documentElement.setAttribute('lang', 'ar');
       localStorage.setItem("lang", "ar");
-      this.translateService.use("ar");
+      this.translate.use("ar");
       this.countries = [
-        { name: 'السعودية', code: 'AR' },
-        { name: 'الولايات المتحدة', code: 'US' },
-        { name: 'الهند', code: 'IN' }
+        { name: 'عربي', code: 'AR' },
+        { name: 'انجليزي', code: 'US' }
+        // { name: 'الهند', code: 'IN' }
       ];
       let findIndexCountry =  this.countries.findIndex(country =>country.code == "AR" )
       this.selectedCountry = this.countries[findIndexCountry];
+      this.sideNavPosition="end";
+      // this.opened=!this.opened;
 
-    } else if (lang.value.code == "IN") {
-      document.documentElement.setAttribute('lang', 'en');
-      localStorage.setItem("lang", "ind");
-      this.translateService.use("ind");
-      this.countries = [
-        { name: 'India', code: 'IN' },
+    } 
+    // else if (lang.value.code == "IN") {
+    //   document.documentElement.setAttribute('lang', 'en');
+    //   localStorage.setItem("lang", "ind");
+    //   this.translate.use("ind");
+    //   this.countries = [
+    //     { name: 'India', code: 'IN' },
 
-        { name: 'Saudi Arabia', code: 'AR' },
-        { name: 'United States', code: 'US' }
-      ];
-      let findIndexCountry =  this.countries.findIndex(country =>country.code == "IN" )
-      this.selectedCountry = this.countries[findIndexCountry];
-    }
+    //     { name: 'arabic', code: 'AR' },
+    //     { name: 'english', code: 'US' }
+    //   ];
+    //   let findIndexCountry =  this.countries.findIndex(country =>country.code == "IN" )
+    //   this.selectedCountry = this.countries[findIndexCountry];
+    // }
   }
   SelectedLang(event: any) {
     this.Newlang = event.target.value;
-    this.translateService.use(this.Newlang);
+    this.translate.use(this.Newlang);
     localStorage.setItem('lang', this.Newlang);
     if (this.Newlang == "ar") {
       document.documentElement.setAttribute('lang', 'ar');

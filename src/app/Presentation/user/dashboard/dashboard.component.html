@@ -4,7 +4,7 @@
     <div class="dashboard-description">
       <span class="subTitle-top d-block">
         <span>👋</span>
-        حيّا الله
+        {{'dashboard.godBless' | translate}}
       </span>
       <span class="title-header-dashboard d-block">
         <ng-container *ngIf="!leadingHeader">
@@ -12,7 +12,7 @@
         <ng-container *ngIf="leadingHeader">{{headerInformations?.name}}</ng-container>
       </span>
       <span class="rate-employee d-block">
-        نسبة حضور الموظفين اليوم {{headerInformations?.employeesAttendanceRateToday
+        {{'dashboard.employeeAttendanceRateToday' | translate}} {{headerInformations?.employeesAttendanceRateToday
         ?headerInformations?.employeesAttendanceRateToday : 0 }}%
       </span>
     </div>
@@ -21,7 +21,7 @@
     <div class="row" *ngIf="!spinnerCards">
       <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
         <div class="custom-card-dashboard">
-          <span class="title-card-dashboard Success-700">إجمالي حضور اليوم</span>
+          <span class="title-card-dashboard Success-700">{{'dashboard.totalAttendanceForTheDay' | translate}}</span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
             <span class="number-card-dashboard">{{cards?.dayTotalAttendanceCount}}</span>
             <span class="icon-card-dashboard">
@@ -41,7 +41,7 @@
       </div>
       <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
         <div class="custom-card-dashboard">
-          <span class="title-card-dashboard Primary-700">إجمالي اجازات اليوم</span>
+          <span class="title-card-dashboard Primary-700">{{'dashboard.totalDaysOff' | translate}}</span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
             <span class="number-card-dashboard">{{cards?.dayTotalVacationsCount}}</span>
             <span class="icon-card-dashboard">
@@ -64,7 +64,7 @@
       </div>
       <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
         <div class="custom-card-dashboard">
-          <span class="title-card-dashboard Error-700">إجمالي غياب اليوم</span>
+          <span class="title-card-dashboard Error-700">{{'dashboard.totalAbsenceForTheDay' | translate}}</span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
             <span class="number-card-dashboard">{{cards?.dayTotalAbsencesCount}}</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
@@ -88,7 +88,7 @@
       </div>
       <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
         <div class="custom-card-dashboard">
-          <span class="title-card-dashboard Warning-700 ">إجمالي تأخيرات اليوم</span>
+          <span class="title-card-dashboard Warning-700">{{'dashboard.totalDelaysForTheDay' | translate}}</span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
             <span class="number-card-dashboard">{{cards?.dayTotalDelaysCount}}</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
@@ -117,9 +117,9 @@
           <div class="col-lg-6 mb-3 col-12 sec1">
             <div class="content-StaffAttendanceStatus background-color-white box-style">
               <div class="header-section-three d-flex align-items-center justify-content-between">
-                <span class="title-section-three">حالة دوام الموظفين</span>
+                <span class="title-section-three">{{'dashboard.staffAttendanceStatus' | translate}}</span>
                 <div class="field-action">
-                  <button type="button" routerLink="/user/employees" class="btn btn-outline-secondary button-border-67748E">عرض الكل</button>
+                  <button type="button" routerLink="/user/employees" class="btn btn-outline-secondary button-border-67748E">{{'dashboard.viewAll' | translate}}</button>
                 </div>
               </div>
               <div class="body-StaffAttendanceStatus">
@@ -149,7 +149,7 @@
                   <div class="paginate">
                     <div class="d-flex align-items-center">
                       <div class="NumberOfRowsPerPage">
-                        <span>عدد الصفوف بالصفحة:</span>
+                        <span>{{'dashboard.numberOfRowsPerPage' | translate}}</span>
                         <!-- <p-dropdown [options]="RowsPerPage" appendTo="body" (onChange)="numberOfRowsPerPage($event)"
                           optionLabel="name"></p-dropdown> -->
                       </div>
@@ -171,7 +171,7 @@
           <div class="col-lg-6 col-12 sec1">
             <div class="content-StaffAttendanceStatus h-100 background-color-white box-style">
               <div class="header-section-three d-flex align-items-center justify-content-between">
-                <span class="title-section-three">حالة الطلبات</span>
+                <span class="title-section-three">{{'dashboard.statusOfRequests' | translate}}</span>
                 <div class="field-action custom-dropdown-section">
                   <p-dropdown [options]="statusOfOrders" (onChange)="onChangeStatusOfOrders($event)" [(ngModel)]="selectedCity" optionLabel="name"></p-dropdown>
 
@@ -223,20 +223,17 @@
                 <div class="title-table-dashboard">
                   <div class="content-StaffAttendanceStatus">
                     <div class="header-section-three d-flex align-items-center">
-                      <span class="title-section-three ml-30">أفضل الموظفين بالشركة</span>
+                      <span class="title-section-three ml-30">{{'dashboard.theBestEmployeesInTheCompany' | translate}}</span>
                       <div class="field-action custom-dropdown-section">
-                        <p-dropdown [options]="bestEmployeesList" (onChange)="onChangeBestEmployees($event)" [(ngModel)]="selectedCity" placeholder="الأسبوع"
+                        <p-dropdown [options]="bestEmployeesList" (onChange)="onChangeBestEmployees($event)" [(ngModel)]="selectedCity" [placeholder]="'dashboard.theWeek' | translate"
                           optionLabel="name"></p-dropdown>
-
                       </div>
                     </div>
                   </div>
-
                 </div>
               </div>
               <div class="body-table-dashboard">
                 <table class="table w-100 m-0">
-
                   <tbody>
                     <ng-container *ngFor="let employee of bestEmployees">
                       <tr>
@@ -268,7 +265,7 @@
                         <div class="paginate paginate-bestEmployees">
                           <div class="d-flex align-items-center">
                             <div class="NumberOfRowsPerPage">
-                              <span>عدد الصفوف بالصفحة:</span>
+                              <span>{{'dashboard.numberOfRowsPerPage' | translate}}</span>
                               <!-- <p-dropdown [options]="RowsPerPage" appendTo="body"
                                 (onChange)="numberOfRowsPerPage($event)" optionLabel="name"></p-dropdown> -->
                             </div>
@@ -296,13 +293,13 @@
             <div class="employees-dashboard h-100 d-flex flex-column justify-content-stretch align-items-stretch">
               <div class="content-card mb-3 col">
                 <div class="custom-card-dashboard h-100 d-flex flex-column">
-                  <span class="title-card-dashboard title-section-three-employee Success-700 ">الموظفين المتاحين</span>
+                  <span class="title-card-dashboard title-section-three-employee Success-700 ">{{'dashboard.availableEmployeess' | translate}}</span>
                   <div class="body-card-dashboard d-flex align-items-center justify-content-between mt-3">
                     <span class="number-card-dashboard p-0 title-employeeSectionTwo">{{employeesStatus?.availableCount ?
                       employeesStatus?.availableCount : 0}}</span>
                     <span class="icon-card-dashboard">
                       <div class="field-action field-action-employee">
-                        <button type="button" class="btn btn-outline-secondary button-border-67748E" (click)="navigateEmployeesStatus('Available', employeesStatus?.availableCount)">عرض الكل</button>
+                        <button type="button" class="btn btn-outline-secondary button-border-67748E" (click)="navigateEmployeesStatus('Available', employeesStatus?.availableCount)">{{'dashboard.viewAll' | translate}}</button>
                       </div>
                     </span>
                   </div>
@@ -310,7 +307,7 @@
               </div>
               <div class="content-card mb-3 col">
                 <div class="custom-card-dashboard h-100 d-flex flex-column">
-                  <span class="title-card-dashboard title-section-three-employee Primary-700">في مهمة او تكليف</span>
+                  <span class="title-card-dashboard title-section-three-employee Primary-700">{{'dashboard.onAMissionOrAssignment' | translate}}</span>
                   <div class="body-card-dashboard d-flex align-items-center justify-content-between mt-3">
                     <span
                       class="number-card-dashboard p-0 title-employeeSectionTwo">{{employeesStatus?.inTaskOrAssignmentCount
@@ -318,7 +315,7 @@
                       employeesStatus?.inTaskOrAssignmentCount : 0}}</span>
                     <span class="icon-card-dashboard">
                       <div class="field-action field-action-employee">
-                        <button type="button" class="btn btn-outline-secondary button-border-67748E" (click)="navigateEmployeesStatus('InTaskOrAssignment', employeesStatus?.inTaskOrAssignmentCount)">عرض الكل</button>
+                        <button type="button" class="btn btn-outline-secondary button-border-67748E" (click)="navigateEmployeesStatus('InTaskOrAssignment', employeesStatus?.inTaskOrAssignmentCount)">{{'dashboard.viewAll' | translate}}</button>
                       </div>
                     </span>
                   </div>
@@ -326,7 +323,7 @@
               </div>
               <div class="content-card col">
                 <div class="custom-card-dashboard h-100 d-flex flex-column">
-                  <span class="title-card-dashboard title-section-three-employee color5C31D6">في أجازة أو الخارج</span>
+                  <span class="title-card-dashboard title-section-three-employee color5C31D6">{{'dashboard.onVacationOrAbroad' | translate}}</span>
                   <div class="body-card-dashboard d-flex align-items-center justify-content-between mt-3">
                     <span
                       class="number-card-dashboard p-0 title-employeeSectionTwo">{{employeesStatus?.inVacationOrOutsideCount
@@ -334,7 +331,7 @@
                       employeesStatus?.inVacationOrOutsideCount : 0}}</span>
                     <span class="icon-card-dashboard">
                       <div class="field-action field-action-employee">
-                        <button type="button" class="btn btn-outline-secondary button-border-67748E" (click)="navigateEmployeesStatus('InVacationOrOutside', employeesStatus?.inVacationOrOutsideCount)">عرض الكل</button>
+                        <button type="button" class="btn btn-outline-secondary button-border-67748E" (click)="navigateEmployeesStatus('InVacationOrOutside', employeesStatus?.inVacationOrOutsideCount)">{{'dashboard.viewAll' | translate}}</button>
                       </div>
                     </span>
                   </div>
@@ -348,9 +345,9 @@
       <div class="col-lg-4 col-12 sectionLeft mb-4">
         <div class="content-DepartmentsAndTeamFormation h-100 background-color-white box-style">
           <div class="header-section-three d-flex align-items-center justify-content-between">
-            <span class="title-section-three">الأقسام وتكوين الفرق</span>
+            <span class="title-section-three">{{'dashboard.departmentsAndTeamFormation' | translate}}</span>
             <div class="field-action">
-              <button type="button" class="btn btn-outline-secondary button-border-67748E" routerLink="/user/sections">عرض الكل</button>
+              <button type="button" class="btn btn-outline-secondary button-border-67748E" routerLink="/user/sections">{{'dashboard.viewAll' | translate}}</button>
             </div>
           </div>
           <div class="body-DepartmentsAndTeamFormation">
@@ -363,10 +360,10 @@
                         {{department.name}}
                       </span>
                       <span class="text-subTitle-StaffAttendanceStatus d-block">
-                        آخر تعديل
+                        {{'dashboard.lastUpdate' | translate}}
 
                         <ng-container *ngIf="department?.lastEditDate?.currentDate">
-                          اليوم الساعة {{department?.lastEditDate?.Date}}
+                          {{'dashboard.TodayTime' | translate}} {{department?.lastEditDate?.Date}}
 
                         </ng-container>
                         <ng-container *ngIf="!department?.lastEditDate?.currentDate">
@@ -448,7 +445,7 @@
                       </div>
                     </div>
                     <div class="left-StaffAttendanceStatus">
-                      <button type="button" class="btn btn-primary"  (click)="addAnEmployee(department)">إضافة موظف</button>
+                      <button type="button" class="btn btn-primary"  (click)="addAnEmployee(department)">{{'dashboard.addAnEmployee' | translate}}</button>
                       <!-- routerLink="/user/employees" -->
                     </div>
                   </div>
@@ -459,7 +456,7 @@
             <div class="paginate paginateDepartments">
               <div class="d-flex align-items-center">
                 <div class="NumberOfRowsPerPage">
-                  <span>عدد الصفوف بالصفحة:</span>
+                  <span>{{'dashboard.numberOfRowsPerPage' | translate}}</span>
                   <!-- <p-dropdown [options]="RowsPerPage" appendTo="body" (onChange)="numberOfRowsPerPage($event)"
                     optionLabel="name"></p-dropdown> -->
                 </div>

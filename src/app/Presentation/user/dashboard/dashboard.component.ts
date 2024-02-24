@@ -1,4 +1,4 @@
-import { map } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import {
@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogAddAnEmployeeComponent } from 'src/app/shared/components/dialog-add-an-employee/dialog-add-an-employee.component';
 import { EmployeesService } from '../employees/services/employees.service';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
+import { TranslateService } from '@ngx-translate/core';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -82,7 +83,11 @@ export class DashboardComponent {
   spinnerChart = true;
   employeesStatus: any = {};
   loadingEmployeesStatus = false;
-  constructor(media: MediaMatcher, private changeDetectorRef: ChangeDetectorRef) {
+  currentLang = localStorage.getItem("lang");
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
+  constructor(media: MediaMatcher, private changeDetectorRef: ChangeDetectorRef,
+    public translate: TranslateService) {
     this.mobileQuery = media.matchMedia('(max-width: 992px)');
 
     this._mobileQueryListener = () => {
@@ -128,6 +133,7 @@ export class DashboardComponent {
   
   filterationStatusOfOrders:any = {
   }
+  
   ngOnInit() {
     this.RowsPerPage = [
       { name: '5', code: 5 },
@@ -301,6 +307,72 @@ export class DashboardComponent {
       { name: 'الشهر', code: 'month' },
       { name: 'السنة', code: 'year' }
     ];
+    if (this.currentLang === undefined || this.currentLang === null) {
+      this.bestEmployeesList = [
+        { name: 'اليوم', code: 'today' },
+        { name: 'الشهر', code: 'month' },
+        { name: 'السنة', code: 'year' }
+      ];
+      this.statusOfOrders = [
+        { name: 'اليوم', code: 'today' },
+        { name: 'الشهر', code: 'month' },
+        { name: 'السنة', code: 'year' }
+      ];
+  } else {
+ 
+    if (this.currentLang == "ar") {
+        this.bestEmployeesList = [
+          { name: 'اليوم', code: 'today' },
+          { name: 'الشهر', code: 'month' },
+          { name: 'السنة', code: 'year' }
+        ];
+        this.statusOfOrders = [
+          { name: 'اليوم', code: 'today' },
+          { name: 'الشهر', code: 'month' },
+          { name: 'السنة', code: 'year' }
+        ];
+
+    } else if (this.currentLang == "en") {
+        this.bestEmployeesList = [
+          { name: 'today', code: 'today' },
+          { name: 'the month', code: 'month' },
+          { name: 'the year', code: 'year' }
+        ];
+        this.statusOfOrders = [
+          { name: 'today', code: 'today' },
+          { name: 'the month', code: 'month' },
+          { name: 'the year', code: 'year' }
+        ];
+      }
+
+  }
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(data => {
+      if(data.lang === "ar") {
+        this.bestEmployeesList = [
+          { name: 'اليوم', code: 'today' },
+          { name: 'الشهر', code: 'month' },
+          { name: 'السنة', code: 'year' }
+        ];
+        this.statusOfOrders = [
+          { name: 'اليوم', code: 'today' },
+          { name: 'الشهر', code: 'month' },
+          { name: 'السنة', code: 'year' }
+        ];
+      } else if(data.lang === "en") {
+        this.bestEmployeesList = [
+          { name: 'today', code: 'today' },
+          { name: 'the month', code: 'month' },
+          { name: 'the year', code: 'year' }
+        ];
+        this.statusOfOrders = [
+          { name: 'today', code: 'today' },
+          { name: 'the month', code: 'month' },
+          { name: 'the year', code: 'year' }
+        ];
+      }
+      this.getDepartmentsInformations(this.filterationDepartments);
+    })
+ 
     this.items = [
       {
         label: 'Options',
@@ -493,6 +565,14 @@ export class DashboardComponent {
     this.dashboardService.getDepartmentsInformations(filteration).subscribe({
       next: data => {
         moment.locale("ar");
+        if (this.currentLang == "ar") {
+          moment.locale("ar");
+
+  
+      } else if (this.currentLang == "en") {
+        moment.locale("en");
+
+        }
         this.departmentsInformations = data.data.map((depratment: any) => {
           return {
             ...depratment, lastEditDate: {
@@ -723,5 +803,8 @@ export class DashboardComponent {
       }
     })
   }
-
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    // this.destroy$.unsubscribe();
+  }
 }

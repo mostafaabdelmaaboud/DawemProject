@@ -38,17 +38,79 @@ export class SignUpComponent {
   isLoading = false;
   general: any[] = []
   private router = inject(Router)
-  selectedCountry: any = { name: 'السعودية', code: 'AR' };
+  selectedCountry: any = { name: 'عربي', code: 'AR' };
   constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService) {
   }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.countries = [
-      { name: 'السعودية', code: 'AR' },
-      { name: 'الولايات المتحدة', code: 'US' },
-      { name: 'الهند', code: 'IN' }
+      { name: 'عربي', code: 'AR' },
+      { name: 'انجليزي', code: 'US' }
+      // { name: 'الهند', code: 'IN' }
     ];
+
+    if (this.currentLang === undefined || this.currentLang === null) {
+      this.countries = [
+        { name: 'عربي', code: 'AR' },
+        { name: 'انجليزي', code: 'US' }
+        // { name: 'الهند', code: 'IN' }
+      ];
+      this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{9}$/)])
+      this.code= "+966";
+      this.selectedCountry = { name: 'عربي', code: 'AR' };
+      document.documentElement.setAttribute('lang', 'ar');
+      this.translate.use("ar");
+    } else {
+   
+      if (this.currentLang == "ar") {
+        this.selectedCountry = { name: 'arabic', code: 'AR' };
+        document.documentElement.setAttribute('lang', 'ar');
+        this.translate.use("ar");
+        this.countries = [
+          { name: 'عربي', code: 'AR' },
+          { name: 'انجليزي', code: 'US' }
+          // { name: 'الهند', code: 'IN' }
+        ];
+        this.selectedCountry = { name: 'عربي', code: 'AR' };
+        this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{9}$/)])
+        this.code= "+966";
+
+      } else if (this.currentLang == "en") {
+        this.selectedCountry = { name: 'english', code: 'US' };
+        document.documentElement.setAttribute('lang', 'en');
+
+        this.translate.use("en");
+        this.countries = [
+          { name: 'english', code: 'US' },
+          { name: 'arabic', code: 'AR' }
+          // { name: 'India', code: 'IN' }
+        ];
+        this.selectedCountry = { name: 'english', code: 'US' };
+        this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required,Validators.pattern(/^\d{3}-\d{3}-\d{4}$/)])
+        this.code= "+1";
+
+      } 
+      // else if (this.currentLang == "ind") {
+      //   this.selectedCountry = { name: 'India', code: 'IN' };
+      //   document.documentElement.setAttribute('lang', 'en');
+      //   this.translate.use("ind");
+      //   this.countries = [
+      //     { name: 'India', code: 'IN' },
+      //     { name: 'arabic', code: 'AR' },
+      //     { name: 'english', code: 'US' }
+      //   ];
+      //   this.selectedCountry = { name: 'India', code: 'IN' };
+      //   this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
+
+      //   this.code= "+91";
+
+      // }
+    }
+    this.getCountries();
+
+  }
+  getCountries() {
     this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
       next: data => {
         this.general = [];
@@ -59,63 +121,6 @@ export class SignUpComponent {
       error: err => {
       }
     });
-    if (this.currentLang === undefined || this.currentLang === null) {
-      this.countries = [
-        { name: 'السعودية', code: 'AR' },
-        { name: 'الولايات المتحدة', code: 'US' },
-        { name: 'الهند', code: 'IN' }
-      ];
-      this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{9}$/)])
-      this.code= "+966";
-      this.selectedCountry = { name: 'السعودية', code: 'AR' };
-      document.documentElement.setAttribute('lang', 'ar');
-      this.translate.use("ar");
-    } else {
-   
-      if (this.currentLang == "ar") {
-        this.selectedCountry = { name: 'Saudi Arabia', code: 'AR' };
-        document.documentElement.setAttribute('lang', 'ar');
-        this.translate.use("ar");
-        this.countries = [
-          { name: 'السعودية', code: 'AR' },
-          { name: 'الولايات المتحدة', code: 'US' },
-          { name: 'الهند', code: 'IN' }
-        ];
-        this.selectedCountry = { name: 'السعودية', code: 'AR' };
-        this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{9}$/)])
-        this.code= "+966";
-
-      }
-      else if (this.currentLang == "en") {
-        this.selectedCountry = { name: 'United States', code: 'US' };
-        document.documentElement.setAttribute('lang', 'en');
-
-        this.translate.use("en");
-        this.countries = [
-          { name: 'United States', code: 'US' },
-          { name: 'Saudi Arabia', code: 'AR' },
-          { name: 'India', code: 'IN' }
-        ];
-        this.selectedCountry = { name: 'United States', code: 'US' };
-        this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required,Validators.pattern(/^\d{3}-\d{3}-\d{4}$/)])
-        this.code= "+1";
-
-      } else if (this.currentLang == "ind") {
-        this.selectedCountry = { name: 'India', code: 'IN' };
-        document.documentElement.setAttribute('lang', 'en');
-        this.translate.use("ind");
-        this.countries = [
-          { name: 'India', code: 'IN' },
-          { name: 'Saudi Arabia', code: 'AR' },
-          { name: 'United States', code: 'US' }
-        ];
-        this.selectedCountry = { name: 'India', code: 'IN' };
-        this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
-
-        this.code= "+91";
-
-      }
-    }
   }
   passwordMatchValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
@@ -135,9 +140,9 @@ export class SignUpComponent {
       localStorage.setItem("lang", "en");
       this.translate.use("en");
       this.countries = [
-        { name: 'United States', code: 'US' },
-        { name: 'Saudi Arabia', code: 'AR' },
-        { name: 'India', code: 'IN' }
+        { name: 'english', code: 'US' },
+        { name: 'arabic', code: 'AR' }
+        // { name: 'India', code: 'IN' }
       ];
       let findIndexCountry =  this.countries.findIndex(country =>country.code == "US" )
       this.selectedCountry = this.countries[findIndexCountry];
@@ -145,15 +150,16 @@ export class SignUpComponent {
       this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required,Validators.pattern(/^\d{3}-\d{3}-\d{4}$/)])
 
       this.code= "+1";
+      this.getCountries();
 
     } else if (lang.value.code == "AR") {
       document.documentElement.setAttribute('lang', 'ar');
       localStorage.setItem("lang", "ar");
       this.translate.use("ar");
       this.countries = [
-        { name: 'السعودية', code: 'AR' },
-        { name: 'الولايات المتحدة', code: 'US' },
-        { name: 'الهند', code: 'IN' }
+        { name: 'عربي', code: 'AR' },
+        { name: 'انجليزي', code: 'US' }
+        // { name: 'الهند', code: 'IN' }
       ];
       let findIndexCountry =  this.countries.findIndex(country =>country.code == "AR" )
       this.selectedCountry = this.countries[findIndexCountry];
@@ -161,24 +167,26 @@ export class SignUpComponent {
 
       this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{9}$/)])
       this.code= "+966";
- 
-    } else if (lang.value.code == "IN") {
-      document.documentElement.setAttribute('lang', 'en');
-      localStorage.setItem("lang", "ind");
-      this.translate.use("ind");
+      this.getCountries();
 
-      this.countries = [
-        { name: 'India', code: 'IN' },
-        { name: 'Saudi Arabia', code: 'AR' },
-        { name: 'United States', code: 'US' }
-      ];
-      let findIndexCountry =  this.countries.findIndex(country =>country.code == "IN" )
-      this.selectedCountry = this.countries[findIndexCountry];
-      this.FormGroup.get("userMobileNumber")?.reset();
+    } 
+    // else if (lang.value.code == "IN") {
+    //   document.documentElement.setAttribute('lang', 'en');
+    //   localStorage.setItem("lang", "ind");
+    //   this.translate.use("ind");
 
-      this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
-      this.code= "+91";
-    }
+    //   this.countries = [
+    //     { name: 'India', code: 'IN' },
+    //     { name: 'arabic', code: 'AR' },
+    //     { name: 'english', code: 'US' }
+    //   ];
+    //   let findIndexCountry =  this.countries.findIndex(country =>country.code == "IN" )
+    //   this.selectedCountry = this.countries[findIndexCountry];
+    //   this.FormGroup.get("userMobileNumber")?.reset();
+
+    //   this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
+    //   this.code= "+91";
+    // }
   }
   lastSearchQuery = "";
 

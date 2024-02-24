@@ -1,4 +1,4 @@
-import { Injectable, inject } from "@angular/core";
+import { Injectable, Injector, inject } from "@angular/core";
 import {
   HttpRequest,
   HttpHandler,
@@ -13,13 +13,19 @@ import { Router } from "@angular/router";
 import { ToastService } from "src/app/shared/services/toast.service";
 import { avilableTypes } from "src/app/shared/models/toast-Data";
 import { AuthService } from "../auth/services/auth-service.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class HttpConfigInterceptor implements HttpInterceptor {
+  currentLang = localStorage.getItem("lang");
+//  public translate = inject(TranslateService);
 
   constructor(private cookieService: CookieService,
     private authService: AuthService,
     private router: Router,
+    private injector: Injector,
+
+    // public translate: TranslateService,
     private toastservice: ToastService) { }
 
   intercept(
@@ -35,25 +41,33 @@ export class HttpConfigInterceptor implements HttpInterceptor {
       } else {
         if (JSON.stringify(localStorage.getItem("token"))) {
           token = `Bearer ${JSON?.parse(JSON.stringify(localStorage.getItem("token")))}`
-
         }
       }
       // request.headers.set("token", this.authService.getToken());
       // request.headers.set("Content-Type", "application/json");
-
-      // request.headers.set(
-      //   "fingerPrint",
-      //   this.cookieService.get("fingerPrint") || "123456"
-      // );
       if (!request.url.includes("assets/i18n")) {
-        request = request.clone({
-          headers: request.headers
-            .set("Authorization", token)
-          // .set(
-          //   "fingerPrint",
-          //   this.cookieService.get("fingerPrint") || "123456"
-          // ),
-        });
+        let translate = this.injector.get(TranslateService)
+        if (translate.currentLang == "ar") {
+          request = request.clone({
+            headers: request.headers
+              .set("Authorization", token).set("lang", "ar")
+            // .set(
+            //   "fingerPrint",
+            //   this.cookieService.get("fingerPrint") || "123456"
+            // ),
+          })
+        } else {
+          request = request.clone({
+            headers: request.headers
+              .set("Authorization", token).set("lang", "en")
+            // .set(
+            //   "fingerPrint",
+            //   this.cookieService.get("fingerPrint") || "123456"
+            // ),
+          });
+        } 
+
+     
       }
 
       if (request.url.includes("/notification/list")) {
@@ -84,14 +98,28 @@ export class HttpConfigInterceptor implements HttpInterceptor {
 
           }
         }
-        request = request.clone({
-          headers: request.headers
-            .set("Authorization", token)
-          // .set(
-          //   "fingerPrint",
-          //   this.cookieService.get("fingerPrint") || "123456"
-          // ),
-        });
+        let translate = this.injector.get(TranslateService);
+          if (translate.currentLang == "ar") {
+            request = request.clone({
+              headers: request.headers
+                .set("Authorization", token).set("lang", "ar")
+              // .set(
+              //   "fingerPrint",
+              //   this.cookieService.get("fingerPrint") || "123456"
+              // ),
+            })
+          } else {
+            request = request.clone({
+              headers: request.headers
+                .set("Authorization", token).set("lang", "en")
+              // .set(
+              //   "fingerPrint",
+              //   this.cookieService.get("fingerPrint") || "123456"
+              // ),
+            });
+          } 
+    
+
 
         // request.body.token = this.authService.getToken() || "";
         // request.body.fingerPrint = this.cookieService.get("fingerPrint") || "123456";
@@ -100,6 +128,8 @@ export class HttpConfigInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: any) => {
+        console.log(error)
+
         let errorMsg = "";
         if (error.error instanceof ErrorEvent) {
           errorMsg = `Error: ${error.error.message}`;
@@ -134,10 +164,14 @@ export class HttpConfigInterceptor implements HttpInterceptor {
 
                 this.router.navigate(["/login"]);
               }
-              this.toastservice.show({
-                message: error?.error?.message,
-                type: avilableTypes.Error,
-              });
+              console.log(request);
+              if(!request.urlWithParams.toLowerCase().includes("permission/checkandgetpermission")) {
+                this.toastservice.show({
+                  message: error?.error?.message,
+                  type: avilableTypes.Error,
+                });
+              }
+           
             }
           }
         }

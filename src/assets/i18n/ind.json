@@ -42,6 +42,38 @@
     "phoneNumberIsIncorrect":"Phone number is incorrect"
 
   },
+  "sideNav": {
+    "panelControl": "Panel control",
+    "requests": "Requests",
+    "employees": "Employees",
+    "attendanceAndDeparture": "Attendance and Departure",
+    "requestsForJustifications": "Requests for justifications",
+    "zones": "zones",
+    "leaveRequests": "Leave requests",
+    "users": "Users",
+    "vacationBalances": "Vacation balances",
+    "schedulingPlansRecords": "Scheduling plans records",
+    "permissionRequests": "Permission requests",
+    "permissions": "permissions",
+    "taskRequests": "Task Requests",
+    "publicHolidays": "Public holidays",
+    "assignmentRequests": "Assignment requests",
+    "schedulingPlans": "Scheduling plans",
+    "scheduling": "Scheduling",
+    "shifts": "Shifts",
+    "sections": "Sections",
+    "groups": "Groups",
+    "jobTitles": "Job titles",
+    "fingerprintDevices": "Fingerprint devices",
+    "summons": "Summons",
+    "sanactions": "Sanactions",
+    "recordsOfFailureToSummon": "Records of failure to summon",
+    "typesOfAssignments": "Types of assignments",
+    "typesOfJustifications": "Types of justifications",
+    "typesOfVacations": "Types of vacations",
+    "typesOfPermissions": "Types of permissions",
+    "typesOfMissions": "Types of missions"
+  },
   "dialogs": {
     "loading": "loading..."
   },

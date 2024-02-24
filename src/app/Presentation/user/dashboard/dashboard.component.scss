@@ -6,11 +6,7 @@
   display: flex;
   align-items: center;
 
-  img {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-  }
+
 
   border-radius: 8px;
   -webkit-border-radius: 8px;
@@ -37,7 +33,6 @@
 
 
 :host ::ng-deep .body-chart .apexcharts-legend-marker {
-  margin-left: 10px !important;
   height: 100% !important;
   width: 2px !important;
 }
@@ -84,17 +79,6 @@
   -ms-border-radius: 20px;
   -o-border-radius: 20px;
 }
-
-.dashboard-description {
-  margin-right: 25px;
-  color: white;
-  line-height: 36px;
-}
-
-
-
-
-
 .title-StaffAttendanceStatus {
   color: #292D32;
   text-align: right;
@@ -130,7 +114,6 @@
     .user {
       width: 40px;
       height: 40px;
-      margin-right: -18px;
 
       .txt {
         position: absolute;
@@ -235,7 +218,6 @@
 .userImage-StaffAttendanceStatus {
   width: 60px;
   height: 60px;
-  margin-left: 10px;
   border-radius: 10px;
   overflow: hidden;
 }

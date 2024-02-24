@@ -30,60 +30,57 @@ export class LoginComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     // this.countries = [
-    //   { name: 'السعودية', code: 'AR' },
-    //   { name: 'الولايات المتحدة', code: 'US' },
+    //   { name: 'عربي', code: 'AR' },
+    //   { name: 'انجليزي', code: 'US' },
     //   { name: 'الهند', code: 'IN' }
     // ];
-    // this.selectedCountry = { name: 'السعودية', code: 'AR' };
-
+    // this.selectedCountry = { name: 'عربي', code: 'AR' };
     if (this.currentLang === undefined || this.currentLang === null) {
       this.countries = [
-        { name: 'السعودية', code: 'AR' },
-        { name: 'الولايات المتحدة', code: 'US' },
-        { name: 'الهند', code: 'IN' }
+        { name: 'عربي', code: 'AR' },
+        { name: 'انجليزي', code: 'US' }
       ];
-      this.selectedCountry = { name: 'السعودية', code: 'AR' };
+      this.selectedCountry = { name: 'عربي', code: 'AR' };
       document.documentElement.setAttribute('lang', 'ar');
       this.translate.use("ar");
     } else {
 
    
-      this.selectedCountry = { name: 'Saudi Arabia', code: 'AR' };
+      this.selectedCountry = { name: 'arabic', code: 'AR' };
 
       if (this.currentLang == "ar") {
         document.documentElement.setAttribute('lang', 'ar');
         this.translate.use("ar");
         this.countries = [
-          { name: 'السعودية', code: 'AR' },
-          { name: 'الولايات المتحدة', code: 'US' },
-          { name: 'الهند', code: 'IN' }
+          { name: 'عربي', code: 'AR' },
+          { name: 'انجليزي', code: 'US' }
         ];
-        this.selectedCountry = { name: 'السعودية', code: 'AR' };
+        this.selectedCountry = { name: 'عربي', code: 'AR' };
 
       }
       else if (this.currentLang == "en") {
-        this.selectedCountry = { name: 'United States', code: 'US' };
+        this.selectedCountry = { name: 'english', code: 'US' };
         document.documentElement.setAttribute('lang', 'en');
         this.translate.use("en");
         this.countries = [
-          { name: 'United States', code: 'US' },
-          { name: 'Saudi Arabia', code: 'AR' },
-          { name: 'India', code: 'IN' }
+          { name: 'english', code: 'US' },
+          { name: 'arabic', code: 'AR' },
         ];
-        this.selectedCountry = { name: 'United States', code: 'US' };
-      } else if (this.currentLang == "ind") {
-        this.selectedCountry = { name: 'India', code: 'IN' };
-        document.documentElement.setAttribute('lang', 'en');
-        this.translate.use("ind");
-        this.countries = [
-          { name: 'India', code: 'IN' },
+        this.selectedCountry = { name: 'english', code: 'US' };
+      } 
+      // else if (this.currentLang == "ind") {
+      //   this.selectedCountry = { name: 'India', code: 'IN' };
+      //   document.documentElement.setAttribute('lang', 'en');
+      //   this.translate.use("ind");
+      //   this.countries = [
+      //     { name: 'India', code: 'IN' },
 
-          { name: 'Saudi Arabia', code: 'AR' },
-          { name: 'United States', code: 'US' }
-        ];
-        this.selectedCountry = { name: 'India', code: 'IN' };
+      //     { name: 'arabic', code: 'AR' },
+      //     { name: 'english', code: 'US' }
+      //   ];
+      //   this.selectedCountry = { name: 'India', code: 'IN' };
 
-      }
+      // }
 
     }
   }
@@ -94,9 +91,9 @@ export class LoginComponent {
       localStorage.setItem("lang", "en");
       this.translate.use("en");
       this.countries = [
-        { name: 'United States', code: 'US' },
-        { name: 'Saudi Arabia', code: 'AR' },
-        { name: 'India', code: 'IN' }
+        { name: 'english', code: 'US' },
+        { name: 'arabic', code: 'AR' }
+        // { name: 'India', code: 'IN' }
       ];
  
       let findIndexCountry =  this.countries.findIndex(country =>country.code == "US" )
@@ -106,26 +103,26 @@ export class LoginComponent {
       localStorage.setItem("lang", "ar");
       this.translate.use("ar");
       this.countries = [
-        { name: 'السعودية', code: 'AR' },
-        { name: 'الولايات المتحدة', code: 'US' },
-        { name: 'الهند', code: 'IN' }
+        { name: 'عربي', code: 'AR' },
+        { name: 'انجليزي', code: 'US' }
       ];
       let findIndexCountry =  this.countries.findIndex(country =>country.code == "AR" )
       this.selectedCountry = this.countries[findIndexCountry];
 
-    } else if (lang.value.code == "IN") {
-      document.documentElement.setAttribute('lang', 'en');
-      localStorage.setItem("lang", "ind");
-      this.translate.use("ind");
-      this.countries = [
-        { name: 'India', code: 'IN' },
+    } 
+    // else if (lang.value.code == "IN") {
+    //   document.documentElement.setAttribute('lang', 'en');
+    //   localStorage.setItem("lang", "ind");
+    //   this.translate.use("ind");
+    //   this.countries = [
+    //     { name: 'India', code: 'IN' },
 
-        { name: 'Saudi Arabia', code: 'AR' },
-        { name: 'United States', code: 'US' }
-      ];
-      let findIndexCountry =  this.countries.findIndex(country =>country.code == "IN" )
-      this.selectedCountry = this.countries[findIndexCountry];
-    }
+    //     { name: 'arabic', code: 'AR' },
+    //     { name: 'english', code: 'US' }
+    //   ];
+    //   let findIndexCountry =  this.countries.findIndex(country =>country.code == "IN" )
+    //   this.selectedCountry = this.countries[findIndexCountry];
+    // }
     this.cd.detectChanges();
   }
   submit() {
@@ -147,13 +144,17 @@ export class LoginComponent {
             if (parseJson.isAdmin || parseJson.availablePermissions.length > 0) {
               this.authService.setToken(res.data.token);
               this.toast.success(res.message,"", {timeOut: 1000});
-              
+
+
               this.router.navigate(["/user/dashboard"]);
+              this.isLoading = false;
+
             } else {
               this.toast.error("you don't have permissions");
+            this.isLoading = false;
 
             }
-            this.isLoading = false;
+            // this.isLoading = false;
 
             this.loading = true;
 
@@ -161,7 +162,6 @@ export class LoginComponent {
           error: err => {
             this.toast.error(err.error.message);
             this.isLoading = false;
-
             this.loading = true;
           }
         }

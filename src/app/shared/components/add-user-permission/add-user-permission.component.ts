@@ -254,7 +254,7 @@ export class AddUserPermissionComponent {
 
 
                   if (data.roleId != null) {
-                    this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.employeeId }).subscribe(dataDropdown => {
+                    this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.roleId }).subscribe(dataDropdown => {
                       this.listRoleId = [];
                       dataDropdown.data?.forEach((list: any) => {
                         this.listRoleId.push({ name: list.name, key: list.id });
@@ -347,21 +347,16 @@ export class AddUserPermissionComponent {
 
     this.userPermissionsService.checkAndGetPermission({ UserId: userId.value.key }).subscribe({
       next: role => {
-
-        this.data!['buttonSend'] = "حفظ الصلاحية";
+        this.data!['titleClose'] = "تراجع";
         this.data!['title'] = "تعديل صلاحية";
+        this.data!['buttonSend'] = "تعديل صلاحية";
         this.editPermission = true;
         this.id = role.id
         this.getControl("isActive")?.setValue(role.isActive);
-
-
         this.getControl("ForType")?.setValue(role.forType.toString());
         this.getControl("fieldDisabled")?.setValue(role.code);
-
-
-
         if (role.roleId != null) {
-          this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: role.employeeId }).subscribe(dataDropdown => {
+          this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: role.roleId }).subscribe(dataDropdown => {
             this.listRoleId = [];
             dataDropdown.data?.forEach((list: any) => {
               this.listRoleId.push({ name: list.name, key: list.id });
@@ -390,6 +385,8 @@ export class AddUserPermissionComponent {
         }
         this.permissionScreens = role?.permissionScreens;
         this.getPermissions(this.filteration, this.permissionScreens);
+        this.toast.success("يوحد صلاحيات سابقة للمستخدم");
+
       },
       error: err => {
         this.data!['buttonSend'] = "اضافه صلاحية";
@@ -405,8 +402,10 @@ export class AddUserPermissionComponent {
 
     this.userPermissionsService.checkAndGetPermission({ RoleId: RoleId.value.key }).subscribe({
       next: role => {
-        this.data!['titleClose'] = "حفظ الصلاحية";
+        this.data!['titleClose'] = "تراجع";
         this.data!['title'] = "تعديل صلاحية";
+        this.data!['buttonSend'] = "تعديل صلاحية";
+
         this.editPermission = true;
         this.id = role.id
         this.getControl("isActive")?.setValue(role.isActive);
@@ -418,7 +417,7 @@ export class AddUserPermissionComponent {
 
 
         if (role.roleId != null) {
-          this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: role.employeeId }).subscribe(dataDropdown => {
+          this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: role.roleId }).subscribe(dataDropdown => {
             this.listRoleId = [];
             dataDropdown.data?.forEach((list: any) => {
               this.listRoleId.push({ name: list.name, key: list.id });
@@ -445,6 +444,8 @@ export class AddUserPermissionComponent {
 
           });
         }
+        this.toast.success("يوجد صلاحيات سابقة للمنصب");
+
         this.permissionScreens = role?.permissionScreens;
         this.getPermissions(this.filteration, this.permissionScreens);
 

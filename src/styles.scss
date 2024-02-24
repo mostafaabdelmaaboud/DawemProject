@@ -693,7 +693,58 @@ html[lang="en"] {
   font-style: normal;
   font-weight: 700;
 }
+html[lang="en"] {
+  .me-1 {
+    margin-right: 0 !important;
+    margin-left: 0.25rem !important;
+  }
+}
+html[lang="en"] {
+  .p-datepicker-header {
+    >.p-link {
+      >.p-icon-wrapper {
+        transform: rotateY(180deg) !important;
+        -webkit-transform: rotateY(180deg) !important;
+        -moz-transform: rotateY(180deg) !important;
+        -ms-transform: rotateY(180deg) !important;
+        -o-transform: rotateY(180deg) !important;
+}
+    }
+  }
+  .field-calendar-header {
+    .p-calendar {
+      direction: rtl;
+      border-radius: 8px;
+      > input {
+        border-radius: 8px;
+      }
+  
+    }
+  }
+  .p-datepicker 
+  {
+    .p-datepicker-header {
+      .p-datepicker-title {
+        display: flex;
+        flex-direction: row-reverse;
+        .p-datepicker-month {
+          margin-left: 0.5rem;
+          margin-right: 0;
+              width: initial !important;
+        }
+      }
+    }
+  }
+  .header-section-three {
+    .title-section-three {
+      flex: 1 0 0%;
+    }
+  }
+  .title-section-three {
+    text-align: left;
 
+  }
+}
 .custom-dropdown-section {
   .p-dropdown {
     height: 38px;
@@ -887,13 +938,7 @@ html[lang="en"] {
 }
 
 
-html[lang="en"] {
-  .mat-sidenav-content {
 
-    margin-right: 0 !important;
-    margin-left: 276px;
-  }
-}
 
 .ml-30 {
   margin-right: 30px;
@@ -1032,9 +1077,85 @@ img.flag {
   padding-right: 15px;
   padding-left: 15px;
 }
+.header-dashboard {
+  img {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+  }
+}
+.dashboard-description {
+  margin-right: 25px;
+  color: white;
+  line-height: 36px;
+}
+.userImage-StaffAttendanceStatus {
+  margin-left: 10px;
 
+}
+.body-chart .apexcharts-legend-marker {
+  margin-left: 10px !important;
 
+}
+.right-StaffAttendanceStatus {
+  .ul-users {
+    .user {
+      margin-right: -18px;
+    }
+  } 
+} 
+[lang="en"] {
+  .ant-menu-item-selected::before {
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -ms-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg);
+}
+  .right-StaffAttendanceStatus {
+    .ul-users {
+      .user {
+        margin-right: 0;
+        margin-left: -18px;
 
+      }
+    } 
+  } 
+  .body-chart .apexcharts-legend-marker {
+    margin-left: 0 !important;
+    margin-right: 10px !important;
+
+  }
+  .userImage-StaffAttendanceStatus {
+    margin-left: 0;
+    margin-right: 10px;
+  }
+  .dashboard-description {
+    margin-right: 0;
+    margin-left: 25px;
+  }
+  .header-dashboard {
+    img {
+      left: initial;
+      right: 0;
+      transform: rotateY(180deg);
+      -webkit-transform: rotateY(180deg);
+      -moz-transform: rotateY(180deg);
+      -ms-transform: rotateY(180deg);
+      -o-transform: rotateY(180deg);
+}
+  }
+}
+[lang="en"] {
+  .mat-sidenav-content {
+    margin-right: 0 !important;
+  }
+}
+[lang="ar"] {
+  .mat-sidenav-content {
+    margin-left: 0 !important;
+  }
+}
 .nameShow {
   margin-right: 10px;
 }
@@ -1763,15 +1884,15 @@ html[lang="ar"] {.container-filteration {
     padding-right: 30px;
   }}
 
-  .mat-sidenav-content {
-    margin-right: 0 !important;
-    margin-left: 222px !important;
-  }
+  // .mat-sidenav-content {
+  //   margin-right: 0 !important;
+  //   margin-left: 222px !important;
+  // }
 
-  html[lang="ar"] {.mat-sidenav-content {
-    margin-left: 0 !important;
-    margin-right: 222px !important;
-  }}
+  // html[lang="ar"] {.mat-sidenav-content {
+  //   margin-left: 0 !important;
+  //   margin-right: 222px !important;
+  // }}
 }
 
 @media (max-width:1050px) {

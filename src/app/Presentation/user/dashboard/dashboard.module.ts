@@ -10,6 +10,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     DashboardRoutingModule,
     FormsModule,
     NgbDropdownModule,
+    TranslateModule,
     DropdownModule,
     NgApexchartsModule,
     SharedModule
