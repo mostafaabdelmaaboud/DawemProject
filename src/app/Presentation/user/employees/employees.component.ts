@@ -368,6 +368,7 @@ export class EmployeesComponent {
           id: employee.id,
           orderNumber: employee.employeeNumber,
           isActive: employee.isActive,
+          code:employee.code,
           employeeName: {
             name: employee?.name ? employee?.name : "لا يوجد",
             alt: employee?.name ? employee?.name : "لا يوجد",
@@ -424,58 +425,58 @@ export class EmployeesComponent {
           setAsNecessary: data.setAsActive,
           labelRadioButtonFirst: data.performanceType,
           firstRadio: data.fullTime,
-          secondRadio: "دوام جزئي",
-          thirdRadio: "دوام حر / شيفت",
-          titleFieldDisabled: "كود الموظف",
+          secondRadio: data.partTime,
+          thirdRadio: data.freeTimeShift,
+          titleFieldDisabled: data.employeeCode,
           code: "#001093",
-          JobNumber: "الرقم الوظيفي <span class='color-red'>*</span>",
-          placeholdeJobNumber: "الرقم الوظيفي",
-          validationtitleJobNumber: "الرقم الوظيفي مطلوب",
-          directManager: "المدير المباشر <span class='color-red'>*</span>",
-          placeholdeDirectManager: "المدير المباشر",
-          validationtitleDirectManager: "المدير المباشر مطلوب",
-          email: "البريد الالكتروني <span class='color-red'>*</span>",
-          placeholdeEmail: "البريد الالكتروني",
-          validationtitleEmail: "البريد الالكتروني مطلوب",
-          validationtitleEmailPattern: "البريد الالكتروني غير صحيح",
+          JobNumber: data.jobNumber + " <span class='color-red'>*</span>",
+          placeholdeJobNumber: data.jobNumber,
+          validationtitleJobNumber:  data.jobNumberRequired,
+          directManager: data.directManager+" <span class='color-red'>*</span>",
+          placeholdeDirectManager: data.directManager,
+          validationtitleDirectManager: data.directManagerRequired,
+          email: data.email+" <span class='color-red'>*</span>",
+          placeholdeEmail: data.email,
+          validationtitleEmail: data.emailRequired,
+          validationtitleEmailPattern: data.invalidEmail,
   
-          address: "العنوان <span class='color-red'>*</span>",
-          placeholdeAddress: "العنوان",
-          validationtitleAddress: "العنوان مطلوب",
-          mobileNumber: "رقم الهاتف <span class='color-red'>*</span>",
-          placeholdeMobileNumber: "رقم الهاتف",
-          validationtitleMobileNumber: "رقم الهاتف مطلوب",
-          titleWorkSchedule: "جدول الدوام <span class='color-red'>*</span>",
-          placeholderWorkSchedule: " اختار جدول الدوام",
-          validationtitleWorkSchedule: "جدول الدوام مطلوب",
-          fieldFirst: "اسم الموظف <span class='color-red'>*</span>",
-          placeholdefieldFirst: "اسم الموظف",
-          validationtitlefieldFirst: "اسم الموظف مطلوب",
-          titleDropdownFirst: "المسمى الوظيفي <span class='color-red'>*</span>",
-          placeholderDropdownFirst: " اختار المسمى الوظيفي",
-          validationtitleDropdownFirst: "المسمي الوظفس مطلوب",
-          titleDropdownSecond: "القسم <span class='color-red'>*</span>",
-          validationtitleDropdownSecond: " اختار القسم مطلوب",
-          placeholderDropdown: " اختار القسم",
-          titleCalendar: "تاريخ الالتحاق <span class='color-red'>*</span>",
-          validationCalendar: "تاريخ الالتحاق مطلوب",
-          uploadFile: "ارفاق ملف",
-          chooseLabel: "اختار الملف ليتم رفعه",
-          labelEmployeeName: "نوع الموظف",
-          firstRadioEmployeeName: "عسكري",
-          secondRadioEmployeeName: "مدني",
-          thirdRadioEmployeeName: "تعاقد مباشر",
-          thirdRadioFour: "تعاقد شركات",
-          placeholderCalendar: "اختار التاريخ",
-          labelRadioButtonSecond: "نوع الشيفت",
-          firstRadiTwo: "صباحي",
-          secondRadioTwo: "مسائي",
-          thirdRadioTwo: "ليلي",
-          titleNotes: "رصيد الاجازات <span class='color-red'>*</span>",
-          placeholdeNotes: "رصيد الاجازات",
-          validationtitleNotes: "برجاء كتابة رصيد الاجازات هنا",
-          buttonSend: "إضافة الموظف",
-          titleClose: "تراجع"
+          address: data.theAddress +" <span class='color-red'>*</span>",
+          placeholdeAddress: data.theAddress,
+          validationtitleAddress: data.addressRequired,
+          mobileNumber: data.phoneNumber + " <span class='color-red'>*</span>",
+          placeholdeMobileNumber: data.phoneNumber,
+          validationtitleMobileNumber: data.phoneNumberRequired,
+          titleWorkSchedule: data.workSchedule + " <span class='color-red'>*</span>",
+          placeholderWorkSchedule: data.chooseYourWorkSchedule,
+          validationtitleWorkSchedule: data.workScheduleRequired,
+          fieldFirst: data.employeeName +" <span class='color-red'>*</span>",
+          placeholdefieldFirst: data.employeeName,
+          validationtitlefieldFirst: data.employeeNameRequired,
+          titleDropdownFirst: data.jobTitle+" <span class='color-red'>*</span>",
+          placeholderDropdownFirst: data.chooseYourJobTitle,
+          validationtitleDropdownFirst: data.theEmployeeNamedIsWanted,
+          titleDropdownSecond: data.section +" <span class='color-red'>*</span>",
+          validationtitleDropdownSecond: data.chooseTheRequiredSection,
+          placeholderDropdown: data.chooseSection,
+          titleCalendar: data.joiningDate+" <span class='color-red'>*</span>",
+          validationCalendar: data.joiningDateIsRequired,
+          uploadFile: data.attachAFile,
+          chooseLabel: data.selectTheFileToUpload,
+          labelEmployeeName: data.employeeType,
+          firstRadioEmployeeName: data.military,
+          secondRadioEmployeeName: data.civil,
+          thirdRadioEmployeeName: data.directContract,
+          thirdRadioFour: data.companyContracting,
+          placeholderCalendar: data.chooseDate,
+          labelRadioButtonSecond: data.shiftType,
+          firstRadiTwo: data.morning,
+          secondRadioTwo: data.evening,
+          thirdRadioTwo: data.layla,
+          titleNotes: data.vacationsBalance+" <span class='color-red'>*</span>",
+          placeholdeNotes: data.vacationsBalance,
+          validationtitleNotes: data.pleaseWriteYourVacationBalanceHere,
+          buttonSend: data.addEmployee,
+          titleClose: data.toRetreat
         },
       });
     })
@@ -527,15 +528,18 @@ export class EmployeesComponent {
             dialogRefAddCurrency.componentInstance.submitted = true;
 
             dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات الموظفين"
-              },
-            });
+            let succressDialog:any;
+            this.translate.get("employees").subscribe(data => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: data.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: data.employeeRequests
+                },
+              });
+            })
+          
             this.getEmployees(this.filteration);
 
             setTimeout(() => {
@@ -561,6 +565,161 @@ export class EmployeesComponent {
       )
 
 
+    });
+    dialogRefAddCurrency.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+  editAnEmployee(data: any) {
+    let dialogRefAddCurrency!:MatDialogRef<DialogAddAnEmployeeComponent, any>;
+    this.translate.get("employees").subscribe(translate => {
+       dialogRefAddCurrency = this.dialog.open(DialogAddAnEmployeeComponent, {
+        width: "50vw",
+        data: {
+          title: translate.employeeModification,
+          setAsNecessary:  translate.setAsActive,
+          labelRadioButtonFirst: translate.performanceType,
+          firstRadio: translate.fullTime,
+          secondRadio: translate.partTime,
+          thirdRadio: translate.freeTimeShift,
+          titleFieldDisabled: translate.employeeCode,
+          code: data.code,
+          JobNumber: translate.jobNumber + " <span class='color-red'>*</span>",
+          placeholdeJobNumber: translate.jobNumber,
+          validationtitleJobNumber:  translate.jobNumberRequired,
+          directManager: translate.directManager+" <span class='color-red'>*</span>",
+          placeholdeDirectManager: translate.directManager,
+          validationtitleDirectManager: translate.directManagerRequired,
+          email: translate.email+" <span class='color-red'>*</span>",
+          placeholdeEmail: translate.email,
+          validationtitleEmail: translate.emailRequired,
+          validationtitleEmailPattern: translate.invalidEmail,
+          address: translate.theAddress +" <span class='color-red'>*</span>",
+          placeholdeAddress: translate.theAddress,
+          validationtitleAddress: translate.addressRequired,
+          mobileNumber: translate.phoneNumber + " <span class='color-red'>*</span>",
+          placeholdeMobileNumber: translate.phoneNumber,
+          validationtitleMobileNumber: translate.phoneNumberRequired,
+          labelEmployeeName: translate.employeeType,
+          firstRadioEmployeeName: translate.military,
+          secondRadioEmployeeName: translate.civil,
+          thirdRadioEmployeeName: translate.directContract,
+          thirdRadioFour: translate.companyContracting,
+          titleWorkSchedule: translate.workSchedule + " <span class='color-red'>*</span>",
+          placeholderWorkSchedule: translate.chooseYourWorkSchedule,
+          validationtitleWorkSchedule: translate.workScheduleRequired,
+          fieldFirst: translate.employeeName +" <span class='color-red'>*</span>",
+          placeholdefieldFirst: translate.employeeName,
+          validationtitlefieldFirst: translate.employeeNameRequired,
+          titleDropdownFirst: translate.jobTitle+" <span class='color-red'>*</span>",
+          placeholderDropdownFirst: translate.chooseYourJobTitle,
+          validationtitleDropdownFirst: translate.theEmployeeNamedIsWanted,
+          titleDropdownSecond: translate.section +" <span class='color-red'>*</span>",
+          validationtitleDropdownSecond: translate.chooseTheRequiredSection,
+          placeholderDropdown: translate.chooseSection,
+          titleCalendar: translate.joiningDate+" <span class='color-red'>*</span>",
+          validationCalendar: translate.joiningDateIsRequired,
+          uploadFile: translate.attachAFile,
+          chooseLabel: translate.selectTheFileToUpload,
+          placeholderCalendar: translate.chooseDate,
+          labelRadioButtonSecond: translate.shiftType,
+          firstRadiTwo: translate.morning,
+          secondRadioTwo: translate.evening,
+          thirdRadioTwo: translate.layla,
+          titleNotes: translate.vacationsBalance+" <span class='color-red'>*</span>",
+          placeholdeNotes: translate.vacationsBalance,
+          validationtitleNotes: translate.pleaseWriteYourVacationBalanceHere,
+          buttonSend:translate.employeeModification,
+          titleClose: translate.toRetreat
+        },
+      });
+    })
+
+    dialogRefAddCurrency.componentInstance.submitted = true;
+    dialogRefAddCurrency.componentInstance.editEmployee = true;
+
+    dialogRefAddCurrency.componentInstance.id = data.id;
+    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+      let formData = new FormData();
+      let formDataObject: any = {};
+
+      moment.locale("en"); 
+
+      formDataObject.zoneIds = [];
+      if (result?.zoneIds?.length > 0) {
+        result?.zoneIds?.forEach((direct: any) => {
+          formDataObject.zoneIds.push(direct.key);
+        });
+      }
+      formData.append("UpdateEmployeeModelString", JSON.stringify({
+        id: data.id,
+        IsActive: result.isActive,
+        AttendanceType: Number(result.AttendanceType),
+        name: result.name,
+        DirectManagerId: result.directManager.key,
+        email: result.email,
+        address: result.address,
+        mobileNumber: dialogRefAddCurrency.componentInstance.code+ result.mobileNumber,
+        EmployeeType: Number(result.employeeType),
+        employeeNumber: result.employeeNumber,
+        zoneIds:formDataObject.zoneIds,
+        JobTitleId: result.JobTitleId.key,
+        ProfileImageName: result.files[0]?.fileUpload?.name ? result.files[0]?.fileUpload?.name : "",
+        DepartmentId: result.DepartmentId.key,
+        JoiningDate: moment(result.JoiningDate).format("MM/DD/YYYY"),
+        ScheduleId: result.ScheduleId.key,
+        AnnualVacationBalance: result.AnnualVacationBalance
+
+      }));
+      result.files.forEach((file: any) => {
+        if (file.detailsImage === false) {
+          formData.append("ProfileImageFile",  file.fileUpload.name);
+
+        } else {
+          
+          formData.append("ProfileImageName", file.fileUpload.name);
+
+        }
+      });
+      dialogRefAddCurrency.componentInstance.submitted = false;
+      this.employeesService.updateEmployee(formData).subscribe(
+        {
+          next: data => {
+
+            dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.close();
+            let succressDialog:any;
+            this.translate.get("employees").subscribe(translate => {
+              
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.employeeRequests
+                },
+              });
+            })
+            this.getEmployees(this.filteration);
+
+            setTimeout(() => {
+              succressDialog.close();
+
+            }, 2000);
+            succressDialog.componentInstance.submitted = true;
+            succressDialog.componentInstance.submitClicked.subscribe(result => {
+              succressDialog.close();
+            })
+          },
+          error: err => {
+            dialogRefAddCurrency.componentInstance.submitted = true;
+
+          }
+        }
+      )
+      dialogRefAddCurrency.componentInstance.submitted = false;
     });
     dialogRefAddCurrency.afterClosed().subscribe(result => {
       if (result) {
@@ -661,159 +820,21 @@ export class EmployeesComponent {
         break;
     }
   }
-  editAnEmployee(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogAddAnEmployeeComponent, {
-      width: "50vw",
-      data: {
-        title: "تعديل موظف",
-        setAsNecessary: "تعيين كنشط",
-        labelRadioButtonFirst: "نوع الدوام",
-        firstRadio: "دوام كامل",
-        secondRadio: "دوام جزئي",
-        thirdRadio: "دوام حر / شيفت",
-        titleFieldDisabled: "كود الموظف",
-        code: data.orderNumber,
-        JobNumber: "الرقم الوظيفي <span class='color-red'>*</span>",
-        placeholdeJobNumber: "الرقم الوظيفي",
-        validationtitleJobNumber: "الرقم الوظيفي مطلوب",
-        directManager: "المدير المباشر <span class='color-red'>*</span>",
-        placeholdeDirectManager: "المدير المباشر",
-        validationtitleDirectManager: "المدير المباشر مطلوب",
-        email: "البريد الالكتروني <span class='color-red'>*</span>",
-        placeholdeEmail: "البريد الالكتروني",
-        validationtitleEmail: "البريد الالكتروني مطلوب",
-        validationtitleEmailPattern: "البريد الالكتروني غير صحيح",
-        address: "العنوان <span class='color-red'>*</span>",
-        placeholdeAddress: "العنوان",
-        validationtitleAddress: "العنوان مطلوب",
-        mobileNumber: "رقم الهاتف <span class='color-red'>*</span>",
-        placeholdeMobileNumber: "رقم الهاتف",
-        validationtitleMobileNumber: "رقم الهاتف مطلوب",
-        labelEmployeeName: "نوع الموظف",
-        firstRadioEmployeeName: "عسكري",
-        secondRadioEmployeeName: "مدني",
-        thirdRadioEmployeeName: "تعاقد مباشر",
-        thirdRadioFour: "تعاقد شركات",
-        titleWorkSchedule: "جدول الدوام <span class='color-red'>*</span>",
-        placeholderWorkSchedule: " اختار جدول الدوام",
-        validationtitleWorkSchedule: "جدول الدوام مطلوب",
-        fieldFirst: "اسم الموظف <span class='color-red'>*</span>",
-        placeholdefieldFirst: "اسم الموظف",
-        validationtitlefieldFirst: "اسم الموظف مطلوب",
-        titleDropdownFirst: "المسمى الوظيفي <span class='color-red'>*</span>",
-        placeholderDropdownFirst: " اختار المسمى الوظيفي",
-        validationtitleDropdownFirst: "المسمي الوظفس مطلوب",
-        titleDropdownSecond: "القسم <span class='color-red'>*</span>",
-        validationtitleDropdownSecond: " اختار القسم مطلوب",
-        placeholderDropdown: " اختار القسم",
-        titleCalendar: "تاريخ الالتحاق <span class='color-red'>*</span>",
-        validationCalendar: "تاريخ الالتحاق مطلوب",
-        uploadFile: "ارفاق ملف",
-        chooseLabel: "اختار الملف ليتم رفعه",
-        placeholderCalendar: "اختار التاريخ",
-        labelRadioButtonSecond: "نوع الشيفت",
-        firstRadiTwo: "صباحي",
-        secondRadioTwo: "مسائي",
-        thirdRadioTwo: "ليلي",
-        titleNotes: "رصيد الاجازات <span class='color-red'>*</span>",
-        placeholdeNotes: "رصيد الاجازات",
-        validationtitleNotes: "برجاء كتابة رصيد الاجازات هنا",
-        buttonSend: "تعديل الموظف",
-        titleClose: "تراجع"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editEmployee = true;
 
-    dialogRefAddCurrency.componentInstance.id = data.id;
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData = new FormData();
-      let formDataObject: any = {};
-
-      moment.locale("en"); 
-
-      formDataObject.zoneIds = [];
-      if (result?.zoneIds?.length > 0) {
-        result?.zoneIds?.forEach((direct: any) => {
-          formDataObject.zoneIds.push(direct.key);
-        });
-      }
-      formData.append("UpdateEmployeeModelString", JSON.stringify({
-        id: data.id,
-        IsActive: result.isActive,
-        AttendanceType: Number(result.AttendanceType),
-        name: result.name,
-        DirectManagerId: result.directManager.key,
-        email: result.email,
-        address: result.address,
-        mobileNumber: dialogRefAddCurrency.componentInstance.code+ result.mobileNumber,
-        EmployeeType: Number(result.employeeType),
-        employeeNumber: result.employeeNumber,
-        zoneIds:formDataObject.zoneIds,
-        JobTitleId: result.JobTitleId.key,
-        ProfileImageName: result.files[0]?.fileUpload?.name ? result.files[0]?.fileUpload?.name : "",
-        DepartmentId: result.DepartmentId.key,
-        JoiningDate: moment(result.JoiningDate).format("MM/DD/YYYY"),
-        ScheduleId: result.ScheduleId.key,
-        AnnualVacationBalance: result.AnnualVacationBalance
-
-      }));
-      result.files.forEach((file: any) => {
-        if (file.detailsImage === false) {
-          formData.append("ProfileImageFile", file.fileUpload, file.fileUpload.name);
-
-        }
-      });
-      dialogRefAddCurrency.componentInstance.submitted = false;
-      this.employeesService.updateEmployee(formData).subscribe(
-        {
-          next: data => {
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-            dialogRefAddCurrency.close();
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات الموظفين"
-              },
-            });
-            this.getEmployees(this.filteration);
-
-            setTimeout(() => {
-              succressDialog.close();
-
-            }, 2000);
-            succressDialog.componentInstance.submitted = true;
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-              succressDialog.close();
-            })
-          },
-          error: err => {
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
-          }
-        }
-      )
-      dialogRefAddCurrency.componentInstance.submitted = false;
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
-
-      }
-    });
-  }
   showActions(data: any) {
     return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 4, actionCode: data.actionCode })
   }
   dialogEmployeeFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogEmployeeFileComponent, {
-      width: "40vw",
-      data: {
-        title: "ملف الموظف"
-      },
-    });
+    let dialogRefAddCurrency!:MatDialogRef<DialogEmployeeFileComponent, any>;
+    this.translate.get("employees").subscribe(data => {
+      dialogRefAddCurrency = this.dialog.open(DialogEmployeeFileComponent, {
+        width: "40vw",
+        data: {
+          title: data.employeeFile
+        },
+      });
+    })
+
     dialogRefAddCurrency.componentInstance.id = data.id
 
   }

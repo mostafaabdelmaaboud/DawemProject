@@ -116,12 +116,8 @@ export class AddUserComponent {
     IsActive: [false],
     Name: ["", Validators.required],
     Email: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
-    Password: ["", [Validators.required, Validators.minLength(5)]],
-    ConfirmPassword: ["", [Validators.required, Validators.minLength(5), , this.passwordMatchValidator()]],
-
     MobileNumber: ["", Validators.required],
     Roles: ["", Validators.required],
-
     EmployeeId: ["", Validators.required],
     IsAdmin: [false],
   });
@@ -204,12 +200,14 @@ export class AddUserComponent {
               //   });
               // }
               if (data?.profileImagePath) {
-                this.employeesService.downloadImage(data.profileImagePath).subscribe(response => {
-                  const blob = new Blob([response]);
-                  const file = new File([blob], data.profileImageName);
+                this.AttachmentsFiles.push({ imageSrc:data?.profileImagePath, fileUpload: {name:data?.profileImageName}, detailsImage: true });
 
-                  this.AttachmentsFiles.push({ imageSrc: data.profileImagePath, fileUpload: file, detailsImage: true });
-                });
+                // this.employeesService.downloadImage(data.profileImagePath).subscribe(response => {
+                //   const blob = new Blob([response]);
+                //   const file = new File([blob], data.profileImageName);
+
+                //   this.AttachmentsFiles.push({ imageSrc: data.profileImagePath, fileUpload: file, detailsImage: true });
+                // });
               }
 
               // IsActive: [false],
@@ -226,7 +224,14 @@ export class AddUserComponent {
               this.addBranchGroupForm.get("Email")?.setValue(data.email);
               // this.addBranchGroupForm.get("Password")?.setValue(data.isNecessary);
               // this.addBranchGroupForm.get("ConfirmPassword")?.setValue(data.isNecessary);
-              this.addBranchGroupForm.get("MobileNumber")?.setValue(data.mobileNumber);
+              let startIndex = data.mobileNumber.indexOf(this.code);
+              let slicedString= ""; 
+              if(startIndex >=0) {
+                slicedString = data.mobileNumber.slice(0, startIndex);
+                slicedString += data.mobileNumber.slice(startIndex + this.code.length);
+                console.log(slicedString)
+              }
+              this.addBranchGroupForm.get("MobileNumber")?.setValue(slicedString);
               this.addBranchGroupForm.get("IsActive")?.setValue(data.isActive);
               this.addBranchGroupForm.get("IsAdmin")?.setValue(data.isAdmin);
               this.addBranchGroupForm.get("Name")?.setValue(data.name);
@@ -285,7 +290,13 @@ export class AddUserComponent {
       }
 
     })
+    if (!this.editUser) {
+      this.addBranchGroupForm.addControl("Password", this.fb.control("", [Validators.required, Validators.minLength(5)]));
+      this.addBranchGroupForm.addControl("ConfirmPassword", this.fb.control("",  [Validators.required, Validators.minLength(5),this.passwordMatchValidator()]))
 
+      this.loading = false;
+      
+    }
   }
   passwordMatchValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {

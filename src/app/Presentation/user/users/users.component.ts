@@ -393,6 +393,8 @@ export class UsersComponent {
       result.files.forEach((file: any) => {
         if (file.detailsImage === false) {
           formData.append("ProfileImageFile", file.fileUpload, file.fileUpload.name);
+        } else {
+          formData.append("ProfileImageName", file.fileUpload.name);
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
@@ -513,6 +515,8 @@ export class UsersComponent {
       result.files.forEach((file: any) => {
         if (file.detailsImage === false) {
           formData.append("ProfileImageFile", file.fileUpload, file.fileUpload.name);
+        } else {
+          formData.append("ProfileImageName", file.fileUpload.name);
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;

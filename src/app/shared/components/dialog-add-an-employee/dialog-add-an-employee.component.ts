@@ -175,6 +175,7 @@ export class DialogAddAnEmployeeComponent {
       this.code= "+91";
 
     }
+
     if (this.data?.code) {
       this.addBranchGroupForm.get("fieldDisabled")?.setValue(this.data?.code);
     }
@@ -254,7 +255,13 @@ export class DialogAddAnEmployeeComponent {
               });
               this.addBranchGroupForm.get("email")?.setValue(data.email);
               this.addBranchGroupForm.get("address")?.setValue(data.address);
-              this.addBranchGroupForm.get("mobileNumber")?.setValue(data.mobileNumber);
+              let startIndex = data.mobileNumber.indexOf(this.code);
+              let slicedString= ""; 
+              if(startIndex >=0) {
+                slicedString = data.mobileNumber.slice(0, startIndex);
+                slicedString += data.mobileNumber.slice(startIndex + this.code.length);
+              }
+              this.addBranchGroupForm.get("mobileNumber")?.setValue(slicedString);
               this.addBranchGroupForm.get("AttendanceType")?.setValue(data.attendanceType.toString());
               this.addBranchGroupForm.get("name")?.setValue(data.name);
 

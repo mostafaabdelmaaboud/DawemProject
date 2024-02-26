@@ -412,6 +412,8 @@ export class VacationsComponent {
       result.files.forEach((file: any) => {
         if (file.detailsImage === false) {
           formData.append("Attachments", file.fileUpload, file.fileUpload.name);
+        } else {
+          formData.append("ProfileImageName", file.fileUpload.name);
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
@@ -514,6 +516,8 @@ export class VacationsComponent {
       result.files.forEach((file: any) => {
         if (file.detailsImage === false) {
           formData.append("Attachments", file.fileUpload, file.fileUpload.name);
+        } else {
+          formData.append("ProfileImageName", file.fileUpload.name);
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;

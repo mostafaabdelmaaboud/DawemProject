@@ -10,14 +10,14 @@
   </header>
   <div class="body-dialog p-15 f-s-16">
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">الرقم الوظيفي</label>
+      <label class="title">{{"employees.jobNumber"|translate}} </label>
       <div class="content-password">
         {{info?.employeeNumber ? info?.employeeNumber : "لا يوجد"}}
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title"> المسمى الوظيفي</label>
+      <label class="title">{{"employees.jobTitle"|translate}}</label>
       <div class="content-password">
         {{info?.jobTitleName ? info?.jobTitleName : "لا يوجد"}}
 
@@ -26,17 +26,24 @@
     </div>
     <div class="section1 d-flex line-bellow">
       <div class="col">
-        <label class="title">حالة الموظف</label>
-        <span class="d-clock">{{info?.isActive ? 'نشط' : 'غير نشط'}}</span>
+        <label class="title">{{"employees.employeeStatus"|translate}} </label>
+        <span class="d-clock">
+          <ng-container *ngIf="info?.isActive">
+            {{"employees.active"|translate}}
+          </ng-container>
+          <ng-container *ngIf="!info?.isActive">
+            {{"employees.Inactive"|translate}}
+          </ng-container>
+        </span>
       </div>
       <div class="col">
-        <label class="title">نوع الدوام</label>
+        <label class="title">{{"employees.permanenceType"|translate}}</label>
         <span class="d-block">{{info?.attendanceTypeName ? info?.attendanceTypeName : "لا يوجد"}}</span>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">اسم الموظف</label>
+      <label class="title">{{"employees.employeeName"|translate}}</label>
       <div class="content-password">
         {{info?.name ? info?.name : "لا يوجد"}}
       </div>
@@ -44,7 +51,7 @@
     </div>
 
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">نوع الموظف</label>
+      <label class="title">{{"employees.employeeType"|translate}}</label>
       <div class="content-password">
         {{info?.employeeTypeName ? info?.employeeTypeName : "لا يوجد"}}
 
@@ -52,64 +59,64 @@
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">القسم</label>
+      <label class="title">{{"employees.section"|translate}}</label>
       <div class="content-password">
         {{info?.dapartmentName ? info?.dapartmentName : "لا يوجد"}}
       </div>
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">المدير المباشر</label>
+      <label class="title">{{"employees.directManager"|translate}}</label>
       <div class="content-password">
         {{info?.directManagerName ? info?.directManagerName : "لا يوجد"}}
 
       </div>
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">المناطق</label>
-      <ng-container *ngFor="let zone of info.zones">
+      <label class="title">{{"employees.zones"|translate}}</label>     
+      <ng-container *ngFor="let zone of info?.zones">
         <div class="content-password">
           {{zone}}
   
         </div>
       </ng-container>
-      <ng-container *ngIf="info.zones.length === 0">لا يوجد</ng-container>
+      <ng-container *ngIf="info?.zones?.length === 0">لا يوجد</ng-container>
   
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">تاريخ الالتحاق</label>
+      <label class="title">{{"employees.joiningDate"|translate}}</label>
       <div class="content-password">
         {{info?.joiningDate ? info?.joiningDate: "لا يوجد"}}
 
       </div>
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">رصيد الاجازات</label>
+      <label class="title">{{"employees.vacationsBalance"|translate}}</label>
       <div class="content-password">
         {{info?.annualVacationBalance ? info?.annualVacationBalance : "0"}} يوم
       </div>
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">جدول الدوام</label>
+      <label class="title">{{"employees.workSchedule"|translate}}</label>
       <div class="content-password">
         {{info?.scheduleName ? info?.scheduleName : "لا يوجد"}}
       </div>
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">البريد الالكتروني</label>
+      <label class="title">{{"employees.email"|translate}}</label>
       <div class="content-password">
         {{info?.email ? info?.email : "لا يوجد"}}
 
       </div>
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">رقم الهاتف</label>
+      <label class="title">{{"employees.phoneNumber"|translate}}</label>
       <div class="content-password">
         {{info?.mobileNumber ? info?.mobileNumber : "لا يوجد"}}
 
       </div>
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">العنوان</label>
+      <label class="title">{{"employees.theAddress"|translate}}</label>
       <div class="content-password">
         {{info?.address ? info?.address : "لا يوجد"}}
 

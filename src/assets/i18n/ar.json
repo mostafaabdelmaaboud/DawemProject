@@ -140,7 +140,72 @@
     "action":"الإجراء",
     "setAsActive":"تعيين كنشط",
     "performanceType":"نوع الدوام",
-    "fullTime":"دوام كامل"
+    "fullTime":"دوام كامل",
+    "partTime":"دوام جزئي",
+    "freeTimeShift":"دوام حر / شيفت",
+    "employeeCode":"كود الموظف",
+    "jobNumber":"الرقم الوظيفي",
+    "jobNumberRequired":"الرقم الوظيفي مطلوب",
+    "directManagerRequired":"المدير المباشر مطلوب",
+    "email":"البريد الالكتروني",
+    "emailRequired":"البريد الالكتروني مطلوب",
+    "invalidEmail":"البريد الالكتروني غير صحيح",
+    "theAddress":" العنوان",
+    "addressRequired":"العنوان مطلوب",
+    "phoneNumber":"رقم الهاتف",
+    "phoneNumberRequired":"رقم الهاتف مطلوب",
+    "workSchedule":"جدول الدوام",
+    "chooseYourWorkSchedule":"اختار جدول الدوام",
+    "workScheduleRequired":"جدول الدوام مطلوب",
+    "employeeNameRequired":"اسم الموظف مطلوب",
+    "chooseYourJobTitle":"اختار المسمى الوظيفي",
+    "theEmployeeNamedIsWanted":"المسمي الوظفس مطلوب",
+    "chooseTheRequiredSection":" اختار القسم مطلوب",
+    "chooseSection":"اختار القسم",
+    "joiningDateIsRequired":"تاريخ الالتحاق مطلوب",
+    "attachAFile":"ارفاق ملف",
+    "selectTheFileToUpload":"اختار الملف ليتم رفعه",
+    "employeeType":"نوع الموظف",
+    "military":"عسكري",
+    "civil":"مدني",
+    "directContract":"تعاقد مباشر",
+    "companyContracting":"تعاقد شركات",
+    "chooseDate":"اختار التاريخ",
+    "shiftType": "نوع الشيفت",
+    "morning":"صباحي",
+    "evening":"مسائي",
+    "layla":"ليلي",
+    "pleaseWriteYourVacationBalanceHere":"برجاء كتابة رصيد الاجازات هنا",
+    "addEmployee":"إضافة الموظف",
+    "toRetreat":"تراجع",
+    "lowestNumber":"أقل رقم 0",
+    "phoneNumberIsIncorrect":"رقم الهاتف غير صحيح",
+    "zones":"المناطق",
+    "zonesAreRequired":"المناطق مطلوبة",
+    "name":"الاسم",
+    "size":"مقاس",
+    "maximumFileSize":"الحد الأقصى لحجم الملف 2 ميجابايت",
+    "yourRequestHasBeenSent":"تم ارسال طلبك",
+    "employeeRequests":"طلبات الموظفين",
+    "employeeModification":"تعديل موظف",
+    "employeeFile":"ملف الموظف",
+    "employeeStatus": "حالة الموظف",
+    "active":"نشط",
+    "Inactive":"غير نشط",
+    "permanenceType":"نوع الدوام"
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   },
   "dialogs": {

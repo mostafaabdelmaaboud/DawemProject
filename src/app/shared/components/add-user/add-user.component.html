@@ -102,60 +102,63 @@
 
 
       </div>
-      <div class="section-field mb-3 c-f">
-        <label class="mb-2 d-block f-s-16 label-form" [innerHTML]="data!['titlePassword']|translate"></label>
-        <div class="content-input position-relative">
-          <span class="p-input-icon-right w-100 field-password">
-            <i class="pi pi-lock"></i>
-            <input [type]="togglePassword ? 'password' : 'text'" formControlName="Password" class="w-100" pInputText
-              [placeholder]="'login.password' | translate" />
-            <span (click)="togglePassword = !togglePassword">
-              <i class=" pi pi-eye" *ngIf="togglePassword"></i>
-              <i class=" pi pi-eye-slash" *ngIf="!togglePassword"></i>
+      <ng-container *ngIf="!editUser">
+        <div class="section-field mb-3 c-f">
+          <label class="mb-2 d-block f-s-16 label-form" [innerHTML]="data!['titlePassword']|translate"></label>
+          <div class="content-input position-relative">
+            <span class="p-input-icon-right w-100 field-password">
+              <i class="pi pi-lock"></i>
+              <input [type]="togglePassword ? 'password' : 'text'" formControlName="Password" class="w-100" pInputText
+                [placeholder]="'login.password' | translate" />
+              <span (click)="togglePassword = !togglePassword">
+                <i class=" pi pi-eye" *ngIf="togglePassword"></i>
+                <i class=" pi pi-eye-slash" *ngIf="!togglePassword"></i>
+              </span>
             </span>
-          </span>
-          <div class="container-alerts mt-2" *ngIf="getControl('Password')?.errors">
-            <div class="alert alert-danger"
-              *ngIf="getControl('Password')?.hasError('required') && getControl('Password')?.dirty">
-              {{'login.PasswordRequired' | translate}}
+            <div class="container-alerts mt-2" *ngIf="getControl('Password')?.errors">
+              <div class="alert alert-danger"
+                *ngIf="getControl('Password')?.hasError('required') && getControl('Password')?.dirty">
+                {{'login.PasswordRequired' | translate}}
+              </div>
+              <div class="alert alert-danger"
+                *ngIf="getControl('Password')?.hasError('minlength') && !getControl('Password')?.hasError('required')">
+                {{'login.TheMinimumNumberOfCharactersIsFive' | translate}}
+              </div>
             </div>
-            <div class="alert alert-danger"
-              *ngIf="getControl('Password')?.hasError('minlength') && !getControl('Password')?.hasError('required')">
-              {{'login.TheMinimumNumberOfCharactersIsFive' | translate}}
+          </div>
+          <!-- <div class="container-alerts mb-2" *ngIf="getControl('bankAccount.bankName')?.errors">
+                                                      <div class="alert alert-danger"
+                                                        *ngIf="getControl('bankAccount.bankName')?.hasError('required') && getControl('bankAccount.bankName')?.dirty">
+                                                        Bank Name is required
+                                                      </div>
+                                                    </div> -->
+        </div>
+        <div class="section-field c-f mb-3">
+          <label class="mb-2 d-block f-s-16 label-form">تأكيد كلمة المرور<span class="color-red ml-2">*</span></label>
+          <div class="content-input position-relative">
+            <span class="p-input-icon-right w-100 field-password">
+              <i class="pi pi-lock"></i>
+              <input [type]="toggleConfirmPassword ? 'password' : 'text'" formControlName="ConfirmPassword" class="w-100"
+                pInputText placeholder="تأكيد كلمة المرور" />
+              <span (click)="toggleConfirmPassword = !toggleConfirmPassword">
+                <i class=" pi pi-eye" *ngIf="toggleConfirmPassword"></i>
+                <i class=" pi pi-eye-slash" *ngIf="!toggleConfirmPassword"></i>
+              </span>
+            </span>
+            <div class="container-alerts mt-2" *ngIf="getControl('ConfirmPassword')?.errors">
+              <div class="alert alert-danger"
+                *ngIf="getControl('ConfirmPassword')?.hasError('required') && getControl('ConfirmPassword')?.dirty">
+                {{'login.PasswordRequired' | translate}}
+              </div>
+              <div class="alert alert-danger"
+                *ngIf="getControl('ConfirmPassword')?.hasError('passwordMismatch') && !getControl('ConfirmPassword')?.hasError('required')">
+                تأكيد كلمة المرور
+              </div>
             </div>
           </div>
         </div>
-        <!-- <div class="container-alerts mb-2" *ngIf="getControl('bankAccount.bankName')?.errors">
-                                                    <div class="alert alert-danger"
-                                                      *ngIf="getControl('bankAccount.bankName')?.hasError('required') && getControl('bankAccount.bankName')?.dirty">
-                                                      Bank Name is required
-                                                    </div>
-                                                  </div> -->
-      </div>
-      <div class="section-field c-f mb-3">
-        <label class="mb-2 d-block f-s-16 label-form">تأكيد كلمة المرور<span class="color-red ml-2">*</span></label>
-        <div class="content-input position-relative">
-          <span class="p-input-icon-right w-100 field-password">
-            <i class="pi pi-lock"></i>
-            <input [type]="toggleConfirmPassword ? 'password' : 'text'" formControlName="ConfirmPassword" class="w-100"
-              pInputText placeholder="تأكيد كلمة المرور" />
-            <span (click)="toggleConfirmPassword = !toggleConfirmPassword">
-              <i class=" pi pi-eye" *ngIf="toggleConfirmPassword"></i>
-              <i class=" pi pi-eye-slash" *ngIf="!toggleConfirmPassword"></i>
-            </span>
-          </span>
-          <div class="container-alerts mt-2" *ngIf="getControl('ConfirmPassword')?.errors">
-            <div class="alert alert-danger"
-              *ngIf="getControl('ConfirmPassword')?.hasError('required') && getControl('ConfirmPassword')?.dirty">
-              {{'login.PasswordRequired' | translate}}
-            </div>
-            <div class="alert alert-danger"
-              *ngIf="getControl('ConfirmPassword')?.hasError('passwordMismatch') && !getControl('ConfirmPassword')?.hasError('required')">
-              تأكيد كلمة المرور
-            </div>
-          </div>
-        </div>
-      </div>
+      </ng-container>
+     
       <div class="sectionTwo mb-3">
         <label class="title" [innerHTML]="data!['Roles']|translate"></label>
         <div class="content-password">

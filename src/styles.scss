@@ -1214,7 +1214,12 @@ img.flag {
 .p-inputtext {
   text-align: right !important;
 }
-
+[lang="en"] {
+  .content-password,
+.p-inputtext {
+  text-align: left !important;
+}
+}
 [lang="ar"] {
   .p-button .p-button-icon-left {
     margin-right: 0;
