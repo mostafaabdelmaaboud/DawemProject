@@ -330,6 +330,7 @@ body {
 [lang="ar"] {
   .p-inputtext {
     text-align: right !important;
+    direction: rtl;
   }
 }
 html[lang="ar"] {
@@ -1161,8 +1162,13 @@ img.flag {
 }
 [lang="en"] {
   .nameShow {
-    margin-right: 0;
+    margin-right: 10px;
     margin-left: 10px;
+
+  }
+  .dropdown-toggle::after {
+    margin-left: 0;
+    margin-right: 0.255em;
 
   }
 }

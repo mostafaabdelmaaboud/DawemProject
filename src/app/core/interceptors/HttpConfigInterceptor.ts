@@ -128,7 +128,6 @@ export class HttpConfigInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: any) => {
-        console.log(error)
 
         let errorMsg = "";
         if (error.error instanceof ErrorEvent) {
@@ -164,7 +163,6 @@ export class HttpConfigInterceptor implements HttpInterceptor {
 
                 this.router.navigate(["/login"]);
               }
-              console.log(request);
               if(!request.urlWithParams.toLowerCase().includes("permission/checkandgetpermission")) {
                 this.toastservice.show({
                   message: error?.error?.message,

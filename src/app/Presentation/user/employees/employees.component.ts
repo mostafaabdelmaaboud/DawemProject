@@ -142,6 +142,8 @@ export class EmployeesComponent {
 
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
+
     });
   }
   ngOnInit(): void {
@@ -529,13 +531,13 @@ export class EmployeesComponent {
 
             dialogRefAddCurrency.close();
             let succressDialog:any;
-            this.translate.get("employees").subscribe(data => {
+            this.translate.get("employees").subscribe(translate => {
               succressDialog = this.dialog.open(ToastSuccessComponent, {
                 width: "30vw",
                 data: {
-                  title: data.yourRequestHasBeenSent,
+                  title: translate.yourRequestHasBeenSent,
                   message: data.message,
-                  buttonSend: data.employeeRequests
+                  buttonSend: translate.employeeRequests
                 },
               });
             })

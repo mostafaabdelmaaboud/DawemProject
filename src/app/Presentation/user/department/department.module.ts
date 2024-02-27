@@ -6,6 +6,7 @@ import { DepartmentComponent } from './department.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
     CommonModule,
     EmploymentRoutingModule,
     MatDialogModule,
+    TranslateModule,
     InputSwitchModule,
     SharedModule
   ]

@@ -502,7 +502,6 @@ export class SideNavBarComponent {
           let filterComponents =this.listComponents.filter(component => component.name.includes(this.searchInput.trim()));
           
           this.listComponents = filterComponents;
-          console.log(filterComponents);
           this.showListSearch = true;
     
         } else {

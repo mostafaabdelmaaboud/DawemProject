@@ -6,6 +6,7 @@ import { JustificationsComponent } from './justifications.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { MatRadioModule } from '@angular/material/radio';
     CommonModule,
     JustificationsRoutingModule,
     MatDialogModule,
+    TranslateModule,
     MatRadioModule,
     SharedModule
   ]

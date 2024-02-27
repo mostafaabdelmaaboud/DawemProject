@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
@@ -102,6 +102,8 @@ export class JustificationsComponent {
   opened = false;
   cards!: any;
   spinnerCards = false;
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
   private _mobileQueryListener: () => void;
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
@@ -132,6 +134,8 @@ export class JustificationsComponent {
 
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
+
     });
   }
   ngOnInit(): void {
@@ -163,7 +167,87 @@ export class JustificationsComponent {
       { name: '5', code: 5 }
 
     ];
-
+    this.translate.get("justifications").subscribe(data => {
+      this.columns =  [
+        {
+          name: data.orderNumber,
+          field: "orderNumber",
+        },
+        {
+          name: data.jobNumber,
+          field: "employeeCode",
+        },
+        {
+          name:  data.employeeName,
+          field: "employeeName",
+        },
+        {
+          name: data.typeOfJustification,
+          field: "typeOfJustification"
+        },
+        {
+          name:  data.requestStatusForJustification,
+          field: "statusName"
+        },
+        {
+          name:  data.theBeginning,
+          field: "dateFrom"
+        },
+        {
+          name: data.theEnd,
+          field: "dateTo"
+        },
+    
+        {
+          name: data.action,
+          field: "actions"
+        }
+    
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("justifications").subscribe(data => {
+        this.columns =  [
+          {
+            name: data.orderNumber,
+            field: "orderNumber",
+          },
+          {
+            name: data.jobNumber,
+            field: "employeeCode",
+          },
+          {
+            name:  data.employeeName,
+            field: "employeeName",
+          },
+          {
+            name: data.typeOfJustification,
+            field: "typeOfJustification"
+          },
+          {
+            name:  data.requestStatusForJustification,
+            field: "statusName"
+          },
+          {
+            name:  data.theBeginning,
+            field: "dateFrom"
+          },
+          {
+            name: data.theEnd,
+            field: "dateTo"
+          },
+      
+          {
+            name: data.action,
+            field: "actions"
+          }
+      
+        ];
+      })
+      // this.subscription = this.translate.stream('primeng').subscribe(data => {
+      //   this.config.setTranslation(data);
+      // });  
+    })
     this.getInformation();
 
 
@@ -255,32 +339,196 @@ export class JustificationsComponent {
       }
     })
   }
-  editJustification(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(RequestForJustificationComponent, {
-      width: "50vw",
-      data: {
-        title: "تعديل التبرير",
-        setAsNecessary: "تعيين كضرورية",
-        titlePermissionTypeId: "نوع التبرير <span class='color-red'>*</span>",
-        placeholderPermissionTypeId: " برجاء اختيار نوع التبرير",
-        PermissionTypeIdValidation: "نوع التبرير مطلوب",
-        titleCalendar: "تاريخ التبرير <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ التبرير",
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        NotesValidation: "الملاحظات مطلوب",
-        dateTaskValidation: "تاريخ التبرير مطلوب",
-        labelRadioButton: "صاحب الطلب",
-        firstRadio: "لنفسي",
-        secondRadio: "لموظف",
-        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
-        placeholderEmployeeId: "الموظف",
-        EmployeeIdValidation: "الموظف مطلوب",
-        uploadFile: "ارفاق ملف",
-        chooseLabel: "اختار الملف ليتم رفعه",
-        buttonSend: "إرسال الطلب"
-      },
+
+  getJustifications(filteration: any) {
+    this.justifications = [];
+    this.isLoading = true;
+    this.justificationsService.listJustifications(filteration).subscribe(data => {
+
+      data.data.forEach((employee: any) => {
+        this.justifications.push({
+          id: employee.id,
+          orderNumber: employee.code,
+          employeeName: {
+            name: employee.employee.name,
+            alt: employee.employee.name,
+            img: employee.employee.profileImagePath ? employee.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
+          },
+          statusName:employee.statusName,
+          employeeCode:employee.employee.code,
+          typeOfJustification: employee.justificationTypeName,
+          status:employee.status,
+          dateFrom: moment(new Date(employee.dateFrom)).format("MM/DD/YYYY"),
+          dateTo: moment(new Date(employee.dateTo)).format("MM/DD/YYYY"),
+        })
+      });
+      this.totalItems = data.totalCount
+      this.isLoading = false;
+    })
+  }
+  mathRound(data: any) {
+    return Math.ceil(data)
+  }
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 24, actionCode: data.actionCode })
+  }
+  numberOfRowsPerPage(data: any) {
+
+
+    this.filteration = { ...this.filteration, PageSize: data.value.code };
+
+    this.getJustifications(this.filteration)
+  }
+  onPageChange(event: any) {
+    this.filteration = { ...this.filteration, PageNumber: event.page };
+    this.getJustifications(this.filteration)
+  }
+
+  requestJustification() {
+    let dialogRefAddCurrency!:MatDialogRef<RequestForJustificationComponent, any>;
+    this.translate.get("justifications").subscribe(translate => {
+       dialogRefAddCurrency = this.dialog.open(RequestForJustificationComponent, {
+        width: "50vw",
+        data: {
+          title: translate.seekingJustification,
+          setAsNecessary: translate.setAsEssential,
+          titlePermissionTypeId: translate.typeOfJustification+" <span class='color-red'>*</span>",
+          placeholderPermissionTypeId: translate.pleaseSelectTheTypeOfJustification,
+          PermissionTypeIdValidation: translate.typeOfJustificationRequired,
+          titleCalendar: translate.historyOfJustification+" <span class='color-red'>*</span>",
+          placeholderCalendar: translate.historyOfJustification,
+          titleNotes: translate.notes+" <span class='color-red'>*</span>",
+          placeholdeNotes: translate.notes,
+          NotesValidation: translate.notesRequired,
+          dateTaskValidation: translate.justificationDateRequired,
+          labelRadioButton: translate.applicant,
+          firstRadio: translate.forMyself,
+          secondRadio: translate.toAnEmployee,
+          titleEmployeeId: translate.employee+" <span class='color-red'>*</span>",
+          placeholderEmployeeId: translate.employee,
+          EmployeeIdValidation: translate.employeeIsRequired,
+          uploadFile: translate.attachAFile,
+          chooseLabel: translate.selectTheFileToUpload,
+          buttonSend: translate.sendRequest
+        },
+      });
+    })
+
+    dialogRefAddCurrency.componentInstance.submitted = true;
+
+    dialogRefAddCurrency.componentInstance.editjustification = false;
+
+    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+      let formData = new FormData();
+      
+      if (result.ForEmployee) {
+        formData.append("CreateRequestJustificationModelString", JSON.stringify({
+          IsNecessary: result.IsNecessary,
+          ForEmployee: result.ForEmployee,
+          EmployeeId: result.EmployeeId.key,
+          JustificationTypeId: result.JustificationTypeId.key,
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss")
+        }));
+
+      } else {
+        formData.append("CreateRequestJustificationModelString", JSON.stringify({
+          IsNecessary: result.IsNecessary,
+          ForEmployee: result.ForEmployee,
+          JustificationTypeId: result.JustificationTypeId.key,
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss")
+
+        }));
+      }
+      result.files.forEach((file: any) => {
+        if (file.detailsImage === false) {
+          formData.append("Attachments", file.fileUpload, file.fileUpload.name);
+        } else {
+          formData.append("ProfileImageName", file.fileUpload.name);
+        }
+      });
+      dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
+
+      this.justificationsService.createJustification(formData).subscribe(
+        {
+          next: (data: any) => {
+
+
+            dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
+
+            dialogRefAddCurrency.close();
+
+            let succressDialog:any;
+
+            this.translate.get("justifications").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.requestsForJustifications
+                },
+              });
+            })
+            this.getJustifications(this.filteration);
+
+            setTimeout(() => {
+              succressDialog.close();
+
+            }, 2000);
+            succressDialog.componentInstance.submitClicked.subscribe(result => {
+              succressDialog.close();
+            })
+
+          },
+          error: (err: any) => {
+
+            dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
+
+          }
+        }
+      )
     });
+    dialogRefAddCurrency.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+  editJustification(data: any) {
+    let dialogRefAddCurrency!:MatDialogRef<RequestForJustificationComponent, any>;
+    this.translate.get("justifications").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(RequestForJustificationComponent, {
+        width: "50vw",
+        data: {
+          title: translate.modificationOfJustification,
+          setAsNecessary: translate.setAsEssential,
+          titlePermissionTypeId: translate.typeOfJustification+" <span class='color-red'>*</span>",
+          placeholderPermissionTypeId: translate.pleaseSelectTheTypeOfJustification,
+          PermissionTypeIdValidation: translate.typeOfJustificationRequired,
+          titleCalendar: translate.historyOfJustification+" <span class='color-red'>*</span>",
+          placeholderCalendar: translate.historyOfJustification,
+          titleNotes: translate.notes+" <span class='color-red'>*</span>",
+          placeholdeNotes: translate.notes,
+          NotesValidation: translate.notesRequired,
+          dateTaskValidation: translate.justificationDateRequired,
+          labelRadioButton: translate.applicant,
+          firstRadio: translate.forMyself,
+          secondRadio: translate.toAnEmployee,
+          titleEmployeeId: translate.employee+" <span class='color-red'>*</span>",
+          placeholderEmployeeId: translate.employee,
+          EmployeeIdValidation: translate.employeeIsRequired,
+          uploadFile: translate.attachAFile,
+          chooseLabel: translate.selectTheFileToUpload,
+          buttonSend: translate.sendRequest
+        },
+      });
+    })
+ 
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editjustification = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
@@ -329,16 +577,19 @@ export class JustificationsComponent {
             dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
+            let succressDialog:any;
 
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات التبريرات"
-
-              },
-            });
+            this.translate.get("justifications").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.requestsForJustifications
+                },
+              });
+            })
+     
             this.getJustifications(this.filteration);
 
             setTimeout(() => {
@@ -366,171 +617,22 @@ export class JustificationsComponent {
       }
     });
   }
-  getJustifications(filteration: any) {
-    this.justifications = [];
-    this.isLoading = true;
-    this.justificationsService.listJustifications(filteration).subscribe(data => {
-
-      data.data.forEach((employee: any) => {
-        this.justifications.push({
-          id: employee.id,
-          orderNumber: employee.code,
-          employeeName: {
-            name: employee.employee.name,
-            alt: employee.employee.name,
-            img: employee.employee.profileImagePath ? employee.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
-          },
-          statusName:employee.statusName,
-          employeeCode:employee.employee.code,
-          typeOfJustification: employee.justificationTypeName,
-          status:employee.status,
-          dateFrom: moment(new Date(employee.dateFrom)).format("MM/DD/YYYY"),
-          dateTo: moment(new Date(employee.dateTo)).format("MM/DD/YYYY"),
-        })
-      });
-      this.totalItems = data.totalCount
-      this.isLoading = false;
-    })
-  }
-  mathRound(data: any) {
-    return Math.ceil(data)
-  }
-  showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 24, actionCode: data.actionCode })
-  }
-  numberOfRowsPerPage(data: any) {
-
-
-    this.filteration = { ...this.filteration, PageSize: data.value.code };
-
-    this.getJustifications(this.filteration)
-  }
-  onPageChange(event: any) {
-    this.filteration = { ...this.filteration, PageNumber: event.page };
-    this.getJustifications(this.filteration)
-  }
-
-  requestJustification() {
-    const dialogRefAddCurrency = this.dialog.open(RequestForJustificationComponent, {
-      width: "50vw",
-      data: {
-        title: "طلب التبرير",
-        setAsNecessary: "تعيين كضرورية",
-        titlePermissionTypeId: "نوع التبرير <span class='color-red'>*</span>",
-        placeholderPermissionTypeId: " برجاء اختيار نوع التبرير",
-        PermissionTypeIdValidation: "نوع التبرير مطلوب",
-        titleCalendar: "تاريخ التبرير <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ التبرير",
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        NotesValidation: "الملاحظات مطلوب",
-
-        dateTaskValidation: "تاريخ التبرير مطلوب",
-        labelRadioButton: "صاحب الطلب",
-        firstRadio: "لنفسي",
-        secondRadio: "لموظف",
-        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
-        placeholderEmployeeId: "الموظف",
-        EmployeeIdValidation: "الموظف مطلوب",
-        uploadFile: "ارفاق ملف",
-        chooseLabel: "اختار الملف ليتم رفعه",
-        buttonSend: "إرسال الطلب"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-
-    dialogRefAddCurrency.componentInstance.editjustification = false;
-
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData = new FormData();
-      
-      if (result.ForEmployee) {
-        formData.append("CreateRequestJustificationModelString", JSON.stringify({
-          IsNecessary: result.IsNecessary,
-          ForEmployee: result.ForEmployee,
-          EmployeeId: result.EmployeeId.key,
-          JustificationTypeId: result.JustificationTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss")
-        }));
-
-      } else {
-        formData.append("CreateRequestJustificationModelString", JSON.stringify({
-          IsNecessary: result.IsNecessary,
-          ForEmployee: result.ForEmployee,
-          JustificationTypeId: result.JustificationTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss")
-
-        }));
-      }
-      result.files.forEach((file: any) => {
-        if (file.detailsImage === false) {
-          formData.append("Attachments", file.fileUpload, file.fileUpload.name);
-        } else {
-          formData.append("ProfileImageName", file.fileUpload.name);
-        }
-      });
-      dialogRefAddCurrency.componentInstance.submitted = false;
-      dialogRefAddCurrency.componentInstance.loading = true;
-
-      this.justificationsService.createJustification(formData).subscribe(
-        {
-          next: (data: any) => {
-
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-            dialogRefAddCurrency.componentInstance.loading = false;
-
-            dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات التبريرات"
-
-              },
-            });
-            this.getJustifications(this.filteration);
-
-            setTimeout(() => {
-              succressDialog.close();
-
-            }, 2000);
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-              succressDialog.close();
-            })
-
-          },
-          error: (err: any) => {
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-            dialogRefAddCurrency.componentInstance.loading = false;
-
-          }
-        }
-      )
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
-
-      }
-    });
-  }
   reasonOfRefuse(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
-      width: "30vw",
-      data: {
-        title: "هل متأكد من رفض الطلب؟",
-        message: "برجاء توضيح السبب إن أمكن",
-        titleReasonOfRefuse: "سبب الرفض",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض",
-        titleClose: "تراجع",
-        buttonSend: "رفض الطلب"
-      },
-    });
+    let reasonOfRefuseDialog!:MatDialogRef<DialogCloseComponent, any>;
+    this.translate.get("justifications").subscribe(translate => {
+      reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
+        width: "30vw",
+        data: {
+          title: translate.areYouSureTheRequestWillBeRejected,
+          message: translate.pleaseExplainWhyIfPossible,
+          titleReasonOfRefuse: translate.theReasonOfRefuse,
+          placeholdeReasonOfRefuse: translate.pleaseWriteTheReasonForRejection,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.rejectionOfTheApplication
+        },
+      });
+    })
+ 
 
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
@@ -560,14 +662,19 @@ export class JustificationsComponent {
       {
         next: res => {
           this.getJustifications(this.filteration);
-          const succressDialog = this.dialog.open(ToastSuccessComponent, {
-            width: "30vw",
-            data: {
-              title: "تم قبول الطلب",
-              message: res.message,
-              buttonSend: "اغلاق"
-            },
-          });
+          let succressDialog:any;
+
+          this.translate.get("justifications").subscribe(translate => {
+            succressDialog = this.dialog.open(ToastSuccessComponent, {
+              width: "30vw",
+              data: {
+                title: translate.TheRequestHasBeenAccepted,
+                message: res.message,
+                buttonSend: translate.close
+              },
+            });
+          })
+     
           setTimeout(() => {
             succressDialog.close();
 
@@ -662,5 +769,9 @@ export class JustificationsComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

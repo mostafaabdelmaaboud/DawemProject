@@ -193,6 +193,86 @@
     "active":"نشط",
     "Inactive":"غير نشط",
     "permanenceType":"نوع الدوام"
+  },
+  "department": {
+    "workSummary":"ملخص الدوام",
+    "totalAttendanceForTheDay":"إجمالي حضور اليوم",
+    "totalDaysOff":"إجمالي اجازات اليوم",
+    "totalAbsenceForTheDay":"إجمالي غياب اليوم",
+    "totalDelaysForTheDay":"إجمالي تأخيرات اليوم",
+    "attendanceAnddeparture":"الحضور والانصراف",
+    "attendanceAndDepartureFile":"ملف الحضور والانصراف",
+    "timeAttendance":"وقت الحضور",
+    "timeToGoOut":"وقت الخروج",
+    "theCondition":"الحالة",
+    "theDifference":"الفرق",
+    "fingerprint":"البصمة",
+    "howToIdentify":"طريقه التعرف :",
+    "theTime":"الوقت :",
+    "type":"Type :",
+    "fingerprintLocation":"مكان البصمة  :",
+    "nothing":"لا يوجد",
+    "employeeNumber":"رقم الموظف",
+    "employeeName":"اسم الموظف",
+    "theDate":"التاريخ",
+    "action":"الإجراء"
+  },
+  "justifications": {
+    "summaryOfJustifications":"ملخص التبريرات",
+    "totalJustifications":"إجمالي التبريرات",
+    "expectedJustifications":"التبريرات المنتظرة",
+    "acceptableJustifications":"التبريرات المقبولة",
+    "rejectedJustifications":"التبريرات المرفوضة",
+    "tableOfJustifications":"جدول التبريرات",
+    "addJustification":"إضافة تبرير",
+    "orderNumber":"رقم الطلب",
+    "jobNumber":"الرقم الوظيفي",
+    "employeeName":"اسم الموظف",
+    "typeOfJustification":"نوع التبرير",
+    "requestStatusForJustification":"حالة الطلب للتبرير",
+    "theBeginning":"البدايه",
+    "theEnd": "النهاية",
+    "action":"الإجراء",
+    "seekingJustification":"طلب التبرير",
+    "setAsEssential":"تعيين كضرورية",
+    "pleaseSelectTheTypeOfJustification":"برجاء اختيار نوع التبرير",
+    "typeOfJustificationRequired":"نوع التبرير مطلوب",
+    "historyOfJustification":"تاريخ التبرير",
+    "notes":"الملاحظات",
+    "notesRequired":"الملاحظات مطلوب",
+    "justificationDateRequired":"تاريخ التبرير مطلوب",
+    "applicant":"صاحب الطلب",
+    "forMyself":"For myself",
+    "toAnEmployee":"لموظف",
+    "employee":"الموظف",
+    "employeeIsRequired":"الموظف مطلوب",
+    "attachAFile":"ارفاق ملف",
+    "selectTheFileToUpload":"اختار الملف ليتم رفعه",
+    "sendRequest":"إرسال الطلب",
+    "modificationOfJustification":"تعديل التبرير",
+    "yourRequestHasBeenSent":"تم ارسال طلبك",
+    "requestsForJustifications":"طلبات التبريرات",
+    "areYouSureTheRequestWillBeRejected":"هل متأكد من رفض الطلب؟",
+    "pleaseExplainWhyIfPossible":"برجاء توضيح السبب إن أمكن",
+    "theReasonOfRefuse":"سبب الرفض",
+    "pleaseWriteTheReasonForRejection":"برجاء كتابة سبب الرفض",
+    "toRetreat":"تراجع",
+    "rejectionOfTheApplication":"رفض الطلب",
+    "TheRequestHasBeenAccepted":"تم قبول الطلب",
+    "close":"اغلاق",
+    "theHistoryOfJustificationIsMultiple":"تاريخ التبرير متعدد",
+    "timeForJustification":"وقت التبرير",
+    "vacationTime":"وقت الاجازة",
+    "timeForJustificationIsRequired":"وقت التبرير مطلوب"
+
+
+
+
+
+
+
+
+
 
 
 

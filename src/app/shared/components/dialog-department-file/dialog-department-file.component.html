@@ -17,63 +17,90 @@
   
       </div> -->
       <div class="sectionTwo mb-3 line-bellow">
-        <label class="title">اسم الموظف</label>
+        <label class="title">{{"employees.employeeName"|translate}}</label>
         <div class="content-password">
-          {{info?.employeeName ? info?.employeeName : "لا يوجد"}}
+          <ng-container *ngIf="info?.employeeName">
+            {{info?.employeeName}}
+          </ng-container>
+          <ng-container *ngIf="!info?.employeeName">
+            {{"department.nothing"|translate}}
+          </ng-container>
         </div>
       </div>
       <div class="sectionTwo mb-3 line-bellow">
-        <label class="title">التاريخ</label>
+        <label class="title">{{"requests.theDate"|translate}}</label>
         <div class="content-password">
-          {{info?.date ? info?.date : "لا يوجد"}}
+          <ng-container *ngIf="info?.date">
+            {{info?.date}}
+          </ng-container>
+          <ng-container *ngIf="!info?.date">
+            {{"department.nothing"|translate}}
+          </ng-container>
         </div>
       </div>
    
       <div class="sectionTwo mb-3 line-bellow">
-        <label class="title">وقت الحضور</label>
+        <label class="title">{{"department.timeAttendance"|translate}}</label>
         <div class="content-password">
-          {{info?.checkInTime ? info?.checkInTime : "لا يوجد"}}
+
+          <ng-container *ngIf="info?.checkInTime">
+            {{info?.checkInTime}}
+          </ng-container>
+          <ng-container *ngIf="!info?.checkInTime">
+            {{"department.nothing"|translate}}
+          </ng-container>
         </div>
       </div>
       <div class="sectionTwo mb-3 line-bellow">
-        <label class="title">وقت الخروج</label>
+        <label class="title">{{"department.timeToGoOut"|translate}}</label>
         <div class="content-password">
-          {{info?.checkOutTime ? info?.checkOutTime : "لا يوجد"}}
+          <ng-container *ngIf="info?.checkOutTime">
+            {{info?.checkOutTime}}
+          </ng-container>
+          <ng-container *ngIf="!info?.checkOutTime">
+            {{"department.nothing"|translate}}
+          </ng-container>
         </div>
       </div>
       <div class="sectionTwo mb-3 line-bellow">
-        <label class="title">الحالة</label>
+        <label class="title">{{"department.theCondition"|translate}}</label>
         <div class="content-password">
-          {{info?.status ? info?.status : "لا يوجد"}}
+          <ng-container *ngIf="info?.status">
+            {{info?.status}}
+          </ng-container>
+          <ng-container *ngIf="!info?.status">
+            {{"department.nothing"|translate}}
+          </ng-container>
         </div>
       </div>
       <div class="sectionTwo mb-3 line-bellow">
-        <label class="title">الفرق</label>
+        <label class="title">{{"department.theDifference"|translate}}</label>
         <div class="content-password">
-          {{info?.timeGap ? info?.timeGap : "لا يوجد"}}
+          <ng-container *ngIf="info?.timeGap">
+            {{info?.timeGap}}
+          </ng-container>
+          <ng-container *ngIf="!info?.timeGap">
+            {{"department.nothing"|translate}}
+          </ng-container>
         </div>
       </div>
  
       <div class="sectionTwo mb-3 line-bellow">
-        <label class="title">البصمة</label>
-        <ng-container *ngFor="let finger of info.fingerprints">
+        <label class="title">{{"department.fingerprint"|translate}}</label>
+        <ng-container *ngFor="let finger of info?.fingerprints">
             <div class="content-password">
-                <span class="d-block">طريقه التعرف : {{finger?.recognitionWay ? finger?.recognitionWay : "لا يوجد"}}</span>
-                <span class="d-block">الوقت : {{finger?.time ? finger?.time : "لا يوجد"}}</span>
-                <span class="d-block">النوع : {{finger?.type ? finger?.type : "لا يوجد"}}</span>
-                <span class="d-block">مكان البصمة : {{finger?.zoneName ? finger?.zoneName : "لا يوجد"}}</span>
+                <span class="d-block">{{"department.howToIdentify"|translate}} {{finger?.recognitionWay ? finger?.recognitionWay : "لا يوجد"}}</span>
+                <span class="d-block">{{"department.theTime"|translate}} {{finger?.time ? finger?.time : "لا يوجد"}}</span>
+                <span class="d-block">{{"department.type"|translate}} {{finger?.type ? finger?.type : "لا يوجد"}}</span>
+                <span class="d-block">{{"department.fingerprintLocation"|translate}} {{finger?.zoneName ? finger?.zoneName : "لا يوجد"}}</span>
               </div>
         </ng-container>
-        <ng-container *ngIf="info.fingerprints.length ===0">
-            <div class="content-password">لا يوجد</div>
+        <ng-container *ngIf="info?.fingerprints?.length ===0">
+            <div class="content-password">{{"department.nothing"|translate}}</div>
         </ng-container>
-        
-
       </div>
     </div>
-  
   </div>
-  
   <div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
     <mat-spinner></mat-spinner>
   </div>

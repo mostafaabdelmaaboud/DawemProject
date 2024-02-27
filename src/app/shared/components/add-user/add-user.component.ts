@@ -229,7 +229,6 @@ export class AddUserComponent {
               if(startIndex >=0) {
                 slicedString = data.mobileNumber.slice(0, startIndex);
                 slicedString += data.mobileNumber.slice(startIndex + this.code.length);
-                console.log(slicedString)
               }
               this.addBranchGroupForm.get("MobileNumber")?.setValue(slicedString);
               this.addBranchGroupForm.get("IsActive")?.setValue(data.isActive);

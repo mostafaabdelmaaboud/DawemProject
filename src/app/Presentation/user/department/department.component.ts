@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogAddTimeComponent } from 'src/app/shared/components/dialog-add-time/dialog-add-time.component';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
@@ -92,6 +92,7 @@ export class DepartmentComponent {
   categories: any[] = [
   ];
   private departmentService = inject(DepartmentService);
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   public configs: PaginationInstance = {
     id: "custom",
@@ -136,6 +137,8 @@ export class DepartmentComponent {
 
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
+
     });
   }
   ngOnInit(): void {
@@ -157,7 +160,83 @@ export class DepartmentComponent {
       { name: '25', code: 25 },
 
     ];
-
+    this.translate.get("department").subscribe(data => {
+      this.columns =  [
+        {
+          name: data.employeeNumber,
+          field: "orderNumber",
+        },
+        {
+          name:  data.employeeName,
+          field: "name",
+        },
+        {
+          name: data.theDate,
+          field: "date"
+        },
+        {
+          name: data.timeAttendance,
+          field: "audience"
+        },
+        {
+          name: data.timeToGoOut,
+          field: "dismissing"
+        },
+        {
+          name:  data.theCondition,
+          field: "status"
+        },
+        {
+          name: data.theDifference,
+          field: "timeGap"
+        },
+        {
+          name: data.action,
+          field: "actions"
+        }
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("department").subscribe(data => {
+        this.columns =  [
+          {
+            name: data.employeeNumber,
+            field: "orderNumber",
+          },
+          {
+            name:  data.employeeName,
+            field: "name",
+          },
+          {
+            name: data.theDate,
+            field: "date"
+          },
+          {
+            name: data.timeAttendance,
+            field: "audience"
+          },
+          {
+            name: data.timeToGoOut,
+            field: "dismissing"
+          },
+          {
+            name:  data.theCondition,
+            field: "status"
+          },
+          {
+            name: data.theDifference,
+            field: "timeGap"
+          },
+          {
+            name: data.action,
+            field: "actions"
+          }
+        ];
+      })
+      // this.subscription = this.translate.stream('primeng').subscribe(data => {
+      //   this.config.setTranslation(data);
+      // });  
+    })
     this.getInformation();
 
     this.getDepartment(this.filteration)
@@ -252,12 +331,16 @@ export class DepartmentComponent {
     })
   }
   dialogEmployeeFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogDepartmentFileComponent, {
-      width: "40vw",
-      data: {
-        title: "ملف الحضور والانصراف"
-      },
-    });
+    let dialogRefAddCurrency!:MatDialogRef<DialogDepartmentFileComponent, any>;
+    this.translate.get("department").subscribe(data => {
+      dialogRefAddCurrency = this.dialog.open(DialogDepartmentFileComponent, {
+        width: "40vw",
+        data: {
+          title: data.attendanceAndDepartureFile
+        },
+      });
+    })
+
     dialogRefAddCurrency.componentInstance.id = data.id
 
   }
@@ -296,114 +379,7 @@ export class DepartmentComponent {
     this.filteration = { ...this.filteration, PageNumber: event.page };
     this.getDepartment(this.filteration)
   }
-  addEmployment() {
-    const dialogRefAddCurrency = this.dialog.open(DialogAddTimeComponent, {
-      width: "50vw",
-      data: {
-        title: "إضافة دوام",
-        titleDropdownFirst: "اسم الموظف <span class='color-red'>*</span>",
-        placeholderDropdownFirst: "اسم الموظف",
-        validationtitleDropdownFirst: "اسم الموظف مطلوب",
-        titleCalendarFirst: "التاريخ <span class='color-red'>*</span>",
-        validationCalendarFirst: "التاريخ مطلوب",
-        placeholderCalendarFirst: "بداية - نهاية",
-        titleCalendarSecond: "وقت الحضور <span class='color-red'>*</span>",
-        placeholderCalendarSecond: "وقت الحضور",
-        validationCalendarSecond: "وقت الحضور مطلوب",
-        titleCalendarThird: "وقت الانصراف <span class='color-red'>*</span>",
-        placeholderCalendarThird: "وقت الانصراف ",
-        validationCalendarThird: "وقت الانصراف مطلوب",
-        titleNotes: "ملاحظات",
-        placeholdeNotes: "برجاء كتابة الملاحظات هنا",
-        titleClose: "تراجع",
-        buttonSend: "إضافة الدوام"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    // dialogRefAddCurrency.componentInstance.list = this.categories;
 
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      dialogRefAddCurrency.close();
-
-      const succressDialog = this.dialog.open(ToastSuccessComponent, {
-        width: "30vw",
-        data: {
-          title: "تم ارسال طلبك",
-          message: "طلبك في انتظار الموافقة، ويمكنك متابعة حالة الطلب من صفحة التبريرات",
-          buttonSend: "طلبات التبريرات"
-        },
-      });
-      setTimeout(() => {
-        succressDialog.close();
-
-      }, 2000);
-      succressDialog.componentInstance.submitted = true;
-      succressDialog.componentInstance.submitClicked.subscribe(result => {
-        succressDialog.close();
-
-      })
-      dialogRefAddCurrency.componentInstance.submitted = false;
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
-
-      }
-    });
-  }
-  editEmployment() {
-    const dialogRefAddCurrency = this.dialog.open(DialogAddTimeComponent, {
-      width: "50vw",
-      data: {
-        title: "تعديل دوام",
-        titleDropdownFirst: "اسم الموظف <span class='color-red'>*</span>",
-        placeholderDropdownFirst: "اسم الموظف",
-        validationtitleDropdownFirst: "اسم الموظف مطلوب",
-        titleCalendarFirst: "التاريخ <span class='color-red'>*</span>",
-        validationCalendarFirst: "التاريخ مطلوب",
-        placeholderCalendarFirst: "بداية - نهاية",
-        titleCalendarSecond: "وقت الحضور <span class='color-red'>*</span>",
-        placeholderCalendarSecond: "وقت الحضور",
-        validationCalendarSecond: "وقت الحضور مطلوب",
-        titleCalendarThird: "وقت الانصراف <span class='color-red'>*</span>",
-        placeholderCalendarThird: "وقت الانصراف ",
-        validationCalendarThird: "وقت الانصراف مطلوب",
-        titleNotes: "ملاحظات",
-        placeholdeNotes: "برجاء كتابة الملاحظات هنا",
-        titleClose: "تراجع",
-        buttonSend: "إضافة الدوام"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    // dialogRefAddCurrency.componentInstance.list = this.categories;
-
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      dialogRefAddCurrency.close();
-
-      const succressDialog = this.dialog.open(ToastSuccessComponent, {
-        width: "30vw",
-        data: {
-          title: "تم ارسال طلبك",
-          message: "طلبك في انتظار الموافقة، ويمكنك متابعة حالة الطلب من صفحة التبريرات",
-          buttonSend: "طلبات التبريرات"
-        },
-      });
-      setTimeout(() => {
-        succressDialog.close();
-
-      }, 2000);
-      succressDialog.componentInstance.submitted = true;
-      succressDialog.componentInstance.submitClicked.subscribe(result => {
-        succressDialog.close();
-
-      })
-      dialogRefAddCurrency.componentInstance.submitted = false;
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
-
-      }
-    });
-  }
   deleteRow(data: any) {
     const reasonOfRefuseDialog = this.dialog.open(DialogCloseRadioButtonsComponent, {
       width: "50vw",
@@ -511,6 +487,10 @@ export class DepartmentComponent {
   }
   changeLang(lang: string) {
     this.translate.use(lang);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
   searchKeyword(val: any) {
 
