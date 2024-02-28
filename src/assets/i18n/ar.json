@@ -264,24 +264,82 @@
     "timeForJustification":"وقت التبرير",
     "vacationTime":"وقت الاجازة",
     "timeForJustificationIsRequired":"وقت التبرير مطلوب"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  },
+  "zones": {
+    "summaryOfSites":"ملخص المواقع",
+    "totalLocations":"اجمالي المواقع",
+    "active":"النشط",
+    "brokenSites":"المواقع المعطلة",
+    "inactive":"الغير نشط",
+    "registerOfAreas":"سجل المناطق",
+    "addARegion":"إضافة منطقة",
+    "setAsActive":"تعيين كنشط",
+    "employeeCode":"كود الموظف",
+    "distance":"المسافه",
+    "distanceRequired":"المسافه مطلوب",
+    "theNameOfTheZone":"اسم الزون",
+    "zoneNameIsRequired":"اسم الزون مطلوب",
+    "toRetreat":"تراجع",
+    "yourRequestHasBeenSent":"تم ارسال طلبك",
+    "areaRequests":"طلبات المناطق",
+    "editRegion":"تعديل المنطقة",
+    "areaFile":"ملف المنطقة",
+    "makeSureYourRegionsAccountIsSuspended":"متأكد من تعليق حساب المنطقة",
+    "pleaseExplainTheReason":"برجاء توضيح السبب إن أمكن ليظهر للمنطقة عند محاولة تسجيل الدخول",
+    "reasonForComment":"سبب التعليق",
+    "pleaseWriteTheReasonForRejectionSoThatItAppearsInTheRegion":"برجاء كتابة سبب الرفض ليظهر للمنطقة",
+    "regionComment":"تعليق المنطقة",
+    "searchOnMap":"بحث في الخريطة",
+    "areaCode":"كود المنطقة",
+    "zoneName":"اسم الزون",
+    "longitudinalLine":"الخط الطولي",
+    "latitudinalLine":"الخط العرضي",
+    "action":"الإجراء",
+    "theNumber":"الرقم",
+    "setAsNecessary":"تعيين كضرورية"
+  },
+  "vacations":{
+    "vacationSummary":"ملخص الاجازات",
+    "totalVacations":"اجمالي الاجازات",
+    "expectedVacations":"الاجازات المنتظرة",
+    "acceptableVacations":"الاجازات المقبولة",
+    "deniedVacations":"الاجازات المرفوضة",
+    "vacations":"الاجازات",
+    "addARequest":"إضافة طلب",
+    "aVacationRequest":"طلب اجازة",
+    "setAsEssential":"تعيين كضرورية",
+    "thekindOfHoliday":"نوع الاجازة",
+    "pleaseSelectTheTypeOfVacation":"برجاء اختيار نوع الاجازة",
+    "typeOfLeaveRequired":"نوع الاجازه مطلوب",
+    "vacationDate":"تاريخ الاجازة",
+    "vacationDateRequired":"تاريخ الاجازة مطلوب",
+    "applicant":"صاحب الطلب",
+    "forMyself":"لنفسي",
+    "toAnEmployee":"لموظف",
+    "employee":"الموظف",
+    "employeeWanted":"الموظف مطلوب",
+    "attachAFile": "ارفاق ملف",
+    "selectTheFileToUpload":"اختار الملف ليتم رفعه",
+    "sendRequest":"إرسال الطلب",
+    "vacationModification":"تعديل اجازة",
+    "yourRequestHasBeenSent":"تم ارسال طلبك",
+    "vacationRequests":"طلبات الاجازات",
+    "theRequestHasBeenAccepted":"تم قبول الطلب",
+    "close":"اغلاق",
+    "vacationFile":"ملف الاجازة",
+    "employeeNumber":"الرقم الموظف",
+    "files":"الملفات",
+    "theBeginning":"البداية",
+    "theEnd":"النهاية",
+    "orderStatus":"حالة الطلب",
+    "balanceAfterOrdering":"الرصيد بعد الطلب",
+    "multipleVacationDates":"تاريخ الاجازة متعدد",
+    "maximumFileSize":"الحد الأقصى لحجم الملف 2 ميجابايت",
+    "orderNumber":"رقم الطلب",
+    "jobNumber":"رقم الوظيفي",
+    "employeeName":"اسم الموظف",
+    "balanceAfterOrder":"الرصيد بعد الطلب",
+    "action":"الإجراء"
 
 
 

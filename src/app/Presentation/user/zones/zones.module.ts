@@ -8,6 +8,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { MatRadioModule } from '@angular/material/radio';
 import { HttpClientModule } from '@angular/common/http';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatDialogModule,
     InputSwitchModule,
     MatRadioModule,
+    TranslateModule,
+
     SharedModule
   ]
 })

@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { RequestVacationComponent } from 'src/app/shared/components/request-vacation/request-vacation.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
@@ -30,6 +30,7 @@ export class VacationsComponent {
   itemsPerPage = 5;
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   columns: any[] = [
     {
@@ -139,6 +140,8 @@ export class VacationsComponent {
 
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
+
     });
   }
   ngOnInit(): void {
@@ -169,6 +172,91 @@ export class VacationsComponent {
       { name: '2', code: 2 },
       { name: '5', code: 5 }
     ];
+    this.translate.get("vacations").subscribe(data => {
+      this.columns = [
+        {
+          name: data.orderNumber,
+          field: "orderNumber",
+        },
+        {
+          name: data.jobNumber,
+          field: "employeeCode",
+        },
+        {
+          name: data.employeeName,
+          field: "employeeName",
+        },
+        {
+          name: data.thekindOfHoliday,
+          field: "kindOfHoliday"
+        },
+        {
+          name: data.theBeginning,
+          field: "beginning"
+        },
+        {
+          name: data.theEnd,
+          field: "final"
+        },
+        {
+          name: data.orderStatus,
+          field: "reason"
+        },
+        {
+          name: data.balanceAfterOrder,
+          field: "balanceAfterRequest"
+        },
+        {
+          name:data.action,
+          field: "actions"
+        }
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("vacations").subscribe(data => {
+        this.columns = [
+          {
+            name: data.orderNumber,
+            field: "orderNumber",
+          },
+          {
+            name: data.jobNumber,
+            field: "employeeCode",
+          },
+          {
+            name: data.employeeName,
+            field: "employeeName",
+          },
+          {
+            name: data.thekindOfHoliday,
+            field: "kindOfHoliday"
+          },
+          {
+            name: data.theBeginning,
+            field: "beginning"
+          },
+          {
+            name: data.theEnd,
+            field: "final"
+          },
+          {
+            name: data.orderStatus,
+            field: "reason"
+          },
+          {
+            name: data.balanceAfterOrder,
+            field: "balanceAfterRequest"
+          },
+          {
+            name:data.action,
+            field: "actions"
+          }
+        ];
+      })
+      // this.subscription = this.translate.stream('primeng').subscribe(data => {
+      //   this.config.setTranslation(data);
+      // });  
+    })
     this.getInformation();
     this.getVacations(this.filteration);
 
@@ -363,28 +451,32 @@ export class VacationsComponent {
     this.getVacations(this.filteration);
   }
   requestVacation() {
-    const dialogRefAddCurrency = this.dialog.open(RequestVacationComponent, {
-      width: "50vw",
-      data: {
-        title: "طلب اجازة",
-        setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاجازة <span class='color-red'>*</span>",
-        placeholderVacationTypeId: " برجاء اختيار نوع الاجازة",
-        VacationTypeIdValidation: "نوع الاجازه مطلوب",
-        titleCalendar: "تاريخ الاجازة <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ الاجازة",
-        dateTaskValidation: "تاريخ الاجازة مطلوب",
-        labelRadioButton: "صاحب الطلب",
-        firstRadio: "لنفسي",
-        secondRadio: "لموظف",
-        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
-        placeholderEmployeeId: "الموظف",
-        EmployeeIdValidation: "الموظف مطلوب",
-        uploadFile: "ارفاق ملف",
-        chooseLabel: "اختار الملف ليتم رفعه",
-        buttonSend: "إرسال الطلب"
-      },
-    });
+    let dialogRefAddCurrency!:MatDialogRef<RequestVacationComponent, any>;
+    this.translate.get("vacations").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(RequestVacationComponent, {
+        width: "50vw",
+        data: {
+          title: translate.aVacationRequest,
+          setAsNecessary: translate.setAsEssential,
+          titleVacationTypeId: translate.thekindOfHoliday+" <span class='color-red'>*</span>",
+          placeholderVacationTypeId: translate.pleaseSelectTheTypeOfVacation,
+          VacationTypeIdValidation: translate.typeOfLeaveRequired,
+          titleCalendar: translate.vacationDate+" <span class='color-red'>*</span>",
+          placeholderCalendar: translate.vacationDate,
+          dateTaskValidation: translate.vacationDateRequired,
+          labelRadioButton: translate.applicant,
+          firstRadio: translate.forMyself,
+          secondRadio: translate.toAnEmployee,
+          titleEmployeeId: translate.employee+" <span class='color-red'>*</span>",
+          placeholderEmployeeId: translate.employee,
+          EmployeeIdValidation: translate.employeeWanted,
+          uploadFile:translate.attachAFile,
+          chooseLabel: translate.selectTheFileToUpload,
+          buttonSend: translate.sendRequest
+        },
+      });
+    })
+ 
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editVacation = false;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
@@ -426,16 +518,19 @@ export class VacationsComponent {
             dialogRefAddCurrency.componentInstance.submitted = true;
 
             dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات الاجازات"
-
-              },
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("vacations").subscribe(translate => {
+               succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.vacationRequests
+  
+                },
+              });
             });
+        
             this.getVacations(this.filteration);
 
             setTimeout(() => {
@@ -463,28 +558,32 @@ export class VacationsComponent {
     });
   }
   editVacation(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(RequestVacationComponent, {
-      width: "50vw",
-      data: {
-        title: "تعديل اجازة",
-        setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاجازة <span class='color-red'>*</span>",
-        placeholderVacationTypeId: " برجاء اختيار نوع الاجازة",
-        VacationTypeIdValidation: "نوع الاجازه مطلوب",
-        titleCalendar: "تاريخ الاجازة <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ الاجازة",
-        dateTaskValidation: "تاريخ الاجازة مطلوب",
-        labelRadioButton: "صاحب الطلب",
-        firstRadio: "لنفسي",
-        secondRadio: "لموظف",
-        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
-        placeholderEmployeeId: "الموظف",
-        EmployeeIdValidation: "الموظف مطلوب",
-        uploadFile: "ارفاق ملف",
-        chooseLabel: "اختار الملف ليتم رفعه",
-        buttonSend: "إرسال الطلب"
-      },
-    });
+    let dialogRefAddCurrency!:MatDialogRef<RequestVacationComponent, any>;
+    this.translate.get("vacations").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(RequestVacationComponent, {
+        width: "50vw",
+        data: {
+          title: translate.vacationModification,
+          setAsNecessary: translate.setAsEssential,
+          titleVacationTypeId: translate.thekindOfHoliday+" <span class='color-red'>*</span>",
+          placeholderVacationTypeId: translate.pleaseSelectTheTypeOfVacation,
+          VacationTypeIdValidation: translate.typeOfLeaveRequired,
+          titleCalendar: translate.vacationDate+" <span class='color-red'>*</span>",
+          placeholderCalendar: translate.vacationDate,
+          dateTaskValidation: translate.vacationDateRequired,
+          labelRadioButton: translate.applicant,
+          firstRadio: translate.forMyself,
+          secondRadio: translate.toAnEmployee,
+          titleEmployeeId: translate.employee+" <span class='color-red'>*</span>",
+          placeholderEmployeeId: translate.employee,
+          EmployeeIdValidation: translate.employeeWanted,
+          uploadFile:translate.attachAFile,
+          chooseLabel: translate.selectTheFileToUpload,
+          buttonSend: translate.sendRequest
+        },
+      });
+    })
+
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editVacation = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
@@ -530,16 +629,19 @@ export class VacationsComponent {
             dialogRefAddCurrency.componentInstance.submitted = true;
 
             dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات الاجازات"
-
-              },
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("vacations").subscribe(translate => {
+               succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.vacationRequests
+  
+                },
+              });
             });
+
             this.getVacations(this.filteration);
 
             setTimeout(() => {
@@ -573,14 +675,19 @@ export class VacationsComponent {
       {
         next: res => {
           this.getVacations(this.filteration);
-          const succressDialog = this.dialog.open(ToastSuccessComponent, {
-            width: "30vw",
-            data: {
-              title: "تم قبول الطلب",
-              message: res.message,
-              buttonSend: "اغلاق"
-            },
+          let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+          this.translate.get("vacations").subscribe(translate => {
+             succressDialog = this.dialog.open(ToastSuccessComponent, {
+              width: "30vw",
+              data: {
+                title: translate.theRequestHasBeenAccepted,
+                message: res.message,
+                buttonSend: translate.close
+
+              },
+            });
           });
+ 
           setTimeout(() => {
             succressDialog.close();
 
@@ -599,12 +706,16 @@ export class VacationsComponent {
 
   }
   dialogVacationFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogVacationFileComponent, {
-      width: "40vw",
-      data: {
-        title: "ملف الاجازة"
-      },
-    });
+    let dialogRefAddCurrency!:MatDialogRef<DialogVacationFileComponent, any>;
+    this.translate.get("vacations").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(DialogVacationFileComponent, {
+        width: "40vw",
+        data: {
+          title: translate.vacationFile
+        },
+      });
+    })
+
     dialogRefAddCurrency.componentInstance.id = data.id
 
   }
@@ -660,5 +771,9 @@ export class VacationsComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

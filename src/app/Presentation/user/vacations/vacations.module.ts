@@ -5,6 +5,7 @@ import { VacationsRoutingModule } from './vacations-routing.module';
 import { VacationsComponent } from './vacations.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -15,6 +16,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     CommonModule,
     VacationsRoutingModule,
     MatDialogModule,
+    TranslateModule,
+
     SharedModule
   ]
 })

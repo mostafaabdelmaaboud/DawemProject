@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import {  Subscription, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import {  Subject, Subscription, debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
 import { ToastrService } from 'ngx-toastr';
@@ -101,6 +101,8 @@ export class ZonesComponent {
   private zonesService = inject(ZonesService);
   cards!: any;
   spinnerCards = false;
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
   constructor(
     private config: PrimeNGConfig, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
@@ -132,6 +134,8 @@ export class ZonesComponent {
 
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
+
     });
   }
   ngOnInit(): void {
@@ -158,6 +162,67 @@ export class ZonesComponent {
         this.listDirectManager.push({ name: jobTitle.name, key: jobTitle.id })
       });
     });
+    this.translate.get("zones").subscribe(data => {
+      this.columns = [
+        {
+          name: data.areaCode,
+          field: "zoneNumber",
+        },
+        {
+          name: data.zoneName,
+          field: "zoneName",
+        },
+        {
+          name: data.longitudinalLine,
+          field: "Latit"
+        },
+        {
+          name: data.latitudinalLine,
+          field: "Long"
+        },
+        {
+          name: data.distance,
+          field: "Radius"
+        },
+        {
+          name: data.action,
+          field: "actions"
+        }
+    
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("zones").subscribe(data => {
+        this.columns = [
+          {
+            name: data.areaCode,
+            field: "zoneNumber",
+          },
+          {
+            name: data.zoneName,
+            field: "zoneName",
+          },
+          {
+            name: data.longitudinalLine,
+            field: "Latit"
+          },
+          {
+            name: data.latitudinalLine,
+            field: "Long"
+          },
+          {
+            name: data.distance,
+            field: "Radius"
+          },
+          {
+            name: data.action,
+            field: "actions"
+          }
+      
+        ];
+      })
+     
+    })
     this.getInformation();
     this.getZones(this.filteration);
     this.getListDepartment();
@@ -244,10 +309,7 @@ export class ZonesComponent {
     this.getZones(filteration);
   }
   numberOfRowsPerPage(data: any) {
-
-
     this.filteration = { ...this.filteration, PageSize: data.value.code };
-
     this.getZones(this.filteration)
   }
   getZones(filteration: any) {
@@ -301,23 +363,27 @@ export class ZonesComponent {
     this.getZones(this.filteration);
   }
   addAnZones() {
-    const dialogRefAddCurrency = this.dialog.open(AddZoneComponent, {
-      width: "60vw",
-      data: {
-        title: "إضافة منطقة",
-        setAsNecessary: "تعيين كنشط",
-        titleFieldDisabled: "كود الموظف",
-        code: "#001093",
-        radiusNumber: "المسافه <span class='color-red'>*</span>",
-        placeholdeRadius: "المسافه",
-        validationtitleRadius: "المسافه مطلوب",
-        fieldFirst: "اسم الزون <span class='color-red'>*</span>",
-        placeholdefieldFirst: "اسم الزون",
-        validationtitlefieldFirst: "اسم الزون مطلوب",
-        buttonSend: "إضافة منطقة",
-        titleClose: "تراجع"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<AddZoneComponent, any>;
+    this.translate.get("zones").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(AddZoneComponent, {
+        width: "60vw",
+        data: {
+          title: translate.addARegion,
+          setAsNecessary: translate.setAsActive,
+          titleFieldDisabled: translate.employeeCode,
+          code: "#001093",
+          radiusNumber: translate.distance+" <span class='color-red'>*</span>",
+          placeholdeRadius: translate.distance,
+          validationtitleRadius: translate.distanceRequired,
+          fieldFirst: translate.theNameOfTheZone+" <span class='color-red'>*</span>",
+          placeholdefieldFirst: translate.theNameOfTheZone,
+          validationtitlefieldFirst: translate.zoneNameIsRequired,
+          buttonSend: translate.addARegion,
+          titleClose: translate.toRetreat
+        },
+      });
     });
+ 
     dialogRefAddCurrency.componentInstance.submitted = true;
     // dialogRefAddCurrency.componentInstance.list = this.categories;
     dialogRefAddCurrency.componentInstance.editEmployee = false;
@@ -344,15 +410,18 @@ export class ZonesComponent {
             dialogRefAddCurrency.componentInstance.submitted = true;
 
             dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات المناطق"
-              },
-            });
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("zones").subscribe(translate => {
+                succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.areaRequests
+                },
+              });
+            })
+     
             this.getZones(this.filteration);
 
             setTimeout(() => {
@@ -379,6 +448,90 @@ export class ZonesComponent {
       )
 
 
+    });
+    dialogRefAddCurrency.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+  editAnZones(data: any) {
+    let dialogRefAddCurrency!:MatDialogRef<AddZoneComponent, any>;
+    this.translate.get("zones").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(AddZoneComponent, {
+        width: "50vw",
+        data: {
+          title: translate.editRegion,
+          setAsNecessary: translate.setAsActive,
+          titleFieldDisabled: translate.employeeCode,
+          code: data.code,
+          radiusNumber: translate.distance+" <span class='color-red'>*</span>",
+          placeholdeRadius: translate.distance,
+          validationtitleRadius: translate.distanceRequired,
+          fieldFirst: translate.theNameOfTheZone+" <span class='color-red'>*</span>",
+          placeholdefieldFirst: translate.theNameOfTheZone,
+          validationtitlefieldFirst: translate.zoneNameIsRequired,
+          buttonSend: translate.editRegion,
+          titleClose: translate.toRetreat
+        },
+      });
+    })
+  
+    dialogRefAddCurrency.componentInstance.submitted = true;
+    dialogRefAddCurrency.componentInstance.editEmployee = true;
+
+    dialogRefAddCurrency.componentInstance.id = data.id;
+    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+      let formData = {};
+
+      formData = {
+        id: data.id,
+        name: result.name,
+        isActive: result.isActive,
+        latitude: result.latitude,
+        longitude: result.longitude,
+        radius: result.radius,
+      }
+
+
+      dialogRefAddCurrency.componentInstance.submitted = false;
+      this.zonesService.updateZone(formData).subscribe(
+        {
+          next: data => {
+
+            dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.close();
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("zones").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.areaRequests
+                },
+              });
+            })
+     
+            this.getZones(this.filteration);
+
+            setTimeout(() => {
+              succressDialog.close();
+
+            }, 2000);
+            succressDialog.componentInstance.submitted = true;
+            succressDialog.componentInstance.submitClicked.subscribe(result => {
+              succressDialog.close();
+            })
+          },
+          error: err => {
+            dialogRefAddCurrency.close();
+            dialogRefAddCurrency.componentInstance.submitted = true;
+
+          }
+        }
+      )
+      dialogRefAddCurrency.componentInstance.submitted = false;
     });
     dialogRefAddCurrency.afterClosed().subscribe(result => {
       if (result) {
@@ -499,105 +652,37 @@ export class ZonesComponent {
         break;
     }
   }
-  editAnZones(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddZoneComponent, {
-      width: "50vw",
-      data: {
-        title: "تعديل المنطقة",
-        setAsNecessary: "تعيين كنشط",
-        titleFieldDisabled: "كود المنطقة",
-        code: data.code,
-        radiusNumber: "المسافه <span class='color-red'>*</span>",
-        placeholdeRadius: "المسافه",
-        validationtitleRadius: "المسافه مطلوب",
-        fieldFirst: "اسم الزون <span class='color-red'>*</span>",
-        placeholdefieldFirst: "اسم الزون",
-        validationtitlefieldFirst: "اسم الزون مطلوب",
-        
-        buttonSend: "تعديل المنطقة",
-        titleClose: "تراجع"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editEmployee = true;
-
-    dialogRefAddCurrency.componentInstance.id = data.id;
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData = {};
-
-      formData = {
-        id: data.id,
-        name: result.name,
-        isActive: result.isActive,
-        latitude: result.latitude,
-        longitude: result.longitude,
-        radius: result.radius,
-      }
-
-
-      dialogRefAddCurrency.componentInstance.submitted = false;
-      this.zonesService.updateZone(formData).subscribe(
-        {
-          next: data => {
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-            dialogRefAddCurrency.close();
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات المناطق"
-              },
-            });
-            this.getZones(this.filteration);
-
-            setTimeout(() => {
-              succressDialog.close();
-
-            }, 2000);
-            succressDialog.componentInstance.submitted = true;
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-              succressDialog.close();
-            })
-          },
-          error: err => {
-            dialogRefAddCurrency.close();
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
-          }
-        }
-      )
-      dialogRefAddCurrency.componentInstance.submitted = false;
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
-
-      }
-    });
-  }
+ 
   dialogZonesFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogZoneFileComponent, {
-      width: "40vw",
-      data: {
-        title: "ملف المنطقة"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<DialogZoneFileComponent, any>;
+    this.translate.get("zones").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(DialogZoneFileComponent, {
+        width: "40vw",
+        data: {
+          title: translate.areaFile
+        },
+      });
     });
+
     dialogRefAddCurrency.componentInstance.id = data.id
 
   }
   reasonOfRefuse(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
-      width: "50vw",
-      data: {
-        title: "متأكد من تعليق حساب المنطقة",
-        message: "برجاء توضيح السبب إن أمكن ليظهر للمنطقة عند محاولة تسجيل الدخول",
-        titleReasonOfRefuse: "سبب التعليق",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض ليظهر للمنطقة",
-        titleClose: "تراجع",
-        buttonSend: "تعليق المنطقة"
-      },
-    });
+    let reasonOfRefuseDialog!:MatDialogRef<DialogCloseComponent, any>;
+    this.translate.get("zones").subscribe(translate => {
+        reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
+        width: "50vw",
+        data: {
+          title: translate.makeSureYourRegionsAccountIsSuspended,
+          message: translate.pleaseExplainTheReason,
+          titleReasonOfRefuse: translate.reasonForComment,
+          placeholdeReasonOfRefuse: translate.pleaseWriteTheReasonForRejectionSoThatItAppearsInTheRegion,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.regionComment
+        },
+      });
+    })
+
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
@@ -666,5 +751,9 @@ export class ZonesComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

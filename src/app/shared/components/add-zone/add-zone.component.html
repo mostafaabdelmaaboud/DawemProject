@@ -40,9 +40,9 @@
       </div>
       <div class="mb-3 content-map">
         <div class="search-map mb-3">
-          <label for="" class="label-input mb-2">بحث في الخريطة</label>
+          <label for="" class="label-input mb-2">{{"zones.searchOnMap"|translate}} </label>
           <div class="content-password">
-            <input type="text" pInputText #searchMapRef placeholder="ابحث في الخريطة" class="w-100" />
+            <input type="text" pInputText #searchMapRef [placeholder]="'zones.searchOnMap'|translate" class="w-100" />
           </div>
         </div>
         <div class="body-map">
@@ -86,7 +86,7 @@
           </div>
           <div class="alert alert-danger"
           *ngIf="getControl('radius')?.hasError('min') && getControl('radius')?.dirty">
-          اقل رقم 0
+          {{"employees.lowestNumber"|translate}}
         </div>
         </div>
       </div>

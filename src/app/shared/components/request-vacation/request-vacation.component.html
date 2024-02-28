@@ -104,8 +104,7 @@
               <div class="container-alerts mt-2"
                 *ngIf="dateTaskMultiple &&  !getControl('dateTask')?.hasError('required')">
                 <div class="alert alert-danger">
-                  تاريخ الاجازة متعدد
-
+                  {{'vacations.multipleVacationDates'|translate}}
                 </div>
 
               </div>
@@ -132,12 +131,12 @@
 
                   </div>
                   <div class="p-fileupload-filename">
-                    <span class="d-block">name:</span>
+                    <span class="d-block">{{'employees.name'|translate}}:</span>
                     {{ file.fileUpload.name
                     }}
                   </div>
                   <div>
-                    <span class="d-block">size:</span>
+                    <span class="d-block">{{'employees.size'|translate}}:</span>
                     {{
                     file.fileUpload.size }}
                   </div>
@@ -154,7 +153,7 @@
               </ul>
             </ng-template>
           </p-fileUpload>
-          <span class="maximum-size">الحد الأقصى لحجم الملف 2 ميجابايت</span>
+          <span class="maximum-size">{{'vacations.maximumFileSize'|translate}}</span>
         </div>
         <!--
         <div class="container-alerts mb-2" *ngIf="uploadedCommercialRegFiles.length<= 0 && requiredCommercialRegFiles">
