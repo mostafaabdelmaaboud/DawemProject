@@ -10,50 +10,75 @@
   </header>
   <div class="body-dialog p-15 f-s-16">
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">تعيين كنشط</label>
+      <label class="title">{{"users.setAsActive"|translate}}</label>
       <div class="content-password">
-        {{info?.isActive ? 'نشط' : 'غير نشط'}}
+        <ng-container *ngIf="info?.isActive">
+          {{"employees.active"|translate}}
+        </ng-container>
+        <ng-container *ngIf="!info?.isActive">
+          {{"employees.Inactive"|translate}}
+        </ng-container>
       </div>
 
     </div>
 
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">الاسم</label>
+      <label class="title">{{"users.theName"|translate}}</label>
       <div class="content-password">
-        {{info?.name ? info?.name : "لا يوجد"}}
+        <ng-container *ngIf="info?.name">
+          {{info?.name}}
+        </ng-container>
+        <ng-container *ngIf="!info?.name">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">البريد الالكتروني</label>
+      <label class="title">{{"users.email"|translate}}</label>
       <div class="content-password">
-        {{info?.email ? info?.email : "لا يوجد"}}
+        <ng-container *ngIf="info?.email">
+          {{info?.email}}
+        </ng-container>
+        <ng-container *ngIf="!info?.email">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">رقم الهاتف</label>
+      <label class="title">{{"users.phoneNumber"|translate}}</label>
       <div class="content-password">
-        {{info?.mobileNumber ? info?.mobileNumber : "لا يوجد"}}
+        <ng-container *ngIf="info?.mobileNumber">
+          {{info?.mobileNumber}}
+        </ng-container>
+        <ng-container *ngIf="!info?.mobileNumber">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">المدير</label>
+      <label class="title">{{"users.theBoss"|translate}}</label>
       <div class="content-password">
-        {{info?.isAdmin ? "نعم" : "لا"}}
+        <ng-container *ngIf="info?.isAdmin">
+          {{"employees.yes"|translate}}
+        </ng-container>
+        <ng-container *ngIf="!info?.isAdmin">
+          {{"employees.no"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">الصلاحيات</label>
+      <label class="title">{{"users.permissions"|translate}}</label>
       <div class="content-password mb-3" *ngFor="let role of info?.roles">
         {{role}}
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">الملفات</label>
+      <label class="title">{{"vacations.files"|translate}}</label>
       <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length">
         <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
           <div class="content-image">
@@ -61,12 +86,12 @@
 
           </div>
           <div class="p-fileupload-filename">
-            <span class="d-block">name:</span>
+            <span class="d-block">{{"employees.name"|translate}}:</span>
             {{ file.fileUpload.name
             }}
           </div>
           <div>
-            <span class="d-block">size:</span>
+            <span class="d-block">{{"employees.size"|translate}}:</span>
             {{
             file.fileUpload.size }}
           </div>

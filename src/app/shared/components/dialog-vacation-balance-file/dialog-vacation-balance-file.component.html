@@ -10,9 +10,14 @@
   </header>
   <div class="body-dialog p-15 f-s-16">
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">تعيين كنشط</label>
+      <label class="title">{{"users.setAsActive"|translate}}</label>
       <div class="content-password">
-        {{info?.isActive ? 'نشط' : 'غير نشط'}}
+        <ng-container *ngIf="info?.isActive">
+          {{"employees.active"|translate}}
+        </ng-container>
+        <ng-container *ngIf="!info?.isActive">
+          {{"employees.Inactive"|translate}}
+        </ng-container>
       </div>
 
     </div>
@@ -28,13 +33,14 @@
     <div class="sectionTwo mb-3 line-bellow">
       <label class="title">
         <ng-container *ngIf="info?.employeeName">
-          اسم الموظف
+          {{"requests.employeeName"|translate}}
         </ng-container>
         <ng-container *ngIf="info?.groupName">
-          اسم الجروب
+          {{"vacationBalance.groupName"|translate}}
         </ng-container>
         <ng-container *ngIf="info?.departmentName">
-          اسم المجموعة
+          {{"vacationBalance.GroupName"|translate}}
+          
         </ng-container>
       </label>
       <div class="content-password" *ngIf="info?.departmentName">
@@ -48,37 +54,62 @@
       </div>
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title"> رصيد المتبقي </label>
+      <label class="title"> {{"vacationBalance.theRemainingBalance"|translate}}</label>
       <div class="content-password">
-        {{info?.remainingBalance ? info?.remainingBalance : "لا يوجد"}}
+        <ng-container *ngIf="info?.remainingBalance">
+          {{info?.remainingBalance}}
+        </ng-container>
+        <ng-container *ngIf="!info?.remainingBalance">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title"> نوع الاجازة </label>
+      <label class="title"> {{"vacationBalance.theKindOfHoliday"|translate}}</label>
       <div class="content-password">
-        {{info?.defaultVacationTypeName ? info?.defaultVacationTypeName : "لا يوجد"}}
+        <ng-container *ngIf="info?.defaultVacationTypeName">
+          {{info?.defaultVacationTypeName}}
+        </ng-container>
+        <ng-container *ngIf="!info?.defaultVacationTypeName">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title"> رصيد الاجازات </label>
+      <label class="title">{{"vacationBalance.vacationsBalance"|translate}}</label>
       <div class="content-password">
-        {{info?.balance ? info?.balance : "لا يوجد"}}
+        <ng-container *ngIf="info?.balance">
+          {{info?.balance}}
+        </ng-container>
+        <ng-container *ngIf="!info?.balance">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title"> التاريخ </label>
+      <label class="title"> {{"vacationBalance.theDate"|translate}} </label>
       <div class="content-password">
-        {{info?.year ? info?.year : "لا يوجد"}}
+        <ng-container *ngIf="info?.year">
+          {{info?.year}}
+        </ng-container>
+        <ng-container *ngIf="!info?.year">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title"> الملاحظات</label>
+      <label class="title"> {{"vacationBalance.notes"|translate}}</label>
       <div class="content-password">
-        {{info?.notes ? info?.notes : "لا يوجد"}}
+        <ng-container *ngIf="info?.notes">
+          {{info?.notes}}
+        </ng-container>
+        <ng-container *ngIf="!info?.notes">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>

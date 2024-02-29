@@ -53,7 +53,7 @@
                     <span class="p-input-icon-left input-search-dropdown">
 
                       <i class="pi pi-search" (click)="searchDropdown(searchEmployeeId, 'EmployeeId')"></i>
-                      <input type="text" placeholder="بحث" pInputText #searchEmployeeId />
+                      <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchEmployeeId />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">
@@ -80,7 +80,7 @@
                     <span class="p-input-icon-left input-search-dropdown">
 
                       <i class="pi pi-search" (click)="searchDropdown(searchGroupId, 'GroupId')"></i>
-                      <input type="text" placeholder="بحث" pInputText #searchGroupId />
+                      <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchGroupId />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">
@@ -107,7 +107,7 @@
                     <span class="p-input-icon-left input-search-dropdown">
 
                       <i class="pi pi-search" (click)="searchDropdown(searchDepartmentId, 'DepartmentId')"></i>
-                      <input type="text" placeholder="بحث" pInputText #searchDepartmentId />
+                      <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchDepartmentId />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">
@@ -135,7 +135,7 @@
                     <span class="p-input-icon-left input-search-dropdown">
 
                       <i class="pi pi-search" (click)="searchDropdown(searchVacationType, 'VacationType')"></i>
-                      <input type="text" placeholder="بحث" pInputText #searchVacationType />
+                      <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchVacationType />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">

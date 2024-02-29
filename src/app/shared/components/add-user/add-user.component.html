@@ -28,7 +28,7 @@
               <span class="p-input-icon-left input-search-dropdown">
 
                 <i class="pi pi-search" (click)="searchDropdown(searchEmployeeId.value, 'EmployeeId')"></i>
-                <input type="text" placeholder="بحث" pInputText #searchEmployeeId />
+                <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchEmployeeId />
               </span>
             </ng-template>
             <ng-template let-option pTemplate="item">
@@ -74,16 +74,16 @@
           </div>
           <div class="alert alert-danger"
             *ngIf="getControl('Email')?.hasError('pattern') && getControl('Email')?.dirty">
-            البريد الالكتروني غير صحيح
+            {{"employees.invalidEmail"|translate}}
           </div>
         </div>
         <!--End Custom Validators-->
       </div>
       <div class="sectionFive mb-3">
-        <label for="" class="label-input mb-2">رقم الهاتف <span class="color-red">*</span></label>
+        <label for="" class="label-input mb-2">{{"users.phoneNumber"|translate}} <span class="color-red">*</span></label>
         <div class="content-input position-relative">
           <div class="content-password position-relative code-phone">
-            <input type="text" pInputText formControlName="MobileNumber" placeholder="رقم الهاتف" class="w-100" />
+            <input type="text" pInputText formControlName="MobileNumber" [placeholder]="'users.phoneNumber'|translate" class="w-100" />
             <span class="code">{{code}}</span>
 
           </div>
@@ -91,11 +91,11 @@
           <div class="container-alerts mt-2" *ngIf="getControl('MobileNumber')?.errors">
             <div class="alert alert-danger"
               *ngIf="getControl('MobileNumber')?.hasError('required') && getControl('MobileNumber')?.dirty">
-              رقم الهاتف مطلوب
+              {{"employees.phoneNumberRequired"|translate}}
             </div>
             <div class="alert alert-danger"
             *ngIf="getControl('MobileNumber')?.hasError('pattern') && getControl('MobileNumber')?.dirty">
-            رقم الهاتف غير صحيح
+            {{"employees.phoneNumberIsIncorrect"|translate}}
           </div>
           </div>
         </div>
@@ -134,12 +134,12 @@
                                                     </div> -->
         </div>
         <div class="section-field c-f mb-3">
-          <label class="mb-2 d-block f-s-16 label-form">تأكيد كلمة المرور<span class="color-red ml-2">*</span></label>
+          <label class="mb-2 d-block f-s-16 label-form">{{'signup.confirmPassword' | translate}} <span class="color-red ml-2">*</span></label>
           <div class="content-input position-relative">
             <span class="p-input-icon-right w-100 field-password">
               <i class="pi pi-lock"></i>
               <input [type]="toggleConfirmPassword ? 'password' : 'text'" formControlName="ConfirmPassword" class="w-100"
-                pInputText placeholder="تأكيد كلمة المرور" />
+                pInputText [placeholder]="'signup.confirmPassword' | translate" />
               <span (click)="toggleConfirmPassword = !toggleConfirmPassword">
                 <i class=" pi pi-eye" *ngIf="toggleConfirmPassword"></i>
                 <i class=" pi pi-eye-slash" *ngIf="!toggleConfirmPassword"></i>
@@ -148,11 +148,11 @@
             <div class="container-alerts mt-2" *ngIf="getControl('ConfirmPassword')?.errors">
               <div class="alert alert-danger"
                 *ngIf="getControl('ConfirmPassword')?.hasError('required') && getControl('ConfirmPassword')?.dirty">
-                {{'login.PasswordRequired' | translate}}
+                {{'signup.PasswordRequired' | translate}}
               </div>
               <div class="alert alert-danger"
                 *ngIf="getControl('ConfirmPassword')?.hasError('passwordMismatch') && !getControl('ConfirmPassword')?.hasError('required')">
-                تأكيد كلمة المرور
+                {{'users.passwordMisMatch' | translate}}
               </div>
             </div>
           </div>
@@ -168,7 +168,7 @@
               <span class="p-input-icon-left input-search-dropdown">
 
                 <i class="pi pi-search" (click)="searchDropdown(searchRoles.value, 'Roles')"></i>
-                <input type="text" placeholder="بحث" pInputText #searchRoles />
+                <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchRoles />
               </span>
             </ng-template>
             <ng-template let-option pTemplate="item">
@@ -203,12 +203,12 @@
 
                   </div>
                   <div class="p-fileupload-filename">
-                    <span class="d-block">name:</span>
+                    <span class="d-block">{{'employees.name' | translate}}:</span>
                     {{ file.fileUpload.name
                     }}
                   </div>
                   <div>
-                    <span class="d-block">size:</span>
+                    <span class="d-block">{{'employees.size' | translate}}:</span>
                     {{
                     file.fileUpload.size }}
                   </div>
@@ -225,12 +225,12 @@
               </ul>
             </ng-template>
           </p-fileUpload>
-          <span class="maximum-size">الحد الأقصى لحجم الملف 2 ميجابايت</span>
+          <span class="maximum-size">{{'vacations.maximumFileSize' | translate}}</span>
           <!--Start Custom Validators-->
           <div class="container-alerts mt-2" *ngIf="requiredCommercialRegFiles">
             <div class="alert alert-danger">
-              الصورة مطلوبة
-
+              
+              {{'users.photoRequired' | translate}}
             </div>
           </div>
           <!--End Custom Validators-->
@@ -247,7 +247,7 @@
       <div class="field-checkbox mb-1">
         <p-checkbox name="category" formControlName="IsAdmin" [value]="true" [binary]="true"
           inputId="IsAdmin"></p-checkbox>
-        <label for="IsAdmin" class="mb-0">مسئول</label>
+        <label for="IsAdmin" class="mb-0">{{'users.responsible' | translate}}</label>
       </div>
     </form>
   </div>

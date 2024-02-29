@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ToastrService } from 'ngx-toastr';
@@ -29,6 +29,8 @@ export class UsersComponent {
   itemsPerPage = 5;
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
   list: any[] = [
     { name: "نسيان تسجيل حضور", key: "1" },
     { name: "نسيان تسجيل انصراف", key: "2" },
@@ -124,6 +126,8 @@ export class UsersComponent {
 
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
+
     });
   }
   ngOnInit(): void {
@@ -144,7 +148,63 @@ export class UsersComponent {
       { name: '25', code: 25 },
 
     ];
-
+    this.translate.get("users").subscribe(data => {
+      this.columns = [
+        {
+          name: data.userNumber,
+          field: "code",
+        },
+        {
+          name: data.userName,
+          field: "name",
+        },
+    
+        {
+          name: data.theBoss,
+          field: "isAdmin"
+        },
+        {
+          name: data.active,
+          field: "isActive"
+        },
+        {
+          name: data.action,
+          field: "actions"
+        }
+    
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("users").subscribe(data => {
+        this.columns = [
+          {
+            name: data.userNumber,
+            field: "code",
+          },
+          {
+            name: data.userName,
+            field: "name",
+          },
+      
+          {
+            name: data.theBoss,
+            field: "isAdmin"
+          },
+          {
+            name: data.active,
+            field: "isActive"
+          },
+          {
+            name: data.action,
+            field: "actions"
+          }
+      
+        ];
+      })
+      // this.subscription = this.translate.stream('primeng').subscribe(data => {
+      //   this.config.setTranslation(data);
+      // });  
+    })
     this.getInformation();
 
     this.getUsers(this.filteration);
@@ -269,14 +329,18 @@ export class UsersComponent {
       {
         next: res => {
           this.getUsers(this.filteration);
-          const succressDialog = this.dialog.open(ToastSuccessComponent, {
-            width: "30vw",
-            data: {
-              title: "تم قبول الطلب",
-              message: res.message,
-              buttonSend: "اغلاق"
-            },
+          let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+          this.translate.get("users").subscribe(translate => {
+            succressDialog = this.dialog.open(ToastSuccessComponent, {
+              width: "30vw",
+              data: {
+                title: translate.theRequestHasBeenAccepted,
+                message: res.message,
+                buttonSend: translate.close
+              },
+            });
           });
+        
           setTimeout(() => {
             succressDialog.close();
 
@@ -295,16 +359,20 @@ export class UsersComponent {
 
   }
   reasonOfRefuse(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
-      width: "30vw",
-      data: {
-        title: "هل متأكد من حذف المستخدم؟",
-        message: "برجاء توضيح السبب إن أمكن",
+    let reasonOfRefuseDialog!:MatDialogRef<DialogDeleteComponent, any>;
+    this.translate.get("users").subscribe(translate => {
+      reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
+        width: "30vw",
+        data: {
+          title: translate.areYouSureYouDeletedTheUser,
+          message: translate.pleaseExplainWhyIfPossible,
+  
+          titleClose: translate.toRetreat,
+          buttonSend: translate.delete
+        },
+      });
+    })
 
-        titleClose: "تراجع",
-        buttonSend: "حذف"
-      },
-    });
 
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
@@ -327,50 +395,45 @@ export class UsersComponent {
     })
   }
   requestUser() {
-    const dialogRefAddCurrency = this.dialog.open(AddUserComponent, {
-      width: "50vw",
-      data: {
-        title: "انشاء مستخدم",
-        setAsNecessary: "تعيين كنشط",
-
-        titleName: "الاسم <span class='color-red'>*</span>",
-        placeholdeName: "الاسم",
-        nameValidation: "الاسم مطلوب",
-
-        titleEmail: "البريد الالكتروني <span class='color-red'>*</span>",
-        placeholdeEmail: "البريد الالكتروني",
-        EmailValidation: "البريد الالكتروني مطلوب",
-
-        titlePassword: "كلمة السر <span class='color-red'>*</span>",
-        placeholdePassword: "كلمة السر",
-        PasswordValidation: "كلمة السر مطلوبة",
-        Roles: " الصلاحيات <span class='color-red'>*</span>",
-        placeholdeRoles: "الصلاحيات",
-        ValidationRoles: "الصلاحيات مطلوبة",
-
-        titleCalendar: "تاريخ الاجازة <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ الاجازة",
-
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        NotesValidation: "الملاحظات مطلوب",
-
-        dateTaskValidation: "تاريخ الاجازة مطلوب",
-        labelRadioButton: "صاحب الطلب",
-        firstRadio: "لنفسي",
-        secondRadio: "لموظف",
-        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
-        placeholderEmployeeId: "الموظف",
-        EmployeeIdValidation: "الموظف مطلوب",
-        uploadFile: "ارفاق صورة",
-        chooseLabel: "اختار صورة ليتم رفعه",
-        buttonSend: "إرسال الطلب"
-      },
-    });
+    let dialogRefAddCurrency!:MatDialogRef<AddUserComponent, any>;
+    this.translate.get("users").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(AddUserComponent, {
+        width: "50vw",
+        data: {
+          title: translate.createUser,
+          setAsNecessary: translate.setAsActive,
+          titleName: translate.theName +" <span class='color-red'>*</span>",
+          placeholdeName: translate.theName,
+          nameValidation: translate.nameRequired,
+          titleEmail: translate.email+" <span class='color-red'>*</span>",
+          placeholdeEmail: translate.email,
+          EmailValidation: translate.emailRequired,
+          titlePassword: translate.password+" <span class='color-red'>*</span>",
+          placeholdePassword: translate.password,
+          PasswordValidation: translate.passwordRequired,
+          Roles: translate.permissions+" <span class='color-red'>*</span>",
+          placeholdeRoles: translate.permissions,
+          ValidationRoles: translate.permissionsRequired,
+          titleCalendar: translate.vacationDate+" <span class='color-red'>*</span>",
+          placeholderCalendar: translate.vacationDate,
+          titleNotes: translate.notes+" <span class='color-red'>*</span>",
+          placeholdeNotes: translate.notes,
+          NotesValidation: translate.notesRequired,
+          dateTaskValidation: translate.vacationDateRequired,
+          labelRadioButton: translate.applicant,
+          firstRadio: translate.forMyself,
+          secondRadio: translate.toAnEmployee,
+          titleEmployeeId: translate.employee+" <span class='color-red'>*</span>",
+          placeholderEmployeeId: translate.employee,
+          EmployeeIdValidation: translate.employeeWanted,
+          uploadFile: translate.attachAFile,
+          chooseLabel:translate.chooseAnImageToUpload,
+          buttonSend: translate.sendRequest
+        },
+      });
+    })
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editUser = false;
-
-
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
 
       let formData = new FormData();
@@ -403,20 +466,18 @@ export class UsersComponent {
       this.usersService.createUser(formData).subscribe(
         {
           next: (data: any) => {
-
-
             dialogRefAddCurrency.componentInstance.submitted = true;
-
             dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات المستخدمين"
-
-              },
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("users").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.users
+                },
+              });
             });
             this.getUsers(this.filteration);
 
@@ -443,7 +504,6 @@ export class UsersComponent {
     });
     dialogRefAddCurrency.afterClosed().subscribe(result => {
       if (result) {
-
       }
     });
   }
@@ -451,46 +511,44 @@ export class UsersComponent {
     return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 34, actionCode: data.actionCode })
   }
   editUser(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddUserComponent, {
-      width: "50vw",
-      data: {
-        title: "انشاء مستخدم",
-        setAsNecessary: "تعيين كنشط",
-
-        titleName: "الاسم <span class='color-red'>*</span>",
-        placeholdeName: "الاسم",
-        nameValidation: "الاسم مطلوب",
-
-        titleEmail: "البريد الالكتروني <span class='color-red'>*</span>",
-        placeholdeEmail: "البريد الالكتروني",
-        EmailValidation: "البريد الالكتروني مطلوب",
-
-        titlePassword: "كلمة السر <span class='color-red'>*</span>",
-        placeholdePassword: "كلمة السر",
-        PasswordValidation: "كلمة السر مطلوبة",
-        Roles: " الصلاحيات <span class='color-red'>*</span>",
-        placeholdeRoles: "الصلاحيات",
-        ValidationRoles: "الصلاحيات مطلوبة",
-
-        titleCalendar: "تاريخ الاجازة <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ الاجازة",
-
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        NotesValidation: "الملاحظات مطلوب",
-
-        dateTaskValidation: "تاريخ الاجازة مطلوب",
-        labelRadioButton: "صاحب الطلب",
-        firstRadio: "لنفسي",
-        secondRadio: "لموظف",
-        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
-        placeholderEmployeeId: "الموظف",
-        EmployeeIdValidation: "الموظف مطلوب",
-        uploadFile: "ارفاق صورة",
-        chooseLabel: "اختار صورة ليتم رفعه",
-        buttonSend: "إرسال الطلب"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<AddUserComponent, any>;
+    this.translate.get("users").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(AddUserComponent, {
+        width: "50vw",
+        data: {
+          title: translate.editUser,
+          setAsNecessary: translate.setAsActive,
+          titleName: translate.theName +" <span class='color-red'>*</span>",
+          placeholdeName: translate.theName,
+          nameValidation: translate.nameRequired,
+          titleEmail: translate.email+" <span class='color-red'>*</span>",
+          placeholdeEmail: translate.email,
+          EmailValidation: translate.emailRequired,
+          titlePassword: translate.password+" <span class='color-red'>*</span>",
+          placeholdePassword: translate.password,
+          PasswordValidation: translate.passwordRequired,
+          Roles: translate.permissions+" <span class='color-red'>*</span>",
+          placeholdeRoles: translate.permissions,
+          ValidationRoles: translate.permissionsRequired,
+          titleCalendar: translate.vacationDate+" <span class='color-red'>*</span>",
+          placeholderCalendar: translate.vacationDate,
+          titleNotes: translate.notes+" <span class='color-red'>*</span>",
+          placeholdeNotes: translate.notes,
+          NotesValidation: translate.notesRequired,
+          dateTaskValidation: translate.vacationDateRequired,
+          labelRadioButton: translate.applicant,
+          firstRadio: translate.forMyself,
+          secondRadio: translate.toAnEmployee,
+          titleEmployeeId: translate.employee+" <span class='color-red'>*</span>",
+          placeholderEmployeeId: translate.employee,
+          EmployeeIdValidation: translate.employeeWanted,
+          uploadFile: translate.attachAFile,
+          chooseLabel:translate.chooseAnImageToUpload,
+          buttonSend: translate.sendRequest
+        },
+      });
     });
+  
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editUser = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
@@ -531,14 +589,17 @@ export class UsersComponent {
 
             dialogRefAddCurrency.close();
 
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات المستخدمين"
-
-              },
+       
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("users").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.users
+                },
+              });
             });
             this.getUsers(this.filteration);
 
@@ -572,14 +633,16 @@ export class UsersComponent {
 
 
   dialogUserFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogUserFileComponent, {
-      width: "60vw",
-      data: {
-        title: "ملف المستخدم"
-      },
-    });
+    let dialogRefAddCurrency!:MatDialogRef<DialogUserFileComponent, any>;
+    this.translate.get("users").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(DialogUserFileComponent, {
+        width: "60vw",
+        data: {
+          title:  translate.userFile
+        },
+      });
+    })
     dialogRefAddCurrency.componentInstance.id = data.id
-
   }
 
 
@@ -664,5 +727,9 @@ export class UsersComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

@@ -133,6 +133,7 @@ export class AddUserComponent {
     public dialogRef: MatDialogRef<AddUserComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
+
     private fb: FormBuilder,
     public translate: TranslateService,
 

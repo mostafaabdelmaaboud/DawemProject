@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import * as moment from 'moment';
@@ -31,8 +31,7 @@ export class VacationBalanceComponent {
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
   private vacationBalanceService = inject(VacationBalanceService);
-
-
+  destroy$: Subject<boolean> = new Subject<boolean>();
   columns: any[] = [
     {
       name: "رقم الاجازة",
@@ -62,25 +61,14 @@ export class VacationBalanceComponent {
       name: "الإجراء",
       field: "actions"
     }
-
   ];
-
-
-
-
-
-
-
   Vacations: any = [];
-
   isLoading = true;
-
   filteration: any = {
     PageSize: 5,
     PageNumber: 0,
     PagingEnabled: true
   };
-
   services: any[] = [
     { name: 'Cash in', key: 'cashIn' },
     { name: 'Cash out', key: 'cashOut' }
@@ -102,11 +90,12 @@ export class VacationBalanceComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
-  constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
+  constructor(private config: PrimeNGConfig, 
+    private changeDetectorRef: ChangeDetectorRef, 
+    media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
-
     this._mobileQueryListener = () => {
       if (this.mobileQuery.matches) {
         this.opened = true;
@@ -115,22 +104,17 @@ export class VacationBalanceComponent {
       } else {
         this.opened = false;
         this.Vacations = this.Vacations;
-
         changeDetectorRef.detectChanges();
-
       }
-
-
-
     };
     this.mobileQuery.addListener(this._mobileQueryListener);
     translate.addLangs(['ar', 'en']);
     translate.setDefaultLang('ar');
     const browserLang: any = translate.getBrowserLang();
     let lang = browserLang.match(/ar|en/) ? browserLang : 'ar';
-
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
     });
   }
   ngOnInit(): void {
@@ -152,9 +136,79 @@ export class VacationBalanceComponent {
       { name: '25', code: 25 },
 
     ];
+    this.translate.get("vacationBalance").subscribe(data => {
+      this.columns = [
+        {
+          name: data.vacationNumber,
+          field: "code",
+        },
+        {
+          name: data.employeeName,
+          field: "employeeName",
+        },
+        {
+          name: data.theKindOfHoliday,
+          field: "vacationTypeName"
+        },
+        {
+          name: data.balance,
+          field: "balance"
+        },
+        {
+          name: data.theRemainingBalance,
+          field: "remainingBalance"
+        },
+        {
+          name: data.theDate,
+          field: "year"
+        },
+        {
+          name: data.action,
+          field: "actions"
+        }
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("vacationBalance").subscribe(data => {
+        this.columns = [
+          {
+            name: data.vacationNumber,
+            field: "code",
+          },
+          {
+            name: data.employeeName,
+            field: "employeeName",
+          },
+          {
+            name: data.theKindOfHoliday,
+            field: "vacationTypeName"
+          },
+          {
+            name: data.balance,
+            field: "balance"
+          },
+          {
+            name: data.theRemainingBalance,
+            field: "remainingBalance"
+          },
+          {
+            name: data.theDate,
+            field: "year"
+          },
+          {
+            name: data.action,
+            field: "actions"
+          }
+        ];
+      })
+      // this.subscription = this.translate.stream('primeng').subscribe(data => {
+      //   this.config.setTranslation(data);
+      // });  
+    })
     this.getInformation();
 
     this.getVacations(this.filteration);
+    
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
@@ -179,9 +233,7 @@ export class VacationBalanceComponent {
   getVacations(filteration: any) {
     this.Vacations = [];
     this.isLoading = true;
-
     this.vacationBalanceService.listVacations(filteration).subscribe(data => {
-
       data.data.forEach((vacation: any) => {
         this.Vacations.push({
           id: vacation.id,
@@ -196,71 +248,59 @@ export class VacationBalanceComponent {
       });
       this.totalItems = data.totalCount
       this.isLoading = false;
-
     })
   }
   showActions(data: any) {
     return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 35, actionCode: data.actionCode })
   }
   addVacation() {
-    const dialogRefAddCurrency = this.dialog.open(AddVacationBalanceComponent, {
-      width: "70vw",
-      data: {
-        title: "اضافه رصيد اجازة",
-        setAsActive: "تعيين كنشط",
-
-        titleDepartmentId: "نوع القسم",
-        placeholdeDepartmentId: "اسم القسم",
-        ValidationDepartmentId: "اسم القسم مطلوب",
-
-
-        labelRadioButton: "نوع الاجازة",
-        firstRadio: "لموظف",
-        secondRadio: "لجروب",
-        thirdRadio: "لقسم",
-
-        titleEmployeeId: "نوع الموظف",
-        placeholdeEmployeeId: "اسم الموظف",
-        ValidationEmployeeId: "اسم الموظف مطلوب",
-
-
-        titleVacationType: " نوع الأجازة الافتراضي",
-        placeholdeVacationType: " نوع الأجازة الافتراضي",
-        ValidationVacationType: " نوع الأجازة الافتراضي مطلوب",
-
-        titleCalendar: "التاريخ",
-        placeholderCalendar: "اختار التاريخ",
-        validationCalendar: "التاريخ مطلوب",
-
-        titleGroupId: "نواب الجروب",
-        placeholdeGroupId: "اسم الجروب",
-        ValidationGroupId: "اسم الجروب مطلوب",
-
-        titleBalance: "رصيد الاجازات",
-        placeholderBalance: "برجاء اختيار رصيد الاجازات",
-        validationBalance: "رصيد الاجازات مطلوب",
-
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        ValidationNotes: "الملاحظات مطلةب",
-
-        titleClose: "تراجع",
-        buttonSend: "إضافة رصيد اجازة"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<AddVacationBalanceComponent, any>;
+    this.translate.get("vacationBalance").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(AddVacationBalanceComponent, {
+        width: "70vw",
+        data: {
+          title: translate.addVacationBalance,
+          setAsActive: translate.setAsActive,
+          titleDepartmentId: translate.sectionType,
+          placeholdeDepartmentId: translate.departmentName,
+          ValidationDepartmentId: translate.departmentNameRequired,
+          labelRadioButton: translate.theKindOfHoliday,
+          firstRadio: translate.forAnEmployee,
+          secondRadio: translate.forAGroup,
+          thirdRadio: translate.toSwear,
+          titleEmployeeId: translate.employeeType,
+          placeholdeEmployeeId: translate.employeeName,
+          ValidationEmployeeId: translate.employeeNameRequired,
+          titleVacationType: translate.defaultLeaveType,
+          placeholdeVacationType: translate.defaultLeaveType,
+          ValidationVacationType: translate.defaultLeaveTypeRequired,
+          titleCalendar: translate.theDate,
+          placeholderCalendar: translate.chooseDate,
+          validationCalendar: translate.dateRequired,
+          titleGroupId: translate.groupRepresentatives,
+          placeholdeGroupId: translate.groupName,
+          ValidationGroupId: translate.groupNameRequired,
+          titleBalance: translate.vacationsBalance,
+          placeholderBalance: translate.pleaseSelectVacationBalance,
+          validationBalance: translate.vacationBalanceRequired,
+          titleNotes: translate.notes+" <span class='color-red'>*</span>",
+          placeholdeNotes: translate.notes,
+          ValidationNotes: translate.feedbackRequired,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.addVacationBalance
+        },
+      });
     });
+  
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editVacation = false;
-
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
-
       formData.isActive = result.isActive;
-
       formData.ForType = Number(result.ForType);
       formData.EmployeeId = result.EmployeeId ? result.EmployeeId.key : null;
       formData.GroupId = result.GroupId ? result.GroupId.key : null;
       formData.DepartmentId = result.DepartmentId ? result.DepartmentId.key : null;
-
       formData.Balance = result.Balance;
 
       formData.DefaultVacationType = result.VacationType.key;
@@ -278,15 +318,18 @@ export class VacationBalanceComponent {
             dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات رصيد الاجازات"
-              },
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("vacationBalance").subscribe(translate => {
+               succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.vacationBalanceRequests
+                },
+              });
             });
+       
             this.getVacations(this.filteration);
             setTimeout(() => {
               succressDialog.close();
@@ -304,6 +347,102 @@ export class VacationBalanceComponent {
             dialogRefAddCurrency.componentInstance.submitted = true;
             dialogRefAddCurrency.componentInstance.loading = false;
 
+          }
+        }
+      )
+    });
+    dialogRefAddCurrency.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+  editVacation(data: any) {
+    let dialogRefAddCurrency!:MatDialogRef<AddVacationBalanceComponent, any>;
+    this.translate.get("vacationBalance").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(AddVacationBalanceComponent, {
+        width: "70vw",
+        data: {
+          title: translate.modifyVacationBalance,
+          setAsActive: translate.setAsActive,
+          titleDepartmentId: translate.sectionType,
+          placeholdeDepartmentId: translate.departmentName,
+          titleFieldDisabled:translate.code,
+          ValidationDepartmentId: translate.departmentNameRequired,
+          labelRadioButton: translate.theKindOfHoliday,
+          firstRadio: translate.forAnEmployee,
+          secondRadio: translate.forAGroup,
+          thirdRadio: translate.toSwear,
+          titleEmployeeId: translate.employeeType,
+          placeholdeEmployeeId: translate.employeeName,
+          ValidationEmployeeId: translate.employeeNameRequired,
+          titleVacationType: translate.defaultLeaveType,
+          placeholdeVacationType: translate.defaultLeaveType,
+          ValidationVacationType: translate.defaultLeaveTypeRequired,
+          titleCalendar: translate.theDate,
+          placeholderCalendar: translate.chooseDate,
+          validationCalendar: translate.dateRequired,
+          titleGroupId: translate.groupRepresentatives,
+          placeholdeGroupId: translate.groupName,
+          ValidationGroupId: translate.groupNameRequired,
+          titleBalance: translate.vacationsBalance,
+          placeholderBalance: translate.pleaseSelectVacationBalance,
+          validationBalance: translate.vacationBalanceRequired,
+          titleNotes: translate.notes+" <span class='color-red'>*</span>",
+          placeholdeNotes: translate.notes,
+          ValidationNotes: translate.feedbackRequired,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.saveVacationBalance
+        },
+      });
+    });
+    dialogRefAddCurrency.componentInstance.submitted = true;
+    dialogRefAddCurrency.componentInstance.editVacation = true;
+    dialogRefAddCurrency.componentInstance.id = data.id;
+    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+      let formData: any = {};
+      formData.isActive = result.isActive;
+      formData.id = data.id;
+      formData.ForType = Number(result.ForType);
+      formData.EmployeeId = result.EmployeeId ? result.EmployeeId.key : null;
+      formData.GroupId = result.GroupId ? result.GroupId.key : null;
+      formData.DepartmentId = result.DepartmentId ? result.DepartmentId.key : null;
+      formData.Balance = result.Balance;
+      formData.DefaultVacationType = result.VacationType.key;
+      formData.Year = moment(new Date(result.Year)).format("yy");
+      formData.notes = result.notes;
+      dialogRefAddCurrency.componentInstance.loading = true;
+      this.vacationBalanceService.updateVacation(formData).subscribe(
+        {
+          next: data => {
+            dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
+            dialogRefAddCurrency.close();
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("vacationBalance").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+               width: "30vw",
+               data: {
+                 title: translate.yourRequestHasBeenSent,
+                 message: data.message,
+                 buttonSend: translate.vacationBalanceRequests
+               },
+             });
+           });
+      
+            this.getVacations(this.filteration);
+            setTimeout(() => {
+              succressDialog.close();
+
+            }, 2000);
+            succressDialog.componentInstance.submitted = true;
+            succressDialog.componentInstance.submitClicked.subscribe(result => {
+              succressDialog.close();
+            })
+          },
+          error: err => {
+            dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
           }
         }
       )
@@ -380,26 +519,31 @@ export class VacationBalanceComponent {
     this.getVacations(this.filteration);
   }
   dialogVacationFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogVacationBalanceFileComponent, {
-      width: "40vw",
-      data: {
-        title: "ملف رصيد الاجازة"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<DialogVacationBalanceFileComponent, any>;
+    this.translate.get("vacationBalance").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(DialogVacationBalanceFileComponent, {
+        width: "40vw",
+        data: {
+          title: translate.vacationBalanceFile
+        },
+      });
     });
     dialogRefAddCurrency.componentInstance.id = data.id
   }
   reasonOfRefuse(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
-      width: "30vw",
-      data: {
-        title: "هل متأكد من حذف رصيد الاجازة؟",
-        message: "برجاء توضيح السبب إن أمكن",
-
-        titleClose: "تراجع",
-        buttonSend: "حذف"
-      },
+    let reasonOfRefuseDialog!:MatDialogRef<DialogDeleteComponent, any>;
+    this.translate.get("vacationBalance").subscribe(translate => {
+      reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
+        width: "30vw",
+        data: {
+          title: translate.areYouSureYouWantToDeleteYourVacationBalance,
+          message: translate.pleaseExplainWhyIfPossible,
+  
+          titleClose: translate.toRetreat,
+          buttonSend: translate.delete
+        },
+      });
     });
-
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
@@ -415,126 +559,8 @@ export class VacationBalanceComponent {
 
         }
       })
-
-
-
     })
   }
-  editVacation(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddVacationBalanceComponent, {
-      width: "70vw",
-      data: {
-        title: "تعديل رصيد اجازة",
-        setAsActive: "تعيين كنشط",
-
-        titleDepartmentId: "نوع القسم",
-        placeholdeDepartmentId: "اسم القسم",
-        ValidationDepartmentId: "اسم القسم مطلوب",
-
-
-        labelRadioButton: "نوع الاجازة",
-        firstRadio: "لموظف",
-        secondRadio: "لجروب",
-        thirdRadio: "لقسم",
-
-        titleEmployeeId: "نوع الموظف",
-        placeholdeEmployeeId: "اسم الموظف",
-        ValidationEmployeeId: "اسم الموظف مطلوب",
-
-
-        titleVacationType: " نوع الأجازة الافتراضي",
-        placeholdeVacationType: " نوع الأجازة الافتراضي",
-        ValidationVacationType: " نوع الأجازة الافتراضي مطلوب",
-
-        titleCalendar: "التاريخ",
-        placeholderCalendar: "اختار التاريخ",
-        validationCalendar: "التاريخ مطلوب",
-
-        titleGroupId: "نواب الجروب",
-        placeholdeGroupId: "اسم الجروب",
-        ValidationGroupId: "اسم الجروب مطلوب",
-
-        titleBalance: "رصيد الاجازات",
-        placeholderBalance: "برجاء اختيار رصيد الاجازات",
-        validationBalance: "رصيد الاجازات مطلوب",
-
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        ValidationNotes: "الملاحظات مطلةب",
-
-        titleClose: "تراجع",
-        buttonSend: "حفظ رصيد اجازة"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editVacation = true;
-    dialogRefAddCurrency.componentInstance.id = data.id;
-
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData: any = {};
-
-      formData.isActive = result.isActive;
-      formData.id = data.id;
-
-      formData.ForType = Number(result.ForType);
-      formData.EmployeeId = result.EmployeeId ? result.EmployeeId.key : null;
-      formData.GroupId = result.GroupId ? result.GroupId.key : null;
-      formData.DepartmentId = result.DepartmentId ? result.DepartmentId.key : null;
-
-      formData.Balance = result.Balance;
-
-      formData.DefaultVacationType = result.VacationType.key;
-
-      formData.Year = moment(new Date(result.Year)).format("yy");
-      formData.notes = result.notes;
-
-      dialogRefAddCurrency.componentInstance.loading = true;
-      this.vacationBalanceService.updateVacation(formData).subscribe(
-        {
-          next: data => {
-
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-            dialogRefAddCurrency.componentInstance.loading = false;
-
-            dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات رصيد الاجازات"
-              },
-            });
-            this.getVacations(this.filteration);
-            setTimeout(() => {
-              succressDialog.close();
-
-            }, 2000);
-
-            succressDialog.componentInstance.submitted = true;
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-              succressDialog.close();
-
-            })
-
-          },
-          error: err => {
-            dialogRefAddCurrency.componentInstance.submitted = true;
-            dialogRefAddCurrency.componentInstance.loading = false;
-
-          }
-        }
-      )
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
-
-      }
-    });
-  }
-
   mathRound(data: any) {
     return Math.ceil(data)
   }
@@ -589,5 +615,9 @@ export class VacationBalanceComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

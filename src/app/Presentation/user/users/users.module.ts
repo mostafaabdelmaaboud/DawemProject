@@ -8,6 +8,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { DropdownModule } from 'primeng/dropdown';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { CheckboxModule } from 'primeng/checkbox';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { CheckboxModule } from 'primeng/checkbox';
     FormsModule,
     NgbDropdownModule,
     DropdownModule,
+    TranslateModule,
     CheckboxModule,
     SharedModule
   ]
