@@ -8,10 +8,7 @@ import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/f
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { TranslateModule } from '@ngx-translate/core';
-
-import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
-import { DialogScheduleFileComponent } from 'src/app/shared/components/dialog-schedule-file/dialog-schedule-file.component';
 import { CommonModule } from '@angular/common';
 import { UserPermissionsService } from 'src/app/Presentation/user/user-permissions/services/user-permissions.service';
 
@@ -30,13 +27,10 @@ export class DialogUserPermissionFileComponent {
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
   @Input() id!: any;
-
   private userPermissionsService = inject(UserPermissionsService);
-
-
   columns: any[] = [
     {
-      name: "اسم الشاشة/اسم الصلاحية	",
+      name: "اسم الشاشة/اسم الصلاحية",
       field: "screenName",
     },
     {
@@ -110,6 +104,18 @@ export class DialogUserPermissionFileComponent {
     });
   }
   ngOnInit(): void {
+    this.translate.get("userPermissions").subscribe(data => {
+      this.columns = [
+        {
+          name: data.screenNamePermissionName,
+          field: "screenName",
+        },
+        {
+          name: data.numberOfScreensAllowed,
+          field: "permissionScreenActions",
+        }
+      ];
+    })
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -181,15 +187,6 @@ export class DialogUserPermissionFileComponent {
 
   }
 
-  dialogScheduleFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogScheduleFileComponent, {
-      width: "40vw",
-      data: {
-        title: "ملف الجدول"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.id = data.id
-  }
 
   mathRound(data: any) {
     return Math.ceil(data)

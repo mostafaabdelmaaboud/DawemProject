@@ -6,6 +6,7 @@ import { HolidaysComponent } from './holidays.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { InputSwitchModule } from 'primeng/inputswitch';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -17,7 +18,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
     HolidaysRoutingModule,
     MatDialogModule,
     InputSwitchModule,
-
+    TranslateModule,
     SharedModule
   ]
 })

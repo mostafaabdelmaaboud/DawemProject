@@ -5,6 +5,7 @@ import { SchedualPlanRoutingModule } from './schedual-plan-routing.module';
 import { SchedualPlanComponent } from './schedual-plan.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -12,6 +13,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
   imports: [
     CommonModule,
     SchedualPlanRoutingModule,
+    TranslateModule,
     MatDialogModule,
     SharedModule
   ]

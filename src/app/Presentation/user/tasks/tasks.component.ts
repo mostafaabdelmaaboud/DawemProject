@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription, map } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { RequestTaskComponent } from 'src/app/shared/components/request-task/request-task.component';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
@@ -30,7 +30,7 @@ export class TasksComponent {
   itemsPerPage = 5;
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
-
+  destroy$: Subject<boolean> = new Subject<boolean>();
   columns: any[] = [
     {
       name: "رقم الطلب",
@@ -68,7 +68,6 @@ export class TasksComponent {
       name: "الإجراء",
       field: "actions"
     }
-
   ];
   tasks: any = [];
 
@@ -115,7 +114,6 @@ export class TasksComponent {
     private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
-
     this._mobileQueryListener = () => {
       if (this.mobileQuery.matches) {
         this.opened = true;
@@ -124,13 +122,8 @@ export class TasksComponent {
       } else {
         this.opened = false;
         this.tasks = this.tasks;
-
         changeDetectorRef.detectChanges();
-
       }
-
-
-
     };
     this.mobileQuery.addListener(this._mobileQueryListener);
     translate.addLangs(['ar', 'en']);
@@ -140,6 +133,7 @@ export class TasksComponent {
 
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
     });
   }
   ngOnInit(): void {
@@ -162,7 +156,90 @@ export class TasksComponent {
     ];
     this.getInformation();
 
-    this.getTasks(this.filteration)
+    this.getTasks(this.filteration);
+    this.translate.get("tasks").subscribe(data => {
+      this.columns = [
+        {
+          name: data.orderNumber,
+          field: "orderNumber",
+        },
+        {
+          name: data.jobNumber,
+          field: "employeeCode",
+        },
+        {
+          name: data.employeeName,
+          field: "employeeName",
+        },
+        {
+          name: data.theMission,
+          field: "task"
+        },
+        {
+          name: data.forMissionTime,
+          field: "taskTime"
+        },
+        {
+          name: data.startDate,
+          field: "dateFrom"
+        },
+        {
+          name: data.expiryDate,
+          field: "dateTo"
+        },
+        {
+          name: data.orderStatus,
+          field: "statusName"
+        },
+        {
+          name: data.action,
+          field: "actions"
+        }
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("tasks").subscribe(data => {
+        this.columns = [
+          {
+            name: data.orderNumber,
+            field: "orderNumber",
+          },
+          {
+            name: data.jobNumber,
+            field: "employeeCode",
+          },
+          {
+            name: data.employeeName,
+            field: "employeeName",
+          },
+          {
+            name: data.theMission,
+            field: "task"
+          },
+          {
+            name: data.forMissionTime,
+            field: "taskTime"
+          },
+          {
+            name: data.startDate,
+            field: "dateFrom"
+          },
+          {
+            name: data.expiryDate,
+            field: "dateTo"
+          },
+          {
+            name: data.orderStatus,
+            field: "statusName"
+          },
+          {
+            name: data.action,
+            field: "actions"
+          }
+        ];
+      })
+ 
+    })
   }
   getInformation() {
     this.spinnerCards = true;
@@ -282,34 +359,38 @@ export class TasksComponent {
     this.getTasks(this.filteration)
   }
   editTask(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(RequestTaskComponent, {
-      width: "50vw",
-      data: {
-        title: "تعديل مهمة عمل",
-        setAsNecessary: "تعيين كضرورية",
-        titleDropdownOne: "نوع مهمة عمل <span class='color-red'>*</span>",
-        placeholderDropdown: " برجاء اختيار نوع مهمة",
-        titleCalendar: "تاريخ مهمة عمل <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ مهمة عمل",
-        dateTaskValidation: "تاريخ مهمة العمل مطلوب",
-        labelRadioButton: "صاحب الطلب",
-        TaskTypeIdValidation: "نوع مهمة العمل مطلوب",
-        firstRadio: "لنفسي",
-        secondRadio: "لموظف",
-        timeAttendance: "وقت مهمة العمل",
-        placeholdertimeAttendance: "وقت مهمة العمل",
-        titleWorkTeam: "فريق العمل <span class='color-red'>*</span>",
-        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
-        placeholderEmployeeId: "الموظف",
-        EmployeeIdValidation: "الموظف مطلوب",
-        placeholderWorkTeam: "فريق العمل",
-        uploadFile: "ارفاق ملف",
-        chooseLabel: "اختار الملف ليتم رفعه",
-        titleNotes: "ملاحظات",
-        placeholdeNotes: "برجاء كتابة الملاحظات هنا",
-        buttonSend: "حفظ الطلب"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<RequestTaskComponent, any>;
+    this.translate.get("tasks").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(RequestTaskComponent, {
+        width: "50vw",
+        data: {
+          title: translate.modifyAWorkTask,
+          setAsNecessary: translate.setAsEssential,
+          titleDropdownOne: translate.businessTaskType+" <span class='color-red'>*</span>",
+          placeholderDropdown: translate.pleaseSelectATaskType,
+          titleCalendar: translate.historyOfAWorkAssignment+" <span class='color-red'>*</span>",
+          placeholderCalendar: translate.historyOfAWorkAssignment,
+          dateTaskValidation: translate.workAssignmentDateRequired,
+          labelRadioButton: translate.applicant,
+          TaskTypeIdValidation: translate.workTaskTypeRequired,
+          firstRadio: translate.forMyself,
+          secondRadio: translate.toAnEmployee,
+          timeAttendance: translate.timeForWorkAssignment,
+          placeholdertimeAttendance: translate.timeForWorkAssignment,
+          titleWorkTeam: translate.workTeam+" <span class='color-red'>*</span>",
+          titleEmployeeId: translate.employee+" <span class='color-red'>*</span>",
+          placeholderEmployeeId: translate.employee,
+          EmployeeIdValidation: translate.employeeRequired,
+          placeholderWorkTeam: translate.workTeam,
+          uploadFile: translate.attachAFile,
+          chooseLabel: translate.selectTheFileToUpload,
+          titleNotes: translate.comments,
+          placeholdeNotes: translate.pleaseWriteNotesHere,
+          buttonSend: translate.saveOrder,
+        },
+      });
     });
+
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editTask = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
@@ -357,21 +438,132 @@ export class TasksComponent {
       this.tasksService.updateTask(formData).subscribe(
         {
           next: data => {
+            dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
+            dialogRefAddCurrency.close();
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("tasks").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.workRequests
+                },
+              });
+            });
+            this.getTasks(this.filteration);
+            setTimeout(() => {
+              succressDialog.close();
+            }, 2000);
+            succressDialog.componentInstance.submitted = true;
+            succressDialog.componentInstance.submitClicked.subscribe(result => {
+              succressDialog.close();
+            })
+          },
+          error: err => {
+            dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
+          }
+        }
+      )
+    });
+    dialogRefAddCurrency.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+  requestTask() {
+    let dialogRefAddCurrency!:MatDialogRef<RequestTaskComponent, any>;
+    this.translate.get("tasks").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(RequestTaskComponent, {
+        width: "50vw",
+        data: {
+          title: translate.requestAWorkAssignment,
+          setAsNecessary: translate.setAsEssential,
+          titleDropdownOne: translate.businessTaskType+" <span class='color-red'>*</span>",
+          placeholderDropdown: translate.pleaseSelectATaskType,
+          titleCalendar: translate.historyOfAWorkAssignment+" <span class='color-red'>*</span>",
+          placeholderCalendar: translate.historyOfAWorkAssignment,
+          dateTaskValidation: translate.workAssignmentDateRequired,
+          labelRadioButton: translate.applicant,
+          TaskTypeIdValidation: translate.workTaskTypeRequired,
+          firstRadio: translate.forMyself,
+          secondRadio: translate.toAnEmployee,
+          timeAttendance: translate.timeForWorkAssignment,
+          placeholdertimeAttendance: translate.timeForWorkAssignment,
+          titleWorkTeam: translate.workTeam+" <span class='color-red'>*</span>",
+          titleEmployeeId: translate.employee+" <span class='color-red'>*</span>",
+          placeholderEmployeeId: translate.employee,
+          EmployeeIdValidation: translate.employeeRequired,
+          placeholderWorkTeam: translate.workTeam,
+          uploadFile: translate.attachAFile,
+          chooseLabel: translate.selectTheFileToUpload,
+          titleNotes: translate.comments,
+          placeholdeNotes: translate.pleaseWriteNotesHere,
+          buttonSend: translate.sendRequest
+        },
+      });
+    });
+ 
+    dialogRefAddCurrency.componentInstance.submitted = true;
+    dialogRefAddCurrency.componentInstance.editTask = false;
+    // dialogRefAddCurrency.componentInstance.list = this.categories;
+
+    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+      let formData = new FormData();
+
+
+      if (result.ForEmployee) {
+        formData.append("CreateRequestTaskModelString", JSON.stringify({
+          IsNecessary: result.IsNecessary,
+          ForEmployee: result.ForEmployee,
+          EmployeeId: result.EmployeeId.key,
+
+          TaskTypeId: result.TaskTypeId.key,
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          TaskEmployeeIds: result.TaskEmployeeIds.map((id: any) => id.key),
+          Notes: result.Notes
+        }));
+
+      } else {
+        formData.append("CreateRequestTaskModelString", JSON.stringify({
+          IsNecessary: result.IsNecessary,
+          ForEmployee: result.ForEmployee,
+          TaskTypeId: result.TaskTypeId.key,
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          TaskEmployeeIds: result.TaskEmployeeIds.map((id: any) => id.key),
+          Notes: result.Notes
+        }));
+      }
+      result.files.forEach((file: any) => {
+        formData.append("Attachments", file.fileUpload, file.fileUpload.name);
+      });
+      dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
+
+      this.tasksService.createTask(formData).subscribe(
+        {
+          next: data => {
 
 
             dialogRefAddCurrency.componentInstance.submitted = true;
             dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات مهمات العمل"
-
-              },
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("tasks").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.workRequests
+                },
+              });
             });
             this.getTasks(this.filteration);
 
@@ -396,6 +588,25 @@ export class TasksComponent {
           }
         }
       )
+
+      // const succressDialog = this.dialog.open(ToastSuccessComponent, {
+      //   width: "30vw",
+      //   data: {
+      //     title: "تم ارسال طلبك",
+      //     message: "طلبك في انتظار الموافقة، ويمكنك متابعة حالة الطلب من صفحة التبريرات",
+      //     buttonSend: "طلبات مهمات العمل"
+      //   },
+      // });
+      // setTimeout(() => {
+      //   succressDialog.close();
+
+      // }, 2000);
+      // succressDialog.componentInstance.submitted = true;
+      // succressDialog.componentInstance.submitClicked.subscribe(result => {
+      //   succressDialog.close();
+
+      // })
+      // dialogRefAddCurrency.componentInstance.submitted = false;
     });
     dialogRefAddCurrency.afterClosed().subscribe(result => {
       if (result) {
@@ -444,17 +655,21 @@ export class TasksComponent {
     this.getTasks(this.filteration)
   }
   reasonOfRefuse(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
-      width: "30vw",
-      data: {
-        title: "هل متأكد من رفض الطلب؟",
-        message: "برجاء توضيح السبب إن أمكن",
-        titleReasonOfRefuse: "سبب الرفض",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض",
-        titleClose: "تراجع",
-        buttonSend: "رفض الطلب"
-      },
-    });
+    let reasonOfRefuseDialog!:MatDialogRef<DialogCloseComponent, any>;
+    this.translate.get("justifications").subscribe(translate => {
+      reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
+        width: "30vw",
+        data: {
+          title: translate.areYouSureTheRequestWillBeRejected,
+          message: translate.pleaseExplainWhyIfPossible,
+          titleReasonOfRefuse: translate.theReasonOfRefuse,
+          placeholdeReasonOfRefuse: translate.pleaseWriteTheReasonForRejection,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.rejectionOfTheApplication
+        },
+      });
+    }); 
+
 
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
@@ -514,150 +729,19 @@ export class TasksComponent {
 
   }
   dialogTaskFile(data: any) {
-
-    const dialogRefAddCurrency = this.dialog.open(DialogTaskFileComponent, {
-      width: "40vw",
-      data: {
-        title: "ملف المهمة"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<DialogTaskFileComponent, any>;
+    this.translate.get("tasks").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(DialogTaskFileComponent, {
+        width: "40vw",
+        data: {
+          title: translate.taskFile
+        },
+      });
     });
+  
     dialogRefAddCurrency.componentInstance.id = data.id
   }
-  requestTask() {
-    const dialogRefAddCurrency = this.dialog.open(RequestTaskComponent, {
-      width: "50vw",
-      data: {
-        title: "طلب مهمة عمل",
-        setAsNecessary: "تعيين كضرورية",
-        titleDropdownOne: "نوع مهمة عمل <span class='color-red'>*</span>",
-        placeholderDropdown: " برجاء اختيار نوع مهمة",
-        titleCalendar: "تاريخ مهمة عمل <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ مهمة عمل",
-        dateTaskValidation: "تاريخ مهمة العمل مطلوب",
-        labelRadioButton: "صاحب الطلب",
-        TaskTypeIdValidation: "نوع مهمة العمل مطلوب",
-        firstRadio: "لنفسي",
-        secondRadio: "لموظف",
-        timeAttendance: "وقت مهمة العمل",
-        placeholdertimeAttendance: "وقت مهمة العمل",
-        titleWorkTeam: "فريق العمل <span class='color-red'>*</span>",
-        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
-        placeholderEmployeeId: "الموظف",
-        EmployeeIdValidation: "الموظف مطلوب",
-        placeholderWorkTeam: "فريق العمل",
-        uploadFile: "ارفاق ملف",
-        chooseLabel: "اختار الملف ليتم رفعه",
-        titleNotes: "ملاحظات",
-        placeholdeNotes: "برجاء كتابة الملاحظات هنا",
-        buttonSend: "إرسال الطلب"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editTask = false;
-    // dialogRefAddCurrency.componentInstance.list = this.categories;
-
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData = new FormData();
-
-
-      if (result.ForEmployee) {
-        formData.append("CreateRequestTaskModelString", JSON.stringify({
-          IsNecessary: result.IsNecessary,
-          ForEmployee: result.ForEmployee,
-          EmployeeId: result.EmployeeId.key,
-
-          TaskTypeId: result.TaskTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
-          TaskEmployeeIds: result.TaskEmployeeIds.map((id: any) => id.key),
-          Notes: result.Notes
-        }));
-
-      } else {
-        formData.append("CreateRequestTaskModelString", JSON.stringify({
-          IsNecessary: result.IsNecessary,
-          ForEmployee: result.ForEmployee,
-          TaskTypeId: result.TaskTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
-          TaskEmployeeIds: result.TaskEmployeeIds.map((id: any) => id.key),
-          Notes: result.Notes
-        }));
-      }
-      result.files.forEach((file: any) => {
-        formData.append("Attachments", file.fileUpload, file.fileUpload.name);
-      });
-      dialogRefAddCurrency.componentInstance.submitted = false;
-      dialogRefAddCurrency.componentInstance.loading = true;
-
-      this.tasksService.createTask(formData).subscribe(
-        {
-          next: data => {
-
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-            dialogRefAddCurrency.componentInstance.loading = false;
-
-            dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات مهمات العمل"
-
-              },
-            });
-            this.getTasks(this.filteration);
-
-            setTimeout(() => {
-              succressDialog.close();
-
-            }, 2000);
-
-            succressDialog.componentInstance.submitted = true;
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-
-
-              succressDialog.close();
-
-            })
-
-          },
-          error: err => {
-            dialogRefAddCurrency.componentInstance.submitted = true;
-            dialogRefAddCurrency.componentInstance.loading = false;
-
-          }
-        }
-      )
-
-      // const succressDialog = this.dialog.open(ToastSuccessComponent, {
-      //   width: "30vw",
-      //   data: {
-      //     title: "تم ارسال طلبك",
-      //     message: "طلبك في انتظار الموافقة، ويمكنك متابعة حالة الطلب من صفحة التبريرات",
-      //     buttonSend: "طلبات مهمات العمل"
-      //   },
-      // });
-      // setTimeout(() => {
-      //   succressDialog.close();
-
-      // }, 2000);
-      // succressDialog.componentInstance.submitted = true;
-      // succressDialog.componentInstance.submitClicked.subscribe(result => {
-      //   succressDialog.close();
-
-      // })
-      // dialogRefAddCurrency.componentInstance.submitted = false;
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
-
-      }
-    });
-  }
+  
   changePage(even: number) {
     this.filteration.page = even;
     let filteration = { ...this.filteration, page: even - 1 };
@@ -671,5 +755,9 @@ export class TasksComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
 import { RequestForPermissionComponent } from 'src/app/shared/components/request-for-permission/request-for-permission.component';
 import { PermissionsService } from './services/permissions.service';
@@ -30,6 +30,7 @@ export class PermissionsComponent {
   itemsPerPage = 5;
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   columns: any[] = [
     {
@@ -68,7 +69,6 @@ export class PermissionsComponent {
       name: "الإجراء",
       field: "actions"
     }
-
   ];
   permissions: any = [];
 
@@ -136,6 +136,8 @@ export class PermissionsComponent {
 
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
+
     });
   }
   ngOnInit(): void {
@@ -161,7 +163,91 @@ export class PermissionsComponent {
     this.getInformation();
 
     this.getPermissions(this.filteration)
-
+    this.translate.get("permissions").subscribe(data => {
+      this.columns = [
+        {
+          name: data.orderNumber,
+          field: "orderNumber",
+        },
+        {
+          name: data.jobNumber,
+          field: "employeeCode",
+        },
+        {
+          name: data.employeeName,
+          field: "employeeName",
+        },
+        {
+          name: data.permissionType,
+          field: "typeOfPermission"
+        },
+        {
+          name: data.orderStatus,
+          field: "statusName"
+        },
+        {
+          name: data.theBeginning,
+          field: "dateFrom"
+        },
+        {
+          name: data.forThePeriodOfAskingPermission,
+          field: "period"
+        },
+        {
+          name: data.theEnd,
+          field: "dateTo"
+        },
+        {
+          name: data.action,
+          field: "actions"
+        }
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("permissions").subscribe(data => {
+        this.columns = [
+          {
+            name: data.orderNumber,
+            field: "orderNumber",
+          },
+          {
+            name: data.jobNumber,
+            field: "employeeCode",
+          },
+          {
+            name: data.employeeName,
+            field: "employeeName",
+          },
+          {
+            name: data.permissionType,
+            field: "typeOfPermission"
+          },
+          {
+            name: data.orderStatus,
+            field: "statusName"
+          },
+          {
+            name: data.theBeginning,
+            field: "dateFrom"
+          },
+          {
+            name: data.forThePeriodOfAskingPermission,
+            field: "period"
+          },
+          {
+            name: data.theEnd,
+            field: "dateTo"
+          },
+          {
+            name: data.action,
+            field: "actions"
+          }
+        ];
+      })
+      // this.subscription = this.translate.stream('primeng').subscribe(data => {
+      //   this.config.setTranslation(data);
+      // });  
+    })
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
@@ -290,17 +376,21 @@ export class PermissionsComponent {
     this.getPermissions(this.filteration)
   }
   reasonOfRefuse(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
-      width: "30vw",
-      data: {
-        title: "هل متأكد من رفض الطلب؟",
-        message: "برجاء توضيح السبب إن أمكن",
-        titleReasonOfRefuse: "سبب الرفض",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض",
-        titleClose: "تراجع",
-        buttonSend: "رفض الطلب"
-      },
+    let reasonOfRefuseDialog!:MatDialogRef<DialogCloseComponent, any>;
+    this.translate.get("justifications").subscribe(translate => {
+      reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
+        width: "30vw",
+        data: {
+          title: translate.areYouSureTheRequestWillBeRejected,
+          message: translate.pleaseExplainWhyIfPossible,
+          titleReasonOfRefuse: translate.theReasonOfRefuse,
+          placeholdeReasonOfRefuse: translate.pleaseWriteTheReasonForRejection,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.rejectionOfTheApplication
+        },
+      });
     });
+
 
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
@@ -326,32 +416,35 @@ export class PermissionsComponent {
     })
   }
   requestPermission() {
-    const dialogRefAddCurrency = this.dialog.open(RequestForPermissionComponent, {
-      width: "50vw",
-      data: {
-        title: "طلب استئذان",
-        setAsNecessary: "تعيين كضرورية",
-        titlePermissionTypeId: "نوع الاستئذان <span class='color-red'>*</span>",
-        placeholderPermissionTypeId: " برجاء اختيار نوع الاستئذان",
-        PermissionTypeIdValidation: "نوع الاستئذان مطلوب",
-        titleCalendar: "تاريخ الأستئذان <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ الأستئذان",
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        NotesValidation: "الملاحظات مطلوب",
-
-        dateTaskValidation: "تاريخ الأستئذان مطلوب",
-        labelRadioButton: "صاحب الطلب",
-        firstRadio: "لنفسي",
-        secondRadio: "لموظف",
-        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
-        placeholderEmployeeId: "الموظف",
-        EmployeeIdValidation: "الموظف مطلوب",
-        uploadFile: "ارفاق ملف",
-        chooseLabel: "اختار الملف ليتم رفعه",
-        buttonSend: "إرسال الطلب"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<RequestForPermissionComponent, any>;
+    this.translate.get("permissions").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(RequestForPermissionComponent, {
+        width: "50vw",
+        data: {
+          title: translate.requestPermission,
+          setAsNecessary: translate.setAsEssential,
+          titlePermissionTypeId: translate.typeOfPermission+" <span class='color-red'>*</span>",
+          placeholderPermissionTypeId: translate.pleaseSelectTheTypeOfPermission,
+          PermissionTypeIdValidation: translate.permissionTypeRequired,
+          titleCalendar: translate.dateOfRequest+" <span class='color-red'>*</span>",
+          placeholderCalendar: translate.historyOfAskingForPermission,
+          titleNotes: translate.notes+" <span class='color-red'>*</span>",
+          placeholdeNotes: translate.notes,
+          NotesValidation: translate.notesRequired,
+          dateTaskValidation: translate.permissionDateRequired,
+          labelRadioButton: translate.applicant,
+          firstRadio: translate.forMyself,
+          secondRadio: translate.toAnEmployee,
+          titleEmployeeId: translate.employee+" <span class='color-red'>*</span>",
+          placeholderEmployeeId: translate.employee,
+          EmployeeIdValidation: translate.employeeRequired,
+          uploadFile: translate.attachAFile,
+          chooseLabel: translate.selectTheFileToUpload,
+          buttonSend: translate.sendRequest
+        },
+      });
     });
+
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editPermission = false;
 
@@ -400,16 +493,19 @@ export class PermissionsComponent {
             dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات الاستئذانات"
-
-              },
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("permissions").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.permissionRequests
+  
+                },
+              });
             });
+     
             this.getPermissions(this.filteration);
 
             setTimeout(() => {
@@ -438,32 +534,35 @@ export class PermissionsComponent {
     });
   }
   editPermission(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(RequestForPermissionComponent, {
-      width: "50vw",
-      data: {
-        title: "تعديل استئذان",
-        setAsNecessary: "تعيين كضرورية",
-        titlePermissionTypeId: "نوع الاستئذان <span class='color-red'>*</span>",
-        placeholderPermissionTypeId: " برجاء اختيار نوع الاستئذان",
-        PermissionTypeIdValidation: "نوع الاستئذان مطلوب",
-        titleCalendar: "تاريخ الأستئذان <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ الأستئذان",
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        NotesValidation: "الملاحظات مطلوب",
-
-        dateTaskValidation: "تاريخ الأستئذان مطلوب",
-        labelRadioButton: "صاحب الطلب",
-        firstRadio: "لنفسي",
-        secondRadio: "لموظف",
-        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
-        placeholderEmployeeId: "الموظف",
-        EmployeeIdValidation: "الموظف مطلوب",
-        uploadFile: "ارفاق ملف",
-        chooseLabel: "اختار الملف ليتم رفعه",
-        buttonSend: "إرسال الطلب"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<RequestForPermissionComponent, any>;
+    this.translate.get("permissions").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(RequestForPermissionComponent, {
+        width: "50vw",
+        data: {
+          title: translate.amendPermission,
+          setAsNecessary: translate.setAsEssential,
+          titlePermissionTypeId: translate.typeOfPermission+" <span class='color-red'>*</span>",
+          placeholderPermissionTypeId: translate.pleaseSelectTheTypeOfPermission,
+          PermissionTypeIdValidation: translate.permissionTypeRequired,
+          titleCalendar: translate.dateOfRequest+" <span class='color-red'>*</span>",
+          placeholderCalendar: translate.historyOfAskingForPermission,
+          titleNotes: translate.notes+" <span class='color-red'>*</span>",
+          placeholdeNotes: translate.notes,
+          NotesValidation: translate.notesRequired,
+          dateTaskValidation: translate.permissionDateRequired,
+          labelRadioButton: translate.applicant,
+          firstRadio: translate.forMyself,
+          secondRadio: translate.toAnEmployee,
+          titleEmployeeId: translate.employee+" <span class='color-red'>*</span>",
+          placeholderEmployeeId: translate.employee,
+          EmployeeIdValidation: translate.employeeRequired,
+          uploadFile: translate.attachAFile,
+          chooseLabel: translate.selectTheFileToUpload,
+          buttonSend: translate.sendRequest
+        },
+      });
     });
+
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editPermission = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
@@ -514,14 +613,17 @@ export class PermissionsComponent {
 
             dialogRefAddCurrency.close();
 
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات الاستئذانات"
-
-              },
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("permissions").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.permissionRequests
+  
+                },
+              });
             });
             this.getPermissions(this.filteration);
 
@@ -551,12 +653,16 @@ export class PermissionsComponent {
     });
   }
   dialogPermissionFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogPermissionFileComponent, {
-      width: "60vw",
-      data: {
-        title: "ملف الاستئذانات"
-      },
-    });
+    let dialogRefAddCurrency!:MatDialogRef<DialogPermissionFileComponent, any>;
+    this.translate.get("permissions").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(DialogPermissionFileComponent, {
+        width: "60vw",
+        data: {
+          title: translate.permissionsFile
+        },
+      });
+    })
+  
     dialogRefAddCurrency.componentInstance.id = data.id
 
   }
@@ -672,5 +778,9 @@ export class PermissionsComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

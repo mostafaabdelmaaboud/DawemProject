@@ -36,9 +36,8 @@
             [placeholder]="data!['placeholderEmployeeId']|translate" optionLabel="name">
             <ng-template pTemplate="header">
               <span class="p-input-icon-left input-search-dropdown">
-
                 <i class="pi pi-search" (click)="searchDropdown(searchEmployeeId.value, 'EmployeeId')"></i>
-                <input type="text" placeholder="بحث" pInputText #searchEmployeeId />
+                <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchEmployeeId />
               </span>
             </ng-template>
             <ng-template let-option pTemplate="item">
@@ -64,7 +63,7 @@
               <span class="p-input-icon-left input-search-dropdown">
 
                 <i class="pi pi-search" (click)="searchDropdown(searchTaskTypeId.value, 'TaskTypeId')"></i>
-                <input type="text" placeholder="بحث" pInputText #searchTaskTypeId />
+                <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchTaskTypeId />
               </span>
             </ng-template>
             <ng-template let-option pTemplate="item">
@@ -104,8 +103,7 @@
               <div class="container-alerts mt-2"
               *ngIf="dateTaskMultiple &&  !getControl('dateTask')?.hasError('required')">
               <div class="alert alert-danger">
-                تاريخ المهمة متعدد
-
+                {{'tasks.multipleTaskHistory' | translate}}
               </div>
 
             </div>
@@ -114,18 +112,18 @@
           </div>
           <div class="col-lg-6 col-12">
             <div class="sectionThree">
-              <label class="title" >وقت مهمة العمل <span class="color-red">*</span></label>
+              <label class="title" >{{'tasks.workTaskTime' | translate}} <span class="color-red">*</span></label>
               <div class="content-password">
                 <div class="content-pCalendar-default" dir="ltr">
                   <p-calendar formControlName="time" appendTo="body" [timeOnly]="true"
-                    placeholder="وقت مهمة العمل" [showTime]="true" [showSeconds]="true" [showIcon]="true"></p-calendar>
+                    [placeholder]="'tasks.workTaskTime' | translate" [showTime]="true" [showSeconds]="true" [showIcon]="true"></p-calendar>
                 </div>
               </div>
               <!--Start Custom Validators-->
               <div class="container-alerts mt-2" *ngIf="getControl('time')?.errors">
                 <div class="alert alert-danger"
                   *ngIf="getControl('time')?.hasError('required') && getControl('time')?.dirty">
-                 وقت مهمة العمل مطلوب  
+                  {{'tasks.workTaskTimeRequired' | translate}}
                 </div>
               </div>
            
@@ -156,7 +154,7 @@
               <span class="p-input-icon-left input-search-dropdown">
 
                 <i class="pi pi-search" (click)="searchDropdown(searchTaskEmployeeIds.value, 'TaskEmployeeIds')"></i>
-                <input type="text" placeholder="بحث" pInputText #searchTaskEmployeeIds />
+                <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchTaskEmployeeIds />
               </span>
             </ng-template>
             <ng-template let-option pTemplate="item">
@@ -166,11 +164,8 @@
         </div>
         <div class="container-alerts mt-2"  *ngIf="getControl('TaskEmployeeIds')?.errors" >
         <div class="alert alert-danger" *ngIf="getControl('TaskEmployeeIds')?.hasError('required') && getControl('TaskEmployeeIds')?.dirty">
-          فريق عمل مطلوب
-
+          {{'tasks.staffRequired' | translate}}
         </div>
-       
-
       </div>
       </div>
       <div class="section-workingDays mb-3">
@@ -189,12 +184,12 @@
 
                   </div>
                   <div class="p-fileupload-filename">
-                    <span class="d-block">name:</span>
+                    <span class="d-block">{{'employees.name' | translate}}:</span>
                     {{ file.fileUpload.name
                     }}
                   </div>
                   <div>
-                    <span class="d-block">size:</span>
+                    <span class="d-block">{{'employees.size' | translate}}:</span>
                     {{
                     file.fileUpload.size }}
                   </div>
@@ -211,16 +206,8 @@
               </ul>
             </ng-template>
           </p-fileUpload>
-          <span class="maximum-size">الحد الأقصى لحجم الملف 2 ميجابايت</span>
+          <span class="maximum-size">{{'employees.maximumFileSize' | translate}}</span>
         </div>
-        <!--
-        <div class="container-alerts mb-2" *ngIf="uploadedCommercialRegFiles.length<= 0 && requiredCommercialRegFiles">
-          <div class="alert alert-danger">
-            مطلوب تحميل الملف
-          </div>
-
-        </div> -->
-
       </div>
       <div class="sectionFive">
         <label for="" class="label-input mb-2" [innerHTML]="data!['titleNotes']|translate"></label>
@@ -231,28 +218,6 @@
 
       </div>
     </form>
-
-    <!-- <form [formGroup]="addBranchGroupForm">
-            <ng-container *ngIf="data?.subTitle">
-                <div class="mb-3" [innerHTML]="data!['subTitle']!|translate"></div>
-            </ng-container>
-            <div class="li-input col-12" *ngFor="let input of data?.addBranchesInputsProps">
-                <label for="" class="label-input mb-2" [innerHTML]="input['LabelMessage']|translate"></label>
-                <div class="content-password">
-
-
-                    <input [formControlName]="input.name" pInputText class="w-100" [type]="input.inputType" required
-                        [name]="input.name" />
-                </div>
-                <div class="container-alerts" *ngIf="getControl(input.name)?.errors">
-                    <div class="alert alert-danger"
-                        *ngIf="getControl(input.name)?.hasError('required') && getControl(input.name)?.dirty">
-                        {{input['message']|translate}}
-                    </div>
-                </div>
-            </div>
-        </form> -->
-
   </div>
   <footer class="footer-dialog p-15 d-flex justify-content-end">
 

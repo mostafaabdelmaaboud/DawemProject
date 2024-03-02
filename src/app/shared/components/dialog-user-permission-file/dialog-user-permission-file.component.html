@@ -1,7 +1,7 @@
 <div class="container-Dialog">
   <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
     <h3 class="title-Dialog m-0">
-      معلومات الصلاحيات
+      {{"userPermissions.permissionsInformation"|translate}}
     </h3>
     <button class="icon-close iconCloseDialog" type="button" (click)="close()">
       <i class="pi pi-times-circle"></i>
@@ -9,39 +9,63 @@
   </header>
   <div class="body-dialog p-15 f-s-16">
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">الحالة</label>
+      <label class="title">{{"userPermissions.theCondition"|translate}}</label>
       <div class="content-password">
-        {{info?.isActive ? 'نشط' : 'غير نشط'}}
+        <ng-container *ngIf="info?.isActive">
+          {{"employees.active"|translate}}
+        </ng-container>
+        <ng-container *ngIf="!info?.isActive">
+          {{"employees.Inactive"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">لنوع</label>
+      <label class="title">{{"userPermissions.forAType"|translate}}</label>
       <div class="content-password">
-        {{info?.forType ===0 ? 'صلاحية' : 'مستخدم'}}
+        <ng-container *ngIf="info?.forType ===0">
+          {{"userPermissions.permission"|translate}}
+        </ng-container>
+        <ng-container *ngIf="info?.forType != 0">
+          {{"userPermissions.user"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">نوع الصلاحية</label>
+      <label class="title">{{"userPermissions.permissionType"|translate}}</label>
       <div class="content-password">
-        {{info?.forTypeName ? info?.forTypeName : "لا يوجد"}}
+        <ng-container *ngIf="info?.forTypeName">
+          {{info?.forTypeName}}
+        </ng-container>
+        <ng-container *ngIf="!info?.forTypeName">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow" *ngIf="info?.userName != null">
-      <label class="title">اسم المستخدم</label>
+      <label class="title">{{"users.userName"|translate}}</label>
       <div class="content-password">
-        {{info?.userName ? info?.userName : "لا يوجد"}}
+        <ng-container *ngIf="info?.userName">
+          {{info?.userName}}
+        </ng-container>
+        <ng-container *ngIf="!info?.userName">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow" *ngIf="info?.roleName != null">
-      <label class="title">اسم الصلاحية</label>
+      <label class="title">{{"userPermissions.permissionName"|translate}}</label>
       <div class="content-password">
-        {{info?.roleName ? info?.roleName : "لا يوجد"}}
+        <ng-container *ngIf="info?.roleName">
+          {{info?.roleName}}
+        </ng-container>
+        <ng-container *ngIf="!info?.roleName">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
-
     </div>
 
   </div>
@@ -116,7 +140,7 @@
                   </clipPath>
                 </defs>
               </svg>
-              <span class="empty-table f-s-16">No Data</span>
+              <span class="empty-table f-s-16">{{"requests.noData"|translate}}</span>
             </div>
           </td>
         </tr>

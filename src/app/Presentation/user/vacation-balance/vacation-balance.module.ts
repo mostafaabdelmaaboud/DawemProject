@@ -16,7 +16,6 @@ import { TranslateModule } from '@ngx-translate/core';
     CommonModule,
     VacationBalanceRoutingModule,
     TranslateModule,
-
     MatDialogModule,
     SharedModule
   ]

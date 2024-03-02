@@ -5,6 +5,7 @@ import { ScheduleLogsRoutingModule } from './schedule-logs-routing.module';
 import { ScheduleLogsComponent } from './schedule-logs.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [ScheduleLogsComponent],
@@ -12,6 +13,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     ScheduleLogsRoutingModule,
     MatDialogModule,
+    TranslateModule,
     SharedModule
   ]
 })

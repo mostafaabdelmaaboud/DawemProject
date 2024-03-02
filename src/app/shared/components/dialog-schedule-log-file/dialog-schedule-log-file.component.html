@@ -1,7 +1,7 @@
 <div class="container-Dialog">
   <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
     <h3 class="title-Dialog m-0">
-      معلومات سجل خطة الجدولة
+      {{"scheduleLogs.schedulingPlanHistoryInformation"|translate}}
     </h3>
     <button class="icon-close iconCloseDialog" type="button" (click)="close()">
       <i class="pi pi-times-circle"></i>
@@ -9,56 +9,96 @@
   </header>
   <div class="body-dialog p-15 f-s-16">
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">اسم الدوم</label>
+      <label class="title">{{"scheduleLogs.domName"|translate}}</label>
       <div class="content-password">
-        {{info?.scheduleName ? info?.scheduleName : "لا يوجد"}}
+        <ng-container *ngIf="info?.scheduleName">
+          {{info?.scheduleName}}
+        </ng-container>
+        <ng-container *ngIf="!info?.scheduleName">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">النوع الطبق عليه</label>
+      <label class="title">{{"scheduleLogs.theTypeIsAppliedToIt"|translate}}</label>
       <div class="content-password">
-        {{info?.schedulePlanTypeName ? info?.schedulePlanTypeName : "لا يوجد"}}
+        <ng-container *ngIf="info?.schedulePlanTypeName">
+          {{info?.schedulePlanTypeName}}
+        </ng-container>
+        <ng-container *ngIf="!info?.schedulePlanTypeName">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">تاريخ التطبيق</label>
+      <label class="title">{{"scheduleLogs.applicationHistory"|translate}}</label>
       <div class="content-password">
-        {{info?.applyDate ? info?.applyDate : "لا يوجد"}}
+        <ng-container *ngIf="info?.applyDate">
+          {{info?.applyDate}}
+        </ng-container>
+        <ng-container *ngIf="!info?.applyDate">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">عدد الموظفين المطبق عليهم</label>
+      <label class="title">{{"scheduleLogs.numberOfEmployeesApplicableToThem"|translate}}</label>
       <div class="content-password">
-        {{info?.employeesNumberAppliedOn ? info?.employeesNumberAppliedOn : "لا يوجد"}}
+        <ng-container *ngIf="info?.employeesNumberAppliedOn">
+          {{info?.employeesNumberAppliedOn}}
+        </ng-container>
+        <ng-container *ngIf="!info?.employeesNumberAppliedOn">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
     </div>
     <div class="sectionTwo mb-3 line-bellow" *ngIf="info?.groupName">
-      <label class="title">اسم المجموعة</label>
+      <label class="title">{{"vacationBalance.GroupName"|translate}}</label>
       <div class="content-password">
-        {{info?.groupName ? info?.groupName : "لا يوجد"}}
+        <ng-container *ngIf="info?.groupName">
+          {{info?.groupName}}
+        </ng-container>
+        <ng-container *ngIf="!info?.groupName">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow" *ngIf="info?.departmentName">
-      <label class="title">اسم القسم</label>
+      <label class="title">{{"vacationBalance.departmentName"|translate}}</label>
       <div class="content-password">
-        {{info?.departmentName ? info?.departmentName : "لا يوجد"}}
+        <ng-container *ngIf="info?.departmentName">
+          {{info?.departmentName}}
+        </ng-container>
+        <ng-container *ngIf="!info?.departmentName">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow" *ngIf="info?.employeeName">
-      <label class="title">اسم الموظف</label>
+      <label class="title">{{"vacationBalance.employeeName"|translate}}</label>
       <div class="content-password">
-        {{info?.employeeName ? info?.employeeName : "لا يوجد"}}
+        <ng-container *ngIf="info?.employeeName">
+          {{info?.employeeName}}
+        </ng-container>
+        <ng-container *ngIf="!info?.employeeName">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">تاريخ الدوام من</label>
+      <label class="title">{{"scheduleLogs.workingDateFrom"|translate}}</label>
       <div class="content-password">
-        {{info?.scheduleDateFrom ? info?.scheduleDateFrom : "لا يوجد"}}
+        <ng-container *ngIf="info?.scheduleDateFrom">
+          {{info?.scheduleDateFrom}}
+        </ng-container>
+        <ng-container *ngIf="!info?.scheduleDateFrom">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
     </div>
   </div>
@@ -125,7 +165,7 @@
                   </clipPath>
                 </defs>
               </svg>
-              <span class="empty-table f-s-16">No Data</span>
+              <span class="empty-table f-s-16">{{"requests.noData"|translate}}</span>
             </div>
           </td>
         </tr>
@@ -142,7 +182,7 @@
           <td colspan="7">
             <div class="paginate d-flex align-items-center justify-content-end">
               <div class="NumberOfRowsPerPage">
-                <span>عدد الصفوف بالصفحة:</span>
+                <span>{{"dashboard.numberOfRowsPerPage"|translate}}</span>
                 <p-dropdown [options]="RowsPerPage" appendTo="body" optionLabel="name"
                   (onChange)="numberOfRowsPerPage($event)"></p-dropdown>
 

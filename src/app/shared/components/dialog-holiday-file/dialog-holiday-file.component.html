@@ -11,42 +11,67 @@
 
   <div class="body-dialog p-15 f-s-16">
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title"> تعيين كنشط</label>
+      <label class="title">{{"holidays.setAsActive"|translate}}</label>
       <div class="content-password">
-        {{info?.isActive ? "نشط" : "غير نشط"}}
+        <ng-container *ngIf="info?.isActive">
+          {{"employees.active"|translate}}
+        </ng-container>
+        <ng-container *ngIf="!info?.isActive">
+          {{"employees.Inactive"|translate}}
+        </ng-container>
 
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">اسم العطلة</label>
+      <label class="title">{{"holidays.holidayName"|translate}}</label>
       <div class="content-password">
-        {{info?.name ? info?.name : "لا يوجد"}}
+        <ng-container *ngIf="info?.name">
+          {{info?.name}}
+        </ng-container>
+        <ng-container *ngIf="!info?.name">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
 
 
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">تاريخ البداية</label>
+      <label class="title">{{"holidays.startDate"|translate}}</label>
       <div class="content-password">
-        {{info?.startDate ? info?.startDate : "لا يوجد"}}
+        <ng-container *ngIf="info?.startDate">
+          {{info?.startDate}}
+        </ng-container>
+        <ng-container *ngIf="!info?.startDate">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
 
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">تاريخ النهاية</label>
+      <label class="title">{{"holidays.expiryDate"|translate}}</label>
       <div class="content-password">
-        {{info?.endDate ? info?.endDate : "لا يوجد"}}
+        <ng-container *ngIf="info?.endDate">
+          {{info?.endDate}}
+        </ng-container>
+        <ng-container *ngIf="!info?.endDate">
+          {{"department.nothing"|translate}}
+        </ng-container>
 
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">الملاحظات</label>
+      <label class="title">{{"permissions.notes"|translate}}</label>
       <div class="content-password">
-        {{info?.notes ? info?.notes : "لا يوجد"}}
+        <ng-container *ngIf="info?.notes">
+          {{info?.notes}}
+        </ng-container>
+        <ng-container *ngIf="!info?.notes">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
     </div>
 

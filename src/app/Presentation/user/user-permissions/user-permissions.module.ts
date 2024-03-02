@@ -5,6 +5,7 @@ import { UserPermissionsRoutingModule } from './user-permissions-routing.module'
 import { UserPermissionsComponent } from './user-permissions.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
   imports: [
     CommonModule,
     UserPermissionsRoutingModule,
+    TranslateModule,
     MatDialogModule,
     SharedModule
   ]

@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DeleteShiftComponent } from 'src/app/shared/components/delete-shift/delete-shift.component';
 import { AddAholidayComponent } from 'src/app/shared/components/add-aholiday/add-aholiday.component';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
@@ -32,6 +32,7 @@ export class HolidaysComponent {
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
   defaultRowPerPage = { name: '5', code: 5 };
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   columns: any[] = [
     {
@@ -58,7 +59,6 @@ export class HolidaysComponent {
       name: "الإجراء",
       field: "actions"
     }
-
   ];
   holidays: any = [];
 
@@ -122,9 +122,68 @@ export class HolidaysComponent {
 
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
     });
   }
   ngOnInit(): void {
+    this.translate.get("holidays").subscribe(data => {
+      this.columns = [
+        {
+          name: data.code,
+          field: "code",
+        },
+        {
+          name: data.theName,
+          field: "name",
+        },
+        {
+          name: data.holidayType,
+          field: "dateType"
+        },
+        {
+          name: data.startDate,
+          field: "startDate"
+        },
+        {
+          name: data.expiryDate,
+          field: "endDate"
+        },
+        {
+          name: data.action,
+          field: "actions"
+        }
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("holidays").subscribe(data => {
+        this.columns = [
+          {
+            name: data.code,
+            field: "code",
+          },
+          {
+            name: data.theName,
+            field: "name",
+          },
+          {
+            name: data.holidayType,
+            field: "dateType"
+          },
+          {
+            name: data.startDate,
+            field: "startDate"
+          },
+          {
+            name: data.expiryDate,
+            field: "endDate"
+          },
+          {
+            name: data.action,
+            field: "actions"
+          }
+        ];
+      })
+    })
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -146,9 +205,6 @@ export class HolidaysComponent {
     this.getInformation();
 
     this.getHolidays(this.filteration)
-
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
 
   }
   showActions(data: any) {
@@ -200,30 +256,34 @@ export class HolidaysComponent {
     this.getHolidays(this.filteration)
   }
   addholiday() {
-    const dialogRefAddCurrency = this.dialog.open(AddAholidayComponent, {
-      width: "50vw",
-      data: {
-        title: "إضافة عطلة",
-        titleHolidayName: "اسم العطلة <span class='color-red'>*</span>",
-        placeholdeHolidayName: "اسم العطلة",
-        labelRadioButtonFirst: "العطلة بالتقويم",
-        firstRadio: "الهجري",
-        secondRadio: "الميلادي",
-        setAsActive: "تعيين كنشط",
-        validationtitleHolidayName: "اسم العطلة مطلوب",
-        validationCalendarFirst: "تاريخ البداية مطلوب",
-        validationCalendarSecond: "تاريخ النهاية مطلوب",
-        validationtitleNotes: "الملاحظات مطلوبة",
-        titleCalendarFirst: "تاريخ البداية <span class='color-red'>*</span>",
-        placeholderCalendarFirst: "اختار تاريخ البداية",
-        titleCalendarSecond: "تاريخ النهاية <span class='color-red'>*</span>",
-        placeholderCalendarSecond: "اختار تاريخ النهاية",
-        titleNotes: "ملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "برجاء كتابة الملاحظات هنا",
-        buttonSend: "إضافة العطلة",
-        titleClose: "تراجع"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<AddAholidayComponent, any>;
+    this.translate.get("holidays").subscribe(translate => {
+     dialogRefAddCurrency = this.dialog.open(AddAholidayComponent, {
+        width: "50vw",
+        data: {
+          title: translate.addHoliday,
+          titleHolidayName: translate.holidayName +" <span class='color-red'>*</span>",
+          placeholdeHolidayName: translate.holidayName,
+          labelRadioButtonFirst: translate.holidayByCalendar,
+          firstRadio: translate.hijri,
+          secondRadio: translate.gregorian,
+          setAsActive: translate.setAsActive,
+          validationtitleHolidayName: translate.holidayNameIsRequired,
+          validationCalendarFirst: translate.startDateRequired,
+          validationCalendarSecond: translate.endDateRequired,
+          validationtitleNotes: translate.notesRequired,
+          titleCalendarFirst: translate.startDate+" <span class='color-red'>*</span>",
+          placeholderCalendarFirst: translate.chooseStartDate,
+          titleCalendarSecond: translate.expiryDate+" <span class='color-red'>*</span>",
+          placeholderCalendarSecond: translate.chooseEndDate,
+          titleNotes: translate.comments+" <span class='color-red'>*</span>",
+          placeholdeNotes: translate.pleaseWriteNotesHere,
+          buttonSend: translate.addVacation,
+          titleClose: translate.toRetreat
+        },
+      });
     });
+    
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editHoliday = false;
 
@@ -254,16 +314,19 @@ export class HolidaysComponent {
             dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات العطلات"
-
-              },
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("holidays").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.holidayRequests
+  
+                },
+              });
             });
+    
             this.getHolidays(this.filteration);
 
             setTimeout(() => {
@@ -280,6 +343,90 @@ export class HolidaysComponent {
             dialogRefAddCurrency.componentInstance.submitted = true;
             dialogRefAddCurrency.componentInstance.loading = false;
 
+          }
+        }
+      )
+    });
+    dialogRefAddCurrency.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+  editHoliday(data: any) {
+    let dialogRefAddCurrency!:MatDialogRef<AddAholidayComponent, any>;
+    this.translate.get("holidays").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(AddAholidayComponent, {
+        width: "50vw",
+        data: {
+          title: translate.modifyHoliday,
+          titleHolidayName: translate.holidayName +" <span class='color-red'>*</span>",
+          placeholdeHolidayName: translate.holidayName,
+          labelRadioButtonFirst: translate.holidayByCalendar,
+          firstRadio: translate.hijri,
+          secondRadio: translate.gregorian,
+          setAsActive: translate.setAsActive,
+          validationtitleHolidayName: translate.holidayNameIsRequired,
+          validationCalendarFirst: translate.startDateRequired,
+          validationCalendarSecond: translate.endDateRequired,
+          validationtitleNotes: translate.notesRequired,
+          titleCalendarFirst: translate.startDate+" <span class='color-red'>*</span>",
+          placeholderCalendarFirst: translate.chooseStartDate,
+          titleCalendarSecond: translate.expiryDate+" <span class='color-red'>*</span>",
+          placeholderCalendarSecond: translate.chooseEndDate,
+          titleNotes: translate.comments+" <span class='color-red'>*</span>",
+          placeholdeNotes: translate.pleaseWriteNotesHere,
+          buttonSend: translate.saveTheHoliday,
+          titleClose: translate.toRetreat
+        },
+      });
+    });
+    dialogRefAddCurrency.componentInstance.submitted = true;
+    dialogRefAddCurrency.componentInstance.editHoliday = true;
+    dialogRefAddCurrency.componentInstance.id = data.id;
+    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+      let formData: any = {};
+      formData.id = data.id;
+      formData.name = result.name;
+      formData.isActive = result.isActive;
+      formData.dateType = Number(result.dateType);
+      formData.startDate = moment(result.startDate).format("YYYY-MM-DD");
+      formData.endDate = moment(result.endDate).format("YYYY-MM-DD");
+      formData.notes = result.notes;
+      formData.isSpecifiedByYear = Array.isArray(result.isSpecifiedByYear) ? result.isSpecifiedByYear[0] : result.isSpecifiedByYear;
+      dialogRefAddCurrency.componentInstance.submitted = false;
+      dialogRefAddCurrency.componentInstance.loading = true;
+      this.holidaysService.updateHoliday(formData).subscribe(
+        {
+          next: (data: any) => {
+            dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
+            dialogRefAddCurrency.close();
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("holidays").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.holidayRequests
+                },
+              });
+            });
+            this.getHolidays(this.filteration);
+
+            setTimeout(() => {
+              succressDialog.close();
+
+            }, 2000);
+            succressDialog.componentInstance.submitted = true;
+            succressDialog.componentInstance.submitClicked.subscribe(result => {
+              succressDialog.close();
+            })
+          },
+          error: (err: any) => {
+            dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
           }
         }
       )
@@ -354,100 +501,7 @@ export class HolidaysComponent {
     };
     this.getHolidays(this.filteration);
   }
-  editHoliday(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddAholidayComponent, {
-      width: "50vw",
-      data: {
-        title: "تعديل عطلة",
-        titleHolidayName: "اسم العطلة <span class='color-red'>*</span>",
-        placeholdeHolidayName: "اسم العطلة",
-        labelRadioButtonFirst: "العطلة بالتقويم",
-        firstRadio: "الهجري",
-        secondRadio: "الميلادي",
-        setAsActive: "تعيين كنشط",
-        validationtitleHolidayName: "اسم العطلة مطلوب",
-        validationCalendarFirst: "تاريخ البداية مطلوب",
-        validationCalendarSecond: "تاريخ النهاية مطلوب",
-        validationtitleNotes: "الملاحظات مطلوبة",
-        titleCalendarFirst: "تاريخ البداية <span class='color-red'>*</span>",
-        placeholderCalendarFirst: "اختار تاريخ البداية",
-        titleCalendarSecond: "تاريخ النهاية <span class='color-red'>*</span>",
-        placeholderCalendarSecond: "اختار تاريخ النهاية",
-        titleNotes: "ملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "برجاء كتابة الملاحظات هنا",
-        buttonSend: "حفظ العطلة",
-        titleClose: "تراجع"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editHoliday = true;
-    dialogRefAddCurrency.componentInstance.id = data.id;
 
-
-    // dialogRefAddCurrency.componentInstance.list = this.categories;
-
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData: any = {};
-      ;
-      formData.id = data.id;
-
-      formData.name = result.name;
-      formData.isActive = result.isActive;
-      formData.dateType = Number(result.dateType);
-      formData.startDate = moment(result.startDate).format("YYYY-MM-DD");
-      formData.endDate = moment(result.endDate).format("YYYY-MM-DD");
-      formData.notes = result.notes;
-      formData.isSpecifiedByYear = Array.isArray(result.isSpecifiedByYear) ? result.isSpecifiedByYear[0] : result.isSpecifiedByYear;
-
-      dialogRefAddCurrency.componentInstance.submitted = false;
-      dialogRefAddCurrency.componentInstance.loading = true;
-
-      ;
-      this.holidaysService.updateHoliday(formData).subscribe(
-        {
-          next: (data: any) => {
-
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-            dialogRefAddCurrency.componentInstance.loading = false;
-
-            dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات العطلات"
-
-              },
-            });
-            this.getHolidays(this.filteration);
-
-            setTimeout(() => {
-              succressDialog.close();
-
-            }, 2000);
-            succressDialog.componentInstance.submitted = true;
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-              succressDialog.close();
-            })
-
-          },
-          error: (err: any) => {
-            dialogRefAddCurrency.componentInstance.submitted = true;
-            dialogRefAddCurrency.componentInstance.loading = false;
-
-          }
-        }
-      )
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
-
-      }
-    });
-  }
   enabledRow(data: any) {
 
     this.holidaysService.enabledHoliday({ HolidayId: data.id }).subscribe(
@@ -464,17 +518,21 @@ export class HolidaysComponent {
     )
   }
   reasonOfRefuse(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
-      width: "40vw",
-      data: {
-        title: "متأكد من تعليق العطلة؟",
-        message: "برجاء توضيح السبب إن أمكن ليظهر للموظف عند محاولة تسجيل الدخول",
-        titleReasonOfRefuse: "سبب التعليق",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض ليظهر للموظف",
-        titleClose: "تراجع",
-        buttonSend: "تعليق الحساب"
-      },
+    let reasonOfRefuseDialog!:MatDialogRef<DialogCloseComponent, any>;
+    this.translate.get("holidays").subscribe(translate => {
+      reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
+        width: "40vw",
+        data: {
+          title: translate.areYouSureYoureOnHoldForVacation,
+          message: translate.pleaseExplainTheReasonIfPossible,
+          titleReasonOfRefuse: translate.reasonForComment,
+          placeholdeReasonOfRefuse: translate.pleaseWriteTheReasonForRejection,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.accountSuspension
+        },
+      });
     });
+
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
@@ -497,26 +555,32 @@ export class HolidaysComponent {
     })
   }
   dialogHolidayFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogHolidayFileComponent, {
-      width: "40vw",
-      data: {
-        title: "ملف العطلة"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<DialogHolidayFileComponent, any>;
+    this.translate.get("holidays").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(DialogHolidayFileComponent, {
+        width: "40vw",
+        data: {
+          title: translate.vacationFile
+        },
+      });
     });
     dialogRefAddCurrency.componentInstance.id = data.id
-
   }
 
   deleteRow() {
-    const reasonOfRefuseDialog = this.dialog.open(DeleteShiftComponent, {
-      width: "30vw",
-      data: {
-        title: "متأكد من حذف العطلة؟",
-        message: "لا يمكن الرجوع في في هذا الأمر",
-        titleClose: "تراجع",
-        buttonSend: "حذف"
-      },
+    let reasonOfRefuseDialog!:MatDialogRef<DeleteShiftComponent, any>;
+    this.translate.get("holidays").subscribe(translate => {
+      reasonOfRefuseDialog = this.dialog.open(DeleteShiftComponent, {
+        width: "30vw",
+        data: {
+          title: translate.areYouSureToDeleteTheVacation,
+          message: translate.thereIsNoGoingBackOnThisMatter,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.delete
+        },
+      });
     });
+
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.close();
@@ -561,41 +625,9 @@ export class HolidaysComponent {
     };
   }
   changePage(even: number) {
-
-    // if (this.filteration.page < even) {
-    //   if (this.page === 0) {
-    //     if (this.filteration.page + 1 < even) {
-    //       let minusCurrentPage = even - this.filteration.page;
-    //       this.page += this.itemsPerPage * minusCurrentPage;
-    //     } else {
-    //       this.page = this.itemsPerPage;
-    //     }
-    //   } else {
-    //     if (this.filteration.page + 1 < even) {
-    //       let minusCurrentPage = even - this.filteration.page;
-    //       this.page += this.itemsPerPage * minusCurrentPage;
-
-    //     } else {
-    //       this.page += this.itemsPerPage;
-
-    //     }
-    //   }
-    // } else {
-    //       //   if (this.filteration.page > even + 1) {
-    //     let minusCurrentPage = this.filteration.page - even;
-    //     this.page -= this.itemsPerPage * minusCurrentPage;
-
-    //   } else {
-    //     this.page -= this.itemsPerPage;
-
-    //   }
-    //   this.page -= this.itemsPerPage;
-    // }
-
     this.filteration.page = even;
     let filteration = { ...this.filteration, page: even - 1 };
     // this.getListTransaction(filteration)
-
   }
   changeLang(lang: string) {
     this.translate.use(lang);
@@ -604,5 +636,9 @@ export class HolidaysComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

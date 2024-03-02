@@ -5,6 +5,7 @@ import { TasksRoutingModule } from './tasks-routing.module';
 import { TasksComponent } from './tasks.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     CommonModule,
     TasksRoutingModule,
     MatDialogModule,
+    TranslateModule,
     SharedModule
   ]
 })

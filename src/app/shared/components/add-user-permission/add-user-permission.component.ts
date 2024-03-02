@@ -173,6 +173,7 @@ export class AddUserPermissionComponent {
     private toast: ToastrService,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
+
     private fb: FormBuilder, private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, public translate: TranslateService, media: MediaMatcher) {
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -206,7 +207,48 @@ export class AddUserPermissionComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+    this.translate.get("userPermissions").subscribe(data => {
+      this.columns = [
+        {
+          name: data.screenNamePermissionName,
+          field: "screenName",
+        },
+        {
+          name: data.addition,
+          field: "0",
+        },
+        {
+          name: data.edit,
+          field: "1"
+        },
+        {
+          name: data.delete,
+          field: "2"
+        },
+        {
+          name: data.watching,
+          field: "3"
+        },
+        {
+          name: data.admissions,
+          field: "4"
+        },
+        {
+          name: data.rejection,
+          field: "5"
+        },
+        {
+          name: data.activation,
+          field: "6"
+        },
+        {
+          name: data.disruption,
+          field: "7"
+        },
+      ];
+    })
     this.loading = true;
+    
     let RoleDropdown = this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
 
     let usersForDropdown = this.userPermissionsService.usersForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
@@ -347,9 +389,12 @@ export class AddUserPermissionComponent {
 
     this.userPermissionsService.checkAndGetPermission({ UserId: userId.value.key }).subscribe({
       next: role => {
-        this.data!['titleClose'] = "تراجع";
-        this.data!['title'] = "تعديل صلاحية";
-        this.data!['buttonSend'] = "تعديل صلاحية";
+        this.translate.get("userPermissions").subscribe(translate => {
+          this.data!['titleClose'] = translate.toRetreat;
+          this.data!['title'] = translate.modifyPermission;
+          this.data!['buttonSend'] = translate.modifyPermission;
+        });
+
         this.editPermission = true;
         this.id = role.id
         this.getControl("isActive")?.setValue(role.isActive);
@@ -385,12 +430,17 @@ export class AddUserPermissionComponent {
         }
         this.permissionScreens = role?.permissionScreens;
         this.getPermissions(this.filteration, this.permissionScreens);
-        this.toast.success("يوحد صلاحيات سابقة للمستخدم");
+        this.translate.get("userPermissions").subscribe(translate => {
+          this.toast.success(translate.unifiesPreviousUserPermissions);
+        });
 
       },
       error: err => {
-        this.data!['buttonSend'] = "اضافه صلاحية";
-        this.data!['title'] = "إضافة صلاحية";
+        this.translate.get("userPermissions").subscribe(translate => {
+          this.data!['buttonSend'] = translate.addPermission;
+          this.data!['title'] = translate.addPermission;
+        });
+     
         this.editPermission = false;
         this.permissionScreens = [];
         this.getPermissions(this.filteration, this.permissionScreens);
@@ -402,9 +452,12 @@ export class AddUserPermissionComponent {
 
     this.userPermissionsService.checkAndGetPermission({ RoleId: RoleId.value.key }).subscribe({
       next: role => {
-        this.data!['titleClose'] = "تراجع";
-        this.data!['title'] = "تعديل صلاحية";
-        this.data!['buttonSend'] = "تعديل صلاحية";
+        this.translate.get("userPermissions").subscribe(translate => {
+          this.data!['titleClose'] = translate.toRetreat;
+          this.data!['title'] = translate.modifyPermission;
+          this.data!['buttonSend'] = translate.modifyPermission;
+        });
+  
 
         this.editPermission = true;
         this.id = role.id
@@ -444,15 +497,20 @@ export class AddUserPermissionComponent {
 
           });
         }
-        this.toast.success("يوجد صلاحيات سابقة للمنصب");
+        this.translate.get("userPermissions").subscribe(translate => {
+          this.toast.success(translate.thereArePreExistingPowersForThePosition);
+        });
 
         this.permissionScreens = role?.permissionScreens;
         this.getPermissions(this.filteration, this.permissionScreens);
 
       },
       error: err => {
-        this.data!['buttonSend'] = "اضافه صلاحية";
-        this.data!['title'] = "إضافة صلاحية";
+        this.translate.get("userPermissions").subscribe(translate => {
+          this.data!['buttonSend'] = translate.addPermission;
+          this.data!['title'] = translate.addPermission;
+        });
+   
         this.editPermission = false;
         this.permissionScreens = [];
         this.getPermissions(this.filteration, this.permissionScreens);
@@ -654,7 +712,10 @@ export class AddUserPermissionComponent {
       this.getControl("UserId")?.markAsDirty();
       this.getControl("RoleId")?.markAsDirty();
       if (formatObject.PermissionScreens.length == 0) {
-        this.toast.error("الرجاء اختيار صلاحية");
+        this.translate.get("userPermissions").subscribe(translate => {
+          this.toast.error(translate.pleaseSelectApermissionPeriod);
+        });
+        
       }
 
 

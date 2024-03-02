@@ -10,57 +10,83 @@
   </header>
   <div class="body-dialog p-15 f-s-16">
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">الرقم الموظف</label>
+      <label class="title">{{"vacations.employeeNumber"|translate}}</label>
       <div class="content-password">
-        {{info?.employee?.code ? info?.employee?.code : "لا يوجد"}}
+        <ng-container *ngIf="info?.employee?.code">
+          {{info?.employee?.code}}
+        </ng-container>
+        <ng-container *ngIf="!info?.employee?.code">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title"> اسم الموظف</label>
+      <label class="title">{{"tasks.employeeName"|translate}}</label>
       <div class="content-password">
-        {{info?.employee?.name ? info?.employee?.name : "لا يوجد"}}
-
+        <ng-container *ngIf="info?.employee?.name">
+          {{info?.employee?.name}}
+        </ng-container>
+        <ng-container *ngIf="!info?.employee?.name">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
-
     </div>
 
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">فريق العمل</label>
+      <label class="title">{{"tasks.workTeam"|translate}}</label>
       <ng-container *ngFor="let task of info?.taskEmployees">
         <div class="content-password">
           {{task}}
         </div>
       </ng-container>
-      <ng-container *ngIf="info?.taskEmployees?.length === 0">لا يوجد</ng-container>
+      <ng-container *ngIf="info?.taskEmployees?.length === 0">{{"department.nothing"|translate}}</ng-container>
       
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">نوع المهمة</label>
+      <label class="title">{{"tasks.taskType"|translate}}</label>
       <div class="content-password">
-        {{info?.taskTypeName ? info?.taskTypeName : "لا يوجد"}}
+        <ng-container *ngIf="info?.taskTypeName">
+          {{info?.taskTypeName}}
+        </ng-container>
+        <ng-container *ngIf="!info?.taskTypeName">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">التاريخ</label>
+      <label class="title">{{"tasks.theDate"|translate}}</label>
       <div class="content-password">
-        {{info?.dateFrom ? info?.dateFrom : "لا يوجد"}}
-
-      </div>
-
-    </div>
-    <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">حاله الطلب</label>
-      <div class="content-password">
-        {{info?.statusName ? info?.statusName : "لا يوجد"}}
-
+        <ng-container *ngIf="info?.dateFrom">
+          {{info?.dateFrom}}
+        </ng-container>
+        <ng-container *ngIf="!info?.dateFrom">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">الملاحظات</label>
+      <label class="title">{{"tasks.orderStatus"|translate}}</label>
       <div class="content-password">
-        {{info?.notes ? info?.notes : "لا يوجد"}}
+        <ng-container *ngIf="info?.statusName">
+          {{info?.statusName}}
+        </ng-container>
+        <ng-container *ngIf="!info?.statusName">
+          {{"department.nothing"|translate}}
+        </ng-container>
+
+      </div>
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">{{"justifications.notes"|translate}}</label>
+      <div class="content-password">
+        <ng-container *ngIf="info?.notes">
+          {{info?.notes}}
+        </ng-container>
+        <ng-container *ngIf="!info?.notes">
+          {{"department.nothing"|translate}}
+        </ng-container>
 
       </div>
     </div>

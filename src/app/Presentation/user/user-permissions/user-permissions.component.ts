@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ToastrService } from 'ngx-toastr';
@@ -29,6 +29,7 @@ export class UserPermissionsComponent {
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
   private userPermissionsService = inject(UserPermissionsService);
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
 
   columns: any[] = [
@@ -120,6 +121,8 @@ export class UserPermissionsComponent {
 
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
+
     });
   }
   ngOnInit(): void {
@@ -144,6 +147,67 @@ export class UserPermissionsComponent {
     this.getInformation();
 
     this.getPermissions(this.filteration);
+    this.translate.get("userPermissions").subscribe(data => {
+      this.columns =  [
+        {
+          name: data.permissionNumber,
+          field: "code",
+        },
+        {
+          name: data.permissionType,
+          field: "forTypeName"
+        },
+        {
+          name: data.permissionNameUser,
+          field: "roleOrUserName",
+        },
+        {
+          name: data.theCondition,
+          field: "isActive"
+        },
+        {
+          name: data.numberOfScreensAllowed,
+          field: "allowedScreensCount"
+        },
+        {
+          name: data.action,
+          field: "actions"
+        }
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("userPermissions").subscribe(data => {
+        this.columns =  [
+          {
+            name: data.permissionNumber,
+            field: "code",
+          },
+          {
+            name: data.permissionType,
+            field: "forTypeName"
+          },
+          {
+            name: data.permissionNameUser,
+            field: "roleOrUserName",
+          },
+          {
+            name: data.theCondition,
+            field: "isActive"
+          },
+          {
+            name: data.numberOfScreensAllowed,
+            field: "allowedScreensCount"
+          },
+          {
+            name: data.action,
+            field: "actions"
+          }
+        ];
+      })
+      // this.subscription = this.translate.stream('primeng').subscribe(data => {
+      //   this.config.setTranslation(data);
+      // });  
+    })
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
@@ -251,30 +315,29 @@ export class UserPermissionsComponent {
     this.getPermissions(this.filteration);
   }
   addUserPermission() {
-    const dialogRefAddCurrency = this.dialog.open(AddUserPermissionComponent, {
-      width: "90vw",
-      maxWidth: "90vw",
-
-      data: {
-        title: "اضافه صلاحية",
-        setAsActive: "تعيين كنشط",
-        labelRadioButton: "النوع",
-        firstRadio: "المنصب",
-        secondRadio: "مستخدم",
-
-        titleRoleId: "نوع المنصب",
-        placeholdeRoleId: "نوع المنصب",
-        ValidationRoleId: "نوع المنصب مطلوب",
-
-        titleUserId: "نوع المستخدم",
-        placeholdeUserId: "نوع المستخدم",
-        ValidationUserId: "نوع المستخدم مطلوب",
-
-
-        titleClose: "تراجع",
-        buttonSend: "إضافة صلاحية"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<AddUserPermissionComponent, any>;
+    this.translate.get("userPermissions").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(AddUserPermissionComponent, {
+        width: "90vw",
+        maxWidth: "90vw",
+        data: {
+          title: translate.addPermission,
+          setAsActive: translate.setAsActive,
+          labelRadioButton: translate.type,
+          firstRadio: translate.position,
+          secondRadio: translate.user,
+          titleRoleId: translate.positionType,
+          placeholdeRoleId: translate.positionType,
+          ValidationRoleId: translate.positionTypeRequired,
+          titleUserId: translate.userType,
+          placeholdeUserId: translate.userType,
+          ValidationUserId: translate.userTypeRequired,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.addPermission
+        },
+      });
     });
+
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editPermission = false;
 
@@ -293,15 +356,18 @@ export class UserPermissionsComponent {
                 dialogRefAddCurrency.componentInstance.submitted = true;
 
                 dialogRefAddCurrency.close();
-
-                const succressDialog = this.dialog.open(ToastSuccessComponent, {
-                  width: "30vw",
-                  data: {
-                    title: "تم ارسال طلبك",
-                    message: data.message,
-                    buttonSend: "طلبات الصلاحيات"
-                  },
-                });
+                let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+                  this.translate.get("userPermissions").subscribe(translate => {
+                    succressDialog = this.dialog.open(ToastSuccessComponent, {
+                      width: "30vw",
+                      data: {
+                        title: translate.yourRequestHasBeenSent,
+                        message: data.message,
+                        buttonSend: translate.permissionRequests
+                      },
+                    });
+                  });
+             
                 this.getPermissions(this.filteration);
                 setTimeout(() => {
                   succressDialog.close();
@@ -336,15 +402,18 @@ export class UserPermissionsComponent {
                 dialogRefAddCurrency.componentInstance.submitted = true;
 
                 dialogRefAddCurrency.close();
-
-                const succressDialog = this.dialog.open(ToastSuccessComponent, {
-                  width: "30vw",
-                  data: {
-                    title: "تم ارسال طلبك",
-                    message: data.message,
-                    buttonSend: "طلبات الصلاحيات"
-                  },
+                let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+                this.translate.get("userPermissions").subscribe(translate => {
+                  succressDialog = this.dialog.open(ToastSuccessComponent, {
+                    width: "30vw",
+                    data: {
+                      title: translate.yourRequestHasBeenSent,
+                      message: data.message,
+                      buttonSend: translate.permissionRequests
+                    },
+                  });
                 });
+  
                 this.getPermissions(this.filteration);
                 setTimeout(() => {
                   succressDialog.close();
@@ -376,29 +445,29 @@ export class UserPermissionsComponent {
     });
   }
   editUserPermission(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddUserPermissionComponent, {
-      width: "90vw",
-      maxWidth: "90vw",
-
-      data: {
-        title: "تعديل صلاحية",
-        setAsActive: "تعيين كنشط",
-        labelRadioButton: "النوع",
-        firstRadio: "المنصب",
-        secondRadio: "مستخدم",
-
-        titleRoleId: "نوع المنصب",
-        placeholdeRoleId: "نوع المنصب",
-        ValidationRoleId: "نوع المنصب مطلوب",
-
-        titleUserId: "نوع المستخدم",
-        placeholdeUserId: "نوع المستخدم",
-        ValidationUserId: "نوع المستخدم مطلوب",
-
-        titleClose: "تراجع",
-        buttonSend: "حفظ الصلاحية"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<AddUserPermissionComponent, any>;
+    this.translate.get("userPermissions").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(AddUserPermissionComponent, {
+        width: "90vw",
+        maxWidth: "90vw",
+        data: {
+          title: translate.modifyPermission,
+          setAsActive: translate.setAsActive,
+          labelRadioButton: translate.type,
+          firstRadio: translate.position,
+          secondRadio: translate.user,
+          titleRoleId: translate.positionType,
+          placeholdeRoleId: translate.positionType,
+          ValidationRoleId: translate.positionTypeRequired,
+          titleUserId: translate.userType,
+          placeholdeUserId: translate.userType,
+          ValidationUserId: translate.userTypeRequired,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.savePermission
+        },
+      });
     });
+  
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editPermission = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
@@ -420,13 +489,16 @@ export class UserPermissionsComponent {
 
                 dialogRefAddCurrency.close();
 
-                const succressDialog = this.dialog.open(ToastSuccessComponent, {
-                  width: "30vw",
-                  data: {
-                    title: "تم ارسال طلبك",
-                    message: data.message,
-                    buttonSend: "طلبات الصلاحيات"
-                  },
+                let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+                this.translate.get("userPermissions").subscribe(translate => {
+                  succressDialog = this.dialog.open(ToastSuccessComponent, {
+                    width: "30vw",
+                    data: {
+                      title: translate.yourRequestHasBeenSent,
+                      message: data.message,
+                      buttonSend: translate.permissionRequests
+                    },
+                  });
                 });
                 this.getPermissions(this.filteration);
                 setTimeout(() => {
@@ -462,14 +534,16 @@ export class UserPermissionsComponent {
                 dialogRefAddCurrency.componentInstance.submitted = true;
 
                 dialogRefAddCurrency.close();
-
-                const succressDialog = this.dialog.open(ToastSuccessComponent, {
-                  width: "30vw",
-                  data: {
-                    title: "تم ارسال طلبك",
-                    message: data.message,
-                    buttonSend: "طلبات الصلاحيات"
-                  },
+                let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+                this.translate.get("userPermissions").subscribe(translate => {
+                  succressDialog = this.dialog.open(ToastSuccessComponent, {
+                    width: "30vw",
+                    data: {
+                      title: translate.yourRequestHasBeenSent,
+                      message: data.message,
+                      buttonSend: translate.permissionRequests
+                    },
+                  });
                 });
                 this.getPermissions(this.filteration);
                 setTimeout(() => {
@@ -503,11 +577,14 @@ export class UserPermissionsComponent {
     });
   }
   dialogPermissionFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogUserPermissionFileComponent, {
-      width: "80vw",
-      data: {
-        title: "ملف الصلاحية"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<DialogUserPermissionFileComponent, any>;
+    this.translate.get("userPermissions").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(DialogUserPermissionFileComponent, {
+        width: "80vw",
+        data: {
+          title: translate.permissionFile
+        },
+      });
     });
     dialogRefAddCurrency.componentInstance.id = data.id
   }
@@ -524,16 +601,19 @@ export class UserPermissionsComponent {
 
 
   reasonOfRefuse(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
-      width: "30vw",
-      data: {
-        title: "هل متأكد من حذف الصلاحية؟",
-        message: "برجاء توضيح السبب إن أمكن",
-
-        titleClose: "تراجع",
-        buttonSend: "حذف"
-      },
+    let reasonOfRefuseDialog!:MatDialogRef<DialogDeleteComponent, any>;
+    this.translate.get("userPermissions").subscribe(translate => {
+      reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
+        width: "30vw",
+        data: {
+          title: translate.areYouSureYouWantToDeletePermission,
+          message: translate.pleaseExplainWhyIfPossible,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.delete
+        },
+      });
     });
+
 
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
@@ -600,5 +680,9 @@ export class UserPermissionsComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

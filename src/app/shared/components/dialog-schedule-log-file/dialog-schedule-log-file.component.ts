@@ -20,6 +20,7 @@ import { ScheduleLogsService } from 'src/app/Presentation/user/schedule-logs/ser
   selector: 'app-dialog-schedule-log-file',
   standalone: true,
   imports: [CommonModule, MatDialogModule, TranslateModule,
+    
     SharedModule],
   templateUrl: './dialog-schedule-log-file.component.html',
   styleUrls: ['./dialog-schedule-log-file.component.scss']
@@ -86,7 +87,9 @@ export class DialogScheduleLogFileComponent {
   constructor(
     public dialogRef: MatDialogRef<DialogScheduleLogFileComponent>,
     @Inject(MAT_DIALOG_DATA) public data: MatDialog | null,
-    private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService) {
+    private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, 
+    public translate: TranslateService, 
+    private fb: FormBuilder, private toast: ToastrService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
 
@@ -169,7 +172,23 @@ export class DialogScheduleLogFileComponent {
     }
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-
+    this.translate.get("scheduleLogs").subscribe(data => {
+      this.columns = [
+        {
+          name: data.employeeName,
+          field: "employeeName",
+        },
+        {
+          name: data.oldTime,
+          field: "oldScheduleName",
+        },
+        {
+          name: data.newShift,
+          field: "newScheduleName"
+        },
+    
+      ];
+    })
   }
   close(): void {
     this.dialogRef.close(false);

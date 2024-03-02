@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MediaMatcher } from '@angular/cdk/layout';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
@@ -28,6 +28,7 @@ export class ScheduleLogsComponent {
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
   private scheduleLogsService = inject(ScheduleLogsService);
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
 
   columns: any[] = [
@@ -112,6 +113,8 @@ export class ScheduleLogsComponent {
 
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
+
     });
   }
   ngOnInit(): void {
@@ -132,7 +135,61 @@ export class ScheduleLogsComponent {
       { name: '25', code: 25 },
 
     ];
-
+    this.translate.get("scheduleLogs").subscribe(data => {
+      this.columns = [
+        {
+          name: data.domName,
+          field: "scheduleName",
+        },
+        {
+          name: data.theTypeAppliedToIt,
+          field: "schedulePlanTypeName",
+        },
+        {
+          name: data.applicationHistory,
+          field: "applyDate"
+        },
+        {
+          name: data.numberOfEmployeesApplicableToThem,
+          field: "employeesNumberAppliedOn"
+        },
+        {
+          name: data.actions,
+          field: "actions"
+        }
+    
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("scheduleLogs").subscribe(data => {
+        this.columns = [
+          {
+            name: data.domName,
+            field: "scheduleName",
+          },
+          {
+            name: data.theTypeAppliedToIt,
+            field: "schedulePlanTypeName",
+          },
+          {
+            name: data.applicationHistory,
+            field: "applyDate"
+          },
+          {
+            name: data.numberOfEmployeesApplicableToThem,
+            field: "employeesNumberAppliedOn"
+          },
+          {
+            name: data.actions,
+            field: "actions"
+          }
+      
+        ];
+      })
+      // this.subscription = this.translate.stream('primeng').subscribe(data => {
+      //   this.config.setTranslation(data);
+      // });  
+    })
     this.getSchedules(this.filteration);
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
@@ -164,12 +221,16 @@ export class ScheduleLogsComponent {
     return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 31, actionCode: data.actionCode })
   }
   dialogScheduleFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogScheduleLogFileComponent, {
-      width: "90vw",
-      data: {
-        title: "ملف الجدول"
-      },
-    });
+    let dialogRefAddCurrency!:MatDialogRef<DialogScheduleLogFileComponent, any>;
+    this.translate.get("vacationBalance").subscribe(translate => {
+     dialogRefAddCurrency = this.dialog.open(DialogScheduleLogFileComponent, {
+        width: "90vw",
+        data: {
+          title: translate.tableFile
+        },
+      });
+    })
+   
     dialogRefAddCurrency.componentInstance.id = data.id
   }
   filter() {
@@ -295,5 +356,9 @@ export class ScheduleLogsComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

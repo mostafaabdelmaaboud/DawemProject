@@ -109,6 +109,9 @@ body {
   margin-left: 30px;
 }
 [lang="en"]{
+  .cardsPermission {
+    flex-direction: row-reverse !important;
+  }
   .localization {
     margin-left: 0;
     margin-right: 30px;
@@ -136,7 +139,7 @@ body {
 }
 
 .w-12 {
-  width: 12%;
+  width: 12% !important;
 }
 
 .w-13 {

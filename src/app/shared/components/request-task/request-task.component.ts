@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/core/auth/services/auth-service.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CalendarModule } from "primeng/calendar";
@@ -101,6 +101,7 @@ export class RequestTaskComponent {
   constructor(
     public dialogRef: MatDialogRef<RequestTaskComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
+    public translate: TranslateService,
     private authService: AuthService,
     private fb: FormBuilder
   ) {
@@ -132,68 +133,48 @@ export class RequestTaskComponent {
       data.taskTypeForDropDown?.data?.forEach((jobTitle: any) => {
         this.list.push({ name: jobTitle.name, key: jobTitle.id })
       });
-
       data.employeeForDropDown?.data?.forEach((jobTitle: any) => {
         this.workTeamList.push({ name: jobTitle.name, key: jobTitle.id })
       });
       data.employeeForDropDown?.data?.forEach((jobTitle: any) => {
         this.listEmployees.push({ name: jobTitle.name, key: jobTitle.id })
       });
-
       if (this.editTask) {
-
-
         this.tasksService.taskGetById({ requestId: this.id }).subscribe(
           {
             next: data => {
-
               if (data?.attachments.length) {
                 data?.attachments.forEach((attachment: any) => {
                   this.employeesService.downloadImage(attachment.filePath).subscribe(response => {
-
                     const blob = new Blob([response]);
                     const file = new File([blob], attachment.fileName);
-
                     this.AttachmentsFiles.push({ imageSrc: attachment.filePath, fileUpload: file, detailsImage: true });
                   });
                 });
-
               }
               this.addBranchGroupForm.get("IsNecessary")?.setValue(data.isNecessary);
-
               if (data.forEmployee) {
                 this.addBranchGroupForm.addControl("EmployeeId", this.fb.control("", [Validators.required]));
                 this.addBranchGroupForm.get("ForEmployee")?.setValue(data.forEmployee);
                 this.addBranchGroupForm.get("radioButtons")?.setValue("true");
-
                 this.toggleForEmployee = true;
-
-
-
-
               } else {
-
                 this.toggleForEmployee = false;
                 this.addBranchGroupForm.get("radioButtons")?.setValue("false");
-
                 this.addBranchGroupForm.removeControl("EmployeeId");
                 this.addBranchGroupForm.get("ForEmployee")?.setValue(data.forEmployee);
-
               }
               this.tasksService.taskTypeDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.taskTypeId }).subscribe(dataDropdown => {
-
                 this.list = []
                 dataDropdown.data?.forEach((insideData: any) => {
                   this.list.push({ name: insideData.name, key: insideData.id })
                 });
-
                 let indexTaskTypeId = this.list.findIndex(job => job.key === data.taskTypeId);
                 if (indexTaskTypeId >= 0) {
                   this.addBranchGroupForm.get("TaskTypeId")?.setValue(this.list[indexTaskTypeId]);
                 }
               });
               this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.employeeId }).subscribe(dataDropdown => {
-
                 this.listEmployees = []
                 dataDropdown.data?.forEach((insideData: any) => {
                   this.listEmployees.push({ name: insideData.name, key: insideData.id })
@@ -204,21 +185,13 @@ export class RequestTaskComponent {
                   this.addBranchGroupForm.get("EmployeeId")?.setValue(this.listEmployees[indexEmployeeId]);
                 }
               });
-
-
               this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids: data?.taskEmployeeIds }).subscribe(dataDropdown => {
-
-
                 this.workTeamList = [];
                 dataDropdown.data?.forEach((list: any) => {
                   this.workTeamList.push({ name: list.name, key: list.id });
                 });
                 data?.taskEmployeeIds?.forEach((employee: any) => {
-
-
                   let indexworkTeamL = this.workTeamList.findIndex(list => list.key === employee);
-
-
                   if (indexworkTeamL >= 0) {
                     if (Array.isArray(this.getControl("TaskEmployeeIds")?.value)) {
                       this.getControl("TaskEmployeeIds")?.patchValue(([{ name: this.workTeamList[indexworkTeamL].name, key: this.workTeamList[indexworkTeamL].key }, ...this.getControl("TaskEmployeeIds")?.value]));
@@ -226,68 +199,11 @@ export class RequestTaskComponent {
                       this.getControl("TaskEmployeeIds")?.patchValue(([{ name: this.workTeamList[indexworkTeamL].name, key: this.workTeamList[indexworkTeamL].key }]));
                     }
                   }
-
                 });
-
               });
-
               this.addBranchGroupForm.get("dateTask")?.setValue([new Date(data.dateFrom), new Date(data.dateTo)]);
               this.addBranchGroupForm.get("time")?.setValue(new Date(data.dateFrom));
-
               this.addBranchGroupForm.get("Notes")?.setValue(data.notes);
-
-              //
-
-              // this.addBranchGroupForm.patchValue({
-              //   dateTask: {
-              //     startDate: new Date(data.dateFrom),
-              //     endDate: new Date(data.dateTo)
-              //   }
-              // });
-
-
-              // this.addBranchGroupForm.get("mobileNumber")?.setValue(data.mobileNumber);
-              // this.addBranchGroupForm.get("AttendanceType")?.setValue(data.attendanceType.toString());
-              // this.addBranchGroupForm.get("name")?.setValue(data.name);
-
-              // this.addBranchGroupForm.get("employeeType")?.setValue(data.employeeType.toString());
-              // this.addBranchGroupForm.get("employeeNumber")?.setValue(data.employeeNumber);
-
-
-              // this.employeesService.getJobTitles({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.jobTitleId }).subscribe(dataDropdown => {
-
-              //   this.jobTitleFirst = []
-              //   dataDropdown.data?.forEach((insideData: any) => {
-              //     this.jobTitleFirst.push({ name: insideData.name, key: insideData.id })
-              //   });
-              //   let JobTitleId = this.jobTitleFirst.findIndex(job => job.key === data.jobTitleId);
-              //   if (JobTitleId >= 0) {
-              //     this.addBranchGroupForm.get("JobTitleId")?.setValue(this.jobTitleFirst[JobTitleId]);
-              //   }
-              // });
-              // this.employeesService.getDepartmentForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.departmentId }).subscribe(dataDropdown => {
-
-              //   this.sectionList = []
-              //   dataDropdown.data?.forEach((insideData: any) => {
-              //     this.sectionList.push({ name: insideData.name, key: insideData.id })
-              //   });
-              //   let sectionList = this.sectionList.findIndex(job => job.key === data.departmentId);
-              //   if (sectionList >= 0) {
-              //     this.addBranchGroupForm.get("DepartmentId")?.setValue(this.sectionList[sectionList]);
-              //   }
-              // });
-              // this.addBranchGroupForm.get("JoiningDate")?.setValue(new Date(data.joiningDate));
-              // this.employeesService.getScheduleForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.scheduleId }).subscribe(dataDropdown => {
-              //   this.workScheduleList = []
-              //   dataDropdown.data?.forEach((insideData: any) => {
-              //     this.workScheduleList.push({ name: insideData.name, key: insideData.id })
-              //   });
-              //   let ScheduleId = this.workScheduleList.findIndex(job => job.key === data.scheduleId);
-              //   if (ScheduleId >= 0) {
-              //     this.addBranchGroupForm.get("ScheduleId")?.setValue(this.workScheduleList[ScheduleId]);
-              //   }
-              // });
-              // this.addBranchGroupForm.get("AnnualVacationBalance")?.setValue(data.annualVacationBalance);
               this.loading = false;
             },
             error: err => {

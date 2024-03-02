@@ -57,7 +57,7 @@
           </div>
           <div class="alert alert-danger"
             *ngIf="getControl('startDate')?.hasError('dateRangeError') && !getControl('startDate')?.hasError('required')">
-            يجب البدايه اصغر من النهايه التاريخ
+            {{"holidays.theStartDateMustBeSmallerThanTheEndDate"|translate}}
           </div>
         </div>
         <!--End Custom Validators-->
@@ -79,7 +79,7 @@
           </div>
           <div class="alert alert-danger"
             *ngIf="getControl('endDate')?.hasError('dateRangeError') && !getControl('endDate')?.hasError('required')">
-            يجب النهاية اكبر من البدايه التاريخ
+            {{"holidays.theEndMustBeGreaterThanTheBeginningOfHistory"|translate}}
           </div>
         </div>
         <!--End Custom Validators-->
@@ -104,7 +104,7 @@
       <div class="field-checkbox mb-1">
         <p-checkbox name="category" formControlName="isSpecifiedByYear" [value]="true"
           inputId="isSpecifiedByYear"></p-checkbox>
-        <label for="isSpecifiedByYear" class="mb-0">يتم تحديده حسب السنة</label>
+        <label for="isSpecifiedByYear" class="mb-0">{{"holidays.itIsDeterminedByYear"|translate}}</label>
       </div>
     </form>
 

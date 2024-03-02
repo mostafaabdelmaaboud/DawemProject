@@ -10,30 +10,48 @@
   </header>
   <div class="body-dialog p-15 f-s-16">
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">الرقم الموظف</label>
+      <label class="title">
+        {{"vacations.employeeNumber"|translate}}
+      </label>
       <div class="content-password">
-        {{info?.employee?.code ? info?.employee?.code : "لا يوجد"}}
+        <ng-container *ngIf="info?.employee?.code">
+          {{info?.employee?.code}}
+        </ng-container>
+        <ng-container *ngIf="!info?.employee?.code">
+          {{"department.nothing"|translate}}
+        </ng-container>
+        
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title"> اسم الموظف</label>
+      <label class="title">{{"vacations.employeeName"|translate}}</label>
       <div class="content-password">
-        {{info?.employee?.name ? info?.employee?.name : "لا يوجد"}}
+        <ng-container *ngIf="info?.employee?.name">
+          {{info?.employee?.name}}
+        </ng-container>
+        <ng-container *ngIf="!info?.employee?.name">
+          {{"department.nothing"|translate}}
+        </ng-container>
 
       </div>
 
     </div>
 
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">نوع الأستئذان</label>
+      <label class="title">{{"permissions.typeOfPermission"|translate}}</label>
       <div class="content-password">
-        {{info?.permissionTypeName ? info?.permissionTypeName : "لا يوجد"}}
+        <ng-container *ngIf="info?.permissionTypeName">
+          {{info?.permissionTypeName}}
+        </ng-container>
+        <ng-container *ngIf="!info?.permissionTypeName">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">الملفات</label>
+      <label class="title">{{"vacations.files"|translate}}</label>
       <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length">
         <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
           <div class="imageProfile">
@@ -41,12 +59,12 @@
 
           </div>
           <div class="p-fileupload-filename">
-            <span class="d-block">name:</span>
+            <span class="d-block">{{"employees.name"|translate}}:</span>
             {{ file.fileUpload.name
             }}
           </div>
           <div>
-            <span class="d-block">size:</span>
+            <span class="d-block">{{"employees.size"|translate}}:</span>
             {{
             file.fileUpload.size }}
           </div>
@@ -56,31 +74,51 @@
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">البداية</label>
+      <label class="title">{{"vacations.theBeginning"|translate}}</label>
       <div class="content-password">
-        {{info?.dateFrom ? info?.dateFrom : "لا يوجد"}}
+        <ng-container *ngIf="info?.dateFrom">
+          {{info?.dateFrom}}
+        </ng-container>
+        <ng-container *ngIf="!info?.dateFrom">
+          {{"department.nothing"|translate}}
+        </ng-container>
 
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">النهاية</label>
+      <label class="title">{{"vacations.theEnd"|translate}}</label>
       <div class="content-password">
-        {{info?.dateTo ? info?.dateTo : "لا يوجد"}}
+        <ng-container *ngIf="info?.dateTo">
+          {{info?.dateTo}}
+        </ng-container>
+        <ng-container *ngIf="!info?.dateTo">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">حاله الطلب</label>
+      <label class="title">{{"requests.requestStatus"|translate}}</label>
       <div class="content-password">
-        {{info?.statusName ? info?.statusName : "لا يوجد"}}
+        <ng-container *ngIf="info?.statusName">
+          {{info?.statusName}}
+        </ng-container>
+        <ng-container *ngIf="!info?.statusName">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
     </div>
     
 
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">الملاحظات</label>
+      <label class="title">{{"justifications.notes"|translate}}</label>
       <div class="content-password">
-        {{info?.notes ? info?.notes: "لا يوجد"}}
+        <ng-container *ngIf="info?.notes">
+          {{info?.notes}}
+        </ng-container>
+        <ng-container *ngIf="!info?.notes">
+          {{"department.nothing"|translate}}
+        </ng-container>
 
       </div>
     </div>
