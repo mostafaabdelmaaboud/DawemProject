@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/core/auth/services/auth-service.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CalendarModule } from "primeng/calendar";
@@ -56,6 +56,8 @@ export class DialogSchedulePlanFileComponent {
     public dialogRef: MatDialogRef<DialogSchedulePlanFileComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
+    public translate: TranslateService, 
+
     private fb: FormBuilder
   ) {
     this.dialogRef.disableClose = true;

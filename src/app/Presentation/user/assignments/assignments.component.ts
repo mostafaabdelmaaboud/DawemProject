@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { AssignmentRequestComponent } from 'src/app/shared/components/assignment-request/assignment-request.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
@@ -30,6 +30,8 @@ export class AssignmentsComponent {
   itemsPerPage = 5;
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
   list: any[] = [
     { name: "نسيان تسجيل حضور", key: "1" },
     { name: "نسيان تسجيل انصراف", key: "2" },
@@ -130,11 +132,7 @@ export class AssignmentsComponent {
         this.assignments = this.assignments;
 
         changeDetectorRef.detectChanges();
-
       }
-
-
-
     };
     this.mobileQuery.addListener(this._mobileQueryListener);
     translate.addLangs(['ar', 'en']);
@@ -144,9 +142,100 @@ export class AssignmentsComponent {
 
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
+
     });
   }
   ngOnInit(): void {
+    this.translate.get("assignments").subscribe(data => {
+      this.columns = [
+        {
+          name: data.orderNumber,
+          field: "orderNumber",
+        },
+        {
+          name: data.jobNumber,
+          field: "employeeCode",
+        },
+        {
+          name: data.employeeName,
+          field: "employeeName",
+        },
+        {
+          name: data.assignmentType,
+          field: "assignmentTypeName"
+        },
+        {
+          name: data.forTheTimeOfAssignment,
+          field: "assignmentTime"
+        },
+        {
+          name: data.theBeginning,
+          field: "dateFrom"
+        },
+        {
+          name: data.theEnd,
+          field: "dateTo"
+        },
+        {
+          name: data.orderStatus,
+          field: "statusName"
+        },
+    
+        {
+          name: data.action,
+          field: "actions"
+        }
+    
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("assignments").subscribe(data => {
+        this.columns = [
+          {
+            name: data.orderNumber,
+            field: "orderNumber",
+          },
+          {
+            name: data.jobNumber,
+            field: "employeeCode",
+          },
+          {
+            name: data.employeeName,
+            field: "employeeName",
+          },
+          {
+            name: data.assignmentType,
+            field: "assignmentTypeName"
+          },
+          {
+            name: data.forTheTimeOfAssignment,
+            field: "assignmentTime"
+          },
+          {
+            name: data.theBeginning,
+            field: "dateFrom"
+          },
+          {
+            name: data.theEnd,
+            field: "dateTo"
+          },
+          {
+            name: data.orderStatus,
+            field: "statusName"
+          },
+      
+          {
+            name: data.action,
+            field: "actions"
+          }
+      
+        ];
+      })
+      // this.subscription = this.translate.stream('primeng').subscribe(data => {
+      //   this.config.setTranslation(data);
+      // });  
+    })
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -327,17 +416,21 @@ export class AssignmentsComponent {
 
   }
   reasonOfRefuse(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
-      width: "30vw",
-      data: {
-        title: "هل متأكد من رفض الطلب؟",
-        message: "برجاء توضيح السبب إن أمكن",
-        titleReasonOfRefuse: "سبب الرفض",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض",
-        titleClose: "تراجع",
-        buttonSend: "رفض الطلب"
-      },
+    let reasonOfRefuseDialog!:MatDialogRef<DialogCloseComponent, any>;
+    this.translate.get("justifications").subscribe(translate => {
+      reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
+        width: "30vw",
+        data: {
+          title: translate.areYouSureTheRequestWillBeRejected,
+          message: translate.pleaseExplainWhyIfPossible,
+          titleReasonOfRefuse:translate.theReasonOfRefuse,
+          placeholdeReasonOfRefuse: translate.pleaseWriteTheReasonForRejection,
+          titleClose:translate.toRetreat,
+          buttonSend: translate.rejectionOfTheApplication
+        },
+      });
     });
+
 
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
@@ -363,32 +456,35 @@ export class AssignmentsComponent {
     })
   }
   requestAssignment() {
-    const dialogRefAddCurrency = this.dialog.open(AssignmentRequestComponent, {
-      width: "50vw",
-      data: {
-        title: "طلب تكليف",
-        setAsNecessary: "تعيين كضرورية",
-        titleAssignmentTypeId: "نوع التكليف <span class='color-red'>*</span>",
-        placeholderAssignmentTypeId: " برجاء اختيار نوع التكليف",
-        AssignmentTypeIdValidation: "نوع التكليف مطلوب",
-        titleCalendar: "تاريخ التكليف <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ التكليف",
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        NotesValidation: "الملاحظات مطلوب",
-
-        dateTaskValidation: "تاريخ التكليف مطلوب",
-        labelRadioButton: "صاحب الطلب",
-        firstRadio: "لنفسي",
-        secondRadio: "لموظف",
-        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
-        placeholderEmployeeId: "الموظف",
-        EmployeeIdValidation: "الموظف مطلوب",
-        uploadFile: "ارفاق ملف",
-        chooseLabel: "اختار الملف ليتم رفعه",
-        buttonSend: "إرسال الطلب"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<AssignmentRequestComponent, any>;
+    this.translate.get("assignments").subscribe(translate => {
+     dialogRefAddCurrency = this.dialog.open(AssignmentRequestComponent, {
+        width: "50vw",
+        data: {
+          title: translate.assignmentRequest,
+          setAsNecessary: translate.setAsEssential,
+          titleAssignmentTypeId: translate.typeOfAssignment+" <span class='color-red'>*</span>",
+          placeholderAssignmentTypeId: translate.pleaseSelectTheTypeOfAssignment,
+          AssignmentTypeIdValidation: translate.assignmentTypeRequired,
+          titleCalendar: translate.assignmentDate+" <span class='color-red'>*</span>",
+          placeholderCalendar: translate.assignmentDate,
+          titleNotes: translate.notes+" <span class='color-red'>*</span>",
+          placeholdeNotes: translate.notes,
+          NotesValidation: translate.notesRequired,
+          dateTaskValidation: translate.assignmentDateRequired,
+          labelRadioButton: translate.applicant,
+          firstRadio: translate.forMyself,
+          secondRadio: translate.toAnEmployee,
+          titleEmployeeId: translate.employee+" <span class='color-red'>*</span>",
+          placeholderEmployeeId: translate.employee,
+          EmployeeIdValidation: translate.employeeRequired,
+          uploadFile: translate.attachAFile,
+          chooseLabel: translate.selectTheFileToUpload,
+          buttonSend: translate.sendRequest
+        },
+      });
     });
+
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editAssignment = false;
 
@@ -437,16 +533,19 @@ export class AssignmentsComponent {
             dialogRefAddCurrency.componentInstance.loading = false;
 
             dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات التكليفات"
-
-              },
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("assignments").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.assignmentRequests
+  
+                },
+              });
             });
+  
             this.getAssignments(this.filteration);
 
             setTimeout(() => {
@@ -475,31 +574,35 @@ export class AssignmentsComponent {
     });
   }
   editAssignment(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AssignmentRequestComponent, {
-      width: "50vw",
-      data: {
-        title: "تعديل تكليف",
-        setAsNecessary: "تعيين كضرورية",
-        titleAssignmentTypeId: "نوع التكليف <span class='color-red'>*</span>",
-        placeholderAssignmentTypeId: " برجاء اختيار نوع التكليف",
-        AssignmentTypeIdValidation: "نوع التكليف مطلوب",
-        titleCalendar: "تاريخ التكليف <span class='color-red'>*</span>",
-        placeholderCalendar: "تاريخ التكليف",
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        NotesValidation: "الملاحظات مطلوب",
-        dateTaskValidation: "تاريخ التكليف مطلوب",
-        labelRadioButton: "صاحب الطلب",
-        firstRadio: "لنفسي",
-        secondRadio: "لموظف",
-        titleEmployeeId: "الموظف <span class='color-red'>*</span>",
-        placeholderEmployeeId: "الموظف",
-        EmployeeIdValidation: "الموظف مطلوب",
-        uploadFile: "ارفاق ملف",
-        chooseLabel: "اختار الملف ليتم رفعه",
-        buttonSend: "إرسال الطلب"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<AssignmentRequestComponent, any>;
+    this.translate.get("assignments").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(AssignmentRequestComponent, {
+        width: "50vw",
+        data: {
+          title: translate.amendmentAssignment,
+          setAsNecessary: translate.setAsEssential,
+          titleAssignmentTypeId: translate.typeOfAssignment+" <span class='color-red'>*</span>",
+          placeholderAssignmentTypeId: translate.pleaseSelectTheTypeOfAssignment,
+          AssignmentTypeIdValidation: translate.assignmentTypeRequired,
+          titleCalendar: translate.assignmentDate+" <span class='color-red'>*</span>",
+          placeholderCalendar: translate.assignmentDate,
+          titleNotes: translate.notes+" <span class='color-red'>*</span>",
+          placeholdeNotes: translate.notes,
+          NotesValidation: translate.notesRequired,
+          dateTaskValidation: translate.assignmentDateRequired,
+          labelRadioButton: translate.applicant,
+          firstRadio: translate.forMyself,
+          secondRadio: translate.toAnEmployee,
+          titleEmployeeId: translate.employee+" <span class='color-red'>*</span>",
+          placeholderEmployeeId: translate.employee,
+          EmployeeIdValidation: translate.employeeRequired,
+          uploadFile: translate.attachAFile,
+          chooseLabel: translate.selectTheFileToUpload,
+          buttonSend: translate.sendRequest
+        },
+      });
     });
+
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editAssignment = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
@@ -546,13 +649,17 @@ export class AssignmentsComponent {
             dialogRefAddCurrency.componentInstance.submitted = true;
             dialogRefAddCurrency.componentInstance.loading = false;
             dialogRefAddCurrency.close();
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات التكليفات"
-              },
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("assignments").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.assignmentRequests
+  
+                },
+              });
             });
             this.getAssignments(this.filteration);
 
@@ -582,12 +689,16 @@ export class AssignmentsComponent {
   }
 
   dialogAssignmentFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogAssignementFileComponent, {
-      width: "60vw",
-      data: {
-        title: "ملف التكليف"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<DialogAssignementFileComponent, any>;
+    this.translate.get("assignments").subscribe(translate => {
+       dialogRefAddCurrency = this.dialog.open(DialogAssignementFileComponent, {
+        width: "60vw",
+        data: {
+          title: translate.assignmentFile
+        },
+      });
     });
+  
     dialogRefAddCurrency.componentInstance.id = data.id
 
   }
@@ -674,5 +785,9 @@ export class AssignmentsComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

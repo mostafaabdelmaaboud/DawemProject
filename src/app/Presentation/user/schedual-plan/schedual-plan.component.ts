@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
@@ -31,6 +31,7 @@ export class SchedualPlanComponent {
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
   private schedualPlanService = inject(SchedualPlanService);
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
 
   columns: any[] = [
@@ -117,9 +118,68 @@ export class SchedualPlanComponent {
 
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
+
     });
   }
   ngOnInit(): void {
+    this.translate.get("schedualPlan").subscribe(data => {
+      this.columns = [
+        {
+          name: data.scheduleNumber,
+          field: "code",
+        },
+        {
+          name: data.scheduleName,
+          field: "scheduleName",
+        },
+        {
+          name: data.scheduleType,
+          field: "schedulePlanTypeName"
+        },
+        {
+          name: data.theDate,
+          field: "dateFrom"
+        },
+    
+        {
+          name: data.actions,
+          field: "actions"
+        }
+    
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("schedualPlan").subscribe(data => {
+        this.columns = [
+          {
+            name: data.scheduleNumber,
+            field: "code",
+          },
+          {
+            name: data.scheduleName,
+            field: "scheduleName",
+          },
+          {
+            name: data.scheduleType,
+            field: "schedulePlanTypeName"
+          },
+          {
+            name: data.theDate,
+            field: "dateFrom"
+          },
+      
+          {
+            name: data.actions,
+            field: "actions"
+          }
+      
+        ];
+      })
+      // this.subscription = this.translate.stream('primeng').subscribe(data => {
+      //   this.config.setTranslation(data);
+      // });  
+    })
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -190,47 +250,42 @@ export class SchedualPlanComponent {
     })
   }
   addSchedualPlane() {
-    const dialogRefAddCurrency = this.dialog.open(AddSchedualPlanComponent, {
-      width: "70vw",
-      data: {
-        title: "اضافه جدولة",
-        setAsActive: "تعيين كنشط",
-
-        titleDepartmentId: "نوع القسم",
-        placeholdeDepartmentId: "اسم القسم",
-        ValidationDepartmentId: "نوع القسم مطلوب",
-        titleFieldDisabled:"الكود",
-
-        labelRadioButton: "نوع الجدولة",
-        firstRadio: "لموظف",
-        secondRadio: "لجروب",
-        thirdRadio: "لقسم",
-
-        titleEmployeeId: "اسم الموظف",
-        placeholdeEmployeeId: "اسم الموظف",
-        ValidationEmployeeId: "اسم الموظف مطلوب",
-
-
-        titleScheduleId: "جدول الدوام",
-        placeholdeScheduleId: "جدول الدوام",
-        ValidationScheduleId: "جدول الدوام مطلوب",
-
-        titleCalendar: "التاريخ",
-        placeholderCalendar: "اختار التاريخ",
-        validationCalendar: "التاريخ مطلوب",
-
-        titleGroupId: "نواب الجروب",
-        placeholdeGroupId: "اسم الجروب",
-        ValidationGroupId: "اسم الجروب مطلوب",
-
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        ValidationNotes: "الملاحظات مطلةب",
-
-        titleClose: "تراجع",
-        buttonSend: "إضافة جدولة"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<AddSchedualPlanComponent, any>;
+    this.translate.get("schedualPlan").subscribe(translate => {
+       dialogRefAddCurrency = this.dialog.open(AddSchedualPlanComponent, {
+        width: "70vw",
+        data: {
+          title: translate.addASchedule,
+          setAsActive: translate.setAsActive,
+          titleDepartmentId: translate.SectionType,
+          placeholdeDepartmentId: translate.departmentName,
+          ValidationDepartmentId:translate.partitionTypeRequired,
+          titleFieldDisabled:translate.code,
+          labelRadioButton: translate.scheduleType,
+          firstRadio: translate.toAnEmployee,
+          secondRadio: translate.forAGroup,
+          thirdRadio: translate.toSwear,
+          titleEmployeeId: translate.employeeName,
+          placeholdeEmployeeId:  translate.employeeName,
+          ValidationEmployeeId: translate.employeeNameRequired,
+          titleScheduleId: translate.workSchedule,
+          placeholdeScheduleId: translate.workSchedule,
+          ValidationScheduleId: translate.WorkScheduleRequired,
+          titleCalendar: translate.theDate,
+          placeholderCalendar: translate.chooseDate,
+          validationCalendar: translate.DateRequired,
+          titleGroupId: translate.GroupRepresentatives,
+          placeholdeGroupId: translate.groupName,
+          ValidationGroupId: translate.groupNameRequired,
+          titleNotes: translate.notes+" <span class='color-red'>*</span>",
+          placeholdeNotes: translate.notes,
+          ValidationNotes: translate.notesRequired,
+          titleClose:translate.toRetreat,
+          buttonSend: translate.addSchedule
+        },
+      });
     });
+
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editSchedualPlan = false;
 
@@ -259,14 +314,124 @@ export class SchedualPlanComponent {
 
             dialogRefAddCurrency.close();
 
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات الجدولة"
-              },
-            });
+    
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("schedualPlan").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+               width: "30vw",
+               data: {
+                 title: translate.yourRequestHasBeenSent,
+                 message: data.message,
+                 buttonSend: translate.schedulingRequests
+               },
+             });
+           });
+            this.getGroups(this.filteration);
+            setTimeout(() => {
+              succressDialog.close();
+
+            }, 2000);
+
+            succressDialog.componentInstance.submitted = true;
+            succressDialog.componentInstance.submitClicked.subscribe(result => {
+              succressDialog.close();
+
+            })
+
+          },
+          error: err => {
+            dialogRefAddCurrency.componentInstance.submitted = true;
+
+          }
+        }
+      )
+    });
+    dialogRefAddCurrency.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+  editSchedualPlane(data: any) {
+    let dialogRefAddCurrency!:MatDialogRef<AddSchedualPlanComponent, any>;
+    this.translate.get("schedualPlan").subscribe(translate => {
+     dialogRefAddCurrency = this.dialog.open(AddSchedualPlanComponent, {
+        width: "70vw",
+        data: {
+          title: translate.modifyScheduling,
+          setAsActive: translate.setAsActive,
+          titleDepartmentId: translate.SectionType,
+          placeholdeDepartmentId: translate.departmentName,
+          ValidationDepartmentId:translate.partitionTypeRequired,
+          titleFieldDisabled:translate.code,
+          labelRadioButton: translate.scheduleType,
+          firstRadio: translate.toAnEmployee,
+          secondRadio: translate.forAGroup,
+          thirdRadio: translate.toSwear,
+          titleEmployeeId: translate.employeeName,
+          placeholdeEmployeeId:  translate.employeeName,
+          ValidationEmployeeId: translate.employeeNameRequired,
+          titleScheduleId: translate.workSchedule,
+          placeholdeScheduleId: translate.workSchedule,
+          ValidationScheduleId: translate.WorkScheduleRequired,
+          titleCalendar: translate.theDate,
+          placeholderCalendar: translate.chooseDate,
+          validationCalendar: translate.DateRequired,
+          titleGroupId: translate.GroupRepresentatives,
+          placeholdeGroupId: translate.groupName,
+          ValidationGroupId: translate.groupNameRequired,
+          titleNotes: translate.notes+" <span class='color-red'>*</span>",
+          placeholdeNotes: translate.notes,
+          ValidationNotes: translate.notesRequired,
+          titleClose:translate.toRetreat,
+          buttonSend:translate.modifyScheduling
+        },
+      });
+    });
+   
+    dialogRefAddCurrency.componentInstance.submitted = true;
+    dialogRefAddCurrency.componentInstance.editSchedualPlan = true;
+
+    dialogRefAddCurrency.componentInstance.id = data.id;
+
+    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+      let formData: any = {};
+
+      formData.id = data.row;
+
+      formData.isActive = result.isActive;
+
+      formData.SchedulePlanType = Number(result.SchedulePlanType);
+      formData.EmployeeId = result.EmployeeId ? result.EmployeeId.key : null;
+      formData.GroupId = result.GroupId ? result.GroupId.key : null;
+      formData.DepartmentId = result.DepartmentId ? result.DepartmentId.key : null;
+      formData.ScheduleId = result.ScheduleId.key;
+      formData.DateFrom = moment(new Date(result.DateFrom)).format("DD/MM/YYYY");
+      formData.notes = result.notes;
+
+
+
+
+      this.schedualPlanService.updateSchedualPlan(formData).subscribe(
+        {
+          next: data => {
+
+
+            dialogRefAddCurrency.componentInstance.submitted = true;
+
+            dialogRefAddCurrency.close();
+
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("schedualPlan").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+               width: "30vw",
+               data: {
+                 title: translate.yourRequestHasBeenSent,
+                 message: data.message,
+                 buttonSend: translate.schedulingRequests
+               },
+             });
+           });
             this.getGroups(this.filteration);
             setTimeout(() => {
               succressDialog.close();
@@ -294,12 +459,16 @@ export class SchedualPlanComponent {
     });
   }
   dialogGroupFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogSchedulePlanFileComponent, {
-      width: "40vw",
-      data: {
-        title: "ملف الجدولة"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<DialogSchedulePlanFileComponent, any>;
+    this.translate.get("schedualPlan").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(DialogSchedulePlanFileComponent, {
+        width: "40vw",
+        data: {
+          title: translate.scheduleFile
+        },
+      });
     });
+ 
     dialogRefAddCurrency.componentInstance.id = data.id
   }
   enabledRow(data: any) {
@@ -380,114 +549,7 @@ export class SchedualPlanComponent {
     };
     this.getGroups(this.filteration);
   }
-  editSchedualPlane(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddSchedualPlanComponent, {
-      width: "70vw",
-      data: {
-        title: "تعديل الجدولة",
-        setAsActive: "تعيين كنشط",
-        titleFieldDisabled:"الكود",
-        titleDepartmentId: "نوع القسم",
-        placeholdeDepartmentId: "اسم القسم",
-        ValidationDepartmentId: "اسم القسم مطلوب",
-
-
-        labelRadioButton: "نوع الجدولة",
-        firstRadio: "لموظف",
-        secondRadio: "لجروب",
-        thirdRadio: "لقسم",
-
-        titleEmployeeId: "نوع الموظف",
-        placeholdeEmployeeId: "اسم الموظف",
-        ValidationEmployeeId: "اسم الموظف مطلوب",
-
-
-        titleScheduleId: "جدول الدوام",
-        placeholdeScheduleId: "جدول الدوام",
-        ValidationScheduleId: "جدول الدوام مطلوب",
-
-        titleCalendar: "التاريخ",
-        placeholderCalendar: "اختار التاريخ",
-        validationCalendar: "التاريخ مطلوب",
-
-        titleGroupId: "نواب الجروب",
-        placeholdeGroupId: "اسم الجروب",
-        ValidationGroupId: "اسم الجروب مطلوب",
-
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
-        placeholdeNotes: "الملاحظات",
-        ValidationNotes: "الملاحظات مطلةب",
-
-        titleClose: "تراجع",
-        buttonSend: "تعديل الجدولة"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editSchedualPlan = true;
-
-    dialogRefAddCurrency.componentInstance.id = data.id;
-
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData: any = {};
-
-      formData.id = data.row;
-
-      formData.isActive = result.isActive;
-
-      formData.SchedulePlanType = Number(result.SchedulePlanType);
-      formData.EmployeeId = result.EmployeeId ? result.EmployeeId.key : null;
-      formData.GroupId = result.GroupId ? result.GroupId.key : null;
-      formData.DepartmentId = result.DepartmentId ? result.DepartmentId.key : null;
-      formData.ScheduleId = result.ScheduleId.key;
-      formData.DateFrom = moment(new Date(result.DateFrom)).format("DD/MM/YYYY");
-      formData.notes = result.notes;
-
-
-
-
-      this.schedualPlanService.updateSchedualPlan(formData).subscribe(
-        {
-          next: data => {
-
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
-            dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات الجدولة"
-              },
-            });
-            this.getGroups(this.filteration);
-            setTimeout(() => {
-              succressDialog.close();
-
-            }, 2000);
-
-            succressDialog.componentInstance.submitted = true;
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-              succressDialog.close();
-
-            })
-
-          },
-          error: err => {
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
-          }
-        }
-      )
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
-
-      }
-    });
-  }
+ 
   mathRound(data: any) {
     return Math.ceil(data)
   }
@@ -498,25 +560,27 @@ export class SchedualPlanComponent {
 
 
   deleteRow(data: any) {
-
-    const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
-      width: "30vw",
-      data: {
-        title: "متأكد من تعليق المجموعة؟",
-        message: "برجاء توضيح السبب إن أمكن ليظهر للمجموعة عند محاولة تسجيل الدخول",
-        titleReasonOfRefuse: "سبب التعليق",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض ليظهر للمجموعة",
-        titleClose: "تراجع",
-        buttonSend: "تعليق المجموعة"
-      },
+    let reasonOfRefuseDialog!:MatDialogRef<DialogCloseComponent, any>;
+    this.translate.get("schedualPlan").subscribe(translate => {
+     reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
+        width: "30vw",
+        data: {
+          title: translate.areYouSureToHangTheGroup,
+          message: translate.pleaseExplainTheReason,
+          titleReasonOfRefuse: translate.reasonForComment,
+          placeholdeReasonOfRefuse: translate.pleaseWriteTheReasonForRejection,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.groupComment
+        },
+      });
     });
+ 
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
       this.schedualPlanService.disabledSchedualPlan({ Id: data.id, DisableReason: result.notes }).subscribe(
         {
           next: res => {
-
             this.toast.success(res.message);
             reasonOfRefuseDialog.componentInstance.submitted = true;
             this.getGroups(this.filteration);
@@ -524,23 +588,10 @@ export class SchedualPlanComponent {
           },
           error: err => {
             reasonOfRefuseDialog.componentInstance.submitted = true;
-
           }
         }
       )
-
-
     })
-
-
-
-
-
-
-
-
-
-
   }
   onPageChange(event: any) {
     this.filteration = { ...this.filteration, PageNumber: event.page };
@@ -587,5 +638,9 @@ export class SchedualPlanComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

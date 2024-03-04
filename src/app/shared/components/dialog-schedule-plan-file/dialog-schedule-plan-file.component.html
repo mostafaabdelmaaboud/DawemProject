@@ -10,9 +10,14 @@
   </header>
   <div class="body-dialog p-15 f-s-16">
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">تعيين كنشط</label>
+      <label class="title">{{"holidays.setAsActive"|translate}}</label>
       <div class="content-password">
-        {{info?.isActive ? 'نشط' : 'غير نشط'}}
+        <ng-container *ngIf="info?.isActive">
+          {{"employees.active"|translate}}
+        </ng-container>
+        <ng-container *ngIf="!info?.isActive">
+          {{"employees.Inactive"|translate}}
+        </ng-container>
       </div>
 
     </div>
@@ -37,17 +42,27 @@
     </div>
 
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title"> اسم الجدولة</label>
+      <label class="title">{{"schedualPlan.scheduleName"|translate}}</label>
       <div class="content-password">
-        {{info?.scheduleName ? info?.scheduleName : "لا يوجد"}}
+        <ng-container *ngIf="info?.scheduleName">
+          {{info?.scheduleName}}
+        </ng-container>
+        <ng-container *ngIf="!info?.scheduleName">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
 
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title"> الملاحظات</label>
+      <label class="title"> {{"schedualPlan.notes"|translate}}</label>
       <div class="content-password">
-        {{info?.notes ? info?.notes : "لا يوجد"}}
+        <ng-container *ngIf="info?.notes">
+          {{info?.notes}}
+        </ng-container>
+        <ng-container *ngIf="!info?.notes">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
