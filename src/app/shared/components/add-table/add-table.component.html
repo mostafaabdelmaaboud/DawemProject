@@ -34,13 +34,13 @@
               <div class="content-password">
                 <ng-container *ngIf="list[i].weekDay === day?.value?.weekDay">
                   <p-dropdown appendTo="body" formControlName="weekDayValue" [options]="list[i].data"
-                    placeholder=" اختار الوردية" optionLabel="name">
+                    [placeholder]="'tables.chooseThePink' | translate" optionLabel="name">
                     <ng-template pTemplate="header">
                       <span class="p-input-icon-left input-search-dropdown">
 
                         <i class="pi pi-search"
                           (click)="searchDropdown(searchdirectManager.value, 'weekDayValue', day?.value?.weekDay)"></i>
-                        <input type="text" placeholder="بحث" pInputText #searchdirectManager />
+                        <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchdirectManager />
                       </span>
                     </ng-template>
                     <ng-template let-option pTemplate="item">

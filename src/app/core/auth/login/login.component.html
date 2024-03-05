@@ -105,8 +105,16 @@
                             </div>
                           </div> -->
             </div>
-            <button class="btn btn-primary w-100 button-submit">{{loading ? ('login.signIn' | translate) :
-              ('login.loading' | translate) + '....'}}</button>
+            <button class="btn btn-primary w-100 button-submit">
+              <ng-container *ngIf="loading">
+                {{'login.signIn' | translate}}
+              </ng-container>
+              <ng-container *ngIf="!loading">
+                {{'login.loading' | translate}} ....
+              </ng-container>
+              <!-- {{loading ? ('login.signIn' | translate) :
+              ('login.loading' | translate) + '....'}} -->
+              </button>
           </form>
           <div class="footer-form">
             <span class="section-footer-login-left" routerLink="/signUp">{{'login.createANewAccount' | translate}}</span>

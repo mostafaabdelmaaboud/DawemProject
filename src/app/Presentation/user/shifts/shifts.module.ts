@@ -5,6 +5,7 @@ import { ShiftsRoutingModule } from './shifts-routing.module';
 import { ShiftsComponent } from './shifts.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     ShiftsRoutingModule,
     MatDialogModule,
+    TranslateModule,
     SharedModule
   ]
 })

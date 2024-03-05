@@ -5,6 +5,7 @@ import { TablesRoutingModule } from './tables-routing.module';
 import { TablesComponent } from './tables.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     TablesRoutingModule,
     MatDialogModule,
+    TranslateModule,
     SharedModule
   ]
 })

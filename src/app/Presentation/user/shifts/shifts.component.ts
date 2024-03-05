@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { AddShiftComponent } from 'src/app/shared/components/add-shift/add-shift.component';
@@ -31,6 +31,7 @@ export class ShiftsComponent {
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
   private shiftsService = inject(ShiftsService);
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   defaultRowPerPage = { name: '5', code: 5 };
 
@@ -126,9 +127,80 @@ export class ShiftsComponent {
 
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
+
     });
   }
   ngOnInit(): void {
+    this.translate.get("shifts").subscribe(data => {
+      this.columns = [
+        {
+          name: data.shiftNumber,
+          field: "shiftNumber",
+        },
+        {
+          name: data.theNameOfTheRose,
+          field: "shiftName",
+        },
+        {
+          name: data.checkInTime,
+          field: "entryTime"
+        },
+        {
+          name: data.timeToGoOut,
+          field: "timeToGoOut"
+        },
+        {
+          name: data.allowedMinutes,
+          field: "allowedMinutes"
+        },
+        {
+          name: data.shiftStaff,
+          field: "shiftStaff"
+        },
+        {
+          name: data.actions,
+          field: "actions"
+        }
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("shifts").subscribe(data => {
+        this.columns = [
+          {
+            name: data.shiftNumber,
+            field: "shiftNumber",
+          },
+          {
+            name: data.theNameOfTheRose,
+            field: "shiftName",
+          },
+          {
+            name: data.checkInTime,
+            field: "entryTime"
+          },
+          {
+            name: data.timeToGoOut,
+            field: "timeToGoOut"
+          },
+          {
+            name: data.allowedMinutes,
+            field: "allowedMinutes"
+          },
+          {
+            name: data.shiftStaff,
+            field: "shiftStaff"
+          },
+          {
+            name: data.actions,
+            field: "actions"
+          }
+        ];
+      })
+      // this.subscription = this.translate.stream('primeng').subscribe(data => {
+      //   this.config.setTranslation(data);
+      // });  
+    })
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -270,12 +342,16 @@ export class ShiftsComponent {
     )
   }
   dialogShiftFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogShiftFileComponent, {
-      width: "40vw",
-      data: {
-        title: "ملف الوردية"
-      },
-    });
+    let dialogRefAddCurrency!:MatDialogRef<DialogShiftFileComponent, any>;
+    this.translate.get("shifts").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(DialogShiftFileComponent, {
+        width: "40vw",
+        data: {
+          title: translate.theRosaryFile
+        },
+      });
+    })
+ 
     dialogRefAddCurrency.componentInstance.id = data.id
   }
   mathRound(data: any) {
@@ -288,32 +364,35 @@ export class ShiftsComponent {
     this.getShifts(this.filteration)
   }
   addShift() {
-    const dialogRefAddCurrency = this.dialog.open(AddShiftComponent, {
-      width: "50vw",
-      data: {
-        title: "إضافة وردية",
-
-        titleShift: "اسم الوردية <span class='color-red'>*</span>",
-        placeholdeShift: "اسم الوردية",
-        validationtitleShift: "اسم القسم مطلوب",
-        titlePermanentType: "نوع الدوام <span class='color-red'>*</span>",
-        placeholderPermanentType: " اختار نوع الدوام",
-        validationtitlePermanentType: "نوع الدوام مطلوب",
-        entryTime: "وقت الدخول <span class='color-red'>*</span>",
-        validationEntryTime: "وقت الدخول مطلوب",
-        firstRadio: "صباحي",
-        secondRadio: "مسائي",
-        validationToGoOut: "وقت الخروج مطلوب",
-        placeholderEntryTime: "وقت الدخول",
-        titletimeToGoOut: "وقت الخروج <span class='color-red'>*</span>",
-        validationtitleExtraMinutes: "الدقائق المسموحة مطلوبه",
-        placeholdertimeToGoOut: "وقت الخروج",
-        extraMinutes: "الدقائق المسموحة <span class='color-red'>*</span>",
-        placeholdeExtraMinutes: "عدد الدقائق المسموحة",
-        titleClose: "تراجع",
-        buttonSend: "إضافة وردية"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<AddShiftComponent, any>;
+    this.translate.get("shifts").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(AddShiftComponent, {
+        width: "50vw",
+        data: {
+          title: translate.pinkAddition,
+          titleShift: translate.rosaryName +" <span class='color-red'>*</span>",
+          placeholdeShift: translate.rosaryName,
+          validationtitleShift: translate.theNameOfTheShiftIsRequired,
+          titlePermanentType: translate.permanenceType+" <span class='color-red'>*</span>",
+          placeholderPermanentType: translate.chooseTheTypeOfWork,
+          validationtitlePermanentType: translate.workTypeRequired,
+          entryTime: translate.entryTime+" <span class='color-red'>*</span>",
+          validationEntryTime: translate.entryTimeRequired,
+          firstRadio: translate.morning,
+          secondRadio: translate.evening,
+          validationToGoOut: translate.checkoutTimeRequired,
+          placeholderEntryTime: translate.checkInTime,
+          titletimeToGoOut: translate.timeToGoOut+" <span class='color-red'>*</span>",
+          validationtitleExtraMinutes: translate.theAllowedMinutesAreRequired,
+          placeholdertimeToGoOut: translate.timeToGoOut,
+          extraMinutes: translate.allowedMinutes+" <span class='color-red'>*</span>",
+          placeholdeExtraMinutes: translate.numberOfMinutesAllowed,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.pinkAdd
+        },
+      });
     });
+
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editShift = false;
 
@@ -334,15 +413,18 @@ export class ShiftsComponent {
             dialogRefAddCurrency.componentInstance.submitted = true;
 
             dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "الورديات"
-              },
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("shifts").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.shifts
+                },
+              });
             });
+      
             this.getShifts(this.filteration);
 
             setTimeout(() => {
@@ -376,86 +458,74 @@ export class ShiftsComponent {
     });
   }
   editShift(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddShiftComponent, {
-      width: "50vw",
-      data: {
-        title: "تعديل الوردية",
-        titleFieldDisabled: "رقم الوردية",
-        placeholdeieldDisabled: "رقم الوردية",
-        titleShift: "اسم الوردية <span class='color-red'>*</span>",
-        placeholdeShift: "اسم الوردية",
-        validationtitleShift: "اسم القسم مطلوب",
-        titlePermanentType: "نوع الدوام <span class='color-red'>*</span>",
-        placeholderPermanentType: " اختار نوع الدوام",
-        validationtitlePermanentType: "نوع الدوام مطلوب",
-        entryTime: "وقت الدخول",
-        placeholderEntryTime: "وقت الدخول",
-        firstRadio: "صباحي",
-        secondRadio: "مسائي",
-        titletimeToGoOut: "وقت الخروج",
-        placeholdertimeToGoOut: "وقت الخروج",
-        extraMinutes: "الدقائق المسموحة <span class='color-red'>*</span>",
-        placeholdeExtraMinutes: "عدد الدقائق المسموحة",
-        code: "#001093",
-        titleClose: "تراجع",
-        buttonSend: "حفظ الوردية"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<AddShiftComponent, any>;
+    this.translate.get("shifts").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(AddShiftComponent, {
+        width: "50vw",
+        data: {
+          title: translate.modifyTheShift,
+          titleShift: translate.rosaryName +" <span class='color-red'>*</span>",
+          placeholdeShift: translate.rosaryName,
+          validationtitleShift: translate.theNameOfTheShiftIsRequired,
+          titlePermanentType: translate.permanenceType+" <span class='color-red'>*</span>",
+          placeholderPermanentType: translate.chooseTheTypeOfWork,
+          validationtitlePermanentType: translate.workTypeRequired,
+          entryTime: translate.entryTime+" <span class='color-red'>*</span>",
+          validationEntryTime: translate.entryTimeRequired,
+          firstRadio: translate.morning,
+          secondRadio: translate.evening,
+          validationToGoOut: translate.checkoutTimeRequired,
+          placeholderEntryTime: translate.checkInTime,
+          titletimeToGoOut: translate.timeToGoOut+" <span class='color-red'>*</span>",
+          validationtitleExtraMinutes: translate.theAllowedMinutesAreRequired,
+          placeholdertimeToGoOut: translate.timeToGoOut,
+          extraMinutes: translate.allowedMinutes+" <span class='color-red'>*</span>",
+          placeholdeExtraMinutes: translate.numberOfMinutesAllowed,
+          code: "#001093",
+          titleClose: translate.toRetreat,
+          buttonSend: translate.saveTheRosary
+        },
+      });
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
-
     dialogRefAddCurrency.componentInstance.editShift = true;
-
-
     // dialogRefAddCurrency.componentInstance.list = this.categories;
-
-
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-
       let formData = result;
       formData.checkInTime = moment(result.checkInTime).format("HH:mm:ss");
       formData.checkOutTime = moment(result.checkOutTime).format("HH:mm:ss")
       formData.timePeriod = Number(formData.timePeriod);
       formData.isActive = true;
       formData.id = data.id;
-
       this.shiftsService.updateShift(formData).subscribe(
         {
           next: data => {
-
             dialogRefAddCurrency.componentInstance.submitted = true;
-
             dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "الورديات"
-              },
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("shifts").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.shifts
+                },
+              });
             });
             this.getShifts(this.filteration);
-
             setTimeout(() => {
               succressDialog.close();
-
             }, 2000);
-
             succressDialog.componentInstance.submitted = true;
             succressDialog.componentInstance.submitClicked.subscribe(result => {
-
-
               succressDialog.close();
-
             })
-
           },
           error: err => {
             dialogRefAddCurrency.close();
-
             dialogRefAddCurrency.componentInstance.submitted = true;
-
           }
         }
       )
@@ -468,16 +538,19 @@ export class ShiftsComponent {
     });
   }
   deleteRow(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DeleteShiftComponent, {
-      width: "30vw",
-      data: {
-        title: "متأكد من حذف الوردية؟",
-        message: "لا يمكن الرجوع في في هذا الأمر",
+    let reasonOfRefuseDialog!:MatDialogRef<DeleteShiftComponent, any>;
+    this.translate.get("shifts").subscribe(translate => {
+      reasonOfRefuseDialog = this.dialog.open(DeleteShiftComponent, {
+        width: "30vw",
+        data: {
+          title: translate.areYouSureYouDeletedTheShift,
+          message: translate.thereIsNoGoingBackOnThisMatter,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.delete
+        },
+      });
+    })
 
-        titleClose: "تراجع",
-        buttonSend: "حذف"
-      },
-    });
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       this.shiftsService.deleteShift({ ShiftWorkingTimeId: data.id }).subscribe(
@@ -578,5 +651,9 @@ export class ShiftsComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

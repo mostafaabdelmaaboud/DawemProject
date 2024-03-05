@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DeleteShiftComponent } from 'src/app/shared/components/delete-shift/delete-shift.component';
@@ -30,6 +30,7 @@ export class TablesComponent {
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
   private schedulesService = inject(SchedulesService);
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
 
   columns: any[] = [
@@ -110,9 +111,53 @@ export class TablesComponent {
 
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
+      this.date = new Date();
+
     });
   }
   ngOnInit(): void {
+    this.translate.get("tables").subscribe(data => {
+      this.columns = [
+        {
+          name: data.tableNumber,
+          field: "tableNumber",
+        },
+        {
+          name: data.tableName,
+          field: "tableName",
+        },
+        {
+          name: data.tableStaff,
+          field: "tableStaff"
+        },
+        {
+          name: data.action,
+          field: "actions"
+        }
+      ];
+    })
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translate.get("tables").subscribe(data => {
+        this.columns = [
+          {
+            name: data.tableNumber,
+            field: "tableNumber",
+          },
+          {
+            name: data.tableName,
+            field: "tableName",
+          },
+          {
+            name: data.tableStaff,
+            field: "tableStaff"
+          },
+          {
+            name: data.action,
+            field: "actions"
+          }
+        ];
+      })
+    })
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -242,27 +287,24 @@ export class TablesComponent {
     })
   }
   addTable() {
-    const dialogRefAddCurrency = this.dialog.open(AddTableComponent, {
-      width: "50vw",
-      data: {
-        title: "إضافة جدول",
-        titleTableName: "اسم الجدول <span class='color-red'>*</span>",
-        placeholdetableName: "اسم الجدول",
-        ValidationTableName: "اسم الجدول مطلوب",
-        titleClose: "تراجع",
-        buttonSend: "إضافة الجدول"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<AddTableComponent, any>;
+    this.translate.get("tables").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(AddTableComponent, {
+        width: "50vw",
+        data: {
+          title: translate.addATable,
+          titleTableName: translate.tableName+" <span class='color-red'>*</span>",
+          placeholdetableName: translate.tableName,
+          ValidationTableName: translate.tableNameRequired,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.addTable
+        },
+      });
     });
-
-
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editSchedule = false;
-
     // dialogRefAddCurrency.componentInstance.list = this.categories;
-
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-
-
       let formData: any = {};
       formData.name = result.tableName;
       formData.isActive = true;
@@ -270,10 +312,8 @@ export class TablesComponent {
       result?.weekDays?.forEach((day: any) => {
         if (day.weekDayValue.key != undefined) {
           formData.scheduleDays.push({ WeekDay: day.weekDay, ShiftId: day.weekDayValue.key })
-
         } else {
           formData.scheduleDays.push({ WeekDay: day.weekDay, ShiftId: null })
-
         }
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
@@ -282,27 +322,27 @@ export class TablesComponent {
       this.schedulesService.createSchedule(formData).subscribe(
         {
           next: data => {
-
             if (data?.state === 2) {
               dialogRefAddCurrency.componentInstance.submitted = true;
               dialogRefAddCurrency.componentInstance.loading = false;
-
               this.toast.error(data?.message);
-
             } else {
               dialogRefAddCurrency.componentInstance.submitted = true;
               dialogRefAddCurrency.componentInstance.loading = false;
 
               dialogRefAddCurrency.close();
-
-              const succressDialog = this.dialog.open(ToastSuccessComponent, {
-                width: "30vw",
-                data: {
-                  title: "تم ارسال طلبك",
-                  message: data.message,
-                  buttonSend: "الجدولة"
-                },
+              let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+              this.translate.get("tables").subscribe(translate => {
+                succressDialog = this.dialog.open(ToastSuccessComponent, {
+                  width: "30vw",
+                  data: {
+                    title: translate.yourRequestHasBeenSent,
+                    message: data.message,
+                    buttonSend: translate.scheduling
+                  },
+                });
               });
+       
               this.getSchedules(this.filteration);
               setTimeout(() => {
                 succressDialog.close();
@@ -333,28 +373,23 @@ export class TablesComponent {
       }
     });
   }
-  dialogScheduleFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogScheduleFileComponent, {
-      width: "40vw",
-      data: {
-        title: "ملف الجدول"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.id = data.id
-  }
   editTable(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddTableComponent, {
-      width: "50vw",
-      data: {
-        title: "تعديل الجدول",
-        titleTableName: "اسم الجدول <span class='color-red'>*</span>",
-        placeholdetableName: "اسم الجدول",
-        ValidationTableName: "اسم الجدول مطلوب",
-        code: "#001093",
-        titleClose: "تراجع",
-        buttonSend: "حفظ الجدول"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<AddTableComponent, any>;
+    this.translate.get("tables").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(AddTableComponent, {
+        width: "50vw",
+        data: {
+          title: translate.editTable,
+          titleTableName: translate.tableName+" <span class='color-red'>*</span>",
+          placeholdetableName: translate.tableName,
+          ValidationTableName: translate.tableNameRequired,
+          code: "#001093",
+          titleClose: translate.toRetreat,
+          buttonSend: translate.saveTable
+        },
+      });
     });
+ 
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editSchedule = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
@@ -383,13 +418,16 @@ export class TablesComponent {
             dialogRefAddCurrency.componentInstance.submitted = true;
             dialogRefAddCurrency.componentInstance.loading = false;
             dialogRefAddCurrency.close();
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "الجدولة"
-              },
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.get("tables").subscribe(translate => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: translate.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: translate.scheduling
+                },
+              });
             });
             this.getSchedules(this.filteration);
             setTimeout(() => {
@@ -413,6 +451,20 @@ export class TablesComponent {
       }
     });
   }
+  dialogScheduleFile(data: any) {
+    let dialogRefAddCurrency!:MatDialogRef<DialogScheduleFileComponent, any>;
+    this.translate.get("tables").subscribe(translate => {
+      dialogRefAddCurrency = this.dialog.open(DialogScheduleFileComponent, {
+        width: "40vw",
+        data: {
+          title: translate.tableFile
+        },
+      });
+    });
+ 
+    dialogRefAddCurrency.componentInstance.id = data.id
+  }
+ 
   mathRound(data: any) {
     return Math.ceil(data)
   }
@@ -423,15 +475,20 @@ export class TablesComponent {
 
 
   deleteRow(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DeleteShiftComponent, {
-      width: "30vw",
-      data: {
-        title: "متأكد من حذف الجدول؟",
-        message: "لا يمكن الرجوع في في هذا الأمر",
-        titleClose: "تراجع",
-        buttonSend: "حذف"
-      },
+
+    let reasonOfRefuseDialog!:MatDialogRef<DeleteShiftComponent, any>;
+    this.translate.get("tables").subscribe(translate => {
+      reasonOfRefuseDialog = this.dialog.open(DeleteShiftComponent, {
+        width: "30vw",
+        data: {
+          title: translate.areYouSureToDeleteTheTable,
+          message: translate.thereIsNoGoingBackOnThisMatter,
+          titleClose: translate.toRetreat,
+          buttonSend: translate.delete
+        },
+      });
     });
+  
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       this.schedulesService.deleteSchedule({ ScheduleId: data.id }).subscribe(
@@ -533,5 +590,9 @@ export class TablesComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

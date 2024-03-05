@@ -10,9 +10,14 @@
   </header>
   <div class="body-dialog p-15 f-s-16">
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">اسم الجدول</label>
+      <label class="title">{{"tables.tableName"|translate}}</label>
       <div class="content-password">
-        {{info?.name ? info?.name : "لا يوجد"}}
+        <ng-container *ngIf="info?.name">
+          {{info?.name}}
+        </ng-container>
+        <ng-container *ngIf="!info?.name">
+          {{"department.nothing"|translate}}
+        </ng-container>
       </div>
 
     </div>
@@ -20,8 +25,12 @@
       <div class="sectionTwo mb-3 line-bellow">
         <label class="title">{{day?.weekDayName}}</label>
         <div class="content-password">
-          {{day?.shiftName ? day?.shiftName : "لا يوجد"}}
-
+          <ng-container *ngIf="info?.shiftName">
+            {{info?.shiftName}}
+          </ng-container>
+          <ng-container *ngIf="!info?.shiftName">
+            {{"department.nothing"|translate}}
+          </ng-container>
         </div>
 
       </div>
