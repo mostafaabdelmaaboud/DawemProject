@@ -8,26 +8,31 @@ import { PrimeNGConfig } from 'primeng/api';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(private translate: TranslateService) {
-    translate.setDefaultLang('ar');
-    translate.use('ar');
+  currentLang = localStorage.getItem("lang");
 
+  constructor(private translate: TranslateService) {
+    document.documentElement.setAttribute('lang', 'ar');
+    translate.setDefaultLang('ar');
+    this.translate.use("ar");
+
+    // if (this.currentLang === undefined || this.currentLang === null) {
+    //   document.documentElement.setAttribute('lang', 'ar');
+    //   this.translate.use("ar");
+    // } else {
+
+    //   if (this.currentLang == "ar") {
+    //     document.documentElement.setAttribute('lang', 'ar');
+    //     this.translate.use("ar");
+ 
+    //   }
+    //   else if (this.currentLang == "en") {
+    //     document.documentElement.setAttribute('lang', 'en');
+    //     this.translate.use("en");
+
+    //   } 
+
+    // }
 
   }
-  //   changeLang(lang: string) {
-  //     this.translate.use(lang);
-  //   }
-  //   constructor(public translate: TranslateService, public primeNGConfig: PrimeNGConfig) {
-  //     translate.addLangs(['en', 'ar']);
-  //     translate.setDefaultLang('ar');
 
-  //     const browserLang: any = translate.getBrowserLang();
-  //     let lang = browserLang.match(/ar|en/) ? browserLang : 'ar';
-  //     this.changeLang(lang);
-
-  //     this.translate.stream('primeng').subscribe(data => {
-  //       this.primeNGConfig.setTranslation(data);
-  //     });
-  //   }
-  // }
 }

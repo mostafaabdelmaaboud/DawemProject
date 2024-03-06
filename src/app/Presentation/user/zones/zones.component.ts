@@ -69,7 +69,7 @@ export class ZonesComponent {
 
   ];
   zones: any = [];
-
+  zonesIsExport: any = [];
   isLoading = true;
   listDirectManager: any[] = [];
 
@@ -233,7 +233,6 @@ export class ZonesComponent {
 
   }
   exportTableToExcel() {
- 
     let columns = [...this.columns];
     delete columns[5]
     var options = { 
@@ -246,27 +245,59 @@ export class ZonesComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    let formatTable = this.zones.map(zone => {
-      
-      return {
-        zoneNumber: zone.zoneNumber,
-        zoneName: zone.zoneName,
-        Latit: zone.Latit,
-        Long: zone.Long,
-        Radius: zone.Radius
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.zonesIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+      this.zonesService.listZones(filteration).subscribe(data => {
+        data.data.forEach((zone: any) => {
+          this.zonesIsExport.push({
+            id: zone.id,
+            code: zone.code,
+            isActive: zone.isActive,
+            zoneNumber: zone.code,
+            zoneName: zone.name,
+            Latit: zone.latitude,
+            Long: zone.longitude,
+            Radius: zone.radius
+          })
+        });
+        let formatTable = this.zonesIsExport.map(zone => {
+          return {
+            zoneNumber: zone.zoneNumber,
+            zoneName: zone.zoneName,
+            Latit: zone.Latit,
+            Long: zone.Long,
+            Radius: zone.Radius
+          }
+        })
+        this.isLoading = false;
+        new ngxCsv(formatTable, "sheet", options);
+      })
+    }
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableZonesHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
-  
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tableZonesHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
 
   }
   showActions(data: any) {

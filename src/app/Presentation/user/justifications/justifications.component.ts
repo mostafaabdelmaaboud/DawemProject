@@ -72,6 +72,8 @@ export class JustificationsComponent {
 
   ];
   justifications: any = [];
+  justificationsIsExport: any = [];
+
   private justificationsService = inject(JustificationsService);
   defaultRowPerPage = { name: '5', code: 5 };
 
@@ -271,28 +273,69 @@ export class JustificationsComponent {
       header: 'th { font-weight: bold; }',
       headers: columns.map((column:any) => column.name)
     };
-    let formatTable = this.justifications.map(justification => {
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.justificationsIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+
+      this.justificationsService.listJustifications(filteration).subscribe(data => {
+
+        data.data.forEach((employee: any) => {
+          this.justificationsIsExport.push({
+            id: employee.id,
+            orderNumber: employee.code,
+            employeeName: {
+              name: employee.employee.name,
+              alt: employee.employee.name,
+              img: employee.employee.profileImagePath ? employee.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
+            },
+            statusName:employee.statusName,
+            employeeCode:employee.employee.employeeNumber,
+            typeOfJustification: employee.justificationTypeName,
+            status:employee.status,
+            dateFrom: moment(new Date(employee.dateFrom)).format("MM/DD/YYYY"),
+            dateTo: moment(new Date(employee.dateTo)).format("MM/DD/YYYY"),
+          })
+        });
+        let formatTable = this.justificationsIsExport.map(justification => {
       
-      return {
-        orderNumber: justification.orderNumber,
-        employeeName: justification.employeeName.name,
-        typeOfJustification: justification.typeOfJustification,
-        dateFrom: justification.dateFrom,
-        dateTo: justification.dateTo
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
+          return {
+            orderNumber: justification.orderNumber,
+            employeeName: justification.employeeName.name,
+            typeOfJustification: justification.typeOfJustification,
+            dateFrom: justification.dateFrom,
+            dateTo: justification.dateTo
+          }
+        })
+        this.isLoading = false;
+        new ngxCsv(formatTable, "sheet", options);
+      })
+    }
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableJustificationHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
-  
 
+  
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tableJustificationHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
   }
   filter() {
     let filteration = { ...this.filteration }
@@ -344,7 +387,6 @@ export class JustificationsComponent {
     this.justifications = [];
     this.isLoading = true;
     this.justificationsService.listJustifications(filteration).subscribe(data => {
-
       data.data.forEach((employee: any) => {
         this.justifications.push({
           id: employee.id,
@@ -355,7 +397,7 @@ export class JustificationsComponent {
             img: employee.employee.profileImagePath ? employee.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
           },
           statusName:employee.statusName,
-          employeeCode:employee.employee.code,
+          employeeCode:employee.employee.employeeNumber,
           typeOfJustification: employee.justificationTypeName,
           status:employee.status,
           dateFrom: moment(new Date(employee.dateFrom)).format("MM/DD/YYYY"),
@@ -373,10 +415,7 @@ export class JustificationsComponent {
     return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 24, actionCode: data.actionCode })
   }
   numberOfRowsPerPage(data: any) {
-
-
     this.filteration = { ...this.filteration, PageSize: data.value.code };
-
     this.getJustifications(this.filteration)
   }
   onPageChange(event: any) {

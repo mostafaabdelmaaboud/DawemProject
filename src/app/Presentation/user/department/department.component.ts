@@ -72,6 +72,7 @@ export class DepartmentComponent {
 
   ];
   department: any = [];
+  departmentIsExport: any = [];
   private dialog = inject(MatDialog);
 
   isLoading = true;
@@ -258,29 +259,68 @@ export class DepartmentComponent {
       headers: columns.map((column:any) => column.name)
     };
  
-    let formatTable = this.department.map(department => {
-      return {
-        orderNumber: department.orderNumber,
-        name: department.name,
-        date: department.date,
-        audience: department.audience,
-        dismissing: department.dismissing,
-        status: department.status,
-        timeGap: department.timeGap
 
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
+    
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.departmentIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+      this.departmentService.listAttendance(filteration).subscribe(data => {
+        data.data.employeeAttendances.forEach((attendacne: any) => {
+          this.departmentIsExport.push({
+            id: attendacne.id,
+            orderNumber: attendacne.id,
+            name: attendacne.employeeName,
+            date: moment(new Date(attendacne.date)).format("MM/DD/YYYY"),
+            audience: attendacne.checkInTime.replaceAll(' ', '') ? attendacne.checkInTime : "لا يوجد",
+            dismissing: attendacne.checkOutTime.replaceAll(' ', '') ? attendacne.checkOutTime : "لا يوجد",
+            status: attendacne.status,
+            timeGap: attendacne.timeGap
+          })
+        });
+  
+  
+
+        let formatTable = this.departmentIsExport.map(department => {
+          return {
+            orderNumber: department.orderNumber,
+            name: department.name,
+            date: department.date,
+            audience: department.audience,
+            dismissing: department.dismissing,
+            status: department.status,
+            timeGap: department.timeGap
+    
+          }
+        })
+        this.isLoading = false;
+        new ngxCsv(formatTable, "sheet", options);
+      })
+  
+    }
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableEmploymentHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
-  
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tableEmploymentHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
 
   }
   filter() {

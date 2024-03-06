@@ -69,6 +69,8 @@ export class RequestsComponent {
 
   ];
   requests: any = [];
+  requestIsExport: any = [];
+
   isLoading = true;
   defaultRowPerPage = { name: '5', code: 5 };
   filteration: any = {
@@ -265,28 +267,71 @@ export class RequestsComponent {
       headers: columns.map((column:any) => column.name)
     };
  
-    let formatTable = this.requests.map(request => {
-      return {
-        orderNumber: request.orderNumber,
-        employeeName: request.employeeName.name,
-        requestTypeName: request.requestTypeName,
-        date: request.date,
 
-        statusName: request.statusName
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.requestIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+      this.requestsService.listRequests(filteration).subscribe(data => {
+        data?.data?.forEach((request: any) => {
+          this.requestIsExport.push({
+            id: request.id,
+            status: request.status,
+            orderNumber: request.employee.employeeNumber,
+            employeeName: {
+              name: request.employee.name,
+              alt: request.employee.name,
+              img: request.employee.profileImagePath ? request.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
+            },
+            requestTypeName: request.requestTypeName,
+            statusName: request.statusName,
+            date: moment(new Date(request.date)).format("MM/DD/YYYY")
+          })
+        });
 
-      }
-    })
 
-    new ngxCsv(formatTable, "sheet", options);
+        let formatTable = this.requestIsExport.map(request => {
+          return {
+            orderNumber: request.orderNumber,
+            employeeName: request.employeeName.name,
+            requestTypeName: request.requestTypeName,
+            date: request.date,
+    
+            statusName: request.statusName
+    
+          }
+        })
+        this.isLoading = false;
+        new ngxCsv(formatTable, "sheet", options);
+
+
+      })
+    }
+
+    // new ngxCsv(formatTable, "sheet", options);
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableRequetstsHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tableRequetstsHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
   
 
   }
@@ -322,11 +367,10 @@ export class RequestsComponent {
     this.isLoading = true;
     this.requestsService.listRequests(filteration).subscribe(data => {
       data?.data?.forEach((request: any) => {
-
         this.requests.push({
           id: request.id,
           status: request.status,
-          orderNumber: request.employee.code,
+          orderNumber: request.employee.employeeNumber,
           employeeName: {
             name: request.employee.name,
             alt: request.employee.name,
@@ -339,9 +383,7 @@ export class RequestsComponent {
       });
       this.totalItems = data.totalCount
       this.isLoading = false;
-
-
-    })
+    });
   }
   mathRound(data: any) {
     return Math.ceil(data)

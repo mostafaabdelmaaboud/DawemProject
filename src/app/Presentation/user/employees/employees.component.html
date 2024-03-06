@@ -504,7 +504,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData>
-      <tr *ngIf="!isLoading">
+      <tr>
         <ng-container *ngFor="let column of columns">
           <ng-container *ngIf="column.field != 'employeeName' && column.field != 'actions'">
             <td>

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject, Subscription, debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs';
@@ -25,7 +25,7 @@ import { ngxCsv } from 'ngx-csv/ngx-csv';
   styleUrls: ['./employees.component.scss']
 })
 export class EmployeesComponent {
-  
+
   date!: Date;
   arabic: any;
   subscription!: Subscription;
@@ -76,6 +76,8 @@ export class EmployeesComponent {
 
   ];
   employees: any = [];
+  employeesIsExport: any = [];
+
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   isLoading = true;
@@ -287,28 +289,97 @@ export class EmployeesComponent {
       headers: columns.map((column:any) => column.name)
     };
  
-    let formatTable = this.employees.map(employee => {
-      return {
-        orderNumber: employee.orderNumber,
-        employeeName: employee.employeeName.name,
-        section: employee.section,
-        joiningDate: employee.joiningDate,
 
-        vacationsBalance: employee.vacationsBalance
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.employeesIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+      this.employeesService.listEmployees(filteration).subscribe(data => {
+        data.data.forEach((employee: any) => {
+          this.employeesIsExport.push({
+            id: employee.id,
+            orderNumber: employee.employeeNumber,
+            isActive: employee.isActive,
+            code:employee.code,
+            employeeName: {
+              name: employee?.name ? employee?.name : "لا يوجد",
+              alt: employee?.name ? employee?.name : "لا يوجد",
+              img: employee?.profileImagePath ? employee?.profileImagePath : "../../../../assets/img/5034901-200.png"
+            },
+            section: employee?.dapartmentName ? employee?.dapartmentName : "لا يوجد",
+            joiningDate: employee?.joiningDate ? moment(employee.joiningDate).format("DD/MM/YYYY") : "لا يوجد",
+            vacationsBalance: employee?.annualVacationBalance ? employee.annualVacationBalance : "0"
+          })
+        });
 
-      }
-    })
 
-    new ngxCsv(formatTable, "sheet", options);
+        let formatTable = this.employeesIsExport.map(employee => {
+          return {
+            orderNumber: employee.orderNumber,
+            employeeName: employee.employeeName.name,
+            section: employee.section,
+            joiningDate: employee.joiningDate,
+    
+            vacationsBalance: employee.vacationsBalance
+    
+          }
+        });
+        this.isLoading = false;
+        new ngxCsv(formatTable, "sheet", options);
+
+
+      })
+    }
+
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableEmployeesHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.employeesIsExport = [];
+      // let filteration = {...this.filteration, isExport:true};
+      let table: any = document.getElementById("tableEmployeesHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+      // this.employeesService.listEmployees(filteration).subscribe(data => {
+      //   data.data.forEach((employee: any) => {
+      //     this.employeesIsExport.push({
+      //       id: employee.id,
+      //       orderNumber: employee.employeeNumber,
+      //       isActive: employee.isActive,
+      //       code:employee.code,
+      //       employeeName: {
+      //         name: employee?.name ? employee?.name : "لا يوجد",
+      //         alt: employee?.name ? employee?.name : "لا يوجد",
+      //         img: employee?.profileImagePath ? employee?.profileImagePath : "../../../../assets/img/5034901-200.png"
+      //       },
+      //       section: employee?.dapartmentName ? employee?.dapartmentName : "لا يوجد",
+      //       joiningDate: employee?.joiningDate ? moment(employee.joiningDate).format("DD/MM/YYYY") : "لا يوجد",
+      //       vacationsBalance: employee?.annualVacationBalance ? employee.annualVacationBalance : "0"
+      //     })
+      //   });
+
+      //   this.totalItems = data.totalCount;
+      //   setTimeout(() => {
+     
+
+      //   }, 500);
+      // })
+    }
+
+
   
 
   }
@@ -361,11 +432,10 @@ export class EmployeesComponent {
   }
   getEmployees(filteration: any) {
     this.employees = [];
+
     this.isLoading = true;
     this.employeesService.listEmployees(filteration).subscribe(data => {
-
       data.data.forEach((employee: any) => {
-
         this.employees.push({
           id: employee.id,
           orderNumber: employee.employeeNumber,
@@ -379,13 +449,10 @@ export class EmployeesComponent {
           section: employee?.dapartmentName ? employee?.dapartmentName : "لا يوجد",
           joiningDate: employee?.joiningDate ? moment(employee.joiningDate).format("DD/MM/YYYY") : "لا يوجد",
           vacationsBalance: employee?.annualVacationBalance ? employee.annualVacationBalance : "0"
-        })
+        });
       });
       this.totalItems = data.totalCount
       this.isLoading = false;
-
-
-
     })
   }
   enabledRow(data: any) {
