@@ -63,6 +63,7 @@ export class VacationBalanceComponent {
     }
   ];
   Vacations: any = [];
+  VacationsIsExport: any = [];
   isLoading = true;
   filteration: any = {
     PageSize: 5,
@@ -483,28 +484,63 @@ export class VacationBalanceComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    let formatTable = this.Vacations.map(Vacation => {
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.VacationsIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+
+      this.vacationBalanceService.listVacations(filteration).subscribe(data => {
+        data.data.forEach((vacation: any) => {
+          this.VacationsIsExport.push({
+            id: vacation.id,
+            code: vacation.code,
+            employeeName: vacation.employeeName,
+            vacationTypeName: vacation.defaultVacationTypeName,
+            balance: vacation.balance,
+            remainingBalance: vacation.remainingBalance,
+            year: vacation.year,
+            isActive: vacation.isActive
+          })
+        });
+        let formatTable = this.VacationsIsExport.map(Vacation => {
       
-      return {
-        code: Vacation.code,
-        employeeName: Vacation.employeeName,
-        vacationTypeName: Vacation.vacationTypeName,
-        balance: Vacation.balance,
-        remainingBalance: Vacation.remainingBalance,
-        year: Vacation.year
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
+          return {
+            code: Vacation.code,
+            employeeName: Vacation.employeeName,
+            vacationTypeName: Vacation.vacationTypeName,
+            balance: Vacation.balance,
+            remainingBalance: Vacation.remainingBalance,
+            year: Vacation.year
+          }
+        })
+        this.isLoading = false;
+        new ngxCsv(formatTable, "sheet", options);
+      })
+    }
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableVacationsHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
-  
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tableVacationsHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
 
   }
   resetFilteration() {

@@ -59,7 +59,7 @@ export class GroupsComponent {
 
   ];
   groups: any = [];
-
+  groupsIsExport: any = [];
   isLoading = true;
 
   filteration: any = {
@@ -176,26 +176,66 @@ export class GroupsComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    let formatTable = this.groups.map(group => {
-      
-      return {
-        groupNumber: group.groupNumber,
-        groupName: group.groupName,
-        groupStaff: group.groupStaff.name,
-        numberOfEmployeesInTheGroup: group.numberOfEmployeesInTheGroup
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
-  }
-  exportTableToPDF() {
-    let table: any = document.getElementById("tableGroupHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.groupsIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+
+      this.groupsService.listGroups(filteration).subscribe(data => {
+
+        data.data.forEach((group: any) => {
+          this.groupsIsExport.push({
+            id: group.id,
+            groupNumber: group.code,
+            groupName: group.name,
+            isActive: group.isActive,
+            groupStaff: {
+              name: group.manager ? group.manager.managerName : "لا يوجد",
+              alt: group.manager ? group.manager.managerName : "",
+              img: group.manager ? group.manager.profileImagePath : "../../../../assets/img/5034901-200.png"
+            },
+            numberOfEmployeesInTheGroup: group.numberOfEmployees
   
+  
+          })
+        });
+        let formatTable = this.groupsIsExport.map(group => {
+      
+          return {
+            groupNumber: group.groupNumber,
+            groupName: group.groupName,
+            groupStaff: group.groupStaff.name,
+            numberOfEmployeesInTheGroup: group.numberOfEmployeesInTheGroup
+          }
+        })
+        this.isLoading = false;
+        new ngxCsv(formatTable, "sheet", options);
+  
+      })
+    }  }
+  exportTableToPDF() {
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tableGroupHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
 
   }
   resetFilteration() {

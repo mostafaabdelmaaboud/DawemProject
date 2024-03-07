@@ -65,7 +65,7 @@ export class FingerPrintDevicesComponent {
   ];
 
   fingerPrintDevices: any = [];
-
+  fingerPrintDevicesIsExport: any = [];
   isLoading = true;
 
   filteration: any = {
@@ -180,29 +180,62 @@ export class FingerPrintDevicesComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    let formatTable = this.fingerPrintDevices.map(fingerPrintDevice => {
-      
-      return {
-        code: fingerPrintDevice.code,
-        name: fingerPrintDevice.name,
-        ipAddress: fingerPrintDevice.ipAddress,
-        portNumber: fingerPrintDevice.portNumber,
-        model: fingerPrintDevice.model,
-        serialNumber: fingerPrintDevice.serialNumber
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
-  }
-  exportTableToPDF() {
-    let table: any = document.getElementById("tableFingerPrintDevicesHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 80); 
-      pdf.save('ملف_PDF.pdf');
-    });
-  
 
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.fingerPrintDevicesIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+  
+      this.fingerPrintDevicesService.listFingerprintDevices(filteration).subscribe(data => {
+        data.data.forEach((fingerPrintDevice: any) => {
+          this.fingerPrintDevicesIsExport.push({
+            id: fingerPrintDevice.id,
+            code: fingerPrintDevice.code,
+            name: fingerPrintDevice.name,
+            ipAddress: fingerPrintDevice.ipAddress,
+            portNumber: fingerPrintDevice.portNumber,
+            model: fingerPrintDevice.model,
+            serialNumber: fingerPrintDevice.serialNumber,
+            isActive: fingerPrintDevice.isActive
+          })
+        });
+        let formatTable = this.fingerPrintDevicesIsExport.map(fingerPrintDevice => {
+      
+          return {
+            code: fingerPrintDevice.code,
+            name: fingerPrintDevice.name,
+            ipAddress: fingerPrintDevice.ipAddress,
+            portNumber: fingerPrintDevice.portNumber,
+            model: fingerPrintDevice.model,
+            serialNumber: fingerPrintDevice.serialNumber
+          }
+        })
+        this.isLoading = false;
+        new ngxCsv(formatTable, "sheet", options);
+  
+      })
+    }  }
+  exportTableToPDF() {
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tableFingerPrintDevicesHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
   }
   resetFilteration() {
     this.filterForm.get("FreeText")?.setValue("");

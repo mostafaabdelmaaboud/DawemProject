@@ -59,7 +59,7 @@ export class SchedualPlanComponent {
 
   ];
   schedualPlan: any = [];
-
+  schedualPlanIsExport: any = [];
   isLoading = true;
 
   filteration: any = {
@@ -516,27 +516,60 @@ export class SchedualPlanComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    let formatTable = this.schedualPlan.map(schedualPlan => {
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.schedualPlanIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+   
+      this.schedualPlanService.listSchedualPlan(filteration).subscribe(data => {
+
+        data.data.forEach((schedualPlan: any) => {
+  
+  
+          this.schedualPlanIsExport.push({
+            id: schedualPlan.id,
+            code: schedualPlan.code,
+            scheduleName: schedualPlan.scheduleName,
+            schedulePlanTypeName: schedualPlan.schedulePlanTypeName,
+            dateFrom: moment(new Date(schedualPlan.dateFrom)).format("MM/DD/YYYY"),
+  
+            isActive: schedualPlan.isActive
+          })
+        });
+        let formatTable = this.schedualPlanIsExport.map(schedualPlan => {
       
-      return {
-        code: schedualPlan.code,
-        scheduleName: schedualPlan.scheduleName,
-        schedulePlanTypeName: schedualPlan.schedulePlanTypeName,
-        dateFrom: schedualPlan.dateFrom
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
+          return {
+            code: schedualPlan.code,
+            scheduleName: schedualPlan.scheduleName,
+            schedulePlanTypeName: schedualPlan.schedulePlanTypeName,
+            dateFrom: schedualPlan.dateFrom
+          }
+        })
+        this.isLoading = false;
+        new ngxCsv(formatTable, "sheet", options);
+  
+      })
+    }
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableSchedualPlanHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
-  
-
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tableSchedualPlanHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+      });
+    }
   }
   resetFilteration() {
     this.filterForm.get("FreeText")?.setValue("");

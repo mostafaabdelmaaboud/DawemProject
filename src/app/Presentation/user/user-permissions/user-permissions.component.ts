@@ -62,7 +62,7 @@ export class UserPermissionsComponent {
 
   ];
   permissions: any = [];
-
+  permissionsIsExport: any = [];
   isLoading = true;
 
   filteration: any = {
@@ -281,26 +281,59 @@ export class UserPermissionsComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    let formatTable = this.permissions.map(permission => {
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.permissionsIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+
+      this.userPermissionsService.listPermissions(filteration).subscribe(data => {
+        data.data.forEach((permission: any) => {
+          this.permissionsIsExport.push({
+            id: permission.id,
+            code: permission.code,
+            roleOrUserName: permission.roleOrUserName,
+            forTypeName: permission.forTypeName,
+            allowedScreensCount: permission.allowedScreensCount,
+            isActive: permission.isActive ? "نشط" : 'غير نشط'
+          });
+        });
+        let formatTable = this.permissionsIsExport.map(permission => {
       
-      return {
-        code: permission.code,
-        forTypeName: permission.forTypeName,
-        roleOrUserName: permission.roleOrUserName,
-        allowedScreensCount: permission.allowedScreensCount
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
+          return {
+            code: permission.code,
+            forTypeName: permission.forTypeName,
+            roleOrUserName: permission.roleOrUserName,
+            allowedScreensCount: permission.allowedScreensCount
+          }
+        })
+        this.isLoading = false;
+        new ngxCsv(formatTable, "sheet", options);
+  
+      })
+    }
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tablePermissionsHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
-  
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tablePermissionsHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
 
   }
   resetFilteration() {

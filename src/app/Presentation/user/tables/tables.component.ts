@@ -52,7 +52,7 @@ export class TablesComponent {
     }
   ];
   schedules: any = [];
-
+  schedulesIsExport: any = [];
   isLoading = true;
 
   filteration: any = {
@@ -213,29 +213,55 @@ export class TablesComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    let formatTable = this.schedules.map(schedule => {
-      return {
-        tableNumber: schedule.tableNumber,
-        tableName: schedule.tableName,
-        tableStaff: schedule.tableStaff
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
-  }
-  exportTableToPDF() {
-    let table: any = document.getElementById("tabletablesHidden");
-    
-    html2canvas(table,  {
-      scale: 3,
-      width: table.offsetWidth,
-      height: table.offsetHeight, 
-  }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.schedulesIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+
+      this.schedulesService.listSchedules(filteration).subscribe(data => {
+        data.data.forEach((employee: any) => {
+          this.schedulesIsExport.push({
+            id: employee.id,
+            tableNumber: employee.code,
+            tableName: employee.name,
+            tableStaff: employee.employeesNumber ? employee.employeesNumber : "لا يوجد"
   
+          })
+        });
+        let formatTable = this.schedulesIsExport.map(schedule => {
+          return {
+            tableNumber: schedule.tableNumber,
+            tableName: schedule.tableName,
+            tableStaff: schedule.tableStaff
+          }
+        })
+        this.isLoading = false;
+        new ngxCsv(formatTable, "sheet", options);
+  
+      })
+    }  }
+  exportTableToPDF() {
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tabletablesHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
 
   }
   resetFilteration() {

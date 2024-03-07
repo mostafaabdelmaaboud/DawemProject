@@ -55,7 +55,7 @@ export class ScheduleLogsComponent {
 
   ];
   schedules: any = [];
-
+  schedulesIsExport: any = [];
   isLoading = true;
 
   filteration: any = {
@@ -263,30 +263,56 @@ export class ScheduleLogsComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    let formatTable = this.schedules.map(schedule => {
-      return {
-        scheduleName: schedule.scheduleName,
-        schedulePlanTypeName: schedule.schedulePlanTypeName,
-        applyDate: schedule.applyDate,
-        employeesNumberAppliedOn: schedule.employeesNumberAppliedOn
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.schedulesIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+      this.scheduleLogsService.listSchedules(filteration).subscribe(data => {
+        data.data.forEach((schedule: any) => {
+          this.schedulesIsExport.push({
+            id: schedule.id,
+            scheduleName: schedule.scheduleName ? schedule.scheduleName : "لا يوجد",
+            schedulePlanTypeName: schedule.schedulePlanTypeName ? schedule.schedulePlanTypeName : "لا يوجد",
+            applyDate: schedule.applyDate ? moment(new Date(schedule.applyDate)).format("MM/DD/YYYY") : "لا يوجد",
+            employeesNumberAppliedOn: schedule.employeesNumberAppliedOn ? schedule.employeesNumberAppliedOn : "لا يوجد",
+          })
+        });
+        let formatTable = this.schedulesIsExport.map(schedule => {
+          return {
+            scheduleName: schedule.scheduleName,
+            schedulePlanTypeName: schedule.schedulePlanTypeName,
+            applyDate: schedule.applyDate,
+            employeesNumberAppliedOn: schedule.employeesNumberAppliedOn
+          }
+        })
+        this.isLoading = false;
+        new ngxCsv(formatTable, "sheet", options);
+  
+      })
+    }
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableshiftHidden");
-    html2canvas(table, {
-        scale: 3,
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tableshiftHidden");
+      html2canvas(table,{
+        scale: 5,
         width: table.offsetWidth,
         height: table.offsetHeight, 
     }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
-  
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
 
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
   }
   resetFilteration() {
     this.filterForm.get("FreeText")?.setValue("");

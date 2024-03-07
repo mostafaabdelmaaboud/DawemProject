@@ -67,7 +67,7 @@ export class ShiftsComponent {
 
   ];
   shifts: any = [];
-
+  shiftsIsExport: any = [];
   isLoading = true;
 
 
@@ -257,27 +257,71 @@ export class ShiftsComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    let formatTable = this.shifts.map(shift => {
-      return {
-        shiftNumber: shift.shiftNumber,
-        shiftName: shift.shiftName,
-        entryTime: shift.entryTime,
-        timeToGoOut: shift.timeToGoOut,
-        allowedMinutes: shift.allowedMinutes,
-        shiftStaff: shift.shiftStaff
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
-  }
-  exportTableToPDF() {
-    let table: any = document.getElementById("tableshiftHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.shiftsIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+
+      this.shiftsService.listShifts(filteration).subscribe(
+        {
+          next: data => {
   
+            data?.data?.forEach((employee: any) => {
+  
+              this.shiftsIsExport.push({
+                id: employee.id,
+                shiftNumber: employee.code,
+                shiftName: employee.name ? employee.name : "لا يوجد",
+                entryTime: employee.checkInTime ? employee.checkInTime : "لا يوجد",
+                timeToGoOut: employee.checkOutTime ? employee.checkOutTime : "لا يوجد",
+                allowedMinutes: employee.allowedMinutes ? employee.allowedMinutes : "لا يوجد",
+                shiftStaff: employee.timePeriod ? employee.timePeriod : "لا يوجد",
+  
+              })
+            });
+            let formatTable = this.shiftsIsExport.map(shift => {
+              return {
+                shiftNumber: shift.shiftNumber,
+                shiftName: shift.shiftName,
+                entryTime: shift.entryTime,
+                timeToGoOut: shift.timeToGoOut,
+                allowedMinutes: shift.allowedMinutes,
+                shiftStaff: shift.shiftStaff
+              }
+            })
+            this.isLoading = false;
+            new ngxCsv(formatTable, "sheet", options);
+  
+          },
+          error: err => {
+            this.isLoading = false;
+  
+          }
+        }
+      )
+    }  }
+  exportTableToPDF() {
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tableshiftHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
 
   }
   resetFilteration() {

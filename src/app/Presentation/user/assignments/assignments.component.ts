@@ -82,7 +82,7 @@ export class AssignmentsComponent {
 
 
   assignments: any = [];
-
+  assignmentsIsExport: any = [];
   isLoading = true;
 
 
@@ -293,29 +293,73 @@ export class AssignmentsComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    let formatTable = this.assignments.map(assignment => {
-      
-      return {
-        orderNumber: assignment.orderNumber,
-        employeeName: assignment.employeeName.name,
-        assignmentTypeName: assignment.assignmentTypeName,
-        dateFrom: assignment.dateFrom,
-        dateTo: assignment.dateTo,
-        statusName: assignment.statusName
 
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.assignmentsIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+
+      this.assignmentsService.listAssignment(filteration).subscribe(data => {
+        data?.data?.forEach((assignment: any) => {
+          this.assignmentsIsExport.push({
+            id: assignment.id,
+            status: assignment.status,
+            orderNumber: assignment.employee.employeeNumber,
+            employeeCode:assignment.code,
+            employeeName: {
+              name: assignment.employee.name,
+              alt: assignment.employee.name,
+              img: assignment.employee.profileImagePath ? assignment.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
+            },
+            assignmentTime:moment(new Date(assignment.dateFrom)).format("hh:mm:ss a"),
+  
+            assignmentTypeName: assignment.assignmentTypeName,
+            statusName: assignment.statusName,
+            dateFrom: moment(new Date(assignment.dateFrom)).format("MM/DD/YYYY"),
+            dateTo: moment(new Date(assignment.dateTo)).format("MM/DD/YYYY"),
+          })
+        });
+        let formatTable = this.assignmentsIsExport.map(assignment => {
+      
+          return {
+            employeeCode:assignment.employeeCode,
+            orderNumber: assignment.orderNumber,
+            employeeName: assignment.employeeName.name,
+            assignmentTypeName: assignment.assignmentTypeName,
+            dateFrom: assignment.dateFrom,
+            dateTo: assignment.dateTo,
+            statusName: assignment.statusName
+    
+          }
+        })
+        this.isLoading = false;
+        new ngxCsv(formatTable, "sheet", options);
+  
+  
+      })
+    }
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableAssignmentHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
-  
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tableAssignmentHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
 
   }
   resetFilteration() {
@@ -354,8 +398,8 @@ export class AssignmentsComponent {
         this.assignments.push({
           id: assignment.id,
           status: assignment.status,
-          orderNumber: assignment.code,
-          employeeCode:assignment.employee.code,
+          orderNumber: assignment.employee.employeeNumber,
+          employeeCode:assignment.code,
           employeeName: {
             name: assignment.employee.name,
             alt: assignment.employee.name,

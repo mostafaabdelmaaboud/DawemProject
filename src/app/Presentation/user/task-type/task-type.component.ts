@@ -51,7 +51,7 @@ export class TaskTypeComponent {
 
   ];
   tasks: any = [];
-
+  tasksIsExport: any = [];
   isLoading = true;
 
   filteration: any = {
@@ -172,26 +172,63 @@ export class TaskTypeComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    let formatTable = this.tasks.map(task => {
-      return {
-        code: task.code,
-        name: task.name,
-        isActive: task.isActive ? 'نشط' : 'غير نشط'
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
-  }
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.tasksIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+ 
+      this.taskTypeService.listTasks(filteration).subscribe(
+        {
+          next: data => {
+            data.data.forEach((vacation: any) => {
+              this.tasksIsExport.push({
+                id: vacation.id,
+                code: vacation.code,
+                name: vacation.name,
+                isActive: vacation.isActive
+  
+              })
+            });
+            let formatTable = this.tasksIsExport.map(task => {
+              return {
+                code: task.code,
+                name: task.name,
+                isActive: task.isActive ? 'نشط' : 'غير نشط'
+              }
+            })
+            this.isLoading = false;
+            new ngxCsv(formatTable, "sheet", options);
+          },
+          error: err => {
+            this.isLoading = false;
+  
+          }
+        }
+      )
+    }  }
 
   exportTableToPDF() {
-    let table: any = document.getElementById("tableTaskTypeHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
-  
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tableTaskTypeHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
 
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
   }
   resetFilteration() {
     this.filterForm.get("FreeText")?.setValue("");

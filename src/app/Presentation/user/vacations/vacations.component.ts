@@ -72,7 +72,7 @@ export class VacationsComponent {
 
   ];
   vacations: any = [];
-
+  vacationsIsExport: any = [];
   isLoading = true;
 
   filteration: any = {
@@ -343,30 +343,80 @@ export class VacationsComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    let formatTable = this.vacations.map(vacation => {
-      
-      return {
-        orderNumber: vacation.orderNumber,
-        employeeName: vacation.employeeName.name,
-        kindOfHoliday: vacation.kindOfHoliday,
-        beginning: vacation.beginning,
-        final: vacation.final,
-        reason: vacation.reason,
-        balanceAfterRequest: vacation.balanceAfterRequest
 
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.vacationsIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+  
+      this.vacationsService.listVacations(filteration).subscribe(
+        {
+          next: data => {
+            data.data.forEach((vacation: any) => {
+              this.vacationsIsExport.push({
+                id: vacation.id,
+                orderNumber: vacation?.code ? vacation?.code : "لا يوجد",
+                status: vacation.status,
+                employeeName: {
+                  name: vacation.employee?.name ? vacation.employee?.name : "لا يوجد",
+                  alt: vacation.employee?.name ? vacation.employee?.name : "لا يوجد",
+                  img: vacation.employee?.profileImagePath ? vacation.employee?.profileImagePath : "../../../../assets/img/5034901-200.png"
+                },
+                employeeCode: vacation.employee?.code,
+                kindOfHoliday: vacation.vacationTypeName,
+                beginning: moment(new Date(vacation.dateFrom)).format("MM/DD/YYYY"),
+                final: moment(new Date(vacation.dateTo)).format("MM/DD/YYYY"),
+                balanceAfterRequest: vacation.balanceAfterRequest,
+                reason: vacation.statusName
+              })
+            });
+          
+            let formatTable = this.vacationsIsExport.map(vacation => {
+      
+              return {
+                orderNumber: vacation.orderNumber,
+                employeeName: vacation.employeeName.name,
+                kindOfHoliday: vacation.kindOfHoliday,
+                beginning: vacation.beginning,
+                final: vacation.final,
+                reason: vacation.reason,
+                balanceAfterRequest: vacation.balanceAfterRequest
+        
+              }
+            })
+            this.isLoading = false;
+            new ngxCsv(formatTable, "sheet", options);
+          },
+          error: err => {
+            this.isLoading = false;
+  
+          }
+        }
+      )
+    }
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableVacationHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
   
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tableVacationHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
 
   }
   createDataTable() {

@@ -71,7 +71,7 @@ export class PermissionsComponent {
     }
   ];
   permissions: any = [];
-
+  permissionsIsExport: any = [];
   isLoading = true;
 
 
@@ -301,29 +301,73 @@ export class PermissionsComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    let formatTable = this.permissions.map(permission => {
-      
-      return {
-        orderNumber: permission.orderNumber,
-        employeeName: permission.employeeName.name,
-        typeOfPermission: permission.typeOfPermission,
-        statusName: permission.statusName,
-        dateFrom: permission.dateFrom,
-        dateTo: permission.dateTo
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.permissionsIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+
+      this.permissionsService.listPermissions(filteration).subscribe(data => {
+        data.data.forEach((permission: any) => {
+          this.permissionsIsExport.push({
+            id: permission.id,
+            status: permission.status,
+            orderNumber: permission.employee.employeeNumber,
+            period:permission.period,
+            employeeName: {
+              name: permission.employee.name,
+              alt: permission.employee.name,
+              img: permission.employee.profileImagePath ? permission.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
+            },
+            employeeCode: permission?.code,
+  
+            statusName: permission.statusName,
+  
+            typeOfPermission: permission.permissionTypeName,
+            dateFrom: moment(new Date(permission.dateFrom)).format("MM/DD/YYYY"),
+            dateTo: moment(new Date(permission.dateTo)).format("MM/DD/YYYY"),
+          })
+        });
+        let formatTable = this.permissionsIsExport.map(permission => {
+          debugger;
+          return {
+            employeeCode: permission.employeeCode,
+            orderNumber: permission.orderNumber,
+            employeeName: permission.employeeName.name,
+            typeOfPermission: permission.typeOfPermission,
+            statusName: permission.statusName,
+            dateFrom: permission.dateFrom,
+            dateTo: permission.dateTo
+          }
+        })
+        this.isLoading = false;
+        new ngxCsv(formatTable, "sheet", options);
+  
+  
+      })
+    }
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tablePermissionHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
-  
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tablePermissionHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
 
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
   }
   resetFilteration() {
     this.filterForm.get("FreeText")?.setValue("");
@@ -344,14 +388,14 @@ export class PermissionsComponent {
         this.permissions.push({
           id: permission.id,
           status: permission.status,
-          orderNumber: permission.employee.code,
+          orderNumber: permission.employee.employeeNumber,
           period:permission.period,
           employeeName: {
             name: permission.employee.name,
             alt: permission.employee.name,
             img: permission.employee.profileImagePath ? permission.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
           },
-          employeeCode: permission.employee?.code,
+          employeeCode: permission?.code,
 
           statusName: permission.statusName,
 

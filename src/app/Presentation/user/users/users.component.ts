@@ -64,7 +64,7 @@ export class UsersComponent {
   ];
 
   users: any = [];
-
+  usersIsExport: any = [];
   isLoading = true;
 
   filteration: any = {
@@ -260,27 +260,65 @@ export class UsersComponent {
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-    let formatTable = this.users.map(user => {
+
+    if(!this.isLoading) {
+      this.isLoading = true;
+      this.usersIsExport = [];
+      let filteration = {...this.filteration, isExport:true};
+
+      this.usersService.listUsers(filteration).subscribe(data => {
+
+        data?.data?.forEach((user: any) => {
+          this.usersIsExport.push({
+            id: user.id,
+            code: user.code,
+            name: {
+              name: user.name,
+              alt: user.name,
+              img: user.profileImagePath ? user.profileImagePath : "../../../../assets/img/5034901-200.png"
+            },
+            isAdmin: user.isAdmin,
+            isActive: user.isActive
+          })
+        });
+        let formatTable = this.usersIsExport.map(user => {
       
-      return {
-        code: user.code,
-        name: user.name.name,
-        isAdmin: user.isAdmin ? 'نعم' : 'لا',
-        isActive: user.isActive ? 'نعم' : 'لا'
-      }
-    })
-    new ngxCsv(formatTable, "sheet", options);
+          return {
+            code: user.code,
+            name: user.name.name,
+            isAdmin: user.isAdmin ? 'نعم' : 'لا',
+            isActive: user.isActive ? 'نعم' : 'لا'
+          }
+        })
+        this.isLoading = false;
+        new ngxCsv(formatTable, "sheet", options);
+  
+  
+      })
+    }
   }
   exportTableToPDF() {
-    let table: any = document.getElementById("tableUsersHidden");
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      pdf.addImage(imgData, 'PNG', 10, 10, 190, 100); 
-      pdf.save('ملف_PDF.pdf');
-    });
-  
 
+    if(!this.isLoading) {
+      this.isLoading = true;
+      let table: any = document.getElementById("tableUsersHidden");
+      html2canvas(table,{
+        scale: 5,
+        width: table.offsetWidth,
+        height: table.offsetHeight, 
+    }).then((canvas) => {
+      let fileWidth = 190;
+      let fileHeight = (canvas.height * fileWidth) / canvas.width;
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, fileWidth, fileHeight); 
+        pdf.save('ملف_PDF.pdf');
+        this.isLoading = false;
+
+      });
+
+    }
   }
   resetFilteration() {
     this.filterForm.get("FreeText")?.setValue("");
