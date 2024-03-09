@@ -138,7 +138,7 @@
         <div class="item uploadFiles">
           <!-- accept="image/*" -->
           <p-fileUpload name="uploadedCommercialRegFiles[]" chooseIcon="pi pi-cloud-upload" [customUpload]="true"
-            [chooseLabel]="data!['chooseLabel']|translate"  accept="image/png, image/gif, image/jpeg, application/pdf" (onSelect)="onFileChange($event, 2)"
+            [chooseLabel]="data!['chooseLabel']|translate"  accept="image/png, image/gif, image/jpeg, application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" (onSelect)="onFileChange($event, 2)"
             [multiple]="true"
             [showUploadButton]="false" [showCancelButton]="false">
             <ng-template pTemplate="content">
@@ -146,7 +146,7 @@
               <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length">
                 <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
                   <div>
-                    <img [src]="viewImagesIdCopy[i]" width="50" alt="">
+                    <img [src]="viewImagesIdCopy[i]" width="50" height="100" alt="">
 
                   </div>
                   <div class="p-fileupload-filename">

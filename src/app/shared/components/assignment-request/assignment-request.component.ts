@@ -16,6 +16,7 @@ import { EmployeesService } from 'src/app/Presentation/user/employees/services/e
 import { PermissionsService } from 'src/app/Presentation/user/permissions/services/permissions.service';
 import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { AssignmentsService } from 'src/app/Presentation/user/assignments/services/assignments.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -96,6 +97,7 @@ export class AssignmentRequestComponent {
     dateTask: [null, Validators.required],
     time:[null, Validators.required],
     Notes: [null, Validators.required],
+    idCopyFile:["", Validators.required],
     files:["", Validators.required],
   });
   AttachmentsFiles: any[] = [];
@@ -114,7 +116,7 @@ export class AssignmentRequestComponent {
     public dialogRef: MatDialogRef<AssignmentRequestComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     public translate: TranslateService,
-
+    private toastr: ToastrService,
     private authService: AuthService,
     private fb: FormBuilder
   ) {
@@ -159,15 +161,36 @@ export class AssignmentRequestComponent {
         this.assignmentsService.assignmentGetById({ requestId: this.id }).subscribe(
           {
             next: data => {
-
               if (data?.attachments.length) {
                 data?.attachments.forEach((attachment: any) => {
-                  this.employeesService.downloadImage(attachment.filePath).subscribe(response => {
-                    const blob = new Blob([response]);
-                    const file = new File([blob], attachment.fileName);
-
-                    this.AttachmentsFiles.push({ imageSrc: attachment.filePath, fileUpload: file, detailsImage: true });
-                  });
+                  var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
+                  let fileExt = attachment.fileName.substring(attachment.fileName.lastIndexOf('.'));
+                  if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
+                    let file!:File;
+                    if(fileExt?.toLowerCase().includes("xlsx") || fileExt?.toLowerCase().includes("xls")) {
+                       file = new File([attachment.filePath], `excel-file${validExts}`, {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                      });
+                      this.viewImagesIdCopy.push("assets/img/excel.png");
+                    } else if(fileExt?.toLowerCase().includes("pdf")) {
+                       file = new File([attachment.filePath], `pdf-file${validExts}`, {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                      });
+                      this.viewImagesIdCopy.push("assets/img/pdf.png");
+                    } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
+                       file = new File([attachment.filePath],`img-file${validExts}`, {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                      });
+                      this.viewImagesIdCopy.push(attachment.filePath);
+                    }
+                    this.AttachmentsFiles.push({ fileUpload: {
+                      ...file,
+                      lastModified:file.lastModified,
+                      size:file.size,
+                      type:file.type,
+                      name:attachment.fileName,
+                    }, detailsImage: true });
+                  }
                 });
               }
               this.addBranchGroupForm.get("IsNecessary")?.setValue(data.isNecessary);
@@ -255,7 +278,7 @@ export class AssignmentRequestComponent {
   }
   onRemoveCommercialReg(event: any) {
 
-    let indexFile = this.AttachmentsFiles.findIndex(item => item.fileUpload.lastModified === event.fileUpload.lastModified);
+    let indexFile = this.AttachmentsFiles.findIndex(item => item.fileUpload.lastModified === event.lastModified);
     this.AttachmentsFiles.splice(indexFile, 1)
     this.AttachmentsFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
     // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
@@ -302,32 +325,7 @@ export class AssignmentRequestComponent {
         break;
     }
   }
-  files(event: UploadEvent) {
 
-    for (let file of event.files) {
-      var reader = new FileReader();
-
-      let thisParent = this;
-      reader.readAsDataURL(file);
-      reader.onload = (function (file) {
-        return function (e: any) {
-          // Render thumbnail.
-          thisParent.AttachmentsFiles.push({ imageSrc: e.target.result, fileUpload: file, detailsImage: false });
-
-        };
-
-      })(file);
-
-
-
-      // this.uploadedCommercialRegFiles.push({ imageSrc: src, fileUpload: file });
-
-
-    }
-    // this.uploadedCommercialRegFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
-
-    // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
-  }
   async onFileChange(pFileList: any, stepIndex: number) {
     
     if (pFileList.files?.length <= 5 || pFileList.length <= 5) {
@@ -342,10 +340,7 @@ export class AssignmentRequestComponent {
           if(findIndexFileName.length < 2) {
             if(fileSize?.size < (2 * 1024 * 1024)) {
               this.viewImage.push(pFileList.files[index]);
-              
               this.AttachmentsFiles.push({fileUpload:pFileList.files[index], detailsImage: false});
-              
-
               this.errorUploadFileIdCopy = "";
             } else {
               this.errorUploadFileIdCopy = "The file size must be less than 2MB";
@@ -368,11 +363,14 @@ export class AssignmentRequestComponent {
             } else {
               this.imageArray = [];
               this.errorUploadFileIdCopy = "";
+              var validExts = new Array(".xlsx", ".xls");
+              let fileExt = this.viewImage[index]?.name.substring(this.viewImage[index]?.name.lastIndexOf('.'));
               await filereaderTwo.readAsDataURL(this.viewImage[index]);
               filereaderTwo.onload = () => {
                 if((filereaderTwo.result as string).includes("application/pdf")) {
-                  
                   this.imageArray.push("assets/img/pdf.png");
+                } else if(validExts.indexOf(fileExt) >= 0) {
+                  this.imageArray.push("assets/img/excel.png");
                 } else {
                   this.imageArray.push(filereaderTwo.result);
                 }
@@ -387,10 +385,10 @@ export class AssignmentRequestComponent {
           }
         }
         if(this.errorUploadFileIdCopy === "") {
-          // this._snackBar.open("Successfully upload!", 'Close', {
-          //   duration: 10000,
-          //   panelClass: ['color-gray']
-          // });
+          this.toastr.success("Successfully upload!", '', {
+            timeOut: 5000,
+            onActivateTick: true
+          });        
         }
 
       } else {
@@ -422,8 +420,8 @@ export class AssignmentRequestComponent {
       this.getControl("Notes")?.markAsDirty();
       this.getControl("AssignmentTypeId")?.markAsDirty();
       this.getControl("EmployeeId")?.markAsDirty();
+      this.getControl("idCopyFile")?.markAsDirty();
 
-      
 
 
     }

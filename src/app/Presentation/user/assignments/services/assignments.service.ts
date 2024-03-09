@@ -17,7 +17,9 @@ export class AssignmentsService {
     }
     return this.http.get<any>(`${environment.baseUrl}RequestAssignment/Get`, { params: queryParams })
   }
-
+  downloadFile(url: string): Observable<Blob> {
+    return this.http.get(url, { responseType: 'blob' });
+  }
   getInformation(): Observable<any> {
 
     return this.http.get<any>(`${environment.baseUrl}RequestAssignment/GetAssignmentsInformations`).pipe(map(data => data.data));

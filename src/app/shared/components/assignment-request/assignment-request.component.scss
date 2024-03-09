@@ -177,6 +177,7 @@
 
 :host ::ng-deep .p-fileupload-row img {
   width: 100%;
+  object-fit: contain;
 }
 
 :host .container-radio-button {

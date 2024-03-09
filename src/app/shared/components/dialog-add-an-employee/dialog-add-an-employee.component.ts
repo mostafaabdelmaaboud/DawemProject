@@ -15,6 +15,7 @@ import { EmployeesService } from 'src/app/Presentation/user/employees/services/e
 import { EMPTY, Subject, combineLatest, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SectionsService } from 'src/app/Presentation/user/sections/services/sections.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -119,7 +120,12 @@ export class DialogAddAnEmployeeComponent {
   @Input() departmentID!: any;
   code="+966";
 
-  
+  viewImagesIdCopy: any[] = [];
+  imageArray: any[] = [];
+  errorUploadFileIdCopyIsRequired!: string;
+  errorUploadFileIdCopy!: string;
+  public viewImage: any[] = [];
+
   listDirectManager: any[] = [];
   listZones: any[] = [];
 
@@ -140,15 +146,16 @@ export class DialogAddAnEmployeeComponent {
     address: ['', Validators.required],
     fieldDisabled: [''],
     AnnualVacationBalance: ['', [Validators.required, Validators.min(0)]],
-    zoneIds: ['', Validators.required]
-
+    zoneIds: ['', Validators.required],
+    idCopyFile: ['', Validators.required]
   });
-  uploadedFiles: any[] = [];
+  AttachmentsFiles: any[] = [];
   requiredCommercialRegFiles = false;
   constructor(
     public dialogRef: MatDialogRef<DialogAddAnEmployeeComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
+    private toastr: ToastrService,
     public translate: TranslateService,
     private fb: FormBuilder
   ) {
@@ -226,9 +233,37 @@ export class DialogAddAnEmployeeComponent {
             next: data => {
 
               if (data?.profileImagePath) {
-                this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: {
-                  name:data.profileImageName
-                }, detailsImage: true });
+                var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
+                let fileExt = data.profileImageName.substring(data.profileImageName.lastIndexOf('.'));
+                if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
+                  let file!:File;
+                  if(fileExt?.toLowerCase().includes("xlsx") || fileExt?.toLowerCase().includes("xls")) {
+                     file = new File([data?.profileImagePath], `excel-file${validExts}`, {
+                      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    });
+                    this.viewImagesIdCopy = ["assets/img/excel.png"];
+                  } else if(fileExt?.toLowerCase().includes("pdf")) {
+                     file = new File([data?.profileImagePath], `pdf-file${validExts}`, {
+                      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    });
+                    this.viewImagesIdCopy=["assets/img/pdf.png"];
+                  } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
+                     file = new File([data?.profileImagePath],`img-file${validExts}`, {
+                      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    });
+                    this.viewImagesIdCopy=[data?.profileImagePath];
+                  }
+                  this.AttachmentsFiles=[{ fileUpload: {
+                    ...file,
+                    lastModified:file.lastModified,
+                    size:file.size,
+                    type:file.type,
+                    name:data.profileImageName,
+                  }, detailsImage: true }];
+                }
+                // this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: {
+                //   name:data.profileImageName
+                // }, detailsImage: true });
 
                 // this.employeesService.downloadImage(data.profileImagePath).subscribe(response => {
                 //   const blob = new Blob([response]);
@@ -448,37 +483,105 @@ export class DialogAddAnEmployeeComponent {
         break;
     }
   }
-  onRemovefile(event: any) {
-
-    let indexFile = this.uploadedFiles.findIndex(item => item.fileUpload.lastModified === event.lastModified);
-    this.uploadedFiles.splice(indexFile, 1)
-    this.uploadedFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
+  onRemoveCommercialReg(event: any) {
+    debugger;
+    let indexFile = this.AttachmentsFiles.findIndex(item => item.fileUpload.lastModified === event.lastModified);
+    this.AttachmentsFiles.splice(indexFile, 1)
+    this.AttachmentsFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
     // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
   }
-  files(event: UploadEvent) {
+  // files(event: UploadEvent) {
+  //   var reader = new FileReader();
+  //   let thisParent = this;
+  //   reader.readAsDataURL(event.files[0]);
+  //   reader.onload = (function (file) {
+  //     return function (e: any) {
+  //       thisParent.uploadedFiles[0] = { imageSrc: e.target.result, fileUpload: file, detailsImage: false };
+  //     };
+  //   })(event.files[0]);
+  // }
+  async onFileChange(pFileList: any, stepIndex: number) {
+    debugger;
+    if (pFileList.files?.length <= 5 || pFileList.length <= 5) {
+      this.errorUploadFileIdCopyIsRequired = "";
+      let indexidCopyFiles = [...this.AttachmentsFiles];
+      if (indexidCopyFiles.length <= 5) {
+        let idCopyFiles = [...this.AttachmentsFiles, ...Object.keys(pFileList.files).map(key => pFileList.files[key])];
+        let findIndexFileName:any[] = [];
+        for (let index = 0; index < pFileList.files.length; index++) {
+          const fileSize = pFileList.files[index];
+          findIndexFileName = idCopyFiles.filter(file => file.name == pFileList.files[index].name);
+          if(findIndexFileName.length < 2) {
+            if(fileSize?.size < (2 * 1024 * 1024)) {
+              this.viewImage=[pFileList.files[index]];
+              debugger;
+              this.AttachmentsFiles=[{fileUpload:pFileList.files[index], detailsImage: false}];
+              debugger;
 
-    var reader = new FileReader();
+              console.log(this.AttachmentsFiles);
+              this.errorUploadFileIdCopy = "";
+            } else {
+              this.errorUploadFileIdCopy = "The file size must be less than 2MB";
+            }
+          } else {
+            if(fileSize?.size > (2 * 1024 * 1024)) {
+              this.errorUploadFileIdCopy = "The file size must be less than 2MB";
+            } else {
+              this.errorUploadFileIdCopy = "The file is duplicate";
+            }
+          }
+        }
+        if(this.errorUploadFileIdCopy === "" && findIndexFileName.length < 2 && this.viewImage.length > 0) {
+          for (let index = 0; index < this.viewImage.length; index++) {
+            let filereaderTwo = new FileReader();
+            const fileSize = this.viewImage[index];
+            if (fileSize?.size > (2 * 1024 * 1024)) {
+              this.errorUploadFileIdCopy = "The file size must be less than 2MB";
+              return;
+            } else {
+              this.imageArray = [];
+              this.errorUploadFileIdCopy = "";
+              var validExts = new Array(".xlsx", ".xls");
+              let fileExt = this.viewImage[index]?.name.substring(this.viewImage[index]?.name.lastIndexOf('.'));
+              await filereaderTwo.readAsDataURL(this.viewImage[index]);
+              filereaderTwo.onload = () => {
+                debugger;
+                console.log(filereaderTwo.result);
+                if((filereaderTwo.result as string).includes("application/pdf")) {
+                  this.imageArray =["assets/img/pdf.png"];
+                } else if(validExts.indexOf(fileExt) >= 0) {
+                  this.imageArray=["assets/img/excel.png"];
+                } else {
+                  this.imageArray= [filereaderTwo.result];
+                }
+                this.viewImagesIdCopy = this.imageArray;
 
-    let thisParent = this;
-    reader.readAsDataURL(event.files[0]);
-    reader.onload = (function (file) {
-      return function (e: any) {
+              }
+              debugger;
+              console.log(this.imageArray);
+              debugger;
+              console.log(this.viewImagesIdCopy);
+              this.addBranchGroupForm.get("files")?.setValue(this.viewImage[0]?.name);
+              this.errorUploadFileIdCopyIsRequired = "";
+            }
+          }
+          if(findIndexFileName.length > 1) {
+            this.errorUploadFileIdCopy = "The file is duplicate";
+          }
+        }
+        if(this.errorUploadFileIdCopy === "") {
+          this.toastr.success("Successfully upload!", '', {
+            timeOut: 5000,
+            onActivateTick: true
+          });        
+        }
 
-        // Render thumbnail.
-        thisParent.uploadedFiles[0] = { imageSrc: e.target.result, fileUpload: file, detailsImage: false };
-
-      };
-
-    })(event.files[0]);
-
-
-
-    // this.uploadedCommercialRegFiles.push({ imageSrc: src, fileUpload: file });
-
-
-    // this.uploadedCommercialRegFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
-
-    // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
+      } else {
+        this.errorUploadFileIdCopyIsRequired = "You can only select up to 5 files.";
+      }
+    } else {
+      this.errorUploadFileIdCopyIsRequired = "You can only select up to 5 files.";
+    }
   }
   getControl(controlName: string) {
     return this.addBranchGroupForm?.get(controlName);
@@ -488,7 +591,7 @@ export class DialogAddAnEmployeeComponent {
     
     if (this.addBranchGroupForm.valid && this.submitted) {
       this.submitted = false;
-      this.submitClicked.emit({ ...this.addBranchGroupForm.value, files: this.uploadedFiles });
+      this.submitClicked.emit({ ...this.addBranchGroupForm.value, files: this.AttachmentsFiles });
       // this.dialogRef.close(true);
     } else {
       this.getControl("name")?.markAsDirty();
@@ -503,6 +606,8 @@ export class DialogAddAnEmployeeComponent {
       this.getControl("address")?.markAsDirty();
       this.getControl("zoneIds")?.markAsDirty();
       this.getControl("AnnualVacationBalance")?.markAsDirty();
+      this.getControl("idCopyFile")?.markAsDirty();
+
     }
 
   }
