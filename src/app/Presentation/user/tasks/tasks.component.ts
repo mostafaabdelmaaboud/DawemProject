@@ -299,7 +299,7 @@ export class TasksComponent {
             id: employee.id,
             orderNumber: employee.code ? employee.code : "لا يوجد",
             status: employee.status,
-            employeeCode:employee.employee.code,
+            employeeCode:employee.employee.employeeNumber,
             employeeName: {
               name: employee.employee.name,
               alt: employee.employee.name,
@@ -315,6 +315,7 @@ export class TasksComponent {
         let formatTable = this.tasksIsExport.map(task => {
           return {
             orderNumber: task.orderNumber,
+            employeeCode:task.employeeCode,
             employeeName: task.employeeName.name,
             task: task.task,
             dateFrom: task.dateFrom,
@@ -373,7 +374,7 @@ export class TasksComponent {
           id: employee.id,
           orderNumber: employee.code ? employee.code : "لا يوجد",
           status: employee.status,
-          employeeCode:employee.employee.code,
+          employeeCode:employee.employee.employeeNumber,
           employeeName: {
             name: employee.employee.name,
             alt: employee.employee.name,

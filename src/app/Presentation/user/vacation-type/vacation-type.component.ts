@@ -399,7 +399,7 @@ export class VacationTypeComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestVacationTypeComponent, {
       width: "50vw",
       data: {
-        title: "طلب اجازة",
+        title: "تعديل الاجازة",
         setAsNecessary: "تعيين كضرورية",
         titleVacationTypeId: "نوع الاجازة <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",

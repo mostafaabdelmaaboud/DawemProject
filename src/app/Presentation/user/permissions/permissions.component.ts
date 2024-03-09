@@ -329,7 +329,6 @@ export class PermissionsComponent {
           })
         });
         let formatTable = this.permissionsIsExport.map(permission => {
-          debugger;
           return {
             employeeCode: permission.employeeCode,
             orderNumber: permission.orderNumber,

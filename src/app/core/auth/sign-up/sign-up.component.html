@@ -284,7 +284,6 @@
                     <label for="sdad" class="mb-0 ml-15">{{'signup.iAgreeToTheTermsAndConditions' | translate}}</label>
 
                     <p-checkbox name="category" [value]="true" formControlName="agreed" inputId="sdad"></p-checkbox>
-                    {{getControl('agreed')?.value}}
                     <!--Start Custom Validators-->
                     <div class="alert alert-danger mt-3"
                       *ngIf="getControl('agreed')?.hasError('required') && getControl('agreed')?.dirty">

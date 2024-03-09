@@ -67,6 +67,36 @@
       </div>
     </div>
     <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">{{"assignments.files"|translate}}</label>
+      <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length > 0">
+        <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
+          <div class="content-image">
+            <img [src]="file.imageSrc" width="200" height="200" alt="">
+
+          </div>
+          <div class="p-fileupload-filename">
+            <span class="d-block">{{"employees.name"|translate}}:</span>
+            {{ file.fileUpload.name
+            }}
+          </div>
+          <div>
+            <span class="d-block">{{"employees.size"|translate}}:</span>
+            {{
+            file.fileUpload.size }}
+          </div>
+          <div>
+            <a class="btn btn-success" [href]="file.download">Download</a>
+          </div>
+
+        </li>
+      </ul>
+      <div *ngIf="AttachmentsFiles.length === 0">
+        {{"department.nothing"|translate}}
+
+      </div>
+
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
       <label class="title">{{"tasks.orderStatus"|translate}}</label>
       <div class="content-password">
         <ng-container *ngIf="info?.statusName">

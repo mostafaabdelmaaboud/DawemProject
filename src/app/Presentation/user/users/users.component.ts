@@ -138,6 +138,7 @@ export class UsersComponent {
 
     }
     this.filterForm = this.fb.group({
+      code:[""],
       FreeText: [""],
 
     });

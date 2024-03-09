@@ -48,10 +48,10 @@
     </div>
     <div class="sectionTwo mb-3 line-bellow">
       <label class="title">{{"vacations.files"|translate}}</label>
-      <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length">
+      <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length > 0">
         <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
-          <div>
-            <img [src]="file.imageSrc" width="50" alt="">
+          <div class="content-image">
+            <img [src]="file.imageSrc" width="200" height="200" alt="">
 
           </div>
           <div class="p-fileupload-filename">
@@ -63,6 +63,9 @@
             <span class="d-block">{{"employees.size"|translate}}:</span>
             {{
             file.fileUpload.size }}
+          </div>
+          <div>
+            <a class="btn btn-success" [href]="file.download">Download</a>
           </div>
 
         </li>

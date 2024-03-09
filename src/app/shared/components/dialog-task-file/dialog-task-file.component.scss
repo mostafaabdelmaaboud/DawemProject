@@ -18,6 +18,7 @@
 }
 
 
+
 :host ::ng-deep .p-calendar {
   width: 100%;
 }
@@ -79,7 +80,7 @@
 }
 
 :host ::ng-deep .p-fileupload-row {
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 :host ::ng-deep .p-fileupload-buttonbar,
@@ -150,12 +151,11 @@
 :host ::ng-deep .p-fileupload-row .p-fileupload-filename {
   width: 36% !important;
   padding: 0 10px !important;
+  white-space: normal;
+  overflow-wrap: break-word;
+
 }
 
-:host ::ng-deep .p-fileupload-row>div:last-of-type {
-  width: 10% !important;
-  max-width: 36% !important;
-}
 
 :host ::ng-deep .p-fileupload-row>div:last-of-type button {
   width: 100% !important;
@@ -176,7 +176,7 @@
 }
 
 :host ::ng-deep .p-fileupload-row img {
-  width: 100%;
+  object-fit: contain;
 }
 
 :host ::ng-deep .p-fileupload .p-fileupload-row>div {

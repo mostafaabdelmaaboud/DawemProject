@@ -298,7 +298,7 @@ export class VacationsComponent {
                 alt: vacation.employee?.name ? vacation.employee?.name : "لا يوجد",
                 img: vacation.employee?.profileImagePath ? vacation.employee?.profileImagePath : "../../../../assets/img/5034901-200.png"
               },
-              employeeCode: vacation.employee?.code,
+              employeeCode: vacation.employee?.employeeNumber,
               kindOfHoliday: vacation.vacationTypeName,
               beginning: moment(new Date(vacation.dateFrom)).format("MM/DD/YYYY"),
               final: moment(new Date(vacation.dateTo)).format("MM/DD/YYYY"),
@@ -362,7 +362,7 @@ export class VacationsComponent {
                   alt: vacation.employee?.name ? vacation.employee?.name : "لا يوجد",
                   img: vacation.employee?.profileImagePath ? vacation.employee?.profileImagePath : "../../../../assets/img/5034901-200.png"
                 },
-                employeeCode: vacation.employee?.code,
+                employeeCode: vacation.employee?.employeeNumber,
                 kindOfHoliday: vacation.vacationTypeName,
                 beginning: moment(new Date(vacation.dateFrom)).format("MM/DD/YYYY"),
                 final: moment(new Date(vacation.dateTo)).format("MM/DD/YYYY"),
@@ -375,6 +375,7 @@ export class VacationsComponent {
       
               return {
                 orderNumber: vacation.orderNumber,
+                employeeCode: vacation.employeeCode,
                 employeeName: vacation.employeeName.name,
                 kindOfHoliday: vacation.kindOfHoliday,
                 beginning: vacation.beginning,
@@ -759,7 +760,7 @@ export class VacationsComponent {
     let dialogRefAddCurrency!:MatDialogRef<DialogVacationFileComponent, any>;
     this.translate.get("vacations").subscribe(translate => {
       dialogRefAddCurrency = this.dialog.open(DialogVacationFileComponent, {
-        width: "40vw",
+        width: "60vw",
         data: {
           title: translate.vacationFile
         },

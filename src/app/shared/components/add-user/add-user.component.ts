@@ -17,6 +17,7 @@ import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { AssignmentsService } from 'src/app/Presentation/user/assignments/services/assignments.service';
 import { CheckboxModule } from 'primeng/checkbox';
 import { UsersService } from 'src/app/Presentation/user/users/services/users.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -106,6 +107,12 @@ export class AddUserComponent {
   @Input() id!: string;
   code="+966";
 
+  viewImagesIdCopy: any[] = [];
+  imageArray: any[] = [];
+  errorUploadFileIdCopyIsRequired!: string;
+  errorUploadFileIdCopy!: string;
+  public viewImage: any[] = [];
+
   listEmployees: any[] = [
   ];
   loading = false;
@@ -120,6 +127,8 @@ export class AddUserComponent {
     Roles: ["", Validators.required],
     EmployeeId: ["", Validators.required],
     IsAdmin: [false],
+    idCopyFile: ['', Validators.required]
+
   });
   uploadImages = false;
   AttachmentsFiles: any[] = [];
@@ -133,7 +142,7 @@ export class AddUserComponent {
     public dialogRef: MatDialogRef<AddUserComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
-
+    private toastr: ToastrService,
     private fb: FormBuilder,
     public translate: TranslateService,
 
@@ -200,8 +209,38 @@ export class AddUserComponent {
               //     });
               //   });
               // }
+              
               if (data?.profileImagePath) {
-                this.AttachmentsFiles.push({ imageSrc:data?.profileImagePath, fileUpload: {name:data?.profileImageName}, detailsImage: true });
+                var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
+                let fileExt = data.profileImageName.substring(data.profileImageName.lastIndexOf('.'));
+                if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
+                  let file!:File;
+                  if(fileExt?.toLowerCase().includes("xlsx") || fileExt?.toLowerCase().includes("xls")) {
+                     file = new File([data?.profileImagePath], `excel-file${validExts}`, {
+                      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    });
+                    this.viewImagesIdCopy = ["assets/img/excel.png"];
+                  } else if(fileExt?.toLowerCase().includes("pdf")) {
+                     file = new File([data?.profileImagePath], `pdf-file${validExts}`, {
+                      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    });
+                    this.viewImagesIdCopy=["assets/img/pdf.png"];
+                  } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
+                     file = new File([data?.profileImagePath],`img-file${validExts}`, {
+                      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    });
+                    this.viewImagesIdCopy=[data?.profileImagePath];
+                  }
+                  this.AttachmentsFiles=[{ fileUpload: {
+                    ...file,
+                    lastModified:file.lastModified,
+                    size:file.size,
+                    type:file.type,
+                    name:data.profileImageName,
+                  }, detailsImage: true }];
+                  this.addBranchGroupForm.get("idCopyFile")?.setValue(data.profileImageName);
+
+                }
 
                 // this.employeesService.downloadImage(data.profileImagePath).subscribe(response => {
                 //   const blob = new Blob([response]);
@@ -313,8 +352,15 @@ export class AddUserComponent {
     return this.addBranchGroupForm?.get(controlName);
   }
   onRemoveCommercialReg(event: any) {
+    
+    let indexFile = this.AttachmentsFiles.findIndex(item => item.fileUpload.lastModified === event.lastModified);
+    this.AttachmentsFiles.splice(indexFile, 1)
+    this.AttachmentsFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
+    if(this.requiredCommercialRegFiles) {
+      this.addBranchGroupForm.get("idCopyFile")?.setValue("");
 
-    this.AttachmentsFiles = []
+    }
+    // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
   }
   lastSearchQuery = "";
 
@@ -358,32 +404,77 @@ export class AddUserComponent {
         break;
     }
   }
-  files(event: UploadEvent) {
+  async onFileChange(pFileList: any, stepIndex: number) {
+    
+    if (pFileList.files?.length <= 5 || pFileList.length <= 5) {
+      this.errorUploadFileIdCopyIsRequired = "";
+      let indexidCopyFiles = [...this.AttachmentsFiles];
+      if (indexidCopyFiles.length <= 5) {
+        let idCopyFiles = [...this.AttachmentsFiles, ...Object.keys(pFileList.files).map(key => pFileList.files[key])];
+        let findIndexFileName:any[] = [];
+        for (let index = 0; index < pFileList.files.length; index++) {
+          const fileSize = pFileList.files[index];
+          findIndexFileName = idCopyFiles.filter(file => file.name == pFileList.files[index].name);
+          if(findIndexFileName.length < 2) {
+            if(fileSize?.size < (2 * 1024 * 1024)) {
+              this.viewImage=[pFileList.files[index]];
+              this.AttachmentsFiles=[{fileUpload:pFileList.files[index], detailsImage: false}];
+              this.errorUploadFileIdCopy = "";
+            } else {
+              this.errorUploadFileIdCopy = "The file size must be less than 2MB";
+            }
+          } else {
+            if(fileSize?.size > (2 * 1024 * 1024)) {
+              this.errorUploadFileIdCopy = "The file size must be less than 2MB";
+            } else {
+              this.errorUploadFileIdCopy = "The file is duplicate";
+            }
+          }
+        }
+        if(this.errorUploadFileIdCopy === "" && findIndexFileName.length < 2 && this.viewImage.length > 0) {
+          for (let index = 0; index < this.viewImage.length; index++) {
+            let filereaderTwo = new FileReader();
+            const fileSize = this.viewImage[index];
+            if (fileSize?.size > (2 * 1024 * 1024)) {
+              this.errorUploadFileIdCopy = "The file size must be less than 2MB";
+              return;
+            } else {
+              this.imageArray = [];
+              this.errorUploadFileIdCopy = "";
+              var validExts = new Array(".xlsx", ".xls");
+              let fileExt = this.viewImage[index]?.name.substring(this.viewImage[index]?.name.lastIndexOf('.'));
+              await filereaderTwo.readAsDataURL(this.viewImage[index]);
+              filereaderTwo.onload = () => {
+                if((filereaderTwo.result as string).includes("application/pdf")) {
+                  this.imageArray =["assets/img/pdf.png"];
+                } else if(validExts.indexOf(fileExt) >= 0) {
+                  this.imageArray=["assets/img/excel.png"];
+                } else {
+                  this.imageArray= [filereaderTwo.result];
+                }
+                this.viewImagesIdCopy = this.imageArray;
+              }
+              this.addBranchGroupForm.get("idCopyFile")?.setValue(this.viewImage[0]?.name);
+              this.errorUploadFileIdCopyIsRequired = "";
+            }
+          }
+          if(findIndexFileName.length > 1) {
+            this.errorUploadFileIdCopy = "The file is duplicate";
+          }
+        }
+        if(this.errorUploadFileIdCopy === "") {
+          this.toastr.success("Successfully upload!", '', {
+            timeOut: 5000,
+            onActivateTick: true
+          });        
+        }
 
-    for (let file of event.files) {
-      var reader = new FileReader();
-
-      let thisParent = this;
-      reader.readAsDataURL(file);
-      reader.onload = (function (file) {
-        return function (e: any) {
-          // Render thumbnail.
-          thisParent.AttachmentsFiles = [{ imageSrc: e.target.result, fileUpload: file, detailsImage: false }];
-          thisParent.AttachmentsFiles.length === 0 ? thisParent.requiredCommercialRegFiles = true : thisParent.requiredCommercialRegFiles = false
-
-        };
-
-      })(file);
-
-
-
-      // this.uploadedCommercialRegFiles.push({ imageSrc: src, fileUpload: file });
-
-
+      } else {
+        this.errorUploadFileIdCopyIsRequired = "You can only select up to 5 files.";
+      }
+    } else {
+      this.errorUploadFileIdCopyIsRequired = "You can only select up to 5 files.";
     }
-    // this.uploadedCommercialRegFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
-
-    // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
   }
   request() {
 
@@ -404,6 +495,7 @@ export class AddUserComponent {
 
       this.getControl("EmployeeId")?.markAsDirty();
 
+      this.getControl("idCopyFile")?.markAsDirty();
 
 
     }

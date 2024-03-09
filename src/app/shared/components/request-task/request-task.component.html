@@ -173,23 +173,23 @@
         <div class="item uploadFiles">
           <!-- accept="image/*" -->
           <p-fileUpload name="uploadedCommercialRegFiles[]" chooseIcon="pi pi-cloud-upload" [customUpload]="true"
-            [chooseLabel]="data!['chooseLabel']|translate" (onSelect)="files($event)" [multiple]="true"
-            [showUploadButton]="false" [showCancelButton]="false" [maxFileSize]="1000000">
+            [chooseLabel]="data!['chooseLabel']|translate" accept="image/png, image/gif, image/jpeg, application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" (onSelect)="onFileChange($event, 2)" [multiple]="true"
+            [showUploadButton]="false" [showCancelButton]="false">
             <ng-template pTemplate="content">
 
               <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length">
                 <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
                   <div>
-                    <img [src]="file.imageSrc" width="50" alt="">
+                    <img [src]="viewImagesIdCopy[i]" width="50" height="100" alt="">
 
                   </div>
                   <div class="p-fileupload-filename">
-                    <span class="d-block">{{'employees.name' | translate}}:</span>
+                    <span class="d-block">{{"employees.name"|translate}}:</span>
                     {{ file.fileUpload.name
                     }}
                   </div>
                   <div>
-                    <span class="d-block">{{'employees.size' | translate}}:</span>
+                    <span class="d-block">{{"employees.size"|translate}}:</span>
                     {{
                     file.fileUpload.size }}
                   </div>
@@ -208,6 +208,21 @@
           </p-fileUpload>
           <span class="maximum-size">{{'employees.maximumFileSize' | translate}}</span>
         </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-s-16">
+                <div class="alert alert-danger mb-3" *ngIf="errorUploadFileIdCopy">
+                    {{errorUploadFileIdCopy}}
+                </div>
+                <div class="alert alert-danger mb-3"
+                    *ngIf="errorUploadFileIdCopyIsRequired && getControl('idCopyFile')?.dirty">
+                    {{errorUploadFileIdCopyIsRequired}}
+                </div>
+                <div class="alert alert-danger mb-3"
+                    *ngIf="getControl('idCopyFile')?.hasError('required') && getControl('idCopyFile')?.dirty">
+                    Upload Files is Required
+                </div>
+            </div>
+            <!--End Custom Validators-->
       </div>
       <div class="sectionFive">
         <label for="" class="label-input mb-2" [innerHTML]="data!['titleNotes']|translate"></label>

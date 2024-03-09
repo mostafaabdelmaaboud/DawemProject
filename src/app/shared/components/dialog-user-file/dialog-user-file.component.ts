@@ -80,14 +80,56 @@ export class DialogUserFileComponent {
           next: data => {
             this.info = data;
 
-
             if (data?.profileImagePath) {
-              this.employeesService.downloadImage(data.profileImagePath).subscribe(response => {
-                const blob = new Blob([response]);
-                const file = new File([blob], data.profileImageName);
+              var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
+              let fileExt = data?.profileImageName?.substring(data?.profileImageName?.lastIndexOf('.'));
+              if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
+                let file!:File;
+                if(fileExt?.toLowerCase().includes("xlsx") || fileExt?.toLowerCase().includes("xls")) {
+                   file = new File([data?.profileImagePath], `excel-file${validExts}`, {
+                    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                  });
+                  this.AttachmentsFiles.push({ imageSrc: "assets/img/excel.png", download:data?.profileImagePath, fileUpload: {
+                    lastModified:file.lastModified,
+                    size:file.size,
+                    type:file.type,
+                    name:data?.profileImageName,
+                  }, detailsImage: true });
 
-                this.AttachmentsFiles.push({ imageSrc: data.profileImagePath, fileUpload: file, detailsImage: true });
-              });
+                } else if(fileExt?.toLowerCase().includes("pdf")) {
+                   file = new File([data?.profileImagePath], `pdf-file${validExts}`, {
+                    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                  });
+                  this.AttachmentsFiles.push({ imageSrc: "assets/img/pdf.png", download:data?.profileImagePath, fileUpload: {
+                    lastModified:file.lastModified,
+                    size:file.size,
+                    type:file.type,
+                    name:data?.profileImageName,
+                  }, detailsImage: true });
+                } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
+                   file = new File([data?.profileImagePath],`img-file${validExts}`, {
+                    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                  });
+                  this.AttachmentsFiles.push({ imageSrc: data?.profileImagePath, download:data?.profileImagePath, fileUpload: {
+                    lastModified:file.lastModified,
+                    size:file.size,
+                    type:file.type,
+                    name:data?.profileImageName,
+                  }, detailsImage: true });
+
+                }
+
+              }
+              // this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: {
+              //   name:data?.profileImageName
+              // }, detailsImage: true });
+
+              // this.employeesService.downloadImage(data.profileImagePath).subscribe(response => {
+              //   const blob = new Blob([response]);
+              //   const file = new File([blob], data?.profileImageName);
+
+              //   this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: file, detailsImage: true });
+              // });
             }
 
             this.loading = false;

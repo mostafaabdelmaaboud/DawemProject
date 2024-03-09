@@ -15,6 +15,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { EmployeesService } from 'src/app/Presentation/user/employees/services/employees.service';
 import { PermissionsService } from 'src/app/Presentation/user/permissions/services/permissions.service';
 import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -80,6 +81,11 @@ export class RequestForPermissionComponent {
   ];
   @Input() id!: string;
 
+  viewImagesIdCopy: any[] = [];
+  imageArray: any[] = [];
+  errorUploadFileIdCopyIsRequired!: string;
+  errorUploadFileIdCopy!: string;
+  public viewImage: any[] = [];
   dateTaskMultiple = false;
   listEmployees: any[] = [
   ];
@@ -95,6 +101,8 @@ export class RequestForPermissionComponent {
     dateTask: [null, Validators.required],
     time: [null, Validators.required],
     Notes: [null, Validators.required],
+    idCopyFile: ['', Validators.required]
+
   });
   AttachmentsFiles: any[] = [];
   requiredCommercialRegFiles = false;
@@ -104,6 +112,7 @@ export class RequestForPermissionComponent {
     public dialogRef: MatDialogRef<RequestForPermissionComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     public translate: TranslateService,
+    private toastr: ToastrService,
     private authService: AuthService,
     private fb: FormBuilder
   ) {
@@ -143,12 +152,36 @@ export class RequestForPermissionComponent {
 
               if (data?.attachments.length) {
                 data?.attachments.forEach((attachment: any) => {
-                  this.employeesService.downloadImage(attachment.filePath).subscribe(response => {
-                    const blob = new Blob([response]);
-                    const file = new File([blob], attachment.fileName);
+                  var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
+                  let fileExt = attachment.fileName.substring(attachment.fileName.lastIndexOf('.'));
+                  if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
+                    let file!:File;
+                    if(fileExt?.toLowerCase().includes("xlsx") || fileExt?.toLowerCase().includes("xls")) {
+                       file = new File([attachment.filePath], `excel-file${validExts}`, {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                      });
+                      this.viewImagesIdCopy.push("assets/img/excel.png");
+                    } else if(fileExt?.toLowerCase().includes("pdf")) {
+                       file = new File([attachment.filePath], `pdf-file${validExts}`, {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                      });
+                      this.viewImagesIdCopy.push("assets/img/pdf.png");
+                    } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
+                       file = new File([attachment.filePath],`img-file${validExts}`, {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                      });
+                      this.viewImagesIdCopy.push(attachment.filePath);
+                    }
+                    this.AttachmentsFiles.push({ fileUpload: {
+                      ...file,
+                      lastModified:file.lastModified,
+                      size:file.size,
+                      type:file.type,
+                      name:attachment.fileName,
+                    }, detailsImage: true });
+                    this.addBranchGroupForm.get("idCopyFile")?.setValue(attachment.fileName);
 
-                    this.AttachmentsFiles.push({ imageSrc: attachment.filePath, fileUpload: file, detailsImage: true });
-                  });
+                  }
                 });
               }
               this.addBranchGroupForm.get("IsNecessary")?.setValue(data.isNecessary);
@@ -248,7 +281,10 @@ export class RequestForPermissionComponent {
     let indexFile = this.AttachmentsFiles.findIndex(item => item.fileUpload.lastModified === event.lastModified);
     this.AttachmentsFiles.splice(indexFile, 1)
     this.AttachmentsFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
-    // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
+    if(this.requiredCommercialRegFiles) {
+      this.addBranchGroupForm.get("idCopyFile")?.setValue("");
+
+    }  
   }
   lastSearchQuery = "";
 
@@ -292,31 +328,77 @@ export class RequestForPermissionComponent {
         break;
     }
   }
-  files(event: UploadEvent) {
+  async onFileChange(pFileList: any, stepIndex: number) {
+    
+    if (pFileList.files?.length <= 5 || pFileList.length <= 5) {
+      this.errorUploadFileIdCopyIsRequired = "";
+      let indexidCopyFiles = [...this.AttachmentsFiles];
+      if (indexidCopyFiles.length <= 5) {
+        let idCopyFiles = [...this.AttachmentsFiles, ...Object.keys(pFileList.files).map(key => pFileList.files[key])];
+        let findIndexFileName:any[] = [];
+        for (let index = 0; index < pFileList.files.length; index++) {
+          const fileSize = pFileList.files[index];
+          findIndexFileName = idCopyFiles.filter(file => file.name == pFileList.files[index].name);
+          if(findIndexFileName.length < 2) {
+            if(fileSize?.size < (2 * 1024 * 1024)) {
+              this.viewImage.push(pFileList.files[index]);
+              this.AttachmentsFiles.push({fileUpload:pFileList.files[index], detailsImage: false});
+              this.errorUploadFileIdCopy = "";
+            } else {
+              this.errorUploadFileIdCopy = "The file size must be less than 2MB";
+            }
+          } else {
+            if(fileSize?.size > (2 * 1024 * 1024)) {
+              this.errorUploadFileIdCopy = "The file size must be less than 2MB";
+            } else {
+              this.errorUploadFileIdCopy = "The file is duplicate";
+            }
+          }
+        }
+        if(this.errorUploadFileIdCopy === "" && findIndexFileName.length < 2 && this.viewImage.length > 0) {
+          for (let index = 0; index < this.viewImage.length; index++) {
+            let filereaderTwo = new FileReader();
+            const fileSize = this.viewImage[index];
+            if (fileSize?.size > (2 * 1024 * 1024)) {
+              this.errorUploadFileIdCopy = "The file size must be less than 2MB";
+              return;
+            } else {
+              this.imageArray = [];
+              this.errorUploadFileIdCopy = "";
+              var validExts = new Array(".xlsx", ".xls");
+              let fileExt = this.viewImage[index]?.name.substring(this.viewImage[index]?.name.lastIndexOf('.'));
+              await filereaderTwo.readAsDataURL(this.viewImage[index]);
+              filereaderTwo.onload = () => {
+                if((filereaderTwo.result as string).includes("application/pdf")) {
+                  this.imageArray.push("assets/img/pdf.png");
+                } else if(validExts.indexOf(fileExt) >= 0) {
+                  this.imageArray.push("assets/img/excel.png");
+                } else {
+                  this.imageArray.push(filereaderTwo.result);
+                }
+              }
+              this.viewImagesIdCopy = this.imageArray;
+              this.addBranchGroupForm.get("idCopyFile")?.setValue(this.viewImage[0]?.name);
+              this.errorUploadFileIdCopyIsRequired = "";
+            }
+          }
+          if(findIndexFileName.length > 1) {
+            this.errorUploadFileIdCopy = "The file is duplicate";
+          }
+        }
+        if(this.errorUploadFileIdCopy === "") {
+          this.toastr.success("Successfully upload!", '', {
+            timeOut: 5000,
+            onActivateTick: true
+          });        
+        }
 
-    for (let file of event.files) {
-      var reader = new FileReader();
-
-      let thisParent = this;
-      reader.readAsDataURL(file);
-      reader.onload = (function (file) {
-        return function (e: any) {
-          // Render thumbnail.
-          thisParent.AttachmentsFiles.push({ imageSrc: e.target.result, fileUpload: file, detailsImage: false });
-
-        };
-
-      })(file);
-
-
-
-      // this.uploadedCommercialRegFiles.push({ imageSrc: src, fileUpload: file });
-
-
+      } else {
+        this.errorUploadFileIdCopyIsRequired = "You can only select up to 5 files.";
+      }
+    } else {
+      this.errorUploadFileIdCopyIsRequired = "You can only select up to 5 files.";
     }
-    // this.uploadedCommercialRegFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
-
-    // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
   }
   request() {
 
@@ -341,6 +423,7 @@ export class RequestForPermissionComponent {
       this.getControl("time")?.markAsDirty();
 
       this.getControl("Notes")?.markAsDirty();
+      this.getControl("idCopyFile")?.markAsDirty();
 
 
 

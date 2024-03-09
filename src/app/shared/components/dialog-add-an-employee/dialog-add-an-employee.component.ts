@@ -260,6 +260,8 @@ export class DialogAddAnEmployeeComponent {
                     type:file.type,
                     name:data.profileImageName,
                   }, detailsImage: true }];
+                  this.addBranchGroupForm.get("idCopyFile")?.setValue(data.profileImageName);
+
                 }
                 // this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: {
                 //   name:data.profileImageName
@@ -484,24 +486,17 @@ export class DialogAddAnEmployeeComponent {
     }
   }
   onRemoveCommercialReg(event: any) {
-    debugger;
+    
     let indexFile = this.AttachmentsFiles.findIndex(item => item.fileUpload.lastModified === event.lastModified);
     this.AttachmentsFiles.splice(indexFile, 1)
     this.AttachmentsFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
-    // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
+    if(this.requiredCommercialRegFiles) {
+      this.addBranchGroupForm.get("idCopyFile")?.setValue("");
+
+    }
   }
-  // files(event: UploadEvent) {
-  //   var reader = new FileReader();
-  //   let thisParent = this;
-  //   reader.readAsDataURL(event.files[0]);
-  //   reader.onload = (function (file) {
-  //     return function (e: any) {
-  //       thisParent.uploadedFiles[0] = { imageSrc: e.target.result, fileUpload: file, detailsImage: false };
-  //     };
-  //   })(event.files[0]);
-  // }
   async onFileChange(pFileList: any, stepIndex: number) {
-    debugger;
+    
     if (pFileList.files?.length <= 5 || pFileList.length <= 5) {
       this.errorUploadFileIdCopyIsRequired = "";
       let indexidCopyFiles = [...this.AttachmentsFiles];
@@ -514,11 +509,7 @@ export class DialogAddAnEmployeeComponent {
           if(findIndexFileName.length < 2) {
             if(fileSize?.size < (2 * 1024 * 1024)) {
               this.viewImage=[pFileList.files[index]];
-              debugger;
               this.AttachmentsFiles=[{fileUpload:pFileList.files[index], detailsImage: false}];
-              debugger;
-
-              console.log(this.AttachmentsFiles);
               this.errorUploadFileIdCopy = "";
             } else {
               this.errorUploadFileIdCopy = "The file size must be less than 2MB";
@@ -545,8 +536,6 @@ export class DialogAddAnEmployeeComponent {
               let fileExt = this.viewImage[index]?.name.substring(this.viewImage[index]?.name.lastIndexOf('.'));
               await filereaderTwo.readAsDataURL(this.viewImage[index]);
               filereaderTwo.onload = () => {
-                debugger;
-                console.log(filereaderTwo.result);
                 if((filereaderTwo.result as string).includes("application/pdf")) {
                   this.imageArray =["assets/img/pdf.png"];
                 } else if(validExts.indexOf(fileExt) >= 0) {
@@ -555,13 +544,8 @@ export class DialogAddAnEmployeeComponent {
                   this.imageArray= [filereaderTwo.result];
                 }
                 this.viewImagesIdCopy = this.imageArray;
-
               }
-              debugger;
-              console.log(this.imageArray);
-              debugger;
-              console.log(this.viewImagesIdCopy);
-              this.addBranchGroupForm.get("files")?.setValue(this.viewImage[0]?.name);
+              this.addBranchGroupForm.get("idCopyFile")?.setValue(this.viewImage[0]?.name);
               this.errorUploadFileIdCopyIsRequired = "";
             }
           }

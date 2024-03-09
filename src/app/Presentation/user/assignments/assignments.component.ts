@@ -567,7 +567,6 @@ export class AssignmentsComponent {
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
       dialogRefAddCurrency.componentInstance.loading = true;
-      debugger;
       this.assignmentsService.createAssignment(formData).subscribe(
         {
           next: (data: any) => {

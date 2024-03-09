@@ -97,8 +97,7 @@ export class AssignmentRequestComponent {
     dateTask: [null, Validators.required],
     time:[null, Validators.required],
     Notes: [null, Validators.required],
-    idCopyFile:["", Validators.required],
-    files:["", Validators.required],
+    idCopyFile:["", Validators.required]
   });
   AttachmentsFiles: any[] = [];
   requiredCommercialRegFiles = false;
@@ -190,6 +189,8 @@ export class AssignmentRequestComponent {
                       type:file.type,
                       name:attachment.fileName,
                     }, detailsImage: true });
+                    this.addBranchGroupForm.get("idCopyFile")?.setValue(attachment.fileName);
+
                   }
                 });
               }
@@ -281,7 +282,10 @@ export class AssignmentRequestComponent {
     let indexFile = this.AttachmentsFiles.findIndex(item => item.fileUpload.lastModified === event.lastModified);
     this.AttachmentsFiles.splice(indexFile, 1)
     this.AttachmentsFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
-    // this.messageService.add({ severity: 'info', summary: 'File Uploaded', detail: '' });
+    if(this.requiredCommercialRegFiles) {
+      this.addBranchGroupForm.get("idCopyFile")?.setValue("");
+
+    }  
   }
   lastSearchQuery = "";
 
@@ -376,7 +380,7 @@ export class AssignmentRequestComponent {
                 }
               }
               this.viewImagesIdCopy = this.imageArray;
-              this.addBranchGroupForm.get("files")?.setValue(this.viewImage[0]?.name);
+              this.addBranchGroupForm.get("idCopyFile")?.setValue(this.viewImage[0]?.name);
               this.errorUploadFileIdCopyIsRequired = "";
             }
           }
