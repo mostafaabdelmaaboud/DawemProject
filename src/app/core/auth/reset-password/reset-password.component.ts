@@ -6,6 +6,7 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../services/auth-service.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-reset-password',
@@ -44,9 +45,14 @@ export class ResetPasswordComponent {
     ];
     if (this.route.snapshot.queryParamMap.get("email")) {
       this.email = this.route.snapshot.queryParamMap.get("email") as string;
+      this.email = this.decodeQueryParameter(this.email);
+   
     };
     if (this.route.snapshot.queryParamMap.get("resetToken")) {
       this.resetToken = this.route.snapshot.queryParamMap.get("resetToken") as string;
+      this.resetToken = this.decodeQueryParameter(this.resetToken);
+
+
     };
     
     if (this.currentLang === undefined || this.currentLang === null) {
@@ -86,7 +92,12 @@ export class ResetPasswordComponent {
     }
 
   }
+  decodeQueryParameter(params: string): string {
+    // استخدام decodeURIComponent لإعادة تشفير القيمة بالشكل الصحيح
+    const stringWithSpaces = params.replace(/ /g, '+');
 
+    return decodeURIComponent(stringWithSpaces);
+  }
   passwordMatchValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       const value: string = control.value;
