@@ -108,7 +108,7 @@ export class DialogAddAnEmployeeComponent {
   loading = false;
   private employeesService = inject(EmployeesService);
   private sectionsService = inject(SectionsService);
-
+  @Input() departmentIsReadOnly = false;
   @Output() submitClicked = new EventEmitter<any>();
   @Input() submitted!: boolean;
   @Input() jobTitleFirst: any[] = [];
@@ -378,6 +378,9 @@ export class DialogAddAnEmployeeComponent {
             if (sectionList >= 0) {
               this.addBranchGroupForm.get("DepartmentId")?.setValue(this.sectionList[sectionList]);
             }
+            // if(this.departmentIsReadOnly) {
+            //   this.addBranchGroupForm.get("DepartmentId").read
+            // }
           });
         }
      

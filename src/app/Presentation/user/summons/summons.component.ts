@@ -177,14 +177,14 @@ export class SummonsComponent {
       data: {
         title: "اضافه استدعاء",
         setAsActive: "تعيين كنشط",
-        titleDepartmentId: "نوع القسم",
+        titleDepartmentId: "اسم القسم",
         placeholdeDepartmentId: "اسم القسم",
         ValidationDepartmentId: "اسم القسم مطلوب",
         labelRadioButton: "نوع الاستدعاء",
         firstRadio: "لموظفين",
         secondRadio: "لجروبات",
         thirdRadio: "لاقسام",
-        titleEmployeeId: "نوع الموظف",
+        titleEmployeeId: "اسم الموظف",
         placeholdeEmployeeId: "اسم الموظف",
         ValidationEmployeeId: "اسم الموظف مطلوب",
         titleSanaction: "الجزاءات",
@@ -193,7 +193,7 @@ export class SummonsComponent {
         titleCalendar: "التاريخ",
         placeholderCalendar: "اختار التاريخ",
         validationCalendar: "التاريخ مطلوب",
-        titleGroupId: "نواب الجروب",
+        titleGroupId: "اسم الجروب",
         placeholdeGroupId: "اسم الجروب",
         ValidationGroupId: "اسم الجروب مطلوب",
         titleClose: "تراجع",
@@ -210,13 +210,17 @@ export class SummonsComponent {
         formData.Employees = result.Employees ? result.Employees.map((list: any) => list.key) : null;
         formData.Groups =  result.Groups ? result.Groups.map((list: any) => list.key)  : null; 
         formData.Departments = result.Departments ? result.Departments.map((list: any) => list.key) : null;
+        formData.forAllEmployees = null;
+
+      } else {
+        formData.forAllEmployees = result.forAllEmployees;
+
       }
       formData.Sanctions = result.Sanctions.map((list: any) => list.key);
       formData.allowedTime = result.allowedTime;
       formData.TimeType = result.TimeType.key;
       formData.notifyWays = result.notifyWays.map((list: any) => list.key);
       formData.DateAndTime = moment(result.dateAndTime).format("YYYY-MM-DD hh:mm");
-      
       dialogRefAddCurrency.componentInstance.loading = true;
       this.summonsService.createSummon(formData).subscribe(
         {

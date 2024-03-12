@@ -703,7 +703,7 @@ export class AddUserPermissionComponent {
       formatObject.ForType = Number(this.addBranchGroupForm.value.ForType);
       formatObject.RoleId = formatObject.ForType === 0 ? this.addBranchGroupForm.value.RoleId.key : null;
       formatObject.UserId = formatObject.ForType === 1 ? this.addBranchGroupForm.value.UserId.key : null;
-
+      formatObject.IsActive = this.addBranchGroupForm.get("isActive")?.value;
 
 
 

@@ -6,6 +6,7 @@
     "EmailIsRequired": "Email is required",
     "EmailIsIncorrect": "Email is incorrect",
     "password": "password",
+    "passwordNew": "new password",
     "PasswordRequired": "Password required",
     "TheMinimumNumberOfCharactersIsFive": "The minimum number of characters is five",
     "signIn": "sign in",
@@ -13,11 +14,17 @@
     "WeNeedHelp": "We need help",
     "loading": "loading",
     "createANewAccount":"create a new account",
+    "sendAFollowUpEmail":"Send a follow up email",
+    "sendEmail":"send Email",
+
     "iForgotTheSecretNumber":"i forgot the secret number?"
   },
   "signup": {
     "signup": "sign up",
     "signupToContinue": "sign up to continue",
+    "resetPassword":"reset Password",
+    "setPassword":"Set password",
+    "resetPasswordToContinue":"Set the password to continue",
     "name":"name",
     "enterTheName":"Enter the name",
     "nameIsRequired":"name is required",
@@ -32,6 +39,8 @@
     "companyEmail":"company email",
     "companyEmailIsRequired":"company email is required",
     "confirmPassword":"confirm password",
+    "confirmNewPassword":"confirm new password",
+
     "confirmPasswordIsRequired":"confirm password is required",
     "userEmail":"user email",
     "userEmailIsRequired":"user email is required",

@@ -210,11 +210,11 @@
                       <div class="container-alerts mb-2" *ngIf="getControl('confirmPassword')?.errors">
                         <div class="alert alert-danger"
                           *ngIf="getControl('confirmPassword')?.hasError('required') && getControl('confirmPassword')?.dirty">
-                          {{'login.PasswordRequired' | translate}}
+                          {{'signup.confirmPasswordIsRequired' | translate}}
                         </div>
                         <div class="alert alert-danger"
                           *ngIf="getControl('confirmPassword')?.hasError('passwordMismatch') && !getControl('confirmPassword')?.hasError('required')">
-                           {{'signup.confirmPasswordIsRequired' | translate}}
+                           {{'users.passwordMisMatch' | translate}}
                         </div>
                       </div>
                       <!-- <div class="container-alerts mb-2"

@@ -50,7 +50,7 @@ export class JustificationsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.delete<any>(`${environment.baseUrl}RequestJustification/Reject`, { params: queryParams })
+    return this.http.put<any>(`${environment.baseUrl}RequestJustification/Reject`, {}, { params: queryParams })
   }
   accept(params: any) {
     let queryParams = new HttpParams();

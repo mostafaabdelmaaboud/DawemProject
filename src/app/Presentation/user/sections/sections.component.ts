@@ -405,7 +405,6 @@ export class SectionsComponent {
 
             }, 2000);
 
-            succressDialog.componentInstance.submitted = true;
             succressDialog.componentInstance.submitClicked.subscribe(result => {
               succressDialog.close();
 
@@ -513,7 +512,6 @@ export class SectionsComponent {
 
             }, 2000);
 
-            succressDialog.componentInstance.submitted = true;
             succressDialog.componentInstance.submitClicked.subscribe(result => {
               succressDialog.close();
 

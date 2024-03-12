@@ -148,7 +148,7 @@
             <div class="container-alerts mt-2" *ngIf="getControl('ConfirmPassword')?.errors">
               <div class="alert alert-danger"
                 *ngIf="getControl('ConfirmPassword')?.hasError('required') && getControl('ConfirmPassword')?.dirty">
-                {{'signup.PasswordRequired' | translate}}
+                {{'signup.confirmPasswordIsRequired' | translate}}
               </div>
               <div class="alert alert-danger"
                 *ngIf="getControl('ConfirmPassword')?.hasError('passwordMismatch') && !getControl('ConfirmPassword')?.hasError('required')">

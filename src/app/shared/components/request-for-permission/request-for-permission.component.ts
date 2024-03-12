@@ -421,6 +421,8 @@ export class RequestForPermissionComponent {
       this.getControl("PermissionTypeId")?.markAsDirty();
       this.getControl("dateTask")?.markAsDirty();
       this.getControl("time")?.markAsDirty();
+      this.getControl("EmployeeId")?.markAsDirty();
+
 
       this.getControl("Notes")?.markAsDirty();
       this.getControl("idCopyFile")?.markAsDirty();

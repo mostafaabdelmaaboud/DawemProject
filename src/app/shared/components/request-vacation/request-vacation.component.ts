@@ -97,7 +97,7 @@ export class RequestVacationComponent {
     ForEmployee: [false],
     VacationTypeId: ['', Validators.required],
     dateTask: [null, Validators.required],
-    idCopyFile: ['', Validators.required]
+    idCopyFile: ['']
   });
   AttachmentsFiles: any[] = [];
   requiredCommercialRegFiles = false;

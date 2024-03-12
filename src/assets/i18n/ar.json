@@ -6,6 +6,8 @@
     "EmailIsRequired": "البريد الالكتروني مطلوب",
     "EmailIsIncorrect": "البريد الالكتروني غير صحيح",
     "password": "كلمه المرور",
+    "passwordNew": "كلمه المرور الجديدة" ,
+
     "PasswordRequired": "كلمة السر مطلوبة",
     "TheMinimumNumberOfCharactersIsFive": "الحد الأدنى لعدد الأحرف هو خمسة",
     "signIn": "تسجيل الدخول ",
@@ -13,10 +15,16 @@
     "WeNeedHelp": "نحتاج مساعده ",
     "loading": "تحميل",
     "createANewAccount":"انشاء حساب",
+    "sendAFollowUpEmail":"قم بإرسال البريد الالكتروني للمتابعة",
+    "sendEmail":"ارسال البريد الالكتروني",
     "iForgotTheSecretNumber":"نسيت الرقم السري؟"
   },
   "signup": {
     "signup": "إنشاء حساب",
+    "resetPassword":"إعادة تعيين كلمة المرور",
+    "resetPasswordToContinue":"قم بي أعادة تعيين كلمة المرور للمتابعة",
+    "setPassword":"تعيين كلمة المرور",
+
     "signupToContinue": "قم بي إنشاء الحساب للمتابعه",
     "name":"الأسم",
     "enterTheName":"ادخال الأسم",
@@ -32,6 +40,8 @@
     "companyEmail":"بريد الألكتروني للشركه",
     "companyEmailIsRequired":"بريد الألكتروني للشركه مطلوب",
     "confirmPassword":"تأكيد كلمة المرور",
+    "confirmNewPassword":"تأكيد كلمة المرور الجديدة",
+
     "confirmPasswordIsRequired":"تأكيد كلمة المرور مطلوبة",
     "userEmail":"بريد الألكتروني للمستخدم",
     "userEmailIsRequired":"بريد الألكتروني المستخدم مطلوب",
@@ -158,8 +168,8 @@
     "workScheduleRequired":"جدول الدوام مطلوب",
     "employeeNameRequired":"اسم الموظف مطلوب",
     "chooseYourJobTitle":"اختار المسمى الوظيفي",
-    "theEmployeeNamedIsWanted":"المسمي الوظفس مطلوب",
-    "chooseTheRequiredSection":" اختار القسم مطلوب",
+    "theEmployeeNamedIsWanted":"المسمي الوظيفي مطلوب",
+    "chooseTheRequiredSection":"اختار القسم مطلوب",
     "chooseSection":"اختار القسم",
     "joiningDateIsRequired":"تاريخ الالتحاق مطلوب",
     "attachAFile":"ارفاق ملف",
@@ -261,7 +271,7 @@
     "close":"اغلاق",
     "theHistoryOfJustificationIsMultiple":"تاريخ التبرير متعدد",
     "timeForJustification":"وقت التبرير",
-    "vacationTime":"وقت الاجازة",
+    "vacationTime":"وقت التبرير",
     "timeForJustificationIsRequired":"وقت التبرير مطلوب"
   },
   "zones": {
@@ -493,7 +503,7 @@
     "permissionRequests":"طلبات الاستئذانات",
     "amendPermission":"تعديل استئذان",
     "permissionsFile":"ملف الاستئذانات",
-    "multipleVacationDates":"تاريخ الاجازة متعدد",
+    "multipleVacationDates":"تاريخ الاستئذان متعدد",
     "askingTime":"وقت الأستئذان",
     "askingTimeIsRequired":"وقت الأستئذان مطلوب  "
   },

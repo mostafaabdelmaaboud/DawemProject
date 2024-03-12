@@ -500,11 +500,7 @@ export class DialogAddASectionComponent {
       this.getControl("managerId")?.markAsDirty();
       this.getControl("managerDelegatorIds")?.markAsDirty();
       this.getControl("zoneIds")?.markAsDirty();
-
-      
       this.getControl("notes")?.markAsDirty();
-
-
     }
 
   }

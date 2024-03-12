@@ -194,7 +194,7 @@
       <div class="sectionTwo mb-3">
         <label class="title" [innerHTML]="data!['titleDropdownSecond']|translate"></label>
         <div class="content-password">
-          <p-dropdown appendTo="body" formControlName="DepartmentId" [options]="sectionList"
+          <p-dropdown appendTo="body" formControlName="DepartmentId" [readonly]="departmentIsReadOnly" [options]="sectionList"
             [placeholder]="data!['placeholderDropdown']|translate" optionLabel="name">
             <ng-template pTemplate="header">
               <span class="p-input-icon-left input-search-dropdown">

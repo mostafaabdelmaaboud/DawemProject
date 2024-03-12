@@ -613,7 +613,6 @@ export class DashboardComponent {
         placeholdeEmail: "البريد الالكتروني",
         validationtitleEmail: "البريد الالكتروني مطلوب",
         validationtitleEmailPattern: "البريد الالكتروني غير صحيح",
-
         address: "العنوان <span class='color-red'>*</span>",
         placeholdeAddress: "العنوان",
         validationtitleAddress: "العنوان مطلوب",
@@ -654,6 +653,7 @@ export class DashboardComponent {
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
+    dialogRefAddCurrency.componentInstance.departmentIsReadOnly = true;
     // dialogRefAddCurrency.componentInstance.list = this.categories;
     dialogRefAddCurrency.componentInstance.editEmployee = false;
     dialogRefAddCurrency.componentInstance.departmentID = data.id;

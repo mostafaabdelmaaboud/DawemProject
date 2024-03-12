@@ -9,11 +9,17 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { ToastrModule } from 'ngx-toastr';
 import { SignUpComponent } from './sign-up/sign-up.component';
+import { SendEmailComponent } from './send-email/send-email.component';
+import { CheckEmailComponent } from './check-email/check-email.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
-    SignUpComponent
+    SignUpComponent,
+    SendEmailComponent,
+    CheckEmailComponent,
+    ResetPasswordComponent
   ],
   imports: [
     CommonModule,

@@ -20,7 +20,6 @@
                 <div>{{ selectedCountry.name }}</div>
               </div>
             </ng-container>
-
           </ng-template>
           <ng-template let-country pTemplate="item">
             <ng-container *ngIf="country.code != 'AR'">
@@ -38,8 +37,6 @@
             </ng-container>
           </ng-template>
         </p-dropdown>
-        
-  
       </div>
       <div class="content-login">
         <div class="header text-center">
@@ -118,7 +115,7 @@
           </form>
           <div class="footer-form">
             <span class="section-footer-login-left" routerLink="/signUp">{{'login.createANewAccount' | translate}}</span>
-            <span class="section-footer-login-right">{{'login.iForgotTheSecretNumber' | translate}}</span>
+            <span class="section-footer-login-right" routerLink="/sendEmail">{{'login.iForgotTheSecretNumber' | translate}}</span>
           </div>
         </div>
       </div>
