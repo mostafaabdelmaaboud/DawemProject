@@ -346,7 +346,7 @@ export class GroupsComponent {
           formData.zoneIds.push(direct.key);
         });
       }
-      formData.groupManagerId = result.groupManager.key;
+      formData.managerId = result.groupManager.key;
       formData.isActive = result.isActive;
 
       this.groupsService.createGroup(formData).subscribe(
@@ -470,7 +470,7 @@ export class GroupsComponent {
         });
       }
 
-      formData.groupManagerId = result.groupManager.key;
+      formData.managerId = result.groupManager.key;
       formData.isActive = result.isActive;
       this.groupsService.updateGroup(formData).subscribe(
         {
