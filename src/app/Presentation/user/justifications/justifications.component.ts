@@ -351,7 +351,8 @@ export class JustificationsComponent {
         }
 
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getJustifications(filteration);
   }
   resetFilteration() {

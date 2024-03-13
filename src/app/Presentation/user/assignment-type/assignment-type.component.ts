@@ -154,7 +154,9 @@ export class AssignmentTypeComponent {
           filteration[key] = value;
         }
       }
-    })
+    });
+    delete filteration.PageNumber;
+
     this.getAssignments(filteration);
   }
   exportTableToExcel() {

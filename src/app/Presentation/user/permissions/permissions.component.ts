@@ -285,7 +285,8 @@ export class PermissionsComponent {
         }
 
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getPermissions(filteration);
   }
   exportTableToExcel() {

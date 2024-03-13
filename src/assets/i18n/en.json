@@ -127,7 +127,9 @@
     "typeOfRequest":"Type of Request",
     "theDate":"the date",
     "requestStatus":"Request status",
-    "action":"Action"
+    "action":"Action",
+    "orderNumber":"order Number"
+
   },
   "employees":{
     "employeesSummary":"employees summary",
@@ -418,19 +420,19 @@
     "theDate":"the date",
     "action":"action",
     "setAsActive":"Set as active",
-    "sectionType":"Section Type",
+    "sectionType":"Section Name",
     "departmentName":"Department Name",
     "departmentNameRequired":"Department name required",
     "forAnEmployee":"For an employee",
     "forAGroup":"For a group",
     "toSwear":"to swear",
-    "employeeType":"Employee type",
+    "employeeType":"Employee Name",
     "employeeNameRequired":"Employee name required",
     "defaultLeaveType":"Default leave type",
     "defaultLeaveTypeRequired":"Default leave type required",
     "chooseDate":"Choose date",
     "dateRequired":"Date required",
-    "groupRepresentatives":"Group representatives",
+    "groupRepresentatives":"Group Name",
     "groupName":"Group name",
     "groupNameRequired":"Group name required",
     "pleaseSelectVacationBalance":"Please select vacation balance",

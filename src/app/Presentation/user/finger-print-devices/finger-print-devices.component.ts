@@ -164,7 +164,9 @@ export class FingerPrintDevicesComponent {
           filteration[key] = value;
         }
       }
-    })
+    });
+    delete filteration.PageNumber;
+
     this.getFingerprintDevices(filteration);
   }
   exportTableToExcel() {

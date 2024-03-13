@@ -156,7 +156,8 @@ export class JustificationsTypeComponent {
         }
 
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getJustifications(filteration);
   }
   exportTableToExcel() {

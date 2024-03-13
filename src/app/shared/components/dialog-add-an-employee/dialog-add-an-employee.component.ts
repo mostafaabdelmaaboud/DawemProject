@@ -119,7 +119,8 @@ export class DialogAddAnEmployeeComponent {
   @Input() id!: string;
   @Input() departmentID!: any;
   code="+966";
-
+  countriesPhone: any[] = [];
+  isCurrentCountry;
   viewImagesIdCopy: any[] = [];
   imageArray: any[] = [];
   errorUploadFileIdCopyIsRequired!: string;
@@ -164,24 +165,7 @@ export class DialogAddAnEmployeeComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    if (this.translate.currentLang == "ar") {
-     
-      this.addBranchGroupForm.get("mobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{9}$/)])
-      this.code= "+966";
 
-    }
-    else if (this.translate.currentLang == "en") {
-
-      this.addBranchGroupForm.get("mobileNumber")?.setValidators([Validators.required,Validators.pattern(/^\d{3}-\d{3}-\d{4}$/)])
-      this.code= "+1";
-
-    } else if (this.translate.currentLang == "ind") {
-
-      this.addBranchGroupForm.get("mobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
-
-      this.code= "+91";
-
-    }
 
     if (this.data?.code) {
       this.addBranchGroupForm.get("fieldDisabled")?.setValue(this.data?.code);
@@ -194,14 +178,21 @@ export class DialogAddAnEmployeeComponent {
     let departmentGetForDropDown = this.employeesService.getDepartmentForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let scheduleForDropDown = this.employeesService.getScheduleForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let GetForDropDownZones = this.sectionsService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+    let countries = this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
 
-
+    this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
+      next: data => {
+   
+      },
+      error: err => {
+      }
+    });
     combineLatest({
       employeeForDropDown,
       employeesService,
       departmentGetForDropDown,
       GetForDropDownZones,
-
+      countries,
       scheduleForDropDown
     }).subscribe(data => {
       this.jobTitleFirst = [];
@@ -224,6 +215,17 @@ export class DialogAddAnEmployeeComponent {
       });
       data.scheduleForDropDown?.data?.forEach((jobTitle: any) => {
         this.workScheduleList.push({ name: jobTitle.name, key: jobTitle.id })
+      });
+  
+      this.countriesPhone = [];
+      data.countries?.forEach((country: any) => {
+        debugger;
+        
+        this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id });
+        if(country.isCurrentCountry) {
+          this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id };
+          this.selectCountry();
+        }
       });
       if (this.editEmployee) {
 
@@ -292,23 +294,23 @@ export class DialogAddAnEmployeeComponent {
               });
               this.addBranchGroupForm.get("email")?.setValue(data.email);
               this.addBranchGroupForm.get("address")?.setValue(data.address);
+              debugger;
+
               let startIndex = data.mobileNumber.indexOf(this.code);
+              debugger;
               let slicedString= ""; 
               if(startIndex >=0) {
                 slicedString = data.mobileNumber.slice(0, startIndex);
                 slicedString += data.mobileNumber.slice(startIndex + this.code.length);
               }
               this.addBranchGroupForm.get("mobileNumber")?.setValue(slicedString);
+
               this.addBranchGroupForm.get("AttendanceType")?.setValue(data.attendanceType.toString());
               this.addBranchGroupForm.get("name")?.setValue(data.name);
-
               this.addBranchGroupForm.get("employeeType")?.setValue(data.employeeType.toString());
               this.addBranchGroupForm.get("employeeNumber")?.setValue(data.employeeNumber);
               data?.zoneIds?.forEach((zone: any) => {
-
                 let indexZones = this.listZones.findIndex(list => list.key === zone);
-
-
                 if (indexZones >= 0) {
                   if (Array.isArray(this.getControl("zoneIds")?.value)) {
                     this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }, ...this.getControl("zoneIds")?.value]));
@@ -316,7 +318,6 @@ export class DialogAddAnEmployeeComponent {
                     this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }]));
                   }
                 }
-
               });
 
               this.employeesService.getJobTitles({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.jobTitleId }).subscribe(dataDropdown => {
@@ -387,8 +388,8 @@ export class DialogAddAnEmployeeComponent {
       }
 
     })
-
-  }
+    // this.getCountriesbyPhone();
+  } 
   lastSearchQuery = "";
 
   searchDropdown(data: any, type: string) {
@@ -487,6 +488,29 @@ export class DialogAddAnEmployeeComponent {
       default:
         break;
     }
+  }
+  selectCountry() {
+    const pattern = new RegExp(`^\\d{${this.isCurrentCountry.phoneLength}}$`);
+    this.addBranchGroupForm.get("mobileNumber")?.setValidators([Validators.required, Validators.pattern(pattern)])
+    this.code= "+"+this.isCurrentCountry.phoneLength;
+  }
+  getCountriesbyPhone() {
+    this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
+      next: data => {
+        this.countriesPhone = [];
+        data.forEach((country: any) => {
+          debugger;
+          
+          this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id });
+          if(country.isCurrentCountry) {
+            this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id };
+            this.selectCountry();
+          }
+        });
+      },
+      error: err => {
+      }
+    });
   }
   onRemoveCommercialReg(event: any) {
     

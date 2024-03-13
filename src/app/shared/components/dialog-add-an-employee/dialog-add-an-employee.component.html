@@ -158,10 +158,31 @@
       </div>
       <div class="sectionField mb-3">
         <label for="" class="label-input mb-2" [innerHTML]="data!['mobileNumber']|translate"></label>
-        <div class="content-password position-relative code-phone">
+        <div class="content-password position-relative content-phone-number">
+          <span class="dropdown-code">
+            <!-- {{code}} -->
+            <p-dropdown appendTo="body" [options]="countriesPhone" [(ngModel)]="isCurrentCountry"  [ngModelOptions]="{standalone: true}"
+   optionLabel="name" (onChange)="selectCountry()">
+            <ng-template let-option pTemplate="selectedItem">
+              <div class="flex align-items-center gap-2" >
+                  <div>{{ option.dial }}+</div>
+              </div>
+          </ng-template>
+            <ng-template pTemplate="header">
+              <span class="p-input-icon-left input-search-dropdown">
+
+                <i class="pi pi-search"  (click)="searchDropdown(searchcompanyCountryId.value, 'companyCountryId')"></i>
+                <input type="text" placeholder="بحث" (keyup.enter)="searchDropdown(searchcompanyCountryId.value, 'companyCountryId')" pInputText #searchcompanyCountryId />
+              </span>
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+              {{ option.name }}
+            </ng-template>
+          </p-dropdown>
+
+          </span>
           <input type="text" pInputText formControlName="mobileNumber"
             [placeholder]="data!['placeholdeMobileNumber']|translate" class="w-100" />
-            <span class="code">{{code}}</span>
         </div>
         <!--Start Custom Validators-->
         <div class="container-alerts mt-2" *ngIf="getControl('mobileNumber')?.errors">

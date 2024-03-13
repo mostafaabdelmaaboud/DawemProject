@@ -451,7 +451,8 @@ export class HolidaysComponent {
         }
 
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getHolidays(filteration);
   }
   exportTableToExcel() {

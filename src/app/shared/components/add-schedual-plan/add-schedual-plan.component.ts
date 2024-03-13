@@ -381,13 +381,18 @@ export class AddSchedualPlanComponent {
 
     switch (type) {
       case 'EmployeeId':
-        if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
-            this.lastSearchQuery = data;
-            this.schedualPlanService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+        if (data.value || data.value === "") {
+          debugger;
+          if (data.value !== this.lastSearchQuery) {
+            this.lastSearchQuery = data.value;
+            this.schedualPlanService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
+                debugger;
+
                 this.listEmployeeId = [];
+                debugger;
+
                 res.data?.forEach((day: any) => {
 
 
@@ -403,10 +408,10 @@ export class AddSchedualPlanComponent {
         break;
 
       case 'GroupId':
-        if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
-            this.lastSearchQuery = data;
-            this.schedualPlanService.groupsForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+        if (data.value || data.value === "") {
+          if (data.value !== this.lastSearchQuery) {
+            this.lastSearchQuery = data.value;
+            this.schedualPlanService.groupsForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listGroupId = [];
@@ -424,10 +429,10 @@ export class AddSchedualPlanComponent {
         }
         break;
       case 'DepartmentId':
-        if (data || data === "") {
+        if (data.value || data.value === "") {
           if (data !== this.lastSearchQuery) {
-            this.lastSearchQuery = data;
-            this.schedualPlanService.departmentForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+            this.lastSearchQuery = data.value;
+            this.schedualPlanService.departmentForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listDepartmentId = [];
@@ -445,10 +450,10 @@ export class AddSchedualPlanComponent {
         }
         break;
       case 'ScheduleId':
-        if (data || data === "") {
+        if (data.value || data.value === "") {
           if (data !== this.lastSearchQuery) {
-            this.lastSearchQuery = data;
-            this.schedualPlanService.schedualForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+            this.lastSearchQuery = data.value;
+            this.schedualPlanService.schedualForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listScheduleId = [];

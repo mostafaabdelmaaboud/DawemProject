@@ -332,11 +332,10 @@ export class ZonesComponent {
       } else {
         if(value >=0) {
           filteration[key] = value;
-
         }
-
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getZones(filteration);
   }
   numberOfRowsPerPage(data: any) {

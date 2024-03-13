@@ -192,7 +192,8 @@ export class SectionsComponent {
         }
 
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getSection(filteration);
   }
   exportTableToExcel() {

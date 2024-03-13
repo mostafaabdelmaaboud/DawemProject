@@ -70,7 +70,7 @@
 
         </li>
       </ul>
-
+      <div *ngIf="AttachmentsFiles.length == 0">{{"department.nothing"|translate}}</div>
     </div>
     <div class="sectionTwo mb-3 line-bellow">
       <label class="title">{{"assignments.theBeginning"|translate}}</label>

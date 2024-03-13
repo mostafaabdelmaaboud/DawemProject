@@ -30,13 +30,15 @@ export class SignUpComponent {
     agreed: [, Validators.required],
 
   });
-  code="+966";
+  code="+20";
   private authService = inject(AuthService);
   currentLang = localStorage.getItem("lang");
   countries!: any[];
   loading: boolean = true;
   isLoading = false;
-  general: any[] = []
+  general: any[] = [];
+  countriesPhone: any[] = [];
+  isCurrentCountry;
   private router = inject(Router)
   selectedCountry: any = { name: 'عربي', code: 'AR' };
   constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService) {
@@ -56,8 +58,7 @@ export class SignUpComponent {
         { name: 'انجليزي', code: 'US' }
         // { name: 'الهند', code: 'IN' }
       ];
-      this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{9}$/)])
-      this.code= "+966";
+
       this.selectedCountry = { name: 'عربي', code: 'AR' };
       document.documentElement.setAttribute('lang', 'ar');
       this.translate.use("ar");
@@ -73,8 +74,7 @@ export class SignUpComponent {
           // { name: 'الهند', code: 'IN' }
         ];
         this.selectedCountry = { name: 'عربي', code: 'AR' };
-        this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{9}$/)])
-        this.code= "+966";
+    
 
       } else if (this.currentLang == "en") {
         this.selectedCountry = { name: 'english', code: 'US' };
@@ -87,8 +87,7 @@ export class SignUpComponent {
           // { name: 'India', code: 'IN' }
         ];
         this.selectedCountry = { name: 'english', code: 'US' };
-        this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required,Validators.pattern(/^\d{3}-\d{3}-\d{4}$/)])
-        this.code= "+1";
+
 
       } 
       // else if (this.currentLang == "ind") {
@@ -108,6 +107,7 @@ export class SignUpComponent {
       // }
     }
     this.getCountries();
+    this.getCountriesbyPhone();
 
   }
   getCountries() {
@@ -116,6 +116,29 @@ export class SignUpComponent {
         this.general = [];
         data.forEach((country: any) => {
           this.general.push({ name: country.name, id: country.id })
+        });
+      },
+      error: err => {
+      }
+    });
+  }
+  selectCountry() {
+    const pattern = new RegExp(`^\\d{${this.isCurrentCountry.phoneLength}}$`);
+    this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(pattern)])
+    this.code= "+"+this.isCurrentCountry.phoneLength;
+  }
+  getCountriesbyPhone() {
+    this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
+      next: data => {
+        this.countriesPhone = [];
+        data.forEach((country: any) => {
+          debugger;
+          
+          this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id });
+          if(country.isCurrentCountry) {
+            this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id };
+            this.selectCountry();
+          }
         });
       },
       error: err => {
@@ -146,10 +169,8 @@ export class SignUpComponent {
       ];
       let findIndexCountry =  this.countries.findIndex(country =>country.code == "US" )
       this.selectedCountry = this.countries[findIndexCountry];
-      this.FormGroup.get("userMobileNumber")?.reset();
-      this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required,Validators.pattern(/^\d{3}-\d{3}-\d{4}$/)])
 
-      this.code= "+1";
+
       this.getCountries();
 
     } else if (lang.value.code == "AR") {
@@ -163,10 +184,7 @@ export class SignUpComponent {
       ];
       let findIndexCountry =  this.countries.findIndex(country =>country.code == "AR" )
       this.selectedCountry = this.countries[findIndexCountry];
-      this.FormGroup.get("userMobileNumber")?.reset();
 
-      this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{9}$/)])
-      this.code= "+966";
       this.getCountries();
 
     } 

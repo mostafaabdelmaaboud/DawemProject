@@ -42,11 +42,11 @@ export class AssignmentsComponent {
   columns: any[] = [
     {
       name: "رقم الطلب",
-      field: "orderNumber",
+      field: "employeeCode",
     },
     {
       name: "رقم الوظيفي",
-      field: "employeeCode",
+      field: "orderNumber",
     },
     {
       name: "اسم الموظف",
@@ -151,11 +151,11 @@ export class AssignmentsComponent {
       this.columns = [
         {
           name: data.orderNumber,
-          field: "orderNumber",
+          field: "employeeCode",
         },
         {
           name: data.jobNumber,
-          field: "employeeCode",
+          field: "orderNumber",
         },
         {
           name: data.employeeName,
@@ -194,11 +194,11 @@ export class AssignmentsComponent {
         this.columns = [
           {
             name: data.orderNumber,
-            field: "orderNumber",
+            field: "employeeCode",
           },
           {
             name: data.jobNumber,
-            field: "employeeCode",
+            field: "orderNumber",
           },
           {
             name: data.employeeName,
@@ -278,6 +278,8 @@ export class AssignmentsComponent {
 
       }
     })
+    delete filteration.PageNumber;
+
     this.getAssignments(filteration);
   }
   exportTableToExcel() {

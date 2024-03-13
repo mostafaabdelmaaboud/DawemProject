@@ -36,36 +36,27 @@ export class ResetPasswordComponent {
   constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService) {
   }
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
     this.countries = [
       { name: 'عربي', code: 'AR' },
       { name: 'انجليزي', code: 'US' }
-      // { name: 'الهند', code: 'IN' }
     ];
     if (this.route.snapshot.queryParamMap.get("email")) {
       this.email = this.route.snapshot.queryParamMap.get("email") as string;
       this.email = this.decodeQueryParameter(this.email);
-   
     };
     if (this.route.snapshot.queryParamMap.get("resetToken")) {
       this.resetToken = this.route.snapshot.queryParamMap.get("resetToken") as string;
       this.resetToken = this.decodeQueryParameter(this.resetToken);
-
-
     };
-    
     if (this.currentLang === undefined || this.currentLang === null) {
       this.countries = [
         { name: 'عربي', code: 'AR' },
         { name: 'انجليزي', code: 'US' }
-        // { name: 'الهند', code: 'IN' }
       ];
       this.selectedCountry = { name: 'عربي', code: 'AR' };
       document.documentElement.setAttribute('lang', 'ar');
       this.translate.use("ar");
     } else {
-   
       if (this.currentLang == "ar") {
         this.selectedCountry = { name: 'arabic', code: 'AR' };
         document.documentElement.setAttribute('lang', 'ar');
@@ -73,7 +64,6 @@ export class ResetPasswordComponent {
         this.countries = [
           { name: 'عربي', code: 'AR' },
           { name: 'انجليزي', code: 'US' }
-          // { name: 'الهند', code: 'IN' }
         ];
         this.selectedCountry = { name: 'عربي', code: 'AR' };
 
@@ -86,16 +76,11 @@ export class ResetPasswordComponent {
           { name: 'arabic', code: 'AR' }
         ];
         this.selectedCountry = { name: 'english', code: 'US' };
-
       } 
- 
     }
-
   }
   decodeQueryParameter(params: string): string {
-    // استخدام decodeURIComponent لإعادة تشفير القيمة بالشكل الصحيح
     const stringWithSpaces = params.replace(/ /g, '+');
-
     return decodeURIComponent(stringWithSpaces);
   }
   passwordMatchValidator(): ValidatorFn {
@@ -118,7 +103,6 @@ export class ResetPasswordComponent {
       this.countries = [
         { name: 'english', code: 'US' },
         { name: 'arabic', code: 'AR' }
-        // { name: 'India', code: 'IN' }
       ];
       let findIndexCountry =  this.countries.findIndex(country =>country.code == "US" )
       this.selectedCountry = this.countries[findIndexCountry];
@@ -133,13 +117,9 @@ export class ResetPasswordComponent {
       let findIndexCountry =  this.countries.findIndex(country =>country.code == "AR" )
       this.selectedCountry = this.countries[findIndexCountry];
     }
-
   }
   lastSearchQuery = "";
-
-
   submit() {
-
     if (this.FormGroup.valid && this.loading) {
       this.loading = false;
       // this.isLoading = true;

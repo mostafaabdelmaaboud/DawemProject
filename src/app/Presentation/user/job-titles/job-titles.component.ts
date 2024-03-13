@@ -156,7 +156,8 @@ export class JobTitlesComponent {
         }
 
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getPermissions(filteration);
   }
   exportTableToExcel() {

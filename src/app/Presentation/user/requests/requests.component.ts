@@ -40,6 +40,10 @@ export class RequestsComponent {
   ];
   columns: any[] = [
     {
+      name: "رقم الطلب",
+      field: "employeeCode",
+    },
+    {
       name: "رقم الموظف",
       field: "orderNumber",
     },
@@ -141,6 +145,10 @@ export class RequestsComponent {
     this.translate.get("requests").subscribe(data => {
       this.columns= [
         {
+          name: data.orderNumber,
+          field: "employeeCode",
+        },
+        {
           name: data.employeeNumber,
           field: "orderNumber",
         },
@@ -170,6 +178,10 @@ export class RequestsComponent {
     this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
       this.translate.get("requests").subscribe(data => {
         this.columns= [
+          {
+            name: data.orderNumber,
+            field: "employeeCode",
+          },
           {
             name: data.employeeNumber,
             field: "orderNumber",
@@ -250,12 +262,13 @@ export class RequestsComponent {
         }
 
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getRequests(filteration);
   }
   exportTableToExcel() {
     let columns = [...this.columns];
-    delete columns[5]
+    delete columns[6]
     var options = { 
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -277,6 +290,7 @@ export class RequestsComponent {
           this.requestIsExport.push({
             id: request.id,
             status: request.status,
+            employeeCode: request.code,
             orderNumber: request.employee.employeeNumber,
             employeeName: {
               name: request.employee.name,
@@ -292,6 +306,7 @@ export class RequestsComponent {
 
         let formatTable = this.requestIsExport.map(request => {
           return {
+            employeeCode: request.employeeCode,
             orderNumber: request.orderNumber,
             employeeName: request.employeeName.name,
             requestTypeName: request.requestTypeName,
@@ -370,6 +385,8 @@ export class RequestsComponent {
         this.requests.push({
           id: request.id,
           status: request.status,
+          employeeCode: request.code,
+
           orderNumber: request.employee.employeeNumber,
           employeeName: {
             name: request.employee.name,

@@ -261,11 +261,10 @@ export class UserPermissionsComponent {
       } else {
         if(value >=0) {
           filteration[key] = value;
-
         }
-
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getPermissions(filteration);
   }
   exportTableToExcel() {

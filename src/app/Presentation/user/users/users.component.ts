@@ -240,11 +240,10 @@ export class UsersComponent {
       } else {
         if(value >=0) {
           filteration[key] = value;
-
         }
-
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getUsers(filteration);
   }
   exportTableToExcel() {

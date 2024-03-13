@@ -329,7 +329,8 @@ export class SanctionsComponent {
         }
 
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getSummons(filteration);
   }
   exportTableToExcel() {

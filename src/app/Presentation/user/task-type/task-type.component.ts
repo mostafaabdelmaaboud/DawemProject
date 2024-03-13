@@ -152,11 +152,10 @@ export class TaskTypeComponent {
       } else {
         if(value >=0) {
           filteration[key] = value;
-
         }
-
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getTasks(filteration);
   }
   exportTableToExcel() {

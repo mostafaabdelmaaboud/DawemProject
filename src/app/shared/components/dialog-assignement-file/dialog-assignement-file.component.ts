@@ -75,7 +75,6 @@ export class DialogAssignementFileComponent {
 
       this.assignmentsService.assignmentGetInfo({ requestId: this.id }).subscribe(
         {
-
           next: data => {
             this.info = data;
             if (this.info?.attachments.length) {

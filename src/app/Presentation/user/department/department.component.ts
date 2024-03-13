@@ -337,7 +337,9 @@ export class DepartmentComponent {
         }
 
       }
-    })
+    });
+    delete filteration.PageNumber;
+
     this.getDepartment(filteration);
   }
   resetFilteration() {

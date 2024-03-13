@@ -418,7 +418,8 @@ export class EmployeesComponent {
         }
       }
 
-    })
+    });
+    delete filteration.PageNumber;
 
     this.getEmployees(filteration);
 

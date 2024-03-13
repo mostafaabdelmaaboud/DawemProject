@@ -483,11 +483,10 @@ export class VacationsComponent {
       } else {
         if(value >=0) {
           filteration[key] = value;
-
         }
-
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getVacations(filteration);
   }
   resetFilteration() {

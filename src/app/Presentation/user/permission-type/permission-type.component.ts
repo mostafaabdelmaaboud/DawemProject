@@ -172,7 +172,8 @@ export class PermissionTypeComponent {
         }
 
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getPermissions(filteration);
   }
   exportTableToExcel() {

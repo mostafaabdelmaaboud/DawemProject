@@ -299,11 +299,10 @@ export class SummonsComponent {
       } else {
         if(value >=0) {
           filteration[key] = value;
-
         }
-
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getSummons(filteration);
   }
   exportTableToExcel() {

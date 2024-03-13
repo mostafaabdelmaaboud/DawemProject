@@ -247,7 +247,8 @@ export class ScheduleLogsComponent {
         }
 
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getSchedules(filteration);
   }
   exportTableToExcel() {

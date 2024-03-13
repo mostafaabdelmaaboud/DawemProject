@@ -397,7 +397,7 @@ export class SchedualPlanComponent {
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
 
-      formData.id = data.row;
+      formData.id = data.id;
 
       formData.isActive = result.isActive;
 
@@ -500,7 +500,8 @@ export class SchedualPlanComponent {
         }
 
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getGroups(filteration);
   }
   exportTableToExcel() {

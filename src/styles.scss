@@ -239,8 +239,63 @@ body {
   }
 } 
 
+  .content-phone-number {
+    > input {
+      padding-right: 65px;
+}
+  }
+  .dropdown-code {
+    .p-dropdown {
+      border-left: 0;
+      height: 100%;
+      border-radius: 0 5px 5px 0;
+      -webkit-border-radius: 0 5px 5px 0;
+      -moz-border-radius: 0 5px 5px 0;
+      -ms-border-radius: 0 5px 5px 0;
+      -o-border-radius: 0 5px 5px 0;
+    }
+  }
 
+.dropdown-code {
+  position: absolute;
+  top: 1%;
+  right: 1px;
+  height: 98%;
+  .p-dropdown {
+    border: 0;
+    height: 100%;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    .p-dropdown-label {
+      padding: 5px;
+      display: flex;
+      align-items: center;
+    }
+    .p-dropdown-trigger {
+      width: initial;
+    }
+  }
+}
 
+[lang="en"] {
+  .content-phone-number {
+    > input {
+      padding-right: 15px;
+      padding-left: 65px;
+}
+  }
+  .dropdown-code {
+    position: absolute;
+    top: 1%;
+    right: initial !important;
+    left: 1px;
+    height: 98%;
+
+  }
+}
 .pont-color-green::before,
 .pont-color-blue::before {
   content: "";

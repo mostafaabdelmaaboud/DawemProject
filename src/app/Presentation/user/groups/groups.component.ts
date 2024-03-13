@@ -160,7 +160,8 @@ export class GroupsComponent {
         }
 
       }
-    })
+    });
+    delete filteration.PageNumber;
     this.getGroups(filteration);
   }
   exportTableToExcel() {
