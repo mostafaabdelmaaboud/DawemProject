@@ -37,12 +37,9 @@ export class AuthService {
  
   getCountries(filter: any) {
     let queryParams = new HttpParams();
-
     if (filter) {
       Object.entries(filter).forEach(([key, value]: any) => {
         queryParams = queryParams.set(key, value);
-
-
       })
     }
     return this.http.get<any>(`${environment.baseUrl}Lookups/GetCountries`, { params: queryParams }).pipe(map(data => data.data))

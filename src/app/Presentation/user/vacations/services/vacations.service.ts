@@ -21,7 +21,7 @@ export class VacationsService {
   }
   getInformation(): Observable<any> {
 
-    return this.http.get<any>(`${environment.baseUrl}EmployeeRequestVacation/GetVacationsInformations`).pipe(map(data => data.data));
+    return this.http.get<any>(`${environment.baseUrl}RequestVacation/GetVacationsInformations`).pipe(map(data => data.data));
   }
   deleteVacation(params: any) {
     let queryParams = new HttpParams();

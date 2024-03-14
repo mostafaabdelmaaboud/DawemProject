@@ -235,10 +235,10 @@
               {{ column.name }} <p-sortIcon field="departmentName"></p-sortIcon>
             </th>
           </ng-container>
-          <ng-container *ngIf="column.field === 'headOfDepartment'">
-            <th class="w-14" pSortableColumn="headOfDepartment.name">
+          <ng-container *ngIf="column.field === 'employeeName'">
+            <th class="w-14" pSortableColumn="employeeName.name">
 
-              {{ column.name }} <p-sortIcon field="headOfDepartment.name"></p-sortIcon>
+              {{ column.name }} <p-sortIcon field="employeeName.name"></p-sortIcon>
             </th>
           </ng-container>
           <ng-container *ngIf="column.field === 'actions'">
@@ -246,7 +246,7 @@
               {{ column.name }}
             </th>
           </ng-container>
-          <ng-container *ngIf="column.field != 'orderNumber' && column.field != 'headOfDepartment' && column.field != 'departmentName' && column.field != 'numberOfEmployeesInDepartment' && column.field != 'actions'">
+          <ng-container *ngIf="column.field != 'orderNumber' && column.field != 'employeeName' && column.field != 'departmentName' && column.field != 'numberOfEmployeesInDepartment' && column.field != 'actions'">
             <th [pSortableColumn]="column.field">
 
               {{ column.name }} <p-sortIcon [field]="column.field"></p-sortIcon>
@@ -277,7 +277,7 @@
                                   </ng-container>
 
                                 </td> -->
-          <ng-container *ngIf="column.field != 'headOfDepartment' && column.field != 'actions'">
+          <ng-container *ngIf="column.field != 'employeeName' && column.field != 'actions'">
             <td>
               <span class="p-column-title">
                 {{column.name}}
@@ -285,7 +285,7 @@
               {{ rowData[column.field] }}
             </td>
           </ng-container>
-          <td *ngIf="column.field === 'headOfDepartment'">
+          <td *ngIf="column.field === 'employeeName'">
             <span class="p-column-title">
               {{column.name}}
             </span>
@@ -415,14 +415,14 @@
               {{ column.name }}
             </th>
           </ng-container>
-          <ng-container *ngIf="column.field === 'headOfDepartment'">
-            <th pSortableColumn="headOfDepartment.name">
+          <ng-container *ngIf="column.field === 'employeeName'">
+            <th pSortableColumn="employeeName.name">
 
               {{ column.name }}
             </th>
           </ng-container>
 
-          <ng-container *ngIf="column.field != 'orderNumber' && column.field != 'headOfDepartment' && column.field != 'numberOfEmployeesInDepartment' && column.field != 'actions'">
+          <ng-container *ngIf="column.field != 'orderNumber' && column.field != 'employeeName' && column.field != 'numberOfEmployeesInDepartment' && column.field != 'actions'">
             <th [pSortableColumn]="column.field">
 
               {{ column.name }} 
@@ -436,7 +436,7 @@
   
         <ng-container *ngFor="let column of columns">
 
-          <ng-container *ngIf="column.field != 'headOfDepartment' && column.field != 'actions'">
+          <ng-container *ngIf="column.field != 'employeeName' && column.field != 'actions'">
             <td>
               <span class="p-column-title">
                 {{column.name}}
@@ -444,7 +444,7 @@
               {{ rowData[column.field] }}
             </td>
           </ng-container>
-          <td *ngIf="column.field === 'headOfDepartment'">
+          <td *ngIf="column.field === 'employeeName'">
             <span class="p-column-title">
               {{column.name}}
             </span>

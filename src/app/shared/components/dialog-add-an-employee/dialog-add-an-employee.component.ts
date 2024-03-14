@@ -218,9 +218,7 @@ export class DialogAddAnEmployeeComponent {
       });
   
       this.countriesPhone = [];
-      data.countries?.forEach((country: any) => {
-        debugger;
-        
+      data.countries?.forEach((country: any) => {        
         this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id });
         if(country.isCurrentCountry) {
           this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id };
@@ -294,10 +292,8 @@ export class DialogAddAnEmployeeComponent {
               });
               this.addBranchGroupForm.get("email")?.setValue(data.email);
               this.addBranchGroupForm.get("address")?.setValue(data.address);
-              debugger;
 
               let startIndex = data.mobileNumber.indexOf(this.code);
-              debugger;
               let slicedString= ""; 
               if(startIndex >=0) {
                 slicedString = data.mobileNumber.slice(0, startIndex);
@@ -499,7 +495,6 @@ export class DialogAddAnEmployeeComponent {
       next: data => {
         this.countriesPhone = [];
         data.forEach((country: any) => {
-          debugger;
           
           this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id });
           if(country.isCurrentCountry) {

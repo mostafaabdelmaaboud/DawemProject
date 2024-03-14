@@ -43,8 +43,8 @@ export class SectionsComponent {
       field: "departmentName",
     },
     {
-      name: "رئيس القسم",
-      field: "headOfDepartment",
+      name: "اسم الموظف",
+      field: "employeeName",
     },
     {
       name: "عدد الموظفين بالقسم",
@@ -179,22 +179,21 @@ export class SectionsComponent {
 
   }
   filter() {
-    let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
       if (typeof value  === 'string') {
         if(value != "") {
-          filteration[key] = value.trim();
+          this.filteration[key] = value.trim();
         }
       } else {
         if(value >=0) {
-          filteration[key] = value;
+          this.filteration[key] = value;
 
         }
 
       }
     });
-    delete filteration.PageNumber;
-    this.getSection(filteration);
+    delete this.filteration.PageNumber;
+    this.getSection(this.filteration);
   }
   exportTableToExcel() {
     let columns = [...this.columns];
@@ -226,7 +225,7 @@ export class SectionsComponent {
                 isActive: section.isActive,
                 orderNumber: section?.code ? section?.code : "لا يوجد",
                 departmentName: section?.name ? section?.name : "لا يوجد",
-                headOfDepartment: {
+                employeeName: {
                   name: section?.manager?.managerName ? section?.manager?.managerName : "لا يوجد",
                   alt: section?.manager?.managerName ? section?.manager?.managerName : "لا",
                   img: section?.manager?.profileImagePath ? section?.manager?.profileImagePath : "../../../../assets/img/5034901-200.png"
@@ -239,7 +238,7 @@ export class SectionsComponent {
               return {
                 orderNumber: section.orderNumber,
                 departmentName: section.departmentName,
-                headOfDepartment: section.headOfDepartment.name,
+                employeeName: section.employeeName.name,
                 numberOfEmployeesInDepartment: section.numberOfEmployeesInDepartment
               }
             })
@@ -301,7 +300,7 @@ export class SectionsComponent {
               isActive: section.isActive,
               orderNumber: section?.code ? section?.code : "لا يوجد",
               departmentName: section?.name ? section?.name : "لا يوجد",
-              headOfDepartment: {
+              employeeName: {
                 name: section?.manager?.managerName ? section?.manager?.managerName : "لا يوجد",
                 alt: section?.manager?.managerName ? section?.manager?.managerName : "لا",
                 img: section?.manager?.profileImagePath ? section?.manager?.profileImagePath : "../../../../assets/img/5034901-200.png"

@@ -88,7 +88,7 @@
       <div class="sectionTwo mb-3 line-bellow">
         <label class="title">{{"department.fingerprint"|translate}}</label>
         <ng-container *ngFor="let finger of info?.fingerprints">
-            <div class="content-password">
+            <div class="content-password content-fingerprint">
                 <span class="d-block">{{"department.howToIdentify"|translate}} {{finger?.recognitionWay ? finger?.recognitionWay : "لا يوجد"}}</span>
                 <span class="d-block">{{"department.theTime"|translate}} {{finger?.time ? finger?.time : "لا يوجد"}}</span>
                 <span class="d-block">{{"department.type"|translate}} {{finger?.type ? finger?.type : "لا يوجد"}}</span>

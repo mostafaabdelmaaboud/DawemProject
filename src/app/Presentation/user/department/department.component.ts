@@ -92,6 +92,8 @@ export class DepartmentComponent {
   page = 0;
   categories: any[] = [
   ];
+  defaultRowPerPage = { name: '5', code: 5 };
+
   private departmentService = inject(DepartmentService);
   destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -156,10 +158,8 @@ export class DepartmentComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
-
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
     ];
     this.translate.get("department").subscribe(data => {
       this.columns =  [
@@ -324,23 +324,22 @@ export class DepartmentComponent {
 
   }
   filter() {
-    let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
       if (typeof value  === 'string') {
         if(value != "") {
-          filteration[key] = value.trim();
+          this.filteration[key] = value.trim();
         }
       } else {
         if(value >=0) {
-          filteration[key] = value;
+          this.filteration[key] = value;
 
         }
 
       }
     });
-    delete filteration.PageNumber;
+    delete this.filteration.PageNumber;
 
-    this.getDepartment(filteration);
+    this.getDepartment(this.filteration);
   }
   resetFilteration() {
     this.filterForm.get("FreeText")?.setValue("");

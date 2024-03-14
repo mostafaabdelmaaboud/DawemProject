@@ -12,10 +12,10 @@
     <div class="sectionTwo mb-3 line-bellow">
       <label class="title">{{"vacations.employeeNumber"|translate}}</label>
       <div class="content-password">
-        <ng-container *ngIf="info?.employee?.code">
-          {{info?.employee?.code}}
+        <ng-container *ngIf="info?.employee?.employeeNumber">
+          {{info?.employee?.employeeNumber}}
         </ng-container>
-        <ng-container *ngIf="!info?.employee?.code">
+        <ng-container *ngIf="!info?.employee?.employeeNumber">
           {{"department.nothing"|translate}}
         </ng-container>
       </div>
@@ -56,12 +56,41 @@
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">{{"tasks.theDate"|translate}}</label>
+      <label class="title">
+        {{"tasks.startDate"|translate}}
+
+      </label>
       <div class="content-password">
         <ng-container *ngIf="info?.dateFrom">
           {{info?.dateFrom}}
         </ng-container>
         <ng-container *ngIf="!info?.dateFrom">
+          {{"department.nothing"|translate}}
+        </ng-container>
+      </div>
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">
+        {{"tasks.expiryDate"|translate}}
+      </label>
+      <div class="content-password">
+        <ng-container *ngIf="info?.dateTo">
+          {{info?.dateTo}}
+        </ng-container>
+        <ng-container *ngIf="!info?.dateTo">
+          {{"department.nothing"|translate}}
+        </ng-container>
+      </div>
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">
+        {{"tasks.forMissionTime"|translate}}
+      </label>
+      <div class="content-password">
+        <ng-container *ngIf="info?.taskTime">
+          {{info?.taskTime}}
+        </ng-container>
+        <ng-container *ngIf="!info?.taskTime">
           {{"department.nothing"|translate}}
         </ng-container>
       </div>

@@ -249,22 +249,21 @@ export class RequestsComponent {
     return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 22, actionCode: data.actionCode })
   }
   filter() {
-    let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
       if (typeof value  === 'string') {
         if(value != "") {
-          filteration[key] = value.trim();
+          this.filteration[key] = value.trim();
         }
       } else {
         if(value >=0) {
-          filteration[key] = value;
+          this.filteration[key] = value;
 
         }
 
       }
     });
-    delete filteration.PageNumber;
-    this.getRequests(filteration);
+    delete this.filteration.PageNumber;
+    this.getRequests(this.filteration);
   }
   exportTableToExcel() {
     let columns = [...this.columns];

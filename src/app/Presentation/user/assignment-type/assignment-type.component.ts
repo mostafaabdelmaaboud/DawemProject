@@ -143,21 +143,20 @@ export class AssignmentTypeComponent {
     this.getAssignments(this.filteration);
   }
   filter() {
-    let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
       if (typeof value  === 'string') {
         if(value != "") {
-          filteration[key] = value.trim();
+          this.filteration[key] = value.trim();
         }
       } else {
         if(value >=0) {
-          filteration[key] = value;
+          this.filteration[key] = value;
         }
       }
     });
-    delete filteration.PageNumber;
+    delete this.filteration.PageNumber;
 
-    this.getAssignments(filteration);
+    this.getAssignments(this.filteration);
   }
   exportTableToExcel() {
     let columns = [...this.columns];

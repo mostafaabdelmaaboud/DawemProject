@@ -106,7 +106,8 @@ export class AddUserComponent {
   ];
   @Input() id!: string;
   code="+966";
-
+  countriesPhone: any[] = [];
+  isCurrentCountry;
   viewImagesIdCopy: any[] = [];
   imageArray: any[] = [];
   errorUploadFileIdCopyIsRequired!: string;
@@ -127,7 +128,7 @@ export class AddUserComponent {
     Roles: ["", Validators.required],
     EmployeeId: ["", Validators.required],
     IsAdmin: [false],
-    idCopyFile: ['', Validators.required]
+    idCopyFile: ['']
 
   });
   uploadImages = false;
@@ -152,33 +153,16 @@ export class AddUserComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.addBranchGroupForm.get("MobileNumber")?.setValue("");
-    this.addBranchGroupForm.get("Password")?.setValue("");
-    this.loading = true;
-    if (this.translate.currentLang == "ar") {
-     
-      this.addBranchGroupForm.get("MobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{9}$/)])
-      this.code= "+966";
 
-    }
-    else if (this.translate.currentLang == "en") {
-
-      this.addBranchGroupForm.get("MobileNumber")?.setValidators([Validators.required,Validators.pattern(/^\d{3}-\d{3}-\d{4}$/)])
-      this.code= "+1";
-
-    } else if (this.translate.currentLang == "ind") {
-
-      this.addBranchGroupForm.get("MobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
-
-      this.code= "+91";
-
-    }
    
     let rolesDropDown = this.usersService.getRolesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let employeeForDropDown = this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+    let countries = this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+
     combineLatest({
       rolesDropDown,
-      employeeForDropDown
+      employeeForDropDown,
+      countries
     }).subscribe(data => {
       this.listRoles = [];
       this.listEmployees = [];
@@ -190,7 +174,15 @@ export class AddUserComponent {
       data.employeeForDropDown?.data?.forEach((jobTitle: any) => {
         this.listEmployees.push({ name: jobTitle.name, key: jobTitle.id })
       });
-
+      this.countriesPhone = [];
+      data.countries?.forEach((country: any) => {
+        
+        this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id });
+        if(country.isCurrentCountry) {
+          this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id };
+          this.selectCountry();
+        }
+      });
       if (this.editUser) {
 
 
@@ -336,6 +328,27 @@ export class AddUserComponent {
       this.loading = false;
       
     }
+  }
+  selectCountry() {
+    const pattern = new RegExp(`^\\d{${this.isCurrentCountry.phoneLength}}$`);
+    this.addBranchGroupForm.get("MobileNumber")?.setValidators([Validators.required, Validators.pattern(pattern)])
+    this.code= "+"+this.isCurrentCountry.phoneLength;
+  }
+  getCountriesbyPhone() {
+    this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
+      next: data => {
+        this.countriesPhone = [];
+        data.forEach((country: any) => {          
+          this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id });
+          if(country.isCurrentCountry) {
+            this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id };
+            this.selectCountry();
+          }
+        });
+      },
+      error: err => {
+      }
+    });
   }
   passwordMatchValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
@@ -495,7 +508,6 @@ export class AddUserComponent {
 
       this.getControl("EmployeeId")?.markAsDirty();
 
-      this.getControl("idCopyFile")?.markAsDirty();
 
 
     }

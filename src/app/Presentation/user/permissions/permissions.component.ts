@@ -35,11 +35,11 @@ export class PermissionsComponent {
   columns: any[] = [
     {
       name: "رقم الطلب",
-      field: "orderNumber",
+      field: "employeeCode",
     },
     {
       name: "رقم الوظيفي",
-      field: "employeeCode",
+      field: "orderNumber",
     },
     {
       name: "اسم الموظف",
@@ -58,13 +58,14 @@ export class PermissionsComponent {
       field: "dateFrom"
     },
     {
-      name: "لمده الأستئذان",
-      field: "period"
-    },
-    {
       name: "النهاية",
       field: "dateTo"
     },
+    {
+      name: "لمده الأستئذان",
+      field: "period"
+    },
+   
     {
       name: "الإجراء",
       field: "actions"
@@ -166,12 +167,12 @@ export class PermissionsComponent {
     this.translate.get("permissions").subscribe(data => {
       this.columns = [
         {
-          name: data.orderNumber,
-          field: "orderNumber",
-        },
-        {
           name: data.jobNumber,
           field: "employeeCode",
+        },
+        {
+          name: data.orderNumber,
+          field: "orderNumber",
         },
         {
           name: data.employeeName,
@@ -190,13 +191,14 @@ export class PermissionsComponent {
           field: "dateFrom"
         },
         {
-          name: data.forThePeriodOfAskingPermission,
-          field: "period"
-        },
-        {
           name: data.theEnd,
           field: "dateTo"
         },
+        {
+          name: data.forThePeriodOfAskingPermission,
+          field: "period"
+        },
+       
         {
           name: data.action,
           field: "actions"
@@ -207,13 +209,14 @@ export class PermissionsComponent {
       this.translate.get("permissions").subscribe(data => {
         this.columns = [
           {
-            name: data.orderNumber,
-            field: "orderNumber",
-          },
-          {
             name: data.jobNumber,
             field: "employeeCode",
           },
+          {
+            name: data.orderNumber,
+            field: "orderNumber",
+          },
+         
           {
             name: data.employeeName,
             field: "employeeName",
@@ -231,13 +234,14 @@ export class PermissionsComponent {
             field: "dateFrom"
           },
           {
-            name: data.forThePeriodOfAskingPermission,
-            field: "period"
-          },
-          {
             name: data.theEnd,
             field: "dateTo"
           },
+          {
+            name: data.forThePeriodOfAskingPermission,
+            field: "period"
+          },
+        
           {
             name: data.action,
             field: "actions"
@@ -272,22 +276,21 @@ export class PermissionsComponent {
     })
   }
   filter() {
-    let filteration = { ...this.filteration }
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
       if (typeof value  === 'string') {
         if(value != "") {
-          filteration[key] = value.trim();
+          this.filteration[key] = value.trim();
         }
       } else {
         if(value >=0) {
-          filteration[key] = value;
+          this.filteration[key] = value;
 
         }
 
       }
     });
-    delete filteration.PageNumber;
-    this.getPermissions(filteration);
+    delete this.filteration.PageNumber;
+    this.getPermissions(this.filteration);
   }
   exportTableToExcel() {
     let columns = [...this.columns];

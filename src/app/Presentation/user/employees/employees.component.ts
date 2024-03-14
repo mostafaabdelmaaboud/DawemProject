@@ -384,34 +384,33 @@ export class EmployeesComponent {
 
   }
   filter() {
-    let filteration = { ...this.filteration }
 
 
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
       if (key === "DepartmentId") {
         if (value != "") {
-          filteration[key] = value.key
+          this.filteration[key] = value.key
         }
       } else if (key === "JobTitleId") {
         if (value != "") {
-          filteration[key] = value.key
+          this.filteration[key] = value.key
         }
       } else if (key === "ScheduleId") {
         if (value != "") {
-          filteration[key] = value.key
+          this.filteration[key] = value.key
         }
       } else if (key === "DirectManagerId") {
         if (value != "") {
-          filteration[key] = value.key
+          this.filteration[key] = value.key
         }
       } else {
         if (typeof value  === 'string') {
           if(value != "") {
-            filteration[key] = value.trim();
+            this.filteration[key] = value.trim();
           }
         } else {
           if(value >=0) {
-            filteration[key] = value;
+            this.filteration[key] = value;
   
           }
   
@@ -419,9 +418,9 @@ export class EmployeesComponent {
       }
 
     });
-    delete filteration.PageNumber;
+    delete this.filteration.PageNumber;
 
-    this.getEmployees(filteration);
+    this.getEmployees(this.filteration);
 
   }
   numberOfRowsPerPage(data: any) {

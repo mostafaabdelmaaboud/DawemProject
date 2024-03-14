@@ -132,7 +132,6 @@ export class SignUpComponent {
       next: data => {
         this.countriesPhone = [];
         data.forEach((country: any) => {
-          debugger;
           
           this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id });
           if(country.isCurrentCountry) {

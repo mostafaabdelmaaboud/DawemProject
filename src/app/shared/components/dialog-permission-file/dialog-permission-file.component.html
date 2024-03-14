@@ -14,10 +14,10 @@
         {{"vacations.employeeNumber"|translate}}
       </label>
       <div class="content-password">
-        <ng-container *ngIf="info?.employee?.code">
-          {{info?.employee?.code}}
+        <ng-container *ngIf="info?.employee?.employeeNumber">
+          {{info?.employee?.employeeNumber}}
         </ng-container>
-        <ng-container *ngIf="!info?.employee?.code">
+        <ng-container *ngIf="!info?.employee?.employeeNumber">
           {{"department.nothing"|translate}}
         </ng-container>
         

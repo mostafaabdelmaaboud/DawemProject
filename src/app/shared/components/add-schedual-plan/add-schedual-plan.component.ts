@@ -382,16 +382,13 @@ export class AddSchedualPlanComponent {
     switch (type) {
       case 'EmployeeId':
         if (data.value || data.value === "") {
-          debugger;
           if (data.value !== this.lastSearchQuery) {
             this.lastSearchQuery = data.value;
             this.schedualPlanService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                debugger;
 
                 this.listEmployeeId = [];
-                debugger;
 
                 res.data?.forEach((day: any) => {
 
