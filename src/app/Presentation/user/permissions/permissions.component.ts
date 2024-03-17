@@ -709,9 +709,7 @@ export class PermissionsComponent {
         },
       });
     })
-  
     dialogRefAddCurrency.componentInstance.id = data.id
-
   }
   sendRequest(data: any) {
 

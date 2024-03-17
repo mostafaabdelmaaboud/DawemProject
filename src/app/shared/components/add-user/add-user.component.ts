@@ -177,9 +177,9 @@ export class AddUserComponent {
       this.countriesPhone = [];
       data.countries?.forEach((country: any) => {
         
-        this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id });
+        this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath });
         if(country.isCurrentCountry) {
-          this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id };
+          this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath };
           this.selectCountry();
         }
       });
@@ -256,13 +256,13 @@ export class AddUserComponent {
               this.addBranchGroupForm.get("Email")?.setValue(data.email);
               // this.addBranchGroupForm.get("Password")?.setValue(data.isNecessary);
               // this.addBranchGroupForm.get("ConfirmPassword")?.setValue(data.isNecessary);
-              let startIndex = data.mobileNumber.indexOf(this.code);
-              let slicedString= ""; 
-              if(startIndex >=0) {
-                slicedString = data.mobileNumber.slice(0, startIndex);
-                slicedString += data.mobileNumber.slice(startIndex + this.code.length);
+           
+              let findIndexCountryCode = this.countriesPhone.findIndex(country => country.id === data.mobileCountryId);
+              if(findIndexCountryCode>=0) {
+                this.isCurrentCountry = this.countriesPhone[findIndexCountryCode];
+                this.selectCountry();
               }
-              this.addBranchGroupForm.get("MobileNumber")?.setValue(slicedString);
+              this.addBranchGroupForm.get("MobileNumber")?.setValue(data.mobileNumber);
               this.addBranchGroupForm.get("IsActive")?.setValue(data.isActive);
               this.addBranchGroupForm.get("IsAdmin")?.setValue(data.isAdmin);
               this.addBranchGroupForm.get("Name")?.setValue(data.name);
@@ -339,9 +339,9 @@ export class AddUserComponent {
       next: data => {
         this.countriesPhone = [];
         data.forEach((country: any) => {          
-          this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id });
+          this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath });
           if(country.isCurrentCountry) {
-            this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id };
+            this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath };
             this.selectCountry();
           }
         });

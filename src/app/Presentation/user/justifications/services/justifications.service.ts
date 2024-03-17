@@ -22,6 +22,16 @@ export class JustificationsService {
 
     return this.http.get<any>(`${environment.baseUrl}RequestJustification/GetJustificationsInformations`).pipe(map(data => data.data));
   }
+  justificationGetInfo(params:any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}RequestJustification/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
+  }
   JustificationGetById(params: any) {
     let queryParams = new HttpParams();
 

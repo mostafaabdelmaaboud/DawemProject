@@ -801,9 +801,13 @@
     "thereIsNoGoingBackOnThisMatter":"There is no going back on this matter",
     "delete":"delete",
     "theRosaryFile":"The Rosary File"
-
-
-
+  },
+  "notifications":{
+    "notifications":"notifications",
+    "unread":"Unread",
+    "ThatAllNotificationsFromTheLast":"That’s all notifications from the last",
+    "days":"days",
+    "showAll":"Show all"
   },
   "dialogs": {
     "loading": "loading..."

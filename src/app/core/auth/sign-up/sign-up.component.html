@@ -264,7 +264,10 @@
                           <p-dropdown appendTo="body" [options]="countriesPhone" [(ngModel)]="isCurrentCountry"  [ngModelOptions]="{standalone: true}"
                  optionLabel="name" (onChange)="selectCountry()">
                           <ng-template let-option pTemplate="selectedItem">
-                            <div class="flex align-items-center gap-2" >
+                            <div class="d-flex align-items-center gap-2" >
+                              <span class="image-country-mobilePhone select-country-image">
+                                <img [src]="option.flagPath" width="25" height="25" [alt]="option.countryISOCode">
+                              </span>
                                 <div>{{ option.dial }}+</div>
                             </div>
                         </ng-template>
@@ -276,7 +279,10 @@
                             </span>
                           </ng-template>
                           <ng-template let-option pTemplate="item">
-                            {{ option.name }}
+                            <span class="image-country-mobilePhone item-c-mobilePhone">
+                              <img [src]="option.flagPath" width="30" height="30" [alt]="option.countryISOCode">
+                            </span>
+                            <span class="item-text">{{ option.name }}</span>
                           </ng-template>
                         </p-dropdown>
 

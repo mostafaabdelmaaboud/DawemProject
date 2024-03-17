@@ -15,7 +15,9 @@ import { RouterModule } from '@angular/router';
 import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AgmCoreModule } from '@agm/core';
-
+import { initializeApp } from 'firebase/app';
+import { environment } from 'src/environments/environment';
+initializeApp(environment.firebase);
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, "./assets/i18n/", ".json");
 }
@@ -29,10 +31,8 @@ registerLocaleData(en);
 
   ],
   imports: [
-
     BrowserModule,
     RouterModule,
-    // GoogleMapsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
@@ -49,10 +49,8 @@ registerLocaleData(en);
       isolate: true
     }),
 
-
   ],
   providers: [
-
     { provide: NZ_I18N, useValue: en_US },
 
     { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },

@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { LogoutComponent } from 'src/app/shared/components/logout/logout.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 import { DashboardService } from 'src/app/Presentation/user/dashboard/services/dashboard.service';
+import { MatTabChangeEvent } from "@angular/material/tabs";
 
 @Component({
   selector: 'app-side-nav-bar',
@@ -23,7 +24,6 @@ export class SideNavBarComponent {
   localization: boolean = true;
   today: number = Date.now();
   numNotification: null | string = "";
-  notificationCount = 0;
   usersMe!: any;
   isAdmin = true;
   private dialog = inject(MatDialog);
@@ -36,6 +36,21 @@ export class SideNavBarComponent {
   countries!: any[];
   selectedCountry: any;
   sideNavPosition: "start" | "end" = 'end';
+  AllLoadingNotification = true;
+  notificationFilter: any = {
+    page: 0,
+    pageSize: 10,
+  };
+
+  AllnotificationList: any[] = [];
+  checked = false;
+
+  notificationCount = 0;
+
+  notificationCountRequests = 0;
+  RequestLoadingNotification = true;
+  RequestnotificationList: any[] = [];
+  selectedTabIndex = 1;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     public translate: TranslateService,
@@ -73,13 +88,308 @@ export class SideNavBarComponent {
   showComponent(data: any) {
     return this.permissionsUserService.checkPermission({ type: "component", screenCode: data.screenCode })
   }
+  onLinkClick(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  onScrollDown() {
+    debugger;
+    console.log("scrolled!!");
+    this.RequestnotificationList = [...this.RequestnotificationList, ...this.RequestnotificationList]
+  }
+  onScrollUp() {
+    console.log("scrolled up!!");
+  }
+  isToday(dateToCheck: any): boolean {
+    const today = new Date();
+
+    const isSameDate =
+      new Date(dateToCheck).getDate() === today.getDate() &&
+      new Date(dateToCheck).getMonth() === today.getMonth() &&
+      new Date(dateToCheck).getFullYear() === today.getFullYear();
+
+    return isSameDate;
+  }
+  showAll(matGroupIndex: any) {
+    this.notificationFilter.pageSize = this.notificationCount;
+
+    this.tabChanged({ index: matGroupIndex } as MatTabChangeEvent);
+  }
+  notificationTrack(index: any, hero: any) {
+    return hero ? hero.id : undefined;
+  }
+  notificationTrackRequests(index: any, hero: any) {
+    return hero ? hero.id : undefined;
+  }
+  tabChanged(tabChangeEvent: any): void {
+    if (tabChangeEvent.index === 0) {
+      this.AllLoadingNotification = true;
+
+      delete this.notificationFilter.type;
+      // this.webSocketService
+      //   .notificationList(this.notificationFilter)
+      //   .subscribe((data) => {
+      //     this.notificationCount = data.count;
+      //     this.AllnotificationList = data.rows;
+      //     this.AllLoadingNotification = false;
+      //     this.changeDetectorRef.detectChanges();
+      //   });
+      this.notificationCount = 22;
+      this.AllnotificationList = [
+        {
+          titleEn:"dsadas",
+          id:"asddas4sad545450",
+          body:{
+            descriptionEn:"dsadsadsasadsa sadas a",
+            createdAt:"22/10/2010"
+          }
+        }
+      ];
+      this.AllLoadingNotification = false;
+      this.changeDetectorRef.detectChanges();
+
+    } else {
+      this.RequestLoadingNotification = true;
+
+      this.notificationFilter.type = "request";
+      // this.webSocketService
+      //   .notificationList(this.notificationFilter)
+      //   .subscribe((data) => {
+      //     this.notificationCountRequests = data.count;
+      //     this.RequestnotificationList = data.rows;
+      //     this.RequestLoadingNotification = false;
+      //     this.changeDetectorRef.detectChanges();
+      //   });
+      this.notificationCountRequests = 22;
+      this.RequestnotificationList =  [
+        {
+          titleEn:"dsadas",
+          id:"asddas4sad545450",
+          body:{
+            descriptionEn:"dsadsadsasadsa sadas a",
+            reason:"dsadsdasdsadsa",
+            createdAt:"22/10/2010"
+          }
+        }
+      ];;
+      this.RequestLoadingNotification = false;
+      this.changeDetectorRef.detectChanges();
+    }
+  }
   componentName(data: any): string {
     let findIndexPermission = (this.getPermissions()?.availablePermissions as any[]).findIndex(permission => permission.screenCode === data.screenCode);
     return this.getPermissions()?.availablePermissions[findIndexPermission]?.screenName
 
   }
-  numberNotification() {
+  numberNotification(groupIndex: any) {
     this.numNotification = "";
+    this.AllnotificationList = [];
+    this.RequestnotificationList = [];
+    this.AllLoadingNotification = true;
+    this.RequestLoadingNotification = true;
+
+    delete this.notificationFilter.type;
+    // this.webSocketService
+    //   .notificationList(this.notificationFilter)
+    //   .subscribe((data) => {
+    //     this.notificationCount = data.count;
+    //     this.AllnotificationList = data.rows;
+    //     this.AllLoadingNotification = false;
+    //     this.changeDetectorRef.detectChanges();
+    //   });
+
+    // fack
+            this.notificationCount = 22;
+        this.AllnotificationList = [
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          }
+        ];
+        this.AllLoadingNotification = false;
+        this.changeDetectorRef.detectChanges();
+    this.notificationFilter.type = "request";
+    // this.webSocketService
+    //   .notificationList(this.notificationFilter)
+    //   .subscribe((data) => {
+    //     this.notificationCountRequests = data.count;
+    //     this.RequestnotificationList = data.rows;
+    //     this.RequestLoadingNotification = false;
+    //     this.changeDetectorRef.detectChanges();
+    //   });
+    //fack
+            this.notificationCountRequests = 22;
+        this.RequestnotificationList =  [
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+
+
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+
+          {
+            titleEn:"dsadas",
+            id:"asddas4sad545450",
+            body:{
+              descriptionEn:"dsadsadsasadsa sadas a",
+              createdAt:"22/10/2010"
+            }
+          },
+        ];
+        this.RequestLoadingNotification = false;
+        this.changeDetectorRef.detectChanges();
   }
 
   ngOnInit(): void {

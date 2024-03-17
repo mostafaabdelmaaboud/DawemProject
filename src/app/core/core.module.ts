@@ -23,6 +23,11 @@ import { NotPermissionComponent } from '../layout/not-permission/not-permission.
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { TranslateModule } from '@ngx-translate/core';
+import {MatMenuModule} from '@angular/material/menu';
+import { TabViewModule } from 'primeng/tabview';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { InfiniteScrollModule } from "ngx-infinite-scroll";
 
 
 @NgModule({
@@ -38,10 +43,14 @@ import { TranslateModule } from '@ngx-translate/core';
     MatToolbarModule,
     MatIconModule,
     NgbDropdownModule,
+    MatMenuModule,
+    TabViewModule,
     TranslateModule,
     DropdownModule,
     ScrollingModule,
     MatSidenavModule,
+    MatProgressSpinnerModule,
+    InputSwitchModule,
     MatDialogModule,
     MatListModule,
     NzLayoutModule,
@@ -50,6 +59,8 @@ import { TranslateModule } from '@ngx-translate/core';
     NzIconModule,
     NzSelectModule,
     InputTextModule,
+    InfiniteScrollModule,
+
 
   ],
   providers: [CookieService, AuthGuard],

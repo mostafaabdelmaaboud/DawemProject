@@ -133,9 +133,9 @@ export class SignUpComponent {
         this.countriesPhone = [];
         data.forEach((country: any) => {
           
-          this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id });
+          this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath });
           if(country.isCurrentCountry) {
-            this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id };
+            this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath };
             this.selectCountry();
           }
         });
@@ -245,9 +245,9 @@ export class SignUpComponent {
         companyEmail: this.FormGroup.value.companyEmail,
         password: this.FormGroup.value.password,
         confirmPassword: this.FormGroup.value.confirmPassword,
-
         userEmail: this.FormGroup.value.userEmail,
-        userMobileNumber: this.code + this.FormGroup.value.userMobileNumber,
+        userMobileCountryId:this.isCurrentCountry.id,
+        userMobileNumber:this.FormGroup.value.userMobileNumber,
         agreed: this.FormGroup.value.agreed ? this.FormGroup.value.agreed[0] : false,
       };
 

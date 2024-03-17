@@ -18,6 +18,33 @@ mat-sidenav {
   width: 88%;
   white-space: break-spaces;
 }
+/*---start notification---*/
+.header-notifications {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid rgba(222, 226, 230, 1);
+}
+.search-results {
+  height: 20rem;
+  overflow-y: scroll;
+}
+.title-notification {
+  font-size: 18px;
+}
+.unread {
+  display: flex;
+  align-items: center;
+}
+
+.icon-number-notification:empty {
+  padding: 0 !important;
+}
+.unread span {
+  margin-left: 7px;
+}
+/*---end notification---*/
 
 @media (min-width: 414px)and (max-width: 415px) {
   mat-sidenav-container {

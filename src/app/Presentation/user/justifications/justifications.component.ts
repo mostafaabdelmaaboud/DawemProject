@@ -16,6 +16,8 @@ import { PermissionsUserService } from 'src/app/shared/services/permissions-user
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
+import { DialogPermissionFileComponent } from 'src/app/shared/components/dialog-permission-file/dialog-permission-file.component';
+import { DialogJustificationFileComponent } from 'src/app/shared/components/dialog-justification-file/dialog-justification-file.component';
 @Component({
   selector: 'app-justifications',
   templateUrl: './justifications.component.html',
@@ -336,6 +338,15 @@ export class JustificationsComponent {
       });
 
     }
+  }
+  dialogJustificationFile(data: any) {
+    let dialogRefAddCurrency = this.dialog.open(DialogJustificationFileComponent, {
+      width: "60vw",
+      data: {
+        title: "ملف التبرير"
+      },
+    });
+    dialogRefAddCurrency.componentInstance.id = data.id
   }
   filter() {
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {

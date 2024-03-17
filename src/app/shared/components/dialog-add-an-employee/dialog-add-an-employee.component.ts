@@ -219,9 +219,9 @@ export class DialogAddAnEmployeeComponent {
   
       this.countriesPhone = [];
       data.countries?.forEach((country: any) => {        
-        this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id });
+        this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath });
         if(country.isCurrentCountry) {
-          this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id };
+          this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id,flagPath:country.flagPath  };
           this.selectCountry();
         }
       });
@@ -293,13 +293,12 @@ export class DialogAddAnEmployeeComponent {
               this.addBranchGroupForm.get("email")?.setValue(data.email);
               this.addBranchGroupForm.get("address")?.setValue(data.address);
 
-              let startIndex = data.mobileNumber.indexOf(this.code);
-              let slicedString= ""; 
-              if(startIndex >=0) {
-                slicedString = data.mobileNumber.slice(0, startIndex);
-                slicedString += data.mobileNumber.slice(startIndex + this.code.length);
+              let findIndexCountryCode = this.countriesPhone.findIndex(country => country.id === data.mobileCountryId);
+              if(findIndexCountryCode>=0) {
+                this.isCurrentCountry = this.countriesPhone[findIndexCountryCode];
+                this.selectCountry();
               }
-              this.addBranchGroupForm.get("mobileNumber")?.setValue(slicedString);
+              this.addBranchGroupForm.get("mobileNumber")?.setValue(data.mobileNumber);
 
               this.addBranchGroupForm.get("AttendanceType")?.setValue(data.attendanceType.toString());
               this.addBranchGroupForm.get("name")?.setValue(data.name);
@@ -496,9 +495,9 @@ export class DialogAddAnEmployeeComponent {
         this.countriesPhone = [];
         data.forEach((country: any) => {
           
-          this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id });
+          this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath  });
           if(country.isCurrentCountry) {
-            this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id };
+            this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath  };
             this.selectCountry();
           }
         });

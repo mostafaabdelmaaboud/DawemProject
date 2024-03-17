@@ -1033,7 +1033,7 @@
             
           </div>
         </div>
-        <div class="section-left-sidebar d-flex">
+        <div class="section-left-sidebar d-flex align-items-center">
           <div class="localization">
             <p-dropdown [options]="countries" [(ngModel)]="selectedCountry" (onChange)="changeLanguage($event)"
             optionLabel="name">
@@ -1070,7 +1070,302 @@
             </ng-template>
           </p-dropdown>
           </div>
-   
+          <!-- <div class="search-results"  infiniteScroll
+          [infiniteScrollDistance]="2"
+          [infiniteScrollThrottle]="50"
+          (scrolled)="onScroll()">
+
+          </div> -->
+          <mat-toolbar style="background-color: transparent !important;">
+            <mat-toolbar-row class="d-flex justify-content-end mat-header-notification">
+              <div style="display: flex;padding: 0 15px;">
+                <!-- <div class="col-lg-1">
+                  <i class="fa fa-gear" style="font-size:27px;margin-top: 6px;color: #6C757D;"></i>
+                </div> -->
+                <div class="dropdown dropdownUserInfo d-inline-block ml-1 mr-5">
+                  <a type="button" class=" position-relative dropdownNotification"
+                    (click)="$event.stopPropagation();numberNotification(selectedTabIndex)"
+                    [matMenuTriggerFor]="notification">
+                    <i class="bi bi-bell-fill" style="font-size:26px;margin-top: 6px;"></i>
+    
+                    <span
+                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill icon-number-notification"
+                      [class.p-0]="!numNotification"
+                      style="margin-left: -0.18em; top: 5px !important;color: rgb(63, 22, 22);background-color: #ED7723;">
+                      {{numNotification}}
+                    </span>
+                  </a>
+    
+                  <mat-menu #notification="matMenu" style="margin-top: 1em;"
+                    class="dropdown-menu userDropDown deropdownNotification">
+                    <span class="dropdown-menu-arrow"></span>
+                    <div class="custom-mat-group custom-mat-group-notifaction" (click)="onLinkClick($event)">
+                      <div class="header-notifications">
+                        <h6 class="title-notification m-0">{{'notifications.notifications' | translate}}</h6>
+                        <div class="unread">
+                          <p-inputSwitch [(ngModel)]="checked"></p-inputSwitch>
+                          <span>{{'notifications.unread' | translate}}</span>
+                        </div>
+                      </div>  
+                  
+
+                      <div class="search-results"  
+                      infiniteScroll
+                      [infiniteScrollDistance]="2"
+                      [infiniteScrollThrottle]="500"
+                      [fromRoot]="true"
+                      (scrolled)="onScrollDown()"
+                      (scrolledUp)="onScrollUp()"
+                      [scrollWindow]="false">
+                        <ng-container *ngIf="!RequestLoadingNotification && RequestnotificationList.length > 0">
+                          <ng-container
+                            *ngFor="let notification of RequestnotificationList; trackBy:notificationTrackRequests">
+                            <div class="item-notification">
+
+                              <div>
+                                <h5>
+                                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.5" y="0.5" width="39" height="39" rx="19.5" fill="#F7F2F9" />
+                                    <path
+                                      d="M6.66667 36C6.66667 36 4 36 4 33.3333C4 30.6667 6.66667 22.6667 20 22.6667C33.3333 22.6667 36 30.6667 36 33.3333C36 36 33.3333 36 33.3333 36H6.66667ZM20 20C22.1217 20 24.1566 19.1571 25.6569 17.6569C27.1571 16.1566 28 14.1217 28 12C28 9.87827 27.1571 7.84344 25.6569 6.34315C24.1566 4.84285 22.1217 4 20 4C17.8783 4 15.8434 4.84285 14.3431 6.34315C12.8429 7.84344 12 9.87827 12 12C12 14.1217 12.8429 16.1566 14.3431 17.6569C15.8434 19.1571 17.8783 20 20 20Z"
+                                      fill="#212529" />
+                                    <rect x="0.5" y="0.5" width="39" height="39" rx="19.5" stroke="#CCCCCC" />
+                                  </svg>
+                                  <span class="ml-2 t-image-header-notification">Assignment - {{notification.titleEn}}</span>
+                                  
+                                </h5>
+                                <p>{{notification.body.descriptionEn}}</p>
+                                <p class="parg-reason">
+                                  <span class="d-block">Reason</span>
+                                  <ng-container *ngIf="notification?.body?.reason != undefined">
+                                    {{notification?.body?.reason}}
+                                  </ng-container>
+                                  <ng-container *ngIf="notification?.body?.reason === undefined">
+                                    {{'department.nothing' | translate}}
+                                  </ng-container>
+                                </p>
+                                <span class="footer-list-notification mb-2 d-block">SAP Analytics .
+                                  <ng-container *ngIf="isToday(notification.createdAt)">
+                                    {{notification.createdAt | date:'hh:mm'}}
+
+                                  </ng-container>
+                                  <ng-container *ngIf="!isToday(notification.createdAt)">
+                                    {{notification.createdAt | date:'dd/MM/YYYY'}}
+
+                                  </ng-container>
+
+                                </span>
+                                <div class="actions-notification list-action-button mb-3">
+
+                                  <button class="btn btn-secondary border-gray me-2">Cancel
+                                  </button>
+                                  <button class="btn btn-primary cashline-btn">Confirm
+                                  </button>
+                                </div>
+                              </div>
+                              <hr class="dropdown-divider">
+                            </div>
+                            
+                          </ng-container>
+                        </ng-container>
+                     
+
+                      </div>
+                      <div class="loading-section" *ngIf="RequestLoadingNotification">
+                        <div class="spinner d-flex justify-content-center align-items-center">
+                          <mat-spinner></mat-spinner>
+                        </div>
+                      </div>
+                    
+                      <!-- <p-tabView #tabView (onChange)="tabChanged($event)" [(activeIndex)]="selectedTabIndex">
+                        <p-tabPanel header="All">
+                          <div>
+                                <ng-container *ngIf="!AllLoadingNotification && AllnotificationList.length > 0">
+                        <ng-container *ngFor="let notification of AllnotificationList; trackBy:notificationTrack">
+                          <div class="item-notification">
+
+                            <div>
+                              <h5>
+                                <i class="bi bi-exclamation-circle text-warning  icon-message"></i>
+                                {{notification.titleEn}}
+                              </h5>
+                              <p>{{notification.body.descriptionEn}}</p>
+                              <span class="footer-list-notification">SAP Analytics .
+                                <ng-container *ngIf="isToday(notification.createdAt)">
+                                  {{notification.createdAt | date:'hh:mm'}}
+
+                                </ng-container>
+                                <ng-container *ngIf="!isToday(notification.createdAt)">
+                                  {{notification.createdAt | date:'dd/MM/YYYY'}}
+
+                                </ng-container>
+                              </span>
+                            </div>
+                          </div>
+                          <hr class="dropdown-divider">
+                            <div class="loading-section" *ngIf="AllLoadingNotification">
+                        <div class="spinner d-flex justify-content-center align-items-center">
+                          <mat-spinner></mat-spinner>
+                        </div>
+                      </div>
+                        </ng-container>
+                      </ng-container>
+
+                          </div>
+                        </p-tabPanel>
+                        <p-tabPanel header="Requests">
+                          <div>
+                            <ng-container *ngIf="!RequestLoadingNotification && RequestnotificationList.length > 0">
+                              <ng-container
+                                *ngFor="let notification of RequestnotificationList; trackBy:notificationTrackRequests">
+                                <div class="item-notification">
+    
+                                  <div>
+                                    <h5>
+                                      <svg width="40" height="40" viewBox="0 0 40 40" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="0.5" y="0.5" width="39" height="39" rx="19.5" fill="#F7F2F9" />
+                                        <path
+                                          d="M6.66667 36C6.66667 36 4 36 4 33.3333C4 30.6667 6.66667 22.6667 20 22.6667C33.3333 22.6667 36 30.6667 36 33.3333C36 36 33.3333 36 33.3333 36H6.66667ZM20 20C22.1217 20 24.1566 19.1571 25.6569 17.6569C27.1571 16.1566 28 14.1217 28 12C28 9.87827 27.1571 7.84344 25.6569 6.34315C24.1566 4.84285 22.1217 4 20 4C17.8783 4 15.8434 4.84285 14.3431 6.34315C12.8429 7.84344 12 9.87827 12 12C12 14.1217 12.8429 16.1566 14.3431 17.6569C15.8434 19.1571 17.8783 20 20 20Z"
+                                          fill="#212529" />
+                                        <rect x="0.5" y="0.5" width="39" height="39" rx="19.5" stroke="#CCCCCC" />
+                                      </svg>
+                                      Assignment - {{notification.titleEn}}
+                                    </h5>
+                                    <p>{{notification.body.descriptionEn}}</p>
+                                    <p class="parg-reason">
+                                      <span class="d-block">Reason</span>
+                                      <ng-container *ngIf="notification?.body?.reason != undefined">
+                                        {{notification?.body?.reason}}
+                                      </ng-container>
+                                      <ng-container *ngIf="notification?.body?.reason === undefined">
+                                        empty
+                                      </ng-container>
+                                    </p>
+                                    <span class="footer-list-notification">SAP Analytics .
+                                      <ng-container *ngIf="isToday(notification.createdAt)">
+                                        {{notification.createdAt | date:'hh:mm'}}
+    
+                                      </ng-container>
+                                      <ng-container *ngIf="!isToday(notification.createdAt)">
+                                        {{notification.createdAt | date:'dd/MM/YYYY'}}
+    
+                                      </ng-container>
+    
+                                    </span>
+                                    <div class="actions-notification list-action-button">
+    
+                                      <button class="btn btn-secondary border-gray me-2">Cancel
+                                      </button>
+                                      <button class="btn btn-primary cashline-btn">Confirm
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <hr class="dropdown-divider">
+                              </ng-container>
+                            </ng-container>
+                            <div class="loading-section" *ngIf="RequestLoadingNotification">
+                              <div class="spinner d-flex justify-content-center align-items-center">
+                                <mat-spinner></mat-spinner>
+                              </div>
+                            </div>
+    
+                          </div>
+                        </p-tabPanel>
+                      </p-tabView> -->
+                    </div>
+                    <!-- <ng-container *ngIf="selectedTabIndex === 0">
+                      <div mat-menu-item class="footer-notification" (click)="$event.stopPropagation()">
+                        <div class="img-notification d-block">
+                          <svg width="101" height="80" viewBox="0 0 101 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                              d="M25.7 53.6H62.1C62.3059 53.6 62.5067 53.5777 62.7 53.5355C62.8933 53.5777 63.094 53.6 63.3 53.6H84.1C85.6464 53.6 86.9 52.3464 86.9 50.8C86.9 49.2536 85.6464 48 84.1 48H81.7C80.1536 48 78.9 46.7464 78.9 45.2C78.9 43.6536 80.1536 42.4 81.7 42.4H89.3C90.8464 42.4 92.1 41.1464 92.1 39.6C92.1 38.0536 90.8464 36.8 89.3 36.8H80.5C82.0464 36.8 83.3 35.5464 83.3 34C83.3 32.4536 82.0464 31.2 80.5 31.2H54.9C56.4464 31.2 57.7 29.9464 57.7 28.4C57.7 26.8536 56.4464 25.6 54.9 25.6H32.1C30.5536 25.6 29.3 26.8536 29.3 28.4C29.3 29.9464 30.5536 31.2 32.1 31.2H16.1C14.5536 31.2 13.3 32.4536 13.3 34C13.3 35.5464 14.5536 36.8 16.1 36.8H26.1C27.6464 36.8 28.9 38.0536 28.9 39.6C28.9 41.1464 27.6464 42.4 26.1 42.4H10.1C8.55359 42.4 7.29999 43.6536 7.29999 45.2C7.29999 46.7464 8.55359 48 10.1 48H25.7C24.1536 48 22.9 49.2536 22.9 50.8C22.9 52.3464 24.1536 53.6 25.7 53.6ZM90.9 53.6C92.4464 53.6 93.7 52.3464 93.7 50.8C93.7 49.2536 92.4464 48 90.9 48C89.3536 48 88.1 49.2536 88.1 50.8C88.1 52.3464 89.3536 53.6 90.9 53.6Z"
+                              fill="#FBE4D4" />
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                              d="M45.7474 44.9226C45.7162 45.1439 45.7 45.37 45.7 45.6C45.7 48.2509 47.849 50.4 50.5 50.4C53.151 50.4 55.3 48.2509 55.3 45.6C55.3 45.37 55.2838 45.1439 55.2526 44.9226H66.9V55.6C66.9 56.2627 66.3627 56.8 65.7 56.8H35.3C34.6373 56.8 34.1 56.2627 34.1 55.6V44.9226H45.7474Z"
+                              fill="white" />
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                              d="M55.7 44.8C55.7 47.6719 53.3719 50 50.5 50C47.6281 50 45.3 47.6719 45.3 44.8C45.3 44.707 45.3024 44.6145 45.3073 44.5227H34.1L37.9242 33.2156C38.089 32.7281 38.5463 32.4 39.0609 32.4H61.9391C62.4537 32.4 62.911 32.7281 63.0758 33.2156L66.9 44.5227H55.6927C55.6976 44.6145 55.7 44.707 55.7 44.8Z"
+                              fill="white" />
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                              d="M54.939 45.1818C54.939 47.401 52.9516 49.6 50.5 49.6C48.0484 49.6 46.061 47.401 46.061 45.1818C46.061 45.1099 46.0631 44.6385 46.0672 44.5675H37.7L40.9646 36.6302C41.1053 36.2535 41.4957 36 41.9349 36H59.0651C59.5044 36 59.8947 36.2535 60.0355 36.6302L63.3 44.5675H54.9328C54.937 44.6385 54.939 45.1099 54.939 45.1818Z"
+                              fill="#E9ECEF" />
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                              d="M34.6 44.6049V55.2C34.6 55.5866 34.9134 55.9 35.3 55.9H65.7C66.0866 55.9 66.4 55.5866 66.4 55.2V44.6049L62.6022 33.3758C62.506 33.0914 62.2393 32.9 61.9391 32.9H39.0609C38.7608 32.9 38.494 33.0914 38.3978 33.3758L34.6 44.6049Z"
+                              stroke="#6C757D" stroke-width="2.5" />
+                            <path
+                              d="M39.7002 44.4C41.2748 44.4 42.9741 44.4 44.7981 44.4C45.5487 44.4 45.5487 44.9275 45.5487 45.2C45.5487 47.851 47.7471 50 50.4591 50C53.1711 50 55.3695 47.851 55.3695 45.2C55.3695 44.9275 55.3695 44.4 56.12 44.4H66.1002M36.7297 44.4H37.7002H36.7297Z"
+                              stroke="#6C757D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <path
+                              d="M60.5399 23.3211L56.1 28.3023M50.1399 21.6V28.3023V21.6ZM39.7 23.3211L44.1399 28.3023L39.7 23.3211Z"
+                              stroke="#ADB5BD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                        </div>
+                        <p class="m-0">That’s all notifications from the last {{notificationCount}} days.</p>
+    
+    
+    
+    
+                        <a style="color: black;" (click)="$event.stopPropagation(); showAll(selectedTabIndex)">Show
+                          all</a>
+    
+                      </div>
+                    </ng-container> -->
+                    <ng-container *ngIf="selectedTabIndex === 1">
+                      <ng-container *ngIf="RequestnotificationList.length > 0">
+                        <ng-container *ngIf="notificationFilter.pageSize < notificationCountRequests">
+                          <div mat-menu-item class="footer-notification" (click)="$event.stopPropagation()">
+                            <div class="img-notification d-block">
+                              <svg width="101" height="80" viewBox="0 0 101 80" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                  d="M25.7 53.6H62.1C62.3059 53.6 62.5067 53.5777 62.7 53.5355C62.8933 53.5777 63.094 53.6 63.3 53.6H84.1C85.6464 53.6 86.9 52.3464 86.9 50.8C86.9 49.2536 85.6464 48 84.1 48H81.7C80.1536 48 78.9 46.7464 78.9 45.2C78.9 43.6536 80.1536 42.4 81.7 42.4H89.3C90.8464 42.4 92.1 41.1464 92.1 39.6C92.1 38.0536 90.8464 36.8 89.3 36.8H80.5C82.0464 36.8 83.3 35.5464 83.3 34C83.3 32.4536 82.0464 31.2 80.5 31.2H54.9C56.4464 31.2 57.7 29.9464 57.7 28.4C57.7 26.8536 56.4464 25.6 54.9 25.6H32.1C30.5536 25.6 29.3 26.8536 29.3 28.4C29.3 29.9464 30.5536 31.2 32.1 31.2H16.1C14.5536 31.2 13.3 32.4536 13.3 34C13.3 35.5464 14.5536 36.8 16.1 36.8H26.1C27.6464 36.8 28.9 38.0536 28.9 39.6C28.9 41.1464 27.6464 42.4 26.1 42.4H10.1C8.55359 42.4 7.29999 43.6536 7.29999 45.2C7.29999 46.7464 8.55359 48 10.1 48H25.7C24.1536 48 22.9 49.2536 22.9 50.8C22.9 52.3464 24.1536 53.6 25.7 53.6ZM90.9 53.6C92.4464 53.6 93.7 52.3464 93.7 50.8C93.7 49.2536 92.4464 48 90.9 48C89.3536 48 88.1 49.2536 88.1 50.8C88.1 52.3464 89.3536 53.6 90.9 53.6Z"
+                                  fill="#FBE4D4" />
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                  d="M45.7474 44.9226C45.7162 45.1439 45.7 45.37 45.7 45.6C45.7 48.2509 47.849 50.4 50.5 50.4C53.151 50.4 55.3 48.2509 55.3 45.6C55.3 45.37 55.2838 45.1439 55.2526 44.9226H66.9V55.6C66.9 56.2627 66.3627 56.8 65.7 56.8H35.3C34.6373 56.8 34.1 56.2627 34.1 55.6V44.9226H45.7474Z"
+                                  fill="white" />
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                  d="M55.7 44.8C55.7 47.6719 53.3719 50 50.5 50C47.6281 50 45.3 47.6719 45.3 44.8C45.3 44.707 45.3024 44.6145 45.3073 44.5227H34.1L37.9242 33.2156C38.089 32.7281 38.5463 32.4 39.0609 32.4H61.9391C62.4537 32.4 62.911 32.7281 63.0758 33.2156L66.9 44.5227H55.6927C55.6976 44.6145 55.7 44.707 55.7 44.8Z"
+                                  fill="white" />
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                  d="M54.939 45.1818C54.939 47.401 52.9516 49.6 50.5 49.6C48.0484 49.6 46.061 47.401 46.061 45.1818C46.061 45.1099 46.0631 44.6385 46.0672 44.5675H37.7L40.9646 36.6302C41.1053 36.2535 41.4957 36 41.9349 36H59.0651C59.5044 36 59.8947 36.2535 60.0355 36.6302L63.3 44.5675H54.9328C54.937 44.6385 54.939 45.1099 54.939 45.1818Z"
+                                  fill="#E9ECEF" />
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                  d="M34.6 44.6049V55.2C34.6 55.5866 34.9134 55.9 35.3 55.9H65.7C66.0866 55.9 66.4 55.5866 66.4 55.2V44.6049L62.6022 33.3758C62.506 33.0914 62.2393 32.9 61.9391 32.9H39.0609C38.7608 32.9 38.494 33.0914 38.3978 33.3758L34.6 44.6049Z"
+                                  stroke="#6C757D" stroke-width="2.5" />
+                                <path
+                                  d="M39.7002 44.4C41.2748 44.4 42.9741 44.4 44.7981 44.4C45.5487 44.4 45.5487 44.9275 45.5487 45.2C45.5487 47.851 47.7471 50 50.4591 50C53.1711 50 55.3695 47.851 55.3695 45.2C55.3695 44.9275 55.3695 44.4 56.12 44.4H66.1002M36.7297 44.4H37.7002H36.7297Z"
+                                  stroke="#6C757D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                                <path
+                                  d="M60.5399 23.3211L56.1 28.3023M50.1399 21.6V28.3023V21.6ZM39.7 23.3211L44.1399 28.3023L39.7 23.3211Z"
+                                  stroke="#ADB5BD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                              </svg>
+                            </div>
+                            <p class="m-0">{{'notifications.ThatAllNotificationsFromTheLast' | translate}} {{notificationCountRequests}} {{'notifications.days' | translate}}.</p>
+    
+    
+    
+    
+                            <a style="color: black;" (click)="$event.stopPropagation(); showAll(selectedTabIndex)">{{'notifications.showAll' | translate}}</a>
+    
+                          </div>
+                        </ng-container>
+                      </ng-container>
+    
+    
+                    </ng-container>
+    
+                  </mat-menu>
+                </div>
+    
+    
+              </div>
+    
+            </mat-toolbar-row>
+          </mat-toolbar>
+<!--    
           <div class="users users-header d-flex align-items-center">
             <ul class="list-unstyled ul-users p-0 m-0 d-flex">
 
@@ -1096,7 +1391,7 @@
                 +
               </li>
             </ul>
-          </div>
+          </div> -->
           <div style="display: flex;">
 
             <!-- <div class="relative dropdownLocalization">

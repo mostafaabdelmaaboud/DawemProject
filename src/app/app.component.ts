@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { PrimeNGConfig } from 'primeng/api';
+import { getMessaging, getToken } from 'firebase/messaging';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -33,6 +34,27 @@ export class AppComponent {
 
     // }
 
+  }
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    this.requestPermission();
+  }
+  requestPermission() {
+    const messaging = getMessaging();
+    getToken(messaging, {vapidKey:environment.firebase.vapidKey}).then(
+    (currentToken) => {
+      if(currentToken) {
+        debugger;
+        console.log("yeah we have token")
+        console.log(currentToken);
+      } else {
+        debugger;
+
+        console.log("we have a problem")
+      }
+    }
+    )
   }
 
 }

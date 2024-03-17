@@ -799,8 +799,13 @@
     "thereIsNoGoingBackOnThisMatter":"لا يمكن الرجوع في في هذا الأمر",
     "delete":"حذف",
     "theRosaryFile":"ملف الوردية"
-
-
+  },
+  "notifications":{
+    "notifications":"إشعارات",
+    "unread":"غير مقروءة",
+    "ThatAllNotificationsFromTheLast":"هذه جميع الإخطارات من أخر",
+    "days":"يومًا",
+    "showAll":"عرض الكل"
 
 
   },

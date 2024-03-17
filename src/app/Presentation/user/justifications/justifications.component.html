@@ -340,6 +340,9 @@
               <button *ngIf="rowData.status === 0 && showActions({actionCode:1})" type="button"
                 class="btn btn-outline-secondary action-accept color-green" (click)="editJustification(rowData)"><i
                   class="bi bi-pencil-square"></i></button>
+                  <button type="button" *ngIf="rowData.status === 0 && showActions({actionCode:3})"
+                  class="btn btn-outline-secondary action-close color-blue" (click)="dialogJustificationFile(rowData)"><i
+                    class="bi bi-person-vcard"></i></button>
               <button *ngIf="rowData.status === 0 && showActions({actionCode:4})" type="button" (click)="sendRequest(rowData)"
                 class="btn btn-outline-secondary action-accept color-green"><i class="bi bi-check-circle"></i></button>
               <button *ngIf="rowData.status === 0 && showActions({actionCode:5})" type="button" (click)="reasonOfRefuse(rowData)"
