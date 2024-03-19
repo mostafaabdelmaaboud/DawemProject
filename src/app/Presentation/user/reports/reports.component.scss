@@ -1,0 +1,56 @@
+
+
+
+
+.spinner  {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+
+@media (max-width:960px) {
+    :host ::ng-deep .table-basic #tableReport .p-datatable-tfoot>tr>td {
+      display: block !important;
+    }
+  }
+  #tableReportHidden,
+  .title-table {
+    letter-spacing: normal !important;
+  
+  }
+  .logoTable {
+    img {
+      width: 180px;
+      height: 50px;
+      object-fit: scale-down
+    }
+  }
+  .hideTable {
+    overflow: hidden;
+    width: 1316px;
+    height: 0;
+    #tableReportHidden {
+      position: relative;
+      width: 1316px;
+
+      left: -100%;
+    }
+  }
+  :host ::ng-deep  #tableReportHidden .p-datatable .p-datatable-header {
+    background-color: white !important;
+  }
+  :host ::ng-deep .p-datatable .p-datatable-thead > tr > th,
+  :host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    padding: 5px;
+    font-size: 13px !important;
+  }
+  :host ::ng-deep .p-datatable .p-sortable-column .p-sortable-column-icon {
+    margin: 0 !important;
+    font-size: 9px !important;
+    width: 12px !important;
+  }
+

@@ -151,8 +151,22 @@ body {
   font-style: normal;
   font-weight: 700;
 }
-
-
+p-calendar.ng-dirty.ng-invalid .p-calendar .p-button {
+  border-color: #e24c4c !important;
+}
+.content-pCalendar-default .p-button {
+  background-color: transparent;
+  color: rgb(48, 133, 254) !important;
+  border-color: #ced4da !important;
+  border-width: 1px 1px 1px 0px !important;
+  padding-left: 0 !important;
+}
+p-calendar.ng-dirty.ng-invalid .p-button {
+  border-color: #e24c4c !important;
+}
+ p-calendar.ng-dirty.ng-invalid > .p-calendar > .p-inputtext {
+  border-color: #e24c4c !important;
+}
 .localization {
   margin-left: 30px;
 }
@@ -172,6 +186,9 @@ body {
 
 .background-blue {
   background-color: #3085FE;
+}
+.w-multiSelect p-multiselect .p-multiselect {
+  width: 100% !important;
 }
 
 .color-white {
@@ -1747,7 +1764,6 @@ html[lang="ar"] {.button-filter-table {
 
 .p-button:enabled:hover {
   background: transparent !important;
-  border-color: transparent !important;
 }
 
 .p-button:focus {

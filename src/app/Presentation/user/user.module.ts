@@ -173,7 +173,11 @@ const routes: Routes = [
         loadChildren: () => import('./zones/zones.module').then((m) => m.ZonesModule),
         canActivate: [PermissionGuard]
       },
-
+      {
+        path: "reports",
+        loadChildren: () => import('./reports/reports.module').then((m) => m.ReportsModule),
+        canActivate: [PermissionGuard]
+      },
 
     ]
   }

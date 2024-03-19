@@ -508,7 +508,6 @@ export class EmployeesComponent {
           placeholdeEmail: data.email,
           validationtitleEmail: data.emailRequired,
           validationtitleEmailPattern: data.invalidEmail,
-  
           address: data.theAddress +" <span class='color-red'>*</span>",
           placeholdeAddress: data.theAddress,
           validationtitleAddress: data.addressRequired,

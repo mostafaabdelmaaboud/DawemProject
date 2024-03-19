@@ -89,6 +89,8 @@ export class SchedualPlanComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
+  defaultRowPerPage = { name: '5', code: 5 };
+
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
@@ -193,10 +195,8 @@ export class SchedualPlanComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
-
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
     ];
     this.getInformation();
 

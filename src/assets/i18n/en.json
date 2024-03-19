@@ -55,6 +55,8 @@
     "requests": "Requests",
     "employees": "Employees",
     "attendanceAndDeparture": "Attendance and Departure",
+    "attendanceSummaryReport": "Attendance Summary Report",
+
     "requestsForJustifications": "Requests for justifications",
     "zones": "zones",
     "leaveRequests": "Leave requests",

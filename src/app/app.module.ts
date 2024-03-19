@@ -15,9 +15,15 @@ import { RouterModule } from '@angular/router';
 import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AgmCoreModule } from '@agm/core';
-import { initializeApp } from 'firebase/app';
-import { environment } from 'src/environments/environment';
-initializeApp(environment.firebase);
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+
+import { MessagingService } from './service/messaging.service';
+import { environment } from '../environments/environment';
+import { AsyncPipe } from '../../node_modules/@angular/common';
+// initializeApp(environment.firebase);
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, "./assets/i18n/", ".json");
 }
@@ -36,6 +42,10 @@ registerLocaleData(en);
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    AngularFireAuthModule,
+    AngularFireMessagingModule,
+    AngularFireModule.initializeApp(environment.firebase),
+
     MatSnackBarModule,
     AgmCoreModule.forRoot({ apiKey: 'AIzaSyB56iuuwKPp0AISP5qM40vgL7hQu32RRfc' }),
     ToastrModule.forRoot(),
@@ -51,6 +61,8 @@ registerLocaleData(en);
 
   ],
   providers: [
+    MessagingService,
+    AsyncPipe,
     { provide: NZ_I18N, useValue: en_US },
 
     { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },

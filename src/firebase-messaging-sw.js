@@ -1,5 +1,6 @@
-importScripts('https://www.gstatic.com/firebasejs/10.2.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/10.2.0/firebase-messaging-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/7.15.1/firebase-messaging.js');
+
 firebase.initializeApp({
     apiKey: "AIzaSyCNr7nAJOZJW0YDBTanTXnH_xVnlnMDAPI",
     authDomain: "dawem-5361a.firebaseapp.com",
@@ -10,3 +11,6 @@ firebase.initializeApp({
     measurementId: "G-VE6JQS06RC"
 });
 const messaging = firebase.messaging();
+// messaging.onBackgroundMessage((payload) => {
+//     console.log('Received background message ', payload);
+// });

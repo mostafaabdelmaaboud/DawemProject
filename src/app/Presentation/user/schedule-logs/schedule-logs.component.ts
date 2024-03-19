@@ -82,6 +82,7 @@ export class ScheduleLogsComponent {
   RowsPerPage!: any[];
   mobileQuery: MediaQueryList;
   opened = false;
+  defaultRowPerPage = { name: '5', code: 5 };
 
   private _mobileQueryListener: () => void;
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
@@ -130,10 +131,8 @@ export class ScheduleLogsComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
-
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
     ];
     this.translate.get("scheduleLogs").subscribe(data => {
       this.columns = [
