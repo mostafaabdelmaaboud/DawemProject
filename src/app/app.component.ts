@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
+import { PushNotificationService } from './service/push-notification.service';
 // import { getMessaging, onMessage,getToken } from 'firebase/messaging';
-import { MessagingService } from './service/messaging.service';
-import * as firebase from 'firebase';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,14 +11,12 @@ import * as firebase from 'firebase';
 export class AppComponent {
   currentLang = localStorage.getItem("lang");
   private messaging;
+  mesaggeReceived:any = '';
 
-  constructor(private translate: TranslateService, private messagingService: MessagingService) {
-    this.messagingService.requestPermission()
-    this.messagingService.receiveMessage();
-    this.messagingService.currentMessage.subscribe(data => {
-      debugger;
-      console.log(data);
-    });
+  constructor(private translate: TranslateService, private notificacion: PushNotificationService) {
+    notificacion.requestPermission().then(token => {
+      console.log(token);
+    })
     document.documentElement.setAttribute('lang', 'ar');
     translate.setDefaultLang('ar');
     this.translate.use("ar");
@@ -51,7 +48,11 @@ export class AppComponent {
     // });
   }
   ngOnInit(): void {
-    debugger;
+    this.notificacion.receiveMessage().subscribe(payload => {
+      debugger;
+      console.log(payload);
+      this.mesaggeReceived = payload.notification.title;
+    })
   //   firebase.initializeApp({
   //     apiKey: "AIzaSyCNr7nAJOZJW0YDBTanTXnH_xVnlnMDAPI",
   //     authDomain: "dawem-5361a.firebaseapp.com",
