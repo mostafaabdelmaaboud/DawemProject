@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
 import { PushNotificationService } from './service/push-notification.service';
-// import { getMessaging, onMessage,getToken } from 'firebase/messaging';
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,8 +12,9 @@ export class AppComponent {
   currentLang = localStorage.getItem("lang");
   private messaging;
   mesaggeReceived:any = '';
+  message:any = null;
 
-  constructor(private translate: TranslateService, private notificacion: PushNotificationService) {
+  constructor(private translate: TranslateService) {
    
     document.documentElement.setAttribute('lang', 'ar');
     translate.setDefaultLang('ar');
@@ -46,16 +47,17 @@ export class AppComponent {
     // });
   }
   ngOnInit(): void {
-    this.notificacion.receiveMessage().subscribe(payload => {
-      debugger;
-      console.log(payload);
-      this.mesaggeReceived = payload.notification.title;
-    })
-  }
-  requestPermission() {
- 
-  }
-  listen() {
+  this.listen();
   }
 
+  listen() {
+    debugger;
+
+    const messaging = getMessaging();
+    onMessage(messaging, (payload) => {
+      debugger;
+      console.log('Message received. ', payload);
+      this.message=payload;
+    });
+  }
 }

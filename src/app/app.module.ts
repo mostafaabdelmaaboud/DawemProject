@@ -15,9 +15,13 @@ import { RouterModule } from '@angular/router';
 import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AgmCoreModule } from '@agm/core';
+import { environment } from 'src/environments/environment';
 
-import { PushNotificationService } from './service/push-notification.service';
-// initializeApp(environment.firebase);
+import { provideFirebaseApp } from "@angular/fire/app";
+import { getFirestore,provideFirestore } from "@angular/fire/firestore";
+import { initializeApp } from "firebase/app";
+
+initializeApp(environment.firebase);
 export function HttpLoaderFactory(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, "./assets/i18n/", ".json");
 }
@@ -37,7 +41,9 @@ registerLocaleData(en);
     BrowserAnimationsModule,
     HttpClientModule,
     MatSnackBarModule,
-    AgmCoreModule.forRoot({ apiKey: 'AIzaSyB56iuuwKPp0AISP5qM40vgL7hQu32RRfc' }),
+    // provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() => getFirestore()),
+    AgmCoreModule.forRoot({ apiKey: environment.firebase.vapidKey }),
     ToastrModule.forRoot(),
     TranslateModule.forRoot({
       defaultLanguage: localStorage.getItem('lang') || 'ar',
@@ -51,7 +57,6 @@ registerLocaleData(en);
 
   ],
   providers: [
-    PushNotificationService,
     { provide: NZ_I18N, useValue: en_US },
 
     { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true },

@@ -6,6 +6,8 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../services/auth-service.service';
 import { PushNotificationService } from 'src/app/service/push-notification.service';
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -27,16 +29,7 @@ export class LoginComponent {
   selectedCountry: any;
   FCMToken:string = "";
   constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService, private cd:ChangeDetectorRef, private notificacion: PushNotificationService) {
-    this.isLoading = true;
-    notificacion.requestPermission().then((token:any) => {
-      console.log(token);
-      this.FCMToken = token;
-      this.isLoading = false;
-
-    }).catch(err=> {
-      this.isLoading = false;
-
-    });
+   
   }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -95,6 +88,33 @@ export class LoginComponent {
       // }
 
     }
+   this.requestPermission()
+  }
+  requestPermission() {
+    this.isLoading = true;
+
+    const messaging = getMessaging();
+    getToken(messaging, 
+     { vapidKey: environment.firebase.vapidKey}).then(
+       (currentToken) => {
+         if (currentToken) {
+          debugger;
+           console.log("Hurraaa!!! we got the token.....");
+           this.isLoading = false;
+
+           this.FCMToken = currentToken;
+           console.log(currentToken);
+         } else {
+          debugger;
+          this.isLoading = false;
+
+           console.log('No registration token available. Request permission to generate one.');
+         }
+     }).catch((err) => {
+      this.isLoading = false;
+
+        console.log('An error occurred while retrieving token. ', err);
+    });
   }
   changeLanguage(lang: any) {
     this.countries = [];

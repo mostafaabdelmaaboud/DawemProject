@@ -118,7 +118,7 @@ export class RequestTaskComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.loading = true;
-
+    this.lastSearchQuery = "";
     let taskTypeForDropDown = this.tasksService.taskTypeDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let employeeForDropDown = this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     this.addBranchGroupForm.get("dateTask")?.valueChanges.subscribe(data => {
@@ -298,6 +298,7 @@ export class RequestTaskComponent {
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.list = [];
+                this.lastSearchQuery = "";
                 res?.data?.forEach((item: any) => {
                   this.list.push({ name: item.name, key: item.id })
                 });
@@ -308,11 +309,15 @@ export class RequestTaskComponent {
         break;
       case 'TaskEmployeeIds':
         if (data || data === "") {
+          debugger;
           if (data !== this.lastSearchQuery) {
+            debugger;
+
             this.lastSearchQuery = data;
             this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
+                this.lastSearchQuery = "";
                 this.workTeamList = [];
                 res?.data?.forEach((jobTitle: any) => {
                   this.workTeamList.push({ name: jobTitle.name, key: jobTitle.id })
@@ -334,6 +339,8 @@ export class RequestTaskComponent {
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listEmployees = [];
+                this.lastSearchQuery = "";
+
                 res?.data?.forEach((jobTitle: any) => {
                   this.listEmployees.push({ name: jobTitle.name, key: jobTitle.id })
                 });
