@@ -29,13 +29,11 @@ export class LoginComponent {
   constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService, private cd:ChangeDetectorRef, private notificacion: PushNotificationService) {
     this.isLoading = true;
     notificacion.requestPermission().then((token:any) => {
-      debugger;
       console.log(token);
       this.FCMToken = token;
       this.isLoading = false;
 
     }).catch(err=> {
-      debugger;
       this.isLoading = false;
 
     });
