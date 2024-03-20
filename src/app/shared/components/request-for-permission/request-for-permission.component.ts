@@ -101,7 +101,7 @@ export class RequestForPermissionComponent {
     dateTask: [null, Validators.required],
     time: [null, Validators.required],
     Notes: [null, Validators.required],
-    idCopyFile: ['', Validators.required]
+    idCopyFile: ['']
 
   });
   AttachmentsFiles: any[] = [];
@@ -312,7 +312,7 @@ export class RequestForPermissionComponent {
 
           if (data !== this.lastSearchQuery) {
             this.lastSearchQuery = data;
-            this.employeesService.GetForDropDownEmployee({ agingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+            this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listEmployees = [];

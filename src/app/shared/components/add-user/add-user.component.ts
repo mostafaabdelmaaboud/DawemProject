@@ -401,7 +401,7 @@ export class AddUserComponent {
 
           if (data !== this.lastSearchQuery) {
             this.lastSearchQuery = data;
-            this.employeesService.GetForDropDownEmployee({ agingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+            this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listEmployees = [];

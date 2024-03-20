@@ -277,7 +277,7 @@ export class ShiftsComponent {
                 entryTime: employee.checkInTime ? employee.checkInTime : "لا يوجد",
                 timeToGoOut: employee.checkOutTime ? employee.checkOutTime : "لا يوجد",
                 allowedMinutes: employee.allowedMinutes ? employee.allowedMinutes : "لا يوجد",
-                shiftStaff: employee.timePeriod ? employee.timePeriod : "0",
+                shiftStaff: employee.employeesCount ? employee.employeesCount : "0",
   
               })
             });
@@ -371,7 +371,7 @@ export class ShiftsComponent {
               entryTime: employee.checkInTime ? employee.checkInTime : "لا يوجد",
               timeToGoOut: employee.checkOutTime ? employee.checkOutTime : "لا يوجد",
               allowedMinutes: employee.allowedMinutes ? employee.allowedMinutes : "لا يوجد",
-              shiftStaff: employee.timePeriod ? employee.timePeriod : "0",
+              shiftStaff: employee.employeesCount ? employee.employeesCount : "0",
 
             })
           });

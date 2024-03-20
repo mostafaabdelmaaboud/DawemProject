@@ -66,10 +66,10 @@
       <label class="title">{{"users.theBoss"|translate}}</label>
       <div class="content-password">
         <ng-container *ngIf="info?.isAdmin">
-          {{"employees.yes"|translate}}
+          {{"users.yes"|translate}}
         </ng-container>
         <ng-container *ngIf="!info?.isAdmin">
-          {{"employees.no"|translate}}
+          {{"users.no"|translate}}
         </ng-container>
       </div>
 
@@ -105,6 +105,9 @@
 
         </li>
       </ul>
+      <ng-container *ngIf="!loading && AttachmentsFiles.length == 0">
+        {{"department.nothing"|translate}}
+      </ng-container>
 
     </div>
 

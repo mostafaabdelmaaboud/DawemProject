@@ -183,10 +183,6 @@
                     *ngIf="errorUploadFileIdCopyIsRequired && getControl('idCopyFile')?.dirty">
                     {{errorUploadFileIdCopyIsRequired}}
                 </div>
-                <div class="alert alert-danger mb-3"
-                    *ngIf="getControl('idCopyFile')?.hasError('required') && getControl('idCopyFile')?.dirty">
-                    Upload Files is Required
-                </div>
             </div>
             <!--End Custom Validators-->
         <!--

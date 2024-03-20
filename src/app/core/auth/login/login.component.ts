@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../services/auth-service.service';
+import { PushNotificationService } from 'src/app/service/push-notification.service';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,20 @@ export class LoginComponent {
   isLoading = false;
   private router = inject(Router)
   selectedCountry: any;
-  constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService, private cd:ChangeDetectorRef) {
+  FCMToken:string = "";
+  constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService, private cd:ChangeDetectorRef, private notificacion: PushNotificationService) {
+    this.isLoading = true;
+    notificacion.requestPermission().then((token:any) => {
+      debugger;
+      console.log(token);
+      this.FCMToken = token;
+      this.isLoading = false;
+
+    }).catch(err=> {
+      debugger;
+      this.isLoading = false;
+
+    });
   }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -133,6 +147,7 @@ export class LoginComponent {
       this.authService.login({
         Email: this.FormGroup.value.Email,
         Password: this.FormGroup.value.password,
+        FCMToken: this.FCMToken,
         RememberMe: true,
         ApplicationType: 1
       }).subscribe(

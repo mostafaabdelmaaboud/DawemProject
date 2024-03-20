@@ -98,7 +98,7 @@ export class RequestTaskComponent {
     TaskEmployeeIds: ["", Validators.required],
     time:[null, Validators.required],
     Notes: [''],
-    idCopyFile: ['', Validators.required],
+    idCopyFile: [''],
   });
   AttachmentsFiles: any[] = [];
   requiredCommercialRegFiles = false;
@@ -330,7 +330,7 @@ export class RequestTaskComponent {
 
           if (data !== this.lastSearchQuery) {
             this.lastSearchQuery = data;
-            this.employeesService.GetForDropDownEmployee({ agingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+            this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listEmployees = [];
@@ -419,7 +419,6 @@ export class RequestTaskComponent {
     }
   }
   request() {
-
     if (this.addBranchGroupForm.value.dateTask != null) {
       if (this.addBranchGroupForm.value.dateTask[1] === null) {
         this.dateTaskMultiple = true;
@@ -427,7 +426,6 @@ export class RequestTaskComponent {
         this.dateTaskMultiple = false;
       }
     }
-
     if (this.addBranchGroupForm.valid && this.submitted && !this.dateTaskMultiple) {
       this.submitted = false;
       this.submitClicked.emit({ ...this.addBranchGroupForm.value, files: this.AttachmentsFiles });

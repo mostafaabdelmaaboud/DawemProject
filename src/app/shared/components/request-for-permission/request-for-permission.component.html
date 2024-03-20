@@ -142,7 +142,6 @@
             [chooseLabel]="data!['chooseLabel']|translate" accept="image/png, image/gif, image/jpeg, application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" (onSelect)="onFileChange($event, 2)" [multiple]="true"
             [showUploadButton]="false" [showCancelButton]="false">
             <ng-template pTemplate="content">
-
               <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length">
                 <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
                   <div>
@@ -183,10 +182,7 @@
               *ngIf="errorUploadFileIdCopyIsRequired && getControl('idCopyFile')?.dirty">
               {{errorUploadFileIdCopyIsRequired}}
           </div>
-          <div class="alert alert-danger mb-3"
-              *ngIf="getControl('idCopyFile')?.hasError('required') && getControl('idCopyFile')?.dirty">
-              Upload Files is Required
-          </div>
+         
       </div>
       <!--End Custom Validators-->
         <!--
