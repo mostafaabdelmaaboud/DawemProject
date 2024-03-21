@@ -20,6 +20,7 @@ import { environment } from 'src/environments/environment';
 import { provideFirebaseApp } from "@angular/fire/app";
 import { getFirestore,provideFirestore } from "@angular/fire/firestore";
 import { initializeApp } from "firebase/app";
+import { ToastModule } from 'primeng/toast';
 
 initializeApp(environment.firebase);
 export function HttpLoaderFactory(httpClient: HttpClient) {
@@ -32,7 +33,6 @@ registerLocaleData(en);
   declarations: [
     AppComponent,
 
-
   ],
   imports: [
     BrowserModule,
@@ -41,7 +41,6 @@ registerLocaleData(en);
     BrowserAnimationsModule,
     HttpClientModule,
     MatSnackBarModule,
-    // provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     AgmCoreModule.forRoot({ apiKey: environment.firebase.vapidKey }),
     ToastrModule.forRoot(),
@@ -54,6 +53,8 @@ registerLocaleData(en);
       },
       isolate: true
     }),
+    ToastModule
+
 
   ],
   providers: [

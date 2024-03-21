@@ -1,1 +1,17 @@
+
+<p-toast [position]="position" key="notification">
+    <ng-template let-message pTemplate="headless" let-closeFn="closeFn">
+        <section class="content-desc-notification p-3 d-flex align-items-center w-full bg-black-alpha-90 shadow-2" style="border-radius: 10px">
+            <span class="icon-bell red position-relative notifications_store">
+                    <i class="bi bi-bell-fill"  id="number_notification"></i>
+
+            </span>
+            <div class="body-notification-p">
+                <h6 class="title m-0 font-semibold text-base text-white">{{ message.data.title }}</h6>
+                <p class="desc m-0 text-base text-700">{{message.data.body }}</p>
+            </div>
+        </section>
+    </ng-template>
+</p-toast>
+
 <router-outlet></router-outlet>

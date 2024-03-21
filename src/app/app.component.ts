@@ -1,63 +1,51 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
-import { PushNotificationService } from './service/push-notification.service';
+import { NotificationService } from './service/notification.service';
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { MessageService } from 'primeng/api';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  providers: [MessageService]
+
 })
 export class AppComponent {
   currentLang = localStorage.getItem("lang");
   private messaging;
   mesaggeReceived:any = '';
-  message:any = null;
-
-  constructor(private translate: TranslateService) {
-   
+  position = "top-left";
+  constructor(private translate: TranslateService, private messageService: MessageService, private notificationService:NotificationService) {
     document.documentElement.setAttribute('lang', 'ar');
     translate.setDefaultLang('ar');
     this.translate.use("ar");
-
-    // الاشتراك في استقبال الإشعارات عند وصولها
-    // if (this.currentLang === undefined || this.currentLang === null) {
-    //   document.documentElement.setAttribute('lang', 'ar');
-    //   this.translate.use("ar");
-    // } else {
-
-    //   if (this.currentLang == "ar") {
-    //     document.documentElement.setAttribute('lang', 'ar');
-    //     this.translate.use("ar");
- 
-    //   }
-    //   else if (this.currentLang == "en") {
-    //     document.documentElement.setAttribute('lang', 'en');
-    //     this.translate.use("en");
-
-    //   } 
-
-    // }
-
+    if (this.currentLang === undefined || this.currentLang === null) {
+      this.position = "top-left";
+    } else {
+      if (this.currentLang == "ar") {
+        this.position = "top-left";
+      }
+      else if (this.currentLang == "en") {
+        this.position = "top-right";
+      } 
+    }
   }
-  receiveMessages(): void {
-    // onMessage(this.messaging, (payload) => {
-    //   console.log('Message received. ', payload);
 
-    // });
-  }
   ngOnInit(): void {
-  this.listen();
+    this.listen();
   }
 
+  closeNotification() {
+    this.messageService.clear("notificationsw");
+  }
   listen() {
-    debugger;
-
     const messaging = getMessaging();
     onMessage(messaging, (payload) => {
       debugger;
-      console.log('Message received. ', payload);
-      this.message=payload;
+      this.notificationService.setNotification({NotificationData:JSON.parse(payload?.data?.['NotificationData'] as string),...payload});
+      this.messageService.add({ key: 'notification',severity: 'info', summary: 'Info', data:{title:payload.notification?.title, body:payload.notification?.body}, detail: 'Message Content',life:2000 });
     });
   }
 }

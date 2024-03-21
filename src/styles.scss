@@ -1743,7 +1743,9 @@ html[lang="ar"] {.accordion-button::after {
   margin-left: initial !important;
   margin-right: auto;
 }}
-
+.p-toast .p-toast-message .p-toast-message-content {
+  padding: 0;
+}
 .accordion-button:focus:not(:focus-visible) {
   box-shadow: inset 0px -1px 0px rgba(0, 0, 0, 0.125) !important;
 }
@@ -1751,11 +1753,55 @@ html[lang="ar"] {.accordion-button::after {
 .button-filter-table i {
   font-size: 17px
 }
+.p-toast .p-toast-message .p-toast-icon-close {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+.body-notification-p {
+  margin-right: 15px;
+  display: flex;
+  flex-direction: column;
+}
+.content-desc-notification {
+  .icon-bell {
+    padding: 10px;
+    background-color: #787aff;
+    border-radius: 50%;
+    i {
+      font-size: 23px;
+      color: white;
+    }
+  }
+}
 
-html[lang="ar"] {.button-filter-table {
+.body-notification-p {
+  .title {
+    font-size: 19px;
+    color: black !important;
+    } 
+    .desc {
+      font-size: 14px;
+      } 
+}
+html[lang="ar"] {
+  .button-filter-table {
   margin-left: 0 !important;
   margin-right: 15px !important;
-}}
+}
+.p-toast .p-toast-message.p-toast-message-info,
+.p-toast .p-toast-message .p-toast-message-content {
+  border-width: 0 6px 0 0 !important;
+}
+.p-toast .p-toast-message {
+  margin: 0 1rem 0 0 !important;
+}
+.p-toast .p-toast-message .p-toast-icon-close {
+  right: initial !important;
+  left: 5px !important;
+
+}
+}
 
 .p-datatable-header {
   padding-left: 0 !important;
@@ -2647,4 +2693,36 @@ html[lang="ar"] {.container-filteration {
 
 .icon-number-notification:empty {
   padding: 0 !important;
+}
+.notifications_store {
+  position: relative;
+  right: 0px;
+  font-size: 12px;
+
+  background-color: red;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+font-family:arial;
+}
+#number_notification {
+  animation: bounce_shake 1.5s ease-out 3;
+  -webkit-animation: bounce_shake 1.5s ease-out 3;
+}
+
+@keyframes bounce_shake{
+0%   { transform: scale(1,1)      translateY(0); }
+10%  { transform: scale(1.1,.9)   translateY(0); }
+30%  { transform: scale(.9,1.1)   translateY(-5px); }
+32% { transform: scale(1.2) translateY(-5px); }
+35%, 40% { transform: scale(1.2) translateY(-5px) rotate(-20deg)}
+45%, 50% { transform: scale(1.2) translateY(-5px) rotate(20deg)}
+60%  { transform: scale(1.05,.95) translateY(0); }
+70%  { transform: scale(1.05,.95) translateY(0); }
+80%  { transform: scale(1,1)      translateY(-3px); }
+95%  { transform: scale(1,1)      translateY(0); }
+100% { transform: scale(1,1)      translateY(0); }
 }

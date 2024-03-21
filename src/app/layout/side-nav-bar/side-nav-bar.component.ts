@@ -8,6 +8,7 @@ import { LogoutComponent } from 'src/app/shared/components/logout/logout.compone
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 import { DashboardService } from 'src/app/Presentation/user/dashboard/services/dashboard.service';
 import { MatTabChangeEvent } from "@angular/material/tabs";
+import { NotificationService } from 'src/app/service/notification.service';
 
 @Component({
   selector: 'app-side-nav-bar',
@@ -55,6 +56,7 @@ export class SideNavBarComponent {
   constructor(private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     public translate: TranslateService,
     public authService: AuthService,
+    private notificationService: NotificationService,
     private permissionsUserService: PermissionsUserService) {
     this.mobileQuery = media.matchMedia('(max-width: 1050px)');
 
@@ -395,7 +397,9 @@ export class SideNavBarComponent {
   ngOnInit(): void {
     let permission = JSON.parse(localStorage.getItem('permissions') as string)
     this.isAdmin = permission?.isAdmin;
-
+    this.notificationService.getNotification().subscribe(data => {
+      this.numNotification = data?.NotificationData?.UnReadNotificationCount;
+    })
     if (this.currentLang === undefined || this.currentLang === null) {
       this.countries = [
         { name: 'عربي', code: 'AR' },
