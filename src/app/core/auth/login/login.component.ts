@@ -8,6 +8,7 @@ import { AuthService } from '../services/auth-service.service';
 import { PushNotificationService } from 'src/app/service/push-notification.service';
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { environment } from 'src/environments/environment';
+import { initializeApp } from "firebase/app";
 
 @Component({
   selector: 'app-login',
@@ -88,25 +89,17 @@ export class LoginComponent {
       // }
 
     }
-    this.isLoading = true;
-
-  }
-  ngAfterViewInit(): void {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    //Add 'implements AfterViewInit' to the class.
+    this.isLoading = false;
     this.requestPermission();
-
   }
   requestPermission() {
     this.isLoading = true;
-
     const messaging = getMessaging();
     getToken(messaging, 
      { vapidKey: environment.firebase.vapidKey}).then(
        (currentToken) => {
          if (currentToken) {
            this.isLoading = false;
-
            this.FCMToken = currentToken;
          } else {
           this.isLoading = false;
@@ -114,8 +107,8 @@ export class LoginComponent {
            console.log('No registration token available. Request permission to generate one.');
          }
      }).catch((err) => {
-      this.isLoading = false;
-
+      // this.isLoading = false;
+      this.requestPermission();
         console.log('An error occurred while retrieving token. ', err);
     });
   }
@@ -161,8 +154,7 @@ export class LoginComponent {
     this.cd.detectChanges();
   }
   submit() {
-
-    if (this.FormGroup.valid && this.loading) {
+    if (this.FormGroup.valid && this.loading && false) {
       this.loading = false;
       this.isLoading = true;
       this.authService.login({
