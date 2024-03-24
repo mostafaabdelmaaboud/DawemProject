@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
 import { PermissionsService } from 'src/app/Presentation/user/services/permission.service';
 import { TranslateService } from '@ngx-translate/core';
 import { MediaMatcher } from '@angular/cdk/layout';
@@ -9,6 +9,9 @@ import { PermissionsUserService } from 'src/app/shared/services/permissions-user
 import { DashboardService } from 'src/app/Presentation/user/dashboard/services/dashboard.service';
 import { MatTabChangeEvent } from "@angular/material/tabs";
 import { NotificationService } from 'src/app/service/notification.service';
+import { FormatDateService } from 'src/app/shared/services/format-date.service';
+import { Router } from '@angular/router';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'app-side-nav-bar',
@@ -16,6 +19,8 @@ import { NotificationService } from 'src/app/service/notification.service';
   styleUrls: ['./side-nav-bar.component.scss']
 })
 export class SideNavBarComponent {
+  @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
+
   items = Array.from({ length: 100000 }).map((_, i) => `Item #${i}`);
   currentLang = localStorage.getItem("lang");
   Newlang: string = '';
@@ -29,7 +34,8 @@ export class SideNavBarComponent {
   isAdmin = true;
   private dialog = inject(MatDialog);
   private _mobileQueryListener: () => void;
-  listComponents:any[] = []
+  listComponents:any[] = [];
+  router = inject(Router);
   // private dialog = inject(MatDialog);
   public permissionsService = inject(PermissionsService);
   public dashboardService = inject(DashboardService);
@@ -37,10 +43,11 @@ export class SideNavBarComponent {
   countries!: any[];
   selectedCountry: any;
   sideNavPosition: "start" | "end" = 'end';
-  AllLoadingNotification = true;
   notificationFilter: any = {
-    page: 0,
-    pageSize: 10,
+    PageNumber: 0,
+    PageSize: 5,
+    PagingEnabled:true
+
   };
 
   AllnotificationList: any[] = [];
@@ -49,14 +56,15 @@ export class SideNavBarComponent {
   notificationCount = 0;
 
   notificationCountRequests = 0;
-  RequestLoadingNotification = true;
-  RequestnotificationList: any[] = [];
+  loadingNotification = true;
+  notificationList: any[] = [];
   selectedTabIndex = 1;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     public translate: TranslateService,
     public authService: AuthService,
     private notificationService: NotificationService,
+    private formatDateService: FormatDateService,
     private permissionsUserService: PermissionsUserService) {
     this.mobileQuery = media.matchMedia('(max-width: 1050px)');
 
@@ -97,7 +105,13 @@ export class SideNavBarComponent {
   onScrollDown() {
     debugger;
     console.log("scrolled!!");
-    this.RequestnotificationList = [...this.RequestnotificationList, ...this.RequestnotificationList]
+    let totalCountPages = Math.ceil(this.notificationCount / 5);
+    debugger;
+    if(totalCountPages > (this.notificationFilter.PageNumber + 1)) {
+      this.notificationFilter.PageNumber++;
+      this.numberNotification(false);
+    }
+    // numberNotification
   }
   onScrollUp() {
     console.log("scrolled up!!");
@@ -120,12 +134,11 @@ export class SideNavBarComponent {
   notificationTrack(index: any, hero: any) {
     return hero ? hero.id : undefined;
   }
-  notificationTrackRequests(index: any, hero: any) {
-    return hero ? hero.id : undefined;
+  notificationTrackRequests(index: any, irem: any) {
+    return irem ? irem.id : undefined;
   }
   tabChanged(tabChangeEvent: any): void {
     if (tabChangeEvent.index === 0) {
-      this.AllLoadingNotification = true;
 
       delete this.notificationFilter.type;
       // this.webSocketService
@@ -133,7 +146,6 @@ export class SideNavBarComponent {
       //   .subscribe((data) => {
       //     this.notificationCount = data.count;
       //     this.AllnotificationList = data.rows;
-      //     this.AllLoadingNotification = false;
       //     this.changeDetectorRef.detectChanges();
       //   });
       this.notificationCount = 22;
@@ -147,11 +159,10 @@ export class SideNavBarComponent {
           }
         }
       ];
-      this.AllLoadingNotification = false;
       this.changeDetectorRef.detectChanges();
 
     } else {
-      this.RequestLoadingNotification = true;
+      this.loadingNotification = true;
 
       this.notificationFilter.type = "request";
       // this.webSocketService
@@ -159,22 +170,12 @@ export class SideNavBarComponent {
       //   .subscribe((data) => {
       //     this.notificationCountRequests = data.count;
       //     this.RequestnotificationList = data.rows;
-      //     this.RequestLoadingNotification = false;
+      //     this.loadingNotification = false;
       //     this.changeDetectorRef.detectChanges();
       //   });
       this.notificationCountRequests = 22;
-      this.RequestnotificationList =  [
-        {
-          titleEn:"dsadas",
-          id:"asddas4sad545450",
-          body:{
-            descriptionEn:"dsadsadsasadsa sadas a",
-            reason:"dsadsdasdsadsa",
-            createdAt:"22/10/2010"
-          }
-        }
-      ];;
-      this.RequestLoadingNotification = false;
+  
+      this.loadingNotification = false;
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -183,223 +184,99 @@ export class SideNavBarComponent {
     return this.getPermissions()?.availablePermissions[findIndexPermission]?.screenName
 
   }
-  numberNotification(groupIndex: any) {
+  numberNotification(showFirstOnly:boolean) {
     this.numNotification = "";
-    this.AllnotificationList = [];
-    this.RequestnotificationList = [];
-    this.AllLoadingNotification = true;
-    this.RequestLoadingNotification = true;
+    // this.notificationList = [];
+    this.loadingNotification = true;
+    if(showFirstOnly) {
+      this.notificationService.markAsViewed().subscribe(data => {
+        debugger;
+      });
+    }
 
-    delete this.notificationFilter.type;
-    // this.webSocketService
-    //   .notificationList(this.notificationFilter)
-    //   .subscribe((data) => {
-    //     this.notificationCount = data.count;
-    //     this.AllnotificationList = data.rows;
-    //     this.AllLoadingNotification = false;
-    //     this.changeDetectorRef.detectChanges();
-    //   });
+    this.notificationService.listNotification(this.notificationFilter).subscribe({
+      next:data => {
+        debugger;
+        // this.notificationList = [];
+        this.loadingNotification = false;
+        data?.data?.notificationStores.forEach(item => {
+          this.notificationList.push({
+            shortMessege:item.shortMessege,
+            fullMessege:item.fullMessege,
+            iconUrl:item.iconUrl,
+            id:item.id,
+            isRead:item.isRead,
+            notificationType:item.notificationType,
+            priority:item.priority,
+            date:this.formatDateService.formatDate(new Date(item.date)),
+            employeeId:item.employeeId,
+            status:item.status
+          })
+        });
 
-    // fack
-            this.notificationCount = 22;
-        this.AllnotificationList = [
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          }
-        ];
-        this.AllLoadingNotification = false;
-        this.changeDetectorRef.detectChanges();
-    this.notificationFilter.type = "request";
-    // this.webSocketService
-    //   .notificationList(this.notificationFilter)
-    //   .subscribe((data) => {
-    //     this.notificationCountRequests = data.count;
-    //     this.RequestnotificationList = data.rows;
-    //     this.RequestLoadingNotification = false;
-    //     this.changeDetectorRef.detectChanges();
-    //   });
-    //fack
-            this.notificationCountRequests = 22;
-        this.RequestnotificationList =  [
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
+        this.notificationCount = data.data.totalCount;
 
+      },
+      error:err => {
+        this.loadingNotification = false;
 
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-
-          {
-            titleEn:"dsadas",
-            id:"asddas4sad545450",
-            body:{
-              descriptionEn:"dsadsadsasadsa sadas a",
-              createdAt:"22/10/2010"
-            }
-          },
-        ];
-        this.RequestLoadingNotification = false;
-        this.changeDetectorRef.detectChanges();
+      }
+    })
+   
   }
+  markAsRead(id:any) {
+    debugger;
+    this.loadingNotification = true;
 
+    let params = {notificationStoreId:id};
+    this.notificationService.markAsRead(params).subscribe({
+      next:data => {
+        debugger;
+        let findIndexIsRead = this.notificationList.findIndex(item => item.id === id);
+        if(findIndexIsRead >= 0) {
+          this.notificationList[findIndexIsRead].isRead = data.data;
+        }
+        this.loadingNotification = false;
+      },
+      error: err => {
+        this.loadingNotification = false;
+      }
+    })
+  }
+  notificationType(type:any) {
+    this.trigger.closeMenu();
+    if(type >=0 && type <= 2) {
+      this.router.navigate(["/user/vacations"]);
+
+    } else if(type>=3  && type <= 5) {
+      this.router.navigate(["/user/tasks"]);
+
+    } else if(type === 6) {
+      this.router.navigate(["/user/justifications"]);
+
+    }else if(type === 7) {
+      this.router.navigate(["/user/permissions"]);
+
+    }else if(type === 8) {
+      this.router.navigate(["/user/sanctions"]);
+
+    }else if(type === 9) {
+      this.router.navigate(["/user/summons"]);
+
+    }
+    
+
+  }
   ngOnInit(): void {
+    debugger;
     let permission = JSON.parse(localStorage.getItem('permissions') as string)
     this.isAdmin = permission?.isAdmin;
     this.notificationService.getNotification().subscribe(data => {
-      this.numNotification = data?.NotificationData?.UnReadNotificationCount;
-    })
+      this.numNotification = data?.NotificationData?.UnViewdNotificationCount;
+    });
+    this.notificationService.getUnViewedNotificationCount().subscribe(data => {
+      this.numNotification = data?.toString() === "0" ? "": data?.toString();
+    });
     if (this.currentLang === undefined || this.currentLang === null) {
       this.countries = [
         { name: 'عربي', code: 'AR' },

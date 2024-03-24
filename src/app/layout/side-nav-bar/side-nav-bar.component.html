@@ -1104,8 +1104,8 @@
                   <i class="fa fa-gear" style="font-size:27px;margin-top: 6px;color: #6C757D;"></i>
                 </div> -->
                 <div class="dropdown dropdownUserInfo d-inline-block ml-1 mr-5">
-                  <a type="button" class=" position-relative dropdownNotification"
-                    (click)="$event.stopPropagation();numberNotification(selectedTabIndex)"
+                  <a type="button" class="position-relative dropdownNotification"
+                    (click)="$event.stopPropagation();numberNotification(true)"
                     [matMenuTriggerFor]="notification">
                     <i class="bi bi-bell-fill" style="font-size:26px;margin-top: 6px;"></i>
     
@@ -1129,75 +1129,89 @@
                         </div>
                       </div>  
                   
-
-                      <div class="search-results"  
-                      infiniteScroll
-                      [infiniteScrollDistance]="2"
-                      [infiniteScrollThrottle]="500"
-                      [fromRoot]="true"
-                      (scrolled)="onScrollDown()"
-                      (scrolledUp)="onScrollUp()"
-                      [scrollWindow]="false">
-                        <ng-container *ngIf="!RequestLoadingNotification && RequestnotificationList.length > 0">
-                          <ng-container
-                            *ngFor="let notification of RequestnotificationList; trackBy:notificationTrackRequests">
-                            <div class="item-notification">
-
-                              <div>
-                                <h5>
-                                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <rect x="0.5" y="0.5" width="39" height="39" rx="19.5" fill="#F7F2F9" />
-                                    <path
-                                      d="M6.66667 36C6.66667 36 4 36 4 33.3333C4 30.6667 6.66667 22.6667 20 22.6667C33.3333 22.6667 36 30.6667 36 33.3333C36 36 33.3333 36 33.3333 36H6.66667ZM20 20C22.1217 20 24.1566 19.1571 25.6569 17.6569C27.1571 16.1566 28 14.1217 28 12C28 9.87827 27.1571 7.84344 25.6569 6.34315C24.1566 4.84285 22.1217 4 20 4C17.8783 4 15.8434 4.84285 14.3431 6.34315C12.8429 7.84344 12 9.87827 12 12C12 14.1217 12.8429 16.1566 14.3431 17.6569C15.8434 19.1571 17.8783 20 20 20Z"
-                                      fill="#212529" />
-                                    <rect x="0.5" y="0.5" width="39" height="39" rx="19.5" stroke="#CCCCCC" />
-                                  </svg>
-                                  <span class="ml-2 t-image-header-notification">Assignment - {{notification.titleEn}}</span>
-                                  
-                                </h5>
-                                <p>{{notification.body.descriptionEn}}</p>
-                                <p class="parg-reason">
-                                  <span class="d-block">Reason</span>
-                                  <ng-container *ngIf="notification?.body?.reason != undefined">
-                                    {{notification?.body?.reason}}
-                                  </ng-container>
-                                  <ng-container *ngIf="notification?.body?.reason === undefined">
-                                    {{'department.nothing' | translate}}
-                                  </ng-container>
-                                </p>
-                                <span class="footer-list-notification mb-2 d-block">SAP Analytics .
-                                  <ng-container *ngIf="isToday(notification.createdAt)">
-                                    {{notification.createdAt | date:'hh:mm'}}
-
-                                  </ng-container>
-                                  <ng-container *ngIf="!isToday(notification.createdAt)">
-                                    {{notification.createdAt | date:'dd/MM/YYYY'}}
-
-                                  </ng-container>
-
-                                </span>
-                                <div class="actions-notification list-action-button mb-3">
-
-                                  <button class="btn btn-secondary border-gray me-2">Cancel
-                                  </button>
-                                  <button class="btn btn-primary cashline-btn">Confirm
-                                  </button>
+                      <div class="position-relative">
+                        <div class="search-results position-relative"  
+                        infiniteScroll
+                        [infiniteScrollDistance]="2"
+                        [infiniteScrollThrottle]="500"
+                        [fromRoot]="true"
+                        (scrolled)="onScrollDown()"
+                        (scrolledUp)="onScrollUp()"
+                        [scrollWindow]="false">
+                            <ng-container
+                              *ngFor="let notification of notificationList; trackBy:notificationTrackRequests">
+                              <div class="item-notification">
+                                <div class="d-flex content-inside-notification mb-2" [class.colorIsRead]="!notification.isRead">
+                                  <div class="col cursor-pointer" (click)="notificationType(notification.notificationType)">
+                                    <div class="content-notifi d-flex">
+                                      <span class="img-notification position-relative" [ngClass]="{'back-high': notification.priority == 0, 'back-medium': notification.priority == 1, 'back-low': notification.priority == 2}">
+                                        <img width="56px" height="56px" [src]="notification.iconUrl" [alt]="notification.shortMessege">
+  
+                                      </span>
+                                      <div class="desc-notifi">
+                                        <h5 class="mb-2">
+                                          {{notification.shortMessege}}
+                                        </h5>
+                                        <p class="m-0">{{notification.fullMessege}}</p>
+                                        <span class="d-block format-date-notification">{{notification.date}}</span>
+                                      </div>
+                                
+                                  </div>
+  
+                                  <div>
+                                   
+                                    <!-- <p class="parg-reason">
+                                      <span class="d-block">Reason</span>
+                                      <ng-container *ngIf="notification?.body?.reason != undefined">
+                                        {{notification?.body?.reason}}
+                                      </ng-container>
+                                      <ng-container *ngIf="notification?.body?.reason === undefined">
+                                        {{'department.nothing' | translate}}
+                                      </ng-container>
+                                    </p>
+                                    <span class="footer-list-notification mb-2 d-block">SAP Analytics .
+                                      <ng-container *ngIf="isToday(notification.createdAt)">
+                                        {{notification.createdAt | date:'hh:mm'}}
+    
+                                      </ng-container>
+                                      <ng-container *ngIf="!isToday(notification.createdAt)">
+                                        {{notification.createdAt | date:'dd/MM/YYYY'}}
+    
+                                      </ng-container>
+    
+                                    </span> -->
+                                    <!-- <div class="actions-notification list-action-button mb-3">
+    
+                                      <button class="btn btn-secondary border-gray me-2">Cancel
+                                      </button>
+                                      <button class="btn btn-primary cashline-btn">Confirm
+                                      </button>
+                                    </div> -->
+                                  </div>
+                                  </div>
+                             
+                                  <div class="content-mark-as-read d-flex align-items-center">
+                                    <span class="icon-mark-as-read" *ngIf="!notification.isRead" (click)="markAsRead(notification.id)"></span>
+    
+                                  </div>
                                 </div>
+                              
+                                <hr class="dropdown-divider">
+  
                               </div>
-                              <hr class="dropdown-divider">
-                            </div>
-                            
-                          </ng-container>
-                        </ng-container>
-                     
-
-                      </div>
-                      <div class="loading-section" *ngIf="RequestLoadingNotification">
-                        <div class="spinner d-flex justify-content-center align-items-center">
-                          <mat-spinner></mat-spinner>
+                              
+                            </ng-container>
+                       
+                          
+                        </div>
+                        <div class="loading-section" *ngIf="loadingNotification">
+                          <div class="spinner d-flex justify-content-center align-items-center">
+                            <mat-spinner></mat-spinner>
+                          </div>
                         </div>
                       </div>
+                    
+                    
                     
                       <!-- <p-tabView #tabView (onChange)="tabChanged($event)" [(activeIndex)]="selectedTabIndex">
                         <p-tabPanel header="All">
@@ -1237,9 +1251,9 @@
                         </p-tabPanel>
                         <p-tabPanel header="Requests">
                           <div>
-                            <ng-container *ngIf="!RequestLoadingNotification && RequestnotificationList.length > 0">
+                            <ng-container *ngIf="!loadingNotification && notificationList.length > 0">
                               <ng-container
-                                *ngFor="let notification of RequestnotificationList; trackBy:notificationTrackRequests">
+                                *ngFor="let notification of notificationList; trackBy:notificationTrackRequests">
                                 <div class="item-notification">
     
                                   <div>
@@ -1287,7 +1301,7 @@
                                 <hr class="dropdown-divider">
                               </ng-container>
                             </ng-container>
-                            <div class="loading-section" *ngIf="RequestLoadingNotification">
+                            <div class="loading-section" *ngIf="loadingNotification">
                               <div class="spinner d-flex justify-content-center align-items-center">
                                 <mat-spinner></mat-spinner>
                               </div>
@@ -1335,8 +1349,8 @@
                       </div>
                     </ng-container> -->
                     <ng-container *ngIf="selectedTabIndex === 1">
-                      <ng-container *ngIf="RequestnotificationList.length > 0">
-                        <ng-container *ngIf="notificationFilter.pageSize < notificationCountRequests">
+                      <ng-container *ngIf="notificationList.length > 0">
+                        <ng-container *ngIf="notificationFilter.PageSize < notificationCount">
                           <div mat-menu-item class="footer-notification" (click)="$event.stopPropagation()">
                             <div class="img-notification d-block">
                               <svg width="101" height="80" viewBox="0 0 101 80" fill="none"
@@ -1364,13 +1378,8 @@
                                   stroke="#ADB5BD" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
                               </svg>
                             </div>
-                            <p class="m-0">{{'notifications.ThatAllNotificationsFromTheLast' | translate}} {{notificationCountRequests}} {{'notifications.days' | translate}}.</p>
-    
-    
-    
-    
-                            <a style="color: black;" (click)="$event.stopPropagation(); showAll(selectedTabIndex)">{{'notifications.showAll' | translate}}</a>
-    
+                            <p class="m-0">هذه جميع الاشعارات {{notificationCount}}.</p>
+                            <!-- <a style="color: black;" (click)="$event.stopPropagation(); showAll(selectedTabIndex)">{{'notifications.showAll' | translate}}</a> -->
                           </div>
                         </ng-container>
                       </ng-container>

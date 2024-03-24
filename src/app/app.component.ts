@@ -35,8 +35,16 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.listen();
+    this.getUnViewedNotificationCount();
+    
   }
-
+  getUnViewedNotificationCount() {
+    this.notificationService.dataUnViewedNotificationCount().subscribe(data => {
+      debugger;
+      this.notificationService.setUnViewedNotificationCount(data.data);
+    })
+  }
+  
   closeNotification() {
     this.messageService.clear("notificationsw");
   }
@@ -44,8 +52,8 @@ export class AppComponent {
     const messaging = getMessaging();
     onMessage(messaging, (payload) => {
       debugger;
-      this.notificationService.setNotification({NotificationData:JSON.parse(payload?.data?.['NotificationData'] as string),...payload});
-      this.messageService.add({ key: 'notification',severity: 'info', summary: 'Info', data:{title:payload.notification?.title, body:payload.notification?.body}, detail: 'Message Content',life:2000 });
+      this.notificationService.setNotification({UnViewdNotificationCount:JSON.parse(payload?.data?.['UnViewdNotificationCount'] as string),...payload});
+      this.messageService.add({ key: 'notification',severity: 'info', summary: 'Info', data:{title:payload.notification?.title, body:payload.notification?.body}, detail: 'Message Content',life:10000 });
     });
   }
 }

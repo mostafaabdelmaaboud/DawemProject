@@ -79,7 +79,7 @@ export class EmployeesComponent {
   employeesIsExport: any = [];
 
   destroy$: Subject<boolean> = new Subject<boolean>();
-
+  loading = false;
   isLoading = true;
   listDirectManager: any[] = [];
 
@@ -819,6 +819,31 @@ export class EmployeesComponent {
         this.listJobTitle.push({ name: jobTitle.name, key: jobTitle.id })
       });
     })
+  }
+  exportDraft() {
+    debugger;
+    this.loading = true;
+    this.employeesService.exportDraft().subscribe( {
+      next:data => {
+        debugger;
+        let fileName = data.headers.get('content-disposition')?.split(';')[1].split('=')[1];
+        let blob:Blob = data.body as Blob;
+        let a = document.createElement('a');
+        a.download = fileName;
+        a.href = window.URL.createObjectURL(blob);
+        a.click();
+        this.loading = false;
+
+      },
+      error:err => {
+        debugger;
+        this.loading = false;
+
+        this.toast.error(err.message);
+
+      }
+    }
+      );
   }
   lastSearchQuery = "";
   searchDropdown(data: any, type: string) {

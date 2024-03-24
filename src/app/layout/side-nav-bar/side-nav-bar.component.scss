@@ -23,12 +23,48 @@ mat-sidenav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
+  padding: 13px 15px 13px 15px;
   border-bottom: 1px solid rgba(222, 226, 230, 1);
 }
 .search-results {
   height: 20rem;
   overflow-y: scroll;
+}
+.content-mark-as-read {
+    margin: 0 10px;
+}
+:host ::ng-deep .mat-mdc-menu-content {
+  padding: 0px 0 !important;
+}
+.icon-mark-as-read {
+  width: 13px;
+  height: 13px;
+  display: block;
+  background-color: #0866FF;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.loading-section {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.content-inside-notification {
+  padding: 5px 0;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.cursor-pointer:hover {
+  background-color: rgb(215 215 215 / 10%);
+}
+.content-inside-notification.colorIsRead {
+  background-color: rgb(187 187 187 / 10%);
+
 }
 .title-notification {
   font-size: 18px;
@@ -37,7 +73,10 @@ mat-sidenav {
   display: flex;
   align-items: center;
 }
-
+.img-notification {
+  height: 56px;
+    width: 56px;
+}
 .icon-number-notification:empty {
   padding: 0 !important;
 }

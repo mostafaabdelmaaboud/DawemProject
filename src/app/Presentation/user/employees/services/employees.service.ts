@@ -137,4 +137,7 @@ export class EmployeesService {
     return this.http.get(url, { responseType: 'arraybuffer' })
 
   }
+  exportDraft(): any {
+    return this.http.get<any>(`${environment.baseUrl}Employee/CreateExportDraft`, {observe:'response', responseType:'blob' as 'json'})
+  }
 }
