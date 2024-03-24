@@ -140,4 +140,10 @@ export class EmployeesService {
   exportDraft(): any {
     return this.http.get<any>(`${environment.baseUrl}Employee/CreateExportDraft`, {observe:'response', responseType:'blob' as 'json'})
   }
+  importDataFromExcel(formData:FormData): any {
+    return this.http.post<any>(`${environment.baseUrl}Employee/CreateImportDataFromExcel`,formData,  {
+      reportProgress: true,
+      observe: "events",
+    });
+  }
 }

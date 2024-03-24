@@ -1,0 +1,114 @@
+<div class="container-Dialog">
+    <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+      <h3 class="title-Dialog m-0">
+        {{data!['title']|translate}}
+  
+      </h3>
+      <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+        <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+        <i class="pi pi-times-circle"></i>
+      </button>
+    </header>
+    <div class="body-dialog p-15 f-s-16">
+      <form [formGroup]="addBranchGroupForm">
+        <div class="section-workingDays mb-3">
+          <label class="mb-2 d-block f-s-16">{{data!['uploadFile']|translate}}</label>
+          <div class="item uploadFiles">
+            <!-- accept="image/*" -->
+            <p-fileUpload name="files[]" chooseIcon="pi pi-cloud-upload" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" [customUpload]="true"
+              [chooseLabel]="data!['chooseLabel']|translate" (onSelect)="onFileChange($event, 2)" [showUploadButton]="false"
+              [showCancelButton]="false">
+              <ng-template pTemplate="content">
+  
+                <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length">
+                  <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
+                    <div>
+                      <img [src]="viewImagesIdCopy[i]" width="50" height="100" alt="">
+  
+                    </div>
+                    <div class="p-fileupload-filename">
+                      <span class="d-block">{{"employees.name"|translate}}:</span>
+                      {{ file.fileUpload.name
+                      }}
+                    </div>
+                    <div>
+                      <span class="d-block">{{"employees.size"|translate}}:</span>
+                      {{
+                      file.fileUpload.size }}
+                    </div>
+                    <div>
+                      <button class="p-element p-button p-component p-button-icon-only"
+                        (click)="onRemoveCommercialReg(file.fileUpload)">
+                        <span class="p-button-icon pi pi-times" aria-hidden="true">
+  
+                        </span>
+                      </button>
+  
+                    </div>
+                  </li>
+                </ul>
+              </ng-template>
+            </p-fileUpload>
+            <span class="maximum-size">{{"employees.maximumFileSize"|translate}}</span>
+          </div>
+                 <!--Start Custom Validators-->
+                 <div class="container-alerts mt-s-16">
+                  <div class="alert alert-danger mb-3" *ngIf="errorUploadFileIdCopy">
+                      {{errorUploadFileIdCopy}}
+                  </div>
+                  <div class="alert alert-danger mb-3"
+                      *ngIf="errorUploadFileIdCopyIsRequired && getControl('idCopyFile')?.dirty">
+                      {{errorUploadFileIdCopyIsRequired}}
+                  </div>
+                  <div class="alert alert-danger mb-3"
+                      *ngIf="getControl('idCopyFile')?.hasError('required') && getControl('idCopyFile')?.dirty">
+                      Upload Files is Required
+                  </div>
+              </div>
+              <!--End Custom Validators-->
+          <!--
+          <div class="container-alerts mb-2" *ngIf="uploadedCommercialRegFiles.length<= 0 && requiredCommercialRegFiles">
+            <div class="alert alert-danger">
+              مطلوب تحميل الملف
+            </div>
+  
+          </div> -->
+  
+        </div>
+       
+      </form>
+  
+      <!-- <form [formGroup]="addBranchGroupForm">
+              <ng-container *ngIf="data?.subTitle">
+                  <div class="mb-3" [innerHTML]="data!['subTitle']!|translate"></div>
+              </ng-container>
+              <div class="li-input col-12" *ngFor="let input of data?.addBranchesInputsProps">
+                  <label for="" class="label-input mb-2" [innerHTML]="input['LabelMessage']|translate"></label>
+                  <div class="content-password">
+  
+  
+                      <input [formControlName]="input.name" pInputText class="w-100" [type]="input.inputType" required
+                          [name]="input.name" />
+                  </div>
+                  <div class="container-alerts" *ngIf="getControl(input.name)?.errors">
+                      <div class="alert alert-danger"
+                          *ngIf="getControl(input.name)?.hasError('required') && getControl(input.name)?.dirty">
+                          {{input['message']|translate}}
+                      </div>
+                  </div>
+              </div>
+          </form> -->
+  
+    </div>
+    <footer class="footer-dialog p-15 d-flex justify-content-end">
+  
+      <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+        (click)="request()">{{submitted ?
+        (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+      <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
+        (click)="close()">{{data!['titleClose']|translate}}</button>
+    </footer>
+  </div>
+  <div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+  </div>

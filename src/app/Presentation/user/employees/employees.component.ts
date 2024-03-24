@@ -18,7 +18,10 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ActivatedRoute } from '@angular/router';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
-
+import { saveAs } from "file-saver";
+import { DialogUploadFileComponent } from 'src/app/shared/components/uploadFiles/dialog-upload-file/dialog-upload-file.component';
+import { HttpEventType } from '@angular/common/http';
+import { DialogUploadFileProgressBarComponent } from 'src/app/shared/components/uploadFiles/dialog-upload-file-progress-bar/dialog-upload-file-progress-bar.component';
 @Component({
   selector: 'app-employees',
   templateUrl: './employees.component.html',
@@ -45,6 +48,14 @@ export class EmployeesComponent {
   listDepratment: any[] = [];
   listSchedules: any[] = [];
   listJobTitle: any[] = [];
+
+  isUploading: boolean = false;
+  isCanceling: boolean = false;
+  isDialogProgressBarOpen = false;
+  dialogRefUploadFiles!: any;
+  dialogRefUploadFilesProgressBar!: any;
+  barWith: number = 0;
+
 
   defaultRowPerPage = { name: '5', code: 5 };
 
@@ -96,6 +107,8 @@ export class EmployeesComponent {
   page = 0;
   categories: any[] = [
   ];
+  uploadSub: Subject<boolean> = new Subject();
+
   public configs: PaginationInstance = {
     id: "custom",
     itemsPerPage: 10,
@@ -826,13 +839,15 @@ export class EmployeesComponent {
     this.employeesService.exportDraft().subscribe( {
       next:data => {
         debugger;
-        let fileName = data.headers.get('content-disposition')?.split(';')[1].split('=')[1];
-        let blob:Blob = data.body as Blob;
-        let a = document.createElement('a');
-        a.download = fileName;
-        a.href = window.URL.createObjectURL(blob);
-        a.click();
+        // let fileName = data.headers.get('content-disposition')?.split(';')[1].split('=')[1];
+        // let blob:Blob = data.body as Blob;
+        // let a = document.createElement('a');
+        // a.download = fileName;
+        // a.href = window.URL.createObjectURL(blob);
+        // a.click();
+        saveAs(data.body, 'employees.docx')
         this.loading = false;
+
 
       },
       error:err => {
@@ -844,6 +859,93 @@ export class EmployeesComponent {
       }
     }
       );
+  }
+  onCancelUpload() {
+    this.uploadSub.next(true);
+    this.uploadSub.unsubscribe();
+    this.isUploading = false;
+    this.isCanceling = true;
+    // this.router.navigate(["../"])
+  }
+  CreateImportDataFromExcel() {
+    // this.employeesService.importDataFromExcel()
+    this.dialogRefUploadFiles = this.dialog.open(DialogUploadFileComponent, {
+      width: "50vw",
+      data: {
+        title: "رفع الملف",
+        uploadFile: "ارفاق الملف",
+        chooseLabel: "اختار الملف ليتم رفعه",
+        buttonSend:"رفع",
+        titleClose:"اغلاق"
+      },
+    });
+
+    this.dialogRefUploadFiles.componentInstance.submitted = true;
+    // dialogRefAddCurrency.componentInstance.list = this.categories;
+    this.dialogRefUploadFiles.componentInstance.submitClicked.subscribe(result => {
+      debugger;
+      let formData = new FormData();
+      moment.locale("en"); 
+      debugger;
+      result.files.forEach((file: any) => {
+        formData.append("file", file.fileUpload, file.fileUpload.name);
+      });
+      this.dialogRefUploadFiles.componentInstance.submitted = false;
+      debugger;
+
+      this.employeesService.importDataFromExcel(formData).pipe(takeUntil(this.uploadSub)).subscribe(
+        {
+          next: data => {
+            debugger;
+
+            if (data.type === HttpEventType.UploadProgress) {
+              this.isUploading = true;
+              debugger;
+
+              this.barWith = Math.round(100 / (data.total || 0) * data.loaded);
+              if (!this.isDialogProgressBarOpen) {
+                this.isDialogProgressBarOpen = true;
+                this.dialogRefUploadFilesProgressBar = this.dialog.open(DialogUploadFileProgressBarComponent, {
+                  id: 'uploadProgressBar',
+                  width: "40vw",
+                  data: {
+                    title: "upload files",
+                    message: "Files are Uploading...",
+                    buttonSend: "remove",
+                    buttonClose: "Cancel",
+                    actionsspaceBetween: true
+                  },
+                });
+              }
+              this.dialogRefUploadFilesProgressBar.componentInstance.barWithText = "يتم تحميل المف..." + this.barWith + "%";
+              this.dialogRefUploadFilesProgressBar.componentInstance.barWidth = this.barWith;
+            } else if (data.type === HttpEventType.Response) {
+              this.dialogRefUploadFilesProgressBar.componentInstance.barWithText = "تم تحميل الملف بنجاح";
+              this.isUploading = false;
+              this.isDialogProgressBarOpen = false;
+              this.dialogRefUploadFiles.componentInstance.submitted = true;
+                  this.dialogRefUploadFilesProgressBar.close();
+                  this.dialogRefUploadFiles.close();
+                this.toast.success("Successfully upload!", '', {
+                  timeOut: 5000,
+                  onActivateTick: true
+                });  
+            }
+          },
+          error: err => {
+            debugger;
+            this.dialogRefUploadFiles.componentInstance.submitted = true;
+          }
+        }
+      )
+
+
+    });
+    this.dialogRefUploadFiles.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
   }
   lastSearchQuery = "";
   searchDropdown(data: any, type: string) {
