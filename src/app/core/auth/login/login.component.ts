@@ -168,7 +168,7 @@ export class LoginComponent {
     this.cd.detectChanges();
   }
   submit() {
-    if (this.FormGroup.valid && this.loading && false) {
+    if (this.FormGroup.valid && this.loading) {
       this.loading = false;
       this.isLoading = true;
       this.authService.login({
