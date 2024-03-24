@@ -133,6 +133,8 @@
   </div>
 
 </div>
-<div class="spinner d-flex justify-content-center align-items-center loading" *ngIf="isLoading">
-  <mat-spinner></mat-spinner>
-</div>
+<ng-container *ngIf="isLoading">
+  <div class="spinner d-flex justify-content-center align-items-center loading">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-container>

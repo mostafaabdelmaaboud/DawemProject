@@ -834,11 +834,9 @@ export class EmployeesComponent {
     })
   }
   exportDraft() {
-    debugger;
     this.loading = true;
     this.employeesService.exportDraft().subscribe( {
       next:data => {
-        debugger;
         // let fileName = data.headers.get('content-disposition')?.split(';')[1].split('=')[1];
         // let blob:Blob = data.body as Blob;
         // let a = document.createElement('a');
@@ -851,7 +849,6 @@ export class EmployeesComponent {
 
       },
       error:err => {
-        debugger;
         this.loading = false;
 
         this.toast.error(err.message);
@@ -883,24 +880,19 @@ export class EmployeesComponent {
     this.dialogRefUploadFiles.componentInstance.submitted = true;
     // dialogRefAddCurrency.componentInstance.list = this.categories;
     this.dialogRefUploadFiles.componentInstance.submitClicked.subscribe(result => {
-      debugger;
       let formData = new FormData();
       moment.locale("en"); 
-      debugger;
       result.files.forEach((file: any) => {
         formData.append("file", file.fileUpload, file.fileUpload.name);
       });
       this.dialogRefUploadFiles.componentInstance.submitted = false;
-      debugger;
 
       this.employeesService.importDataFromExcel(formData).pipe(takeUntil(this.uploadSub)).subscribe(
         {
           next: data => {
-            debugger;
 
             if (data.type === HttpEventType.UploadProgress) {
               this.isUploading = true;
-              debugger;
 
               this.barWith = Math.round(100 / (data.total || 0) * data.loaded);
               if (!this.isDialogProgressBarOpen) {
@@ -933,7 +925,6 @@ export class EmployeesComponent {
             }
           },
           error: err => {
-            debugger;
             this.dialogRefUploadFiles.componentInstance.submitted = true;
           }
         }

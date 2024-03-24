@@ -259,7 +259,6 @@ export class ReportsComponent {
     dialogRefAddCurrency.componentInstance.id = data.id
   }
   filter() {
-    debugger;
     if (this.filterForm.value.searchDate != null) {
       if (this.filterForm.value.searchDate[1] === null) {
         this.dateTaskMultiple = true;
@@ -272,7 +271,6 @@ export class ReportsComponent {
     }
     if (this.filterForm.valid && !this.dateTaskMultiple) {
       Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
-        debugger;
         if (typeof value  === 'string') {
           if(value != "") {
             if(key !="searchDate") {
@@ -283,7 +281,6 @@ export class ReportsComponent {
             if(key !="searchDate" && key !="EmployeesIds") {
               this.filteration[key] = value;
             } else if(key ==="EmployeesIds") {
-              debugger;
               this.filteration[key] = value.map(item => item.key);
 
             }

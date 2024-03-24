@@ -103,10 +103,7 @@ export class SideNavBarComponent {
     event.stopPropagation();
   }
   onScrollDown() {
-    debugger;
-    console.log("scrolled!!");
     let totalCountPages = Math.ceil(this.notificationCount / 5);
-    debugger;
     if(totalCountPages > (this.notificationFilter.PageNumber + 1)) {
       this.notificationFilter.PageNumber++;
       this.numberNotification(false);
@@ -114,7 +111,6 @@ export class SideNavBarComponent {
     // numberNotification
   }
   onScrollUp() {
-    console.log("scrolled up!!");
   }
   isToday(dateToCheck: any): boolean {
     const today = new Date();
@@ -190,13 +186,11 @@ export class SideNavBarComponent {
     this.loadingNotification = true;
     if(showFirstOnly) {
       this.notificationService.markAsViewed().subscribe(data => {
-        debugger;
       });
     }
 
     this.notificationService.listNotification(this.notificationFilter).subscribe({
       next:data => {
-        debugger;
         // this.notificationList = [];
         this.loadingNotification = false;
         data?.data?.notificationStores.forEach(item => {
@@ -225,13 +219,11 @@ export class SideNavBarComponent {
    
   }
   markAsRead(id:any) {
-    debugger;
     this.loadingNotification = true;
 
     let params = {notificationStoreId:id};
     this.notificationService.markAsRead(params).subscribe({
       next:data => {
-        debugger;
         let findIndexIsRead = this.notificationList.findIndex(item => item.id === id);
         if(findIndexIsRead >= 0) {
           this.notificationList[findIndexIsRead].isRead = data.data;
@@ -268,7 +260,6 @@ export class SideNavBarComponent {
 
   }
   ngOnInit(): void {
-    debugger;
     let permission = JSON.parse(localStorage.getItem('permissions') as string)
     this.isAdmin = permission?.isAdmin;
     this.notificationService.getNotification().subscribe(data => {
@@ -277,6 +268,8 @@ export class SideNavBarComponent {
     this.notificationService.getUnViewedNotificationCount().subscribe(data => {
       this.numNotification = data?.toString() === "0" ? "": data?.toString();
     });
+    this.getUnViewedNotificationCount();
+
     if (this.currentLang === undefined || this.currentLang === null) {
       this.countries = [
         { name: 'عربي', code: 'AR' },
@@ -674,6 +667,11 @@ export class SideNavBarComponent {
     }
     this.dashboardService.getInformationProfile().subscribe(data => {
       this.profile = data;
+    })
+  }
+  getUnViewedNotificationCount() {
+    this.notificationService.dataUnViewedNotificationCount().subscribe(data => {
+      this.notificationService.setUnViewedNotificationCount(data.data);
     })
   }
   searchInput = "";

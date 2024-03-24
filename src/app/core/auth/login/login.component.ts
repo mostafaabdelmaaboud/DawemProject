@@ -88,7 +88,14 @@ export class LoginComponent {
       // }
 
     }
-   this.requestPermission()
+    this.isLoading = true;
+
+  }
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+    this.requestPermission();
+
   }
   requestPermission() {
     this.isLoading = true;
@@ -98,14 +105,10 @@ export class LoginComponent {
      { vapidKey: environment.firebase.vapidKey}).then(
        (currentToken) => {
          if (currentToken) {
-          debugger;
-           console.log("Hurraaa!!! we got the token.....");
            this.isLoading = false;
 
            this.FCMToken = currentToken;
-           console.log(currentToken);
          } else {
-          debugger;
           this.isLoading = false;
 
            console.log('No registration token available. Request permission to generate one.');
