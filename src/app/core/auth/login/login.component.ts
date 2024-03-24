@@ -90,7 +90,23 @@ export class LoginComponent {
 
     }
     this.isLoading = false;
-    this.requestPermission();
+    if ('Notification' in window && navigator.permissions) {
+      navigator.permissions.query({ name: 'notifications' })
+      .then(permissionStatus => {
+        if(permissionStatus.state === "granted") {
+          this.requestPermission();
+        } else {
+          this.toast.error("Error querying Notification permission: " + permissionStatus.state, '', {
+            timeOut: 10000,
+            onActivateTick: true
+          });  
+        }
+      }).catch(error => {
+        console.error('Error querying Notification permission:', error);
+      });
+    } else {
+      console.error('Notifications not supported in this browser.');
+    }
   }
   requestPermission() {
     this.isLoading = true;
@@ -103,11 +119,9 @@ export class LoginComponent {
            this.FCMToken = currentToken;
          } else {
           this.isLoading = false;
-
            console.log('No registration token available. Request permission to generate one.');
          }
      }).catch((err) => {
-      // this.isLoading = false;
       this.requestPermission();
         console.log('An error occurred while retrieving token. ', err);
     });
