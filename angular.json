@@ -20,6 +20,8 @@
             "allowedCommonJsDependencies": [
               "html2canvas",
               "lodash",
+              "file-saver",
+              "ngx-csv/ngx-csv",
               "html2pdf.js",
               "raf",
               "core-js/modules/web.dom-collections.iterator.js",
