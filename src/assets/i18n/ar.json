@@ -805,6 +805,8 @@
   "notifications":{
     "notifications":"إشعارات",
     "unread":"غير مقروءة",
+    "read":"مقروءة",
+
     "ThatAllNotificationsFromTheLast":"هذه جميع الإخطارات من أخر",
     "days":"يومًا",
     "showAll":"عرض الكل"

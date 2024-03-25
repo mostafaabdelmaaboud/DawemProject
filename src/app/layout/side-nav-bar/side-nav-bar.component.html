@@ -1126,7 +1126,7 @@
                         <div class="unread" [formGroup]="formGroupUnRead">
                             <p-inputSwitch formControlName="unRead"></p-inputSwitch>
 
-                          <span>{{'notifications.unread' | translate}}</span>
+                          <span>{{unReadView ? ('notifications.unread' | translate) : ('notifications.read' | translate)}}</span>
                         </div>
                       </div>  
                   

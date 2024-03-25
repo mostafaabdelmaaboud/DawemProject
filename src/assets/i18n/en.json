@@ -807,6 +807,7 @@
   "notifications":{
     "notifications":"notifications",
     "unread":"Unread",
+    "read":"read",
     "ThatAllNotificationsFromTheLast":"That’s all notifications from the last",
     "days":"days",
     "showAll":"Show all"
