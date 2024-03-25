@@ -507,7 +507,13 @@ export class SectionsComponent {
             }
           },
           error: err => {
+            if(err.status === 400) {
+              let valuesError = Object.values(err?.error);
+              this.dialogRefUploadFiles.componentInstance.errorUploadFileIdCopy = valuesError.join(" , ")
+            }
             this.dialogRefUploadFiles.componentInstance.submitted = true;
+            this.dialogRefUploadFilesProgressBar.close();
+
           }
         }
       )

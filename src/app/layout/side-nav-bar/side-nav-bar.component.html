@@ -1105,7 +1105,7 @@
                 </div> -->
                 <div class="dropdown dropdownUserInfo d-inline-block ml-1 mr-5">
                   <a type="button" class="position-relative dropdownNotification"
-                    (click)="$event.stopPropagation();numberNotification(true)"
+                    (click)="$event.stopPropagation();numberNotification(true, unReadView)"
                     [matMenuTriggerFor]="notification">
                     <i class="bi bi-bell-fill" style="font-size:26px;margin-top: 6px;"></i>
     
@@ -1123,8 +1123,9 @@
                     <div class="custom-mat-group custom-mat-group-notifaction" (click)="onLinkClick($event)">
                       <div class="header-notifications">
                         <h6 class="title-notification m-0">{{'notifications.notifications' | translate}}</h6>
-                        <div class="unread">
-                          <p-inputSwitch [(ngModel)]="checked"></p-inputSwitch>
+                        <div class="unread" [formGroup]="formGroupUnRead">
+                            <p-inputSwitch formControlName="unRead"></p-inputSwitch>
+
                           <span>{{'notifications.unread' | translate}}</span>
                         </div>
                       </div>  

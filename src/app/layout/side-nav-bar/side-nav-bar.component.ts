@@ -12,6 +12,7 @@ import { NotificationService } from 'src/app/service/notification.service';
 import { FormatDateService } from 'src/app/shared/services/format-date.service';
 import { Router } from '@angular/router';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-side-nav-bar',
@@ -49,12 +50,14 @@ export class SideNavBarComponent {
     PagingEnabled:true
 
   };
-
+  formGroupUnRead:FormGroup = this.fb.group({
+    unRead:[false]
+  });
   AllnotificationList: any[] = [];
   checked = false;
 
   notificationCount = 0;
-
+  unReadView = false;
   notificationCountRequests = 0;
   loadingNotification = true;
   notificationList: any[] = [];
@@ -64,6 +67,7 @@ export class SideNavBarComponent {
     public translate: TranslateService,
     public authService: AuthService,
     private notificationService: NotificationService,
+    private fb:FormBuilder,
     private formatDateService: FormatDateService,
     private permissionsUserService: PermissionsUserService) {
     this.mobileQuery = media.matchMedia('(max-width: 1050px)');
@@ -106,7 +110,7 @@ export class SideNavBarComponent {
     let totalCountPages = Math.ceil(this.notificationCount / 5);
     if(totalCountPages > (this.notificationFilter.PageNumber + 1)) {
       this.notificationFilter.PageNumber++;
-      this.numberNotification(false);
+      this.numberNotification(false, this.unReadView);
     }
     // numberNotification
   }
@@ -180,7 +184,7 @@ export class SideNavBarComponent {
     return this.getPermissions()?.availablePermissions[findIndexPermission]?.screenName
 
   }
-  numberNotification(showFirstOnly:boolean) {
+  numberNotification(showFirstOnly:boolean, unread:boolean) {
     this.numNotification = "";
     // this.notificationList = [];
     this.loadingNotification = true;
@@ -188,34 +192,75 @@ export class SideNavBarComponent {
       this.notificationService.markAsViewed().subscribe(data => {
       });
     }
+    
+    if(!unread) {
+      
 
-    this.notificationService.listNotification(this.notificationFilter).subscribe({
-      next:data => {
-        // this.notificationList = [];
-        this.loadingNotification = false;
-        data?.data?.notificationStores.forEach(item => {
-          this.notificationList.push({
-            shortMessege:item.shortMessege,
-            fullMessege:item.fullMessege,
-            iconUrl:item.iconUrl,
-            id:item.id,
-            isRead:item.isRead,
-            notificationType:item.notificationType,
-            priority:item.priority,
-            date:this.formatDateService.formatDate(new Date(item.date)),
-            employeeId:item.employeeId,
-            status:item.status
-          })
-        });
+      this.notificationService.listNotification(this.notificationFilter).subscribe({
+        next:data => {
+          // this.notificationList = [];
+          this.loadingNotification = false;
+          
 
-        this.notificationCount = data.data.totalCount;
+          data?.data?.notificationStores.forEach(item => {
+            this.notificationList.push({
+              shortMessege:item.shortMessege,
+              fullMessege:item.fullMessege,
+              iconUrl:item.iconUrl,
+              id:item.id,
+              isRead:item.isRead,
+              notificationType:item.notificationType,
+              priority:item.priority,
+              date:this.formatDateService.formatDate(new Date(item.date)),
+              employeeId:item.employeeId,
+              status:item.status
+            })
+          });
+  
+          this.notificationCount = data.data.totalCount;
+  
+        },
+        error:err => {
+          this.loadingNotification = false;
+  
+        }
+      })
+    } else {
+      
 
-      },
-      error:err => {
-        this.loadingNotification = false;
+      this.notificationService.getUnreadNotifications(this.notificationFilter).subscribe({
+        next:data => {
+          
 
-      }
-    })
+          // this.notificationList = [];
+          this.loadingNotification = false;
+          
+
+          data?.data?.notificationStores.forEach(item => {
+            this.notificationList.push({
+              shortMessege:item.shortMessege,
+              fullMessege:item.fullMessege,
+              iconUrl:item.iconUrl,
+              id:item.id,
+              isRead:item.isRead,
+              notificationType:item.notificationType,
+              priority:item.priority,
+              date:this.formatDateService.formatDate(new Date(item.date)),
+              employeeId:item.employeeId,
+              status:item.status
+            })
+          });
+  
+          this.notificationCount = data.data.totalCount;
+  
+        },
+        error:err => {
+          this.loadingNotification = false;
+  
+        }
+      })
+    }
+    
    
   }
   markAsRead(id:any) {
@@ -269,7 +314,17 @@ export class SideNavBarComponent {
       this.numNotification = data?.toString() === "0" ? "": data?.toString();
     });
     this.getUnViewedNotificationCount();
-
+    this.formGroupUnRead.get("unRead")?.valueChanges.subscribe(data => {
+      
+      this.unReadView = data;
+      this.notificationFilter = {
+        PageNumber: 0,
+        PageSize: 5,
+        PagingEnabled:true
+      };
+      this.notificationList = [];
+      this.numberNotification(false,this.unReadView)
+    })
     if (this.currentLang === undefined || this.currentLang === null) {
       this.countries = [
         { name: 'عربي', code: 'AR' },

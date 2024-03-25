@@ -142,6 +142,8 @@ export class DialogUploadFileComponent {
     this.AttachmentsFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
     if(this.requiredCommercialRegFiles) {
       this.addBranchGroupForm.get("idCopyFile")?.setValue("");
+      this.errorUploadFileIdCopy = "";
+
 
     }
   }

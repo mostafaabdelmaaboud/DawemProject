@@ -145,6 +145,13 @@ export class HttpConfigInterceptor implements HttpInterceptor {
             localStorage.clear();
             sessionStorage.clear();
             this.router.navigate(["/login"]);
+          } else if(error?.status == 400) {
+            let valuesError = Object.values(error?.error);
+
+            this.toastservice.show({
+              message: valuesError.join(" , "),
+              type: avilableTypes.Error,
+            });
           } else {
             if (error?.response?.data) {
               this.toastservice.show({
