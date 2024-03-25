@@ -16,6 +16,11 @@ import { PermissionsUserService } from 'src/app/shared/services/permissions-user
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
+import { DialogUploadFileComponent } from 'src/app/shared/components/uploadFiles/dialog-upload-file/dialog-upload-file.component';
+import moment from 'moment';
+import { HttpEventType } from '@angular/common/http';
+import { DialogUploadFileProgressBarComponent } from 'src/app/shared/components/uploadFiles/dialog-upload-file-progress-bar/dialog-upload-file-progress-bar.component';
+import { saveAs } from "file-saver";
 
 @Component({
   selector: 'app-zones',
@@ -102,7 +107,15 @@ export class ZonesComponent {
   cards!: any;
   spinnerCards = false;
   destroy$: Subject<boolean> = new Subject<boolean>();
-
+  isUploading: boolean = false;
+  isCanceling: boolean = false;
+  isDialogProgressBarOpen = false;
+  dialogRefUploadFiles!: any;
+  dialogRefUploadFilesProgressBar!: any;
+  barWith: number = 0;
+  uploadSub: Subject<boolean> = new Subject();
+  loading = false;
+  
   constructor(
     private config: PrimeNGConfig, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
@@ -483,6 +496,104 @@ export class ZonesComponent {
 
       }
     });
+  }
+  CreateImportDataFromExcel() {
+    // this.employeesService.importDataFromExcel()
+    this.dialogRefUploadFiles = this.dialog.open(DialogUploadFileComponent, {
+      width: "50vw",
+      data: {
+        title: "رفع الملف",
+        uploadFile: "ارفاق الملف",
+        chooseLabel: "اختار الملف ليتم رفعه",
+        buttonSend:"رفع",
+        titleClose:"اغلاق"
+      },
+    });
+
+    this.dialogRefUploadFiles.componentInstance.submitted = true;
+    // dialogRefAddCurrency.componentInstance.list = this.categories;
+    this.dialogRefUploadFiles.componentInstance.submitClicked.subscribe(result => {
+      let formData = new FormData();
+      moment.locale("en"); 
+      result.files.forEach((file: any) => {
+        formData.append("file", file.fileUpload, file.fileUpload.name);
+      });
+      this.dialogRefUploadFiles.componentInstance.submitted = false;
+
+      this.zonesService.importDataFromExcel(formData).pipe(takeUntil(this.uploadSub)).subscribe(
+        {
+          next: data => {
+
+            if (data.type === HttpEventType.UploadProgress) {
+              this.isUploading = true;
+
+              this.barWith = Math.round(100 / (data.total || 0) * data.loaded);
+              if (!this.isDialogProgressBarOpen) {
+                this.isDialogProgressBarOpen = true;
+                this.dialogRefUploadFilesProgressBar = this.dialog.open(DialogUploadFileProgressBarComponent, {
+                  id: 'uploadProgressBar',
+                  width: "40vw",
+                  data: {
+                    title: "upload files",
+                    message: "Files are Uploading...",
+                    buttonSend: "remove",
+                    buttonClose: "Cancel",
+                    actionsspaceBetween: true
+                  },
+                });
+              }
+              this.dialogRefUploadFilesProgressBar.componentInstance.barWithText = "يتم تحميل المف..." + this.barWith + "%";
+              this.dialogRefUploadFilesProgressBar.componentInstance.barWidth = this.barWith;
+            } else if (data.type === HttpEventType.Response) {
+              this.dialogRefUploadFilesProgressBar.componentInstance.barWithText = "تم تحميل الملف بنجاح";
+              this.isUploading = false;
+              this.isDialogProgressBarOpen = false;
+              this.dialogRefUploadFiles.componentInstance.submitted = true;
+                  this.dialogRefUploadFilesProgressBar.close();
+                  this.dialogRefUploadFiles.close();
+                this.toast.success("Successfully upload!", '', {
+                  timeOut: 5000,
+                  onActivateTick: true
+                });  
+            }
+          },
+          error: err => {
+            this.dialogRefUploadFiles.componentInstance.submitted = true;
+          }
+        }
+      )
+
+
+    });
+    this.dialogRefUploadFiles.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+  exportDraft() {
+    this.loading = true;
+    this.zonesService.exportDraft().subscribe( {
+      next:data => {
+        // let fileName = data.headers.get('content-disposition')?.split(';')[1].split('=')[1];
+        // let blob:Blob = data.body as Blob;
+        // let a = document.createElement('a');
+        // a.download = fileName;
+        // a.href = window.URL.createObjectURL(blob);
+        // a.click();
+        saveAs(data.body, 'zones.docx')
+        this.loading = false;
+
+
+      },
+      error:err => {
+        this.loading = false;
+
+        this.toast.error(err.message);
+
+      }
+    }
+      );
   }
   editAnZones(data: any) {
     let dialogRefAddCurrency!:MatDialogRef<AddZoneComponent, any>;

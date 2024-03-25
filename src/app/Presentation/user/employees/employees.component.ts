@@ -55,6 +55,8 @@ export class EmployeesComponent {
   dialogRefUploadFiles!: any;
   dialogRefUploadFilesProgressBar!: any;
   barWith: number = 0;
+  uploadSub: Subject<boolean> = new Subject();
+  loading = false;
 
 
   defaultRowPerPage = { name: '5', code: 5 };
@@ -90,7 +92,6 @@ export class EmployeesComponent {
   employeesIsExport: any = [];
 
   destroy$: Subject<boolean> = new Subject<boolean>();
-  loading = false;
   isLoading = true;
   listDirectManager: any[] = [];
 
@@ -107,7 +108,6 @@ export class EmployeesComponent {
   page = 0;
   categories: any[] = [
   ];
-  uploadSub: Subject<boolean> = new Subject();
 
   public configs: PaginationInstance = {
     id: "custom",
@@ -833,30 +833,7 @@ export class EmployeesComponent {
       });
     })
   }
-  exportDraft() {
-    this.loading = true;
-    this.employeesService.exportDraft().subscribe( {
-      next:data => {
-        // let fileName = data.headers.get('content-disposition')?.split(';')[1].split('=')[1];
-        // let blob:Blob = data.body as Blob;
-        // let a = document.createElement('a');
-        // a.download = fileName;
-        // a.href = window.URL.createObjectURL(blob);
-        // a.click();
-        saveAs(data.body, 'employees.docx')
-        this.loading = false;
-
-
-      },
-      error:err => {
-        this.loading = false;
-
-        this.toast.error(err.message);
-
-      }
-    }
-      );
-  }
+ 
   onCancelUpload() {
     this.uploadSub.next(true);
     this.uploadSub.unsubscribe();
@@ -937,6 +914,30 @@ export class EmployeesComponent {
 
       }
     });
+  }
+  exportDraft() {
+    this.loading = true;
+    this.employeesService.exportDraft().subscribe( {
+      next:data => {
+        // let fileName = data.headers.get('content-disposition')?.split(';')[1].split('=')[1];
+        // let blob:Blob = data.body as Blob;
+        // let a = document.createElement('a');
+        // a.download = fileName;
+        // a.href = window.URL.createObjectURL(blob);
+        // a.click();
+        saveAs(data.body, 'employees.docx')
+        this.loading = false;
+
+
+      },
+      error:err => {
+        this.loading = false;
+
+        this.toast.error(err.message);
+
+      }
+    }
+      );
   }
   lastSearchQuery = "";
   searchDropdown(data: any, type: string) {

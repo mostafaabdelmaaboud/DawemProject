@@ -132,5 +132,13 @@ export class SectionsService {
     }
     return this.http.put<any>(`${environment.baseUrl}Department/disable`, {}, { params: queryParams })
   }
-
+  exportDraft(): any {
+    return this.http.get<any>(`${environment.baseUrl}Department/CreateExportDraft`, {observe:'response', responseType:'blob' as 'json'})
+  }
+  importDataFromExcel(formData:FormData): any {
+    return this.http.post<any>(`${environment.baseUrl}Department/CreateImportDataFromExcel`,formData,  {
+      reportProgress: true,
+      observe: "events",
+    });
+  }
 }

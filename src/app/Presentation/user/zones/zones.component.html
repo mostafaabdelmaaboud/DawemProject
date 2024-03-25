@@ -132,6 +132,16 @@
             <input pInputText type="text" #search (input)="dt1.filterGlobal(search.value, 'contains')"
               placeholder="Search..." />
           </span> -->
+          <button (click)="exportDraft()" class="btn btn-outline-primary action-button-t d-flex align-items-center">
+            <i class="pi pi-download"></i>
+
+            <span>تحميل ملف المناطق</span>
+          </button>
+          <button (click)="CreateImportDataFromExcel()" class="btn btn-outline-primary action-button-t d-flex align-items-center">
+            <i class="pi pi-upload"></i>
+
+            <span>رفع ملف المناطق</span>
+          </button>
           <button (click)="op.toggle($event)" class="btn btn-outline-primary action-button-t d-flex align-items-center">
             <i class="pi pi-filter-fill"></i>
 

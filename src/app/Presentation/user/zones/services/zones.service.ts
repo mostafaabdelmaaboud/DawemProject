@@ -129,7 +129,15 @@ export class ZonesService {
     }
     return this.http.get<any>(`${environment.baseUrl}Zone/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
   }
-
+  exportDraft(): any {
+    return this.http.get<any>(`${environment.baseUrl}Department/CreateExportDraft`, {observe:'response', responseType:'blob' as 'json'})
+  }
+  importDataFromExcel(formData:FormData): any {
+    return this.http.post<any>(`${environment.baseUrl}Department/CreateImportDataFromExcel`,formData,  {
+      reportProgress: true,
+      observe: "events",
+    });
+  }
 
 
 }
