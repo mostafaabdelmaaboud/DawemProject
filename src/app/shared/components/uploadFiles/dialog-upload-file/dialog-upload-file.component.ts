@@ -113,6 +113,7 @@ export class DialogUploadFileComponent {
   imageArray: any[] = [];
   errorUploadFileIdCopyIsRequired!: string;
   errorUploadFileIdCopy!: string;
+  errorFile: any[] = [];
   public viewImage: any[] = [];
   addBranchGroupForm: FormGroup = this.fb.group({
  

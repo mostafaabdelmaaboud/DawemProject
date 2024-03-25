@@ -908,7 +908,7 @@ export class EmployeesComponent {
           error: err => {
             if(err.status === 400) {
               let valuesError = Object.values(err?.error);
-              this.dialogRefUploadFiles.componentInstance.errorUploadFileIdCopy = valuesError.join(" , ")
+              this.dialogRefUploadFiles.componentInstance.errorFile = valuesError;
             }
             this.dialogRefUploadFiles.componentInstance.submitted = true;
             this.dialogRefUploadFilesProgressBar.close();
@@ -935,7 +935,7 @@ export class EmployeesComponent {
         // a.download = fileName;
         // a.href = window.URL.createObjectURL(blob);
         // a.click();
-        saveAs(data.body, 'employees.docx')
+        saveAs(data.body, 'EmployeeEmptyDraft.xlsx')
         this.loading = false;
 
 

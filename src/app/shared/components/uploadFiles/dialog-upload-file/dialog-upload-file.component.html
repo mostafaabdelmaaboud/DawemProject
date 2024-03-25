@@ -56,6 +56,13 @@
                   <div class="alert alert-danger mb-3" *ngIf="errorUploadFileIdCopy">
                       {{errorUploadFileIdCopy}}
                   </div>
+                  <div class="alert alert-danger mb-3" *ngIf="errorFile.length > 0">
+                    <ul style="list-style-type:disc" class="m-0">
+                      <ng-container *ngFor="let error of errorFile">
+                        <li>{{error}}</li>
+                      </ng-container>
+                    </ul>
+                </div>
                   <div class="alert alert-danger mb-3"
                       *ngIf="errorUploadFileIdCopyIsRequired && getControl('idCopyFile')?.dirty">
                       {{errorUploadFileIdCopyIsRequired}}

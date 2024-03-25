@@ -562,7 +562,7 @@ export class ZonesComponent {
           error: err => {
             if(err.status === 400) {
               let valuesError = Object.values(err?.error);
-              this.dialogRefUploadFiles.componentInstance.errorUploadFileIdCopy = valuesError.join(" , ")
+              this.dialogRefUploadFiles.componentInstance.errorFile = valuesError;
             }
             this.dialogRefUploadFiles.componentInstance.submitted = true;
             this.dialogRefUploadFilesProgressBar.close();
@@ -588,7 +588,7 @@ export class ZonesComponent {
         // a.download = fileName;
         // a.href = window.URL.createObjectURL(blob);
         // a.click();
-        saveAs(data.body, 'zones.docx')
+        saveAs(data.body, 'ZoneEmptyDraft.xlsx')
         this.loading = false;
 
 
