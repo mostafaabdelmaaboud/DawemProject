@@ -499,11 +499,13 @@ export class SectionsComponent {
               this.isDialogProgressBarOpen = false;
               this.dialogRefUploadFiles.componentInstance.submitted = true;
                   this.dialogRefUploadFilesProgressBar.close();
+                  this.getSection(this.filteration);
+                  this.toast.success("Successfully upload!", '', {
+                    timeOut: 5000,
+                    onActivateTick: true
+                  });  
                   this.dialogRefUploadFiles.close();
-                this.toast.success("Successfully upload!", '', {
-                  timeOut: 5000,
-                  onActivateTick: true
-                });  
+             
             }
           },
           error: err => {

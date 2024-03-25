@@ -441,7 +441,7 @@ export class EmployeesComponent {
 
     this.filteration = { ...this.filteration, PageSize: data.value.code };
 
-    this.getEmployees(this.filteration)
+    this.getEmployees(this.filteration);
   }
   getEmployees(filteration: any) {
     this.employees = [];
@@ -894,11 +894,15 @@ export class EmployeesComponent {
               this.isDialogProgressBarOpen = false;
               this.dialogRefUploadFiles.componentInstance.submitted = true;
                   this.dialogRefUploadFilesProgressBar.close();
+                  this.toast.success("Successfully upload!", '', {
+                    timeOut: 5000,
+                    onActivateTick: true
+                  });
+                  this.getEmployees(this.filteration);
+
                   this.dialogRefUploadFiles.close();
-                this.toast.success("Successfully upload!", '', {
-                  timeOut: 5000,
-                  onActivateTick: true
-                });  
+
+              
             }
           },
           error: err => {
