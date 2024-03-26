@@ -18,6 +18,10 @@ import jsPDF from 'jspdf';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { DialogDepartmentFileComponent } from 'src/app/shared/components/dialog-department-file/dialog-department-file.component';
 import { DialogCloseRadioButtonsComponent } from 'src/app/shared/components/dialog-close-radio-buttons/dialog-close-radio-buttons.component';
+import { DialogUploadFileComponent } from 'src/app/shared/components/uploadFiles/dialog-upload-file/dialog-upload-file.component';
+import { HttpEventType } from '@angular/common/http';
+import { DialogUploadFileProgressBarComponent } from 'src/app/shared/components/uploadFiles/dialog-upload-file-progress-bar/dialog-upload-file-progress-bar.component';
+import { saveAs } from "file-saver";
 
 @Component({
   selector: 'app-department',
@@ -76,7 +80,14 @@ export class DepartmentComponent {
   private dialog = inject(MatDialog);
 
   isLoading = true;
-
+  isUploading: boolean = false;
+  isCanceling: boolean = false;
+  isDialogProgressBarOpen = false;
+  dialogRefUploadFiles!: any;
+  dialogRefUploadFilesProgressBar!: any;
+  barWith: number = 0;
+  uploadSub: Subject<boolean> = new Subject();
+  loading = false;
   filteration: any = {
     PageSize: 5,
     PageNumber: 0,
@@ -420,7 +431,114 @@ export class DepartmentComponent {
     this.filteration = { ...this.filteration, PageNumber: event.page };
     this.getDepartment(this.filteration)
   }
+  CreateImportDataFromExcel() {
+    // this.employeesService.importDataFromExcel()
+    this.dialogRefUploadFiles = this.dialog.open(DialogUploadFileComponent, {
+      width: "50vw",
+      data: {
+        title: "رفع الملف",
+        uploadFile: "ارفاق الملف",
+        chooseLabel: "اختار الملف ليتم رفعه",
+        buttonSend:"رفع",
+        titleClose:"اغلاق"
+      },
+    });
 
+    this.dialogRefUploadFiles.componentInstance.submitted = true;
+    // dialogRefAddCurrency.componentInstance.list = this.categories;
+    this.dialogRefUploadFiles.componentInstance.submitClicked.subscribe(result => {
+      let formData = new FormData();
+      moment.locale("en"); 
+      result.files.forEach((file: any) => {
+        formData.append("file", file.fileUpload, file.fileUpload.name);
+      });
+      this.dialogRefUploadFiles.componentInstance.submitted = false;
+
+      this.departmentService.importDataFromExcel(formData).pipe(takeUntil(this.uploadSub)).subscribe(
+        {
+          next: data => {
+
+            if (data.type === HttpEventType.UploadProgress) {
+              this.isUploading = true;
+
+              this.barWith = Math.round(100 / (data.total || 0) * data.loaded);
+              if (!this.isDialogProgressBarOpen) {
+                this.isDialogProgressBarOpen = true;
+                this.dialogRefUploadFilesProgressBar = this.dialog.open(DialogUploadFileProgressBarComponent, {
+                  id: 'uploadProgressBar',
+                  width: "40vw",
+                  data: {
+                    title: "upload files",
+                    message: "Files are Uploading...",
+                    buttonSend: "remove",
+                    buttonClose: "Cancel",
+                    actionsspaceBetween: true
+                  },
+                });
+              }
+              this.dialogRefUploadFilesProgressBar.componentInstance.barWithText = "يتم تحميل المف..." + this.barWith + "%";
+              this.dialogRefUploadFilesProgressBar.componentInstance.barWidth = this.barWith;
+            } else if (data.type === HttpEventType.Response) {
+              this.dialogRefUploadFilesProgressBar.componentInstance.barWithText = "تم تحميل الملف بنجاح";
+              this.isUploading = false;
+              this.isDialogProgressBarOpen = false;
+              this.dialogRefUploadFiles.componentInstance.submitted = true;
+                  this.dialogRefUploadFilesProgressBar.close();
+                  this.toast.success("Successfully upload!", '', {
+                    timeOut: 5000,
+                    onActivateTick: true
+                  });
+                  this.getDepartment(this.filteration);
+
+                  this.dialogRefUploadFiles.close();
+
+              
+            }
+          },
+          error: err => {
+            if(err.status === 400) {
+              let valuesError = Object.values(err?.error);
+              this.dialogRefUploadFiles.componentInstance.errorFile = valuesError;
+            }
+            this.dialogRefUploadFiles.componentInstance.submitted = true;
+            this.dialogRefUploadFilesProgressBar.close();
+
+          }
+        }
+      )
+
+
+    });
+    this.dialogRefUploadFiles.afterClosed().subscribe(result => {
+      if (result) {
+
+      }
+    });
+  }
+  exportDraft() {
+    this.loading = true;
+    this.departmentService.exportDraft().subscribe( {
+      next:data => {
+        // let fileName = data.headers.get('content-disposition')?.split(';')[1].split('=')[1];
+        // let blob:Blob = data.body as Blob;
+        // let a = document.createElement('a');
+        // a.download = fileName;
+        // a.href = window.URL.createObjectURL(blob);
+        // a.click();
+        saveAs(data.body, 'DepartmentEmptyDraft.xlsx')
+        this.loading = false;
+
+
+      },
+      error:err => {
+        this.loading = false;
+
+        this.toast.error(err.message);
+
+      }
+    }
+      );
+  }
   deleteRow(data: any) {
     const reasonOfRefuseDialog = this.dialog.open(DialogCloseRadioButtonsComponent, {
       width: "50vw",
