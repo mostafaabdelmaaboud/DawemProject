@@ -206,6 +206,9 @@
     "Inactive":"غير نشط",
     "permanenceType":"نوع الدوام"
   },
+  "exportFiles":{
+    "maximumFileSize":"الحد الأقصى لحجم الملف 20 ميجابايت"
+  },
   "department": {
     "workSummary":"ملخص الدوام",
     "totalAttendanceForTheDay":"إجمالي حضور اليوم",
@@ -712,7 +715,7 @@
     "actions":"الإجراء",
     "addASchedule":"اضافه جدولة",
     "setAsActive":"تعيين كنشط",
-    "SectionType":"نوع القسم",
+    "SectionType":"اسم القسم",
     "departmentName":"اسم القسم",
     "partitionTypeRequired": "نوع القسم مطلوب",
     "code":"الكود",
@@ -725,7 +728,7 @@
     "WorkScheduleRequired":"جدول الدوام مطلوب",
     "chooseDate":"اختار التاريخ",
     "DateRequired":"التاريخ مطلوب",
-    "GroupRepresentatives":"نواب الجروب",
+    "GroupRepresentatives":"اسم الجروب",
     "groupName":"اسم الجروب",
     "groupNameRequired":"اسم الجروب مطلوب",
     "notes":"الملاحظات",

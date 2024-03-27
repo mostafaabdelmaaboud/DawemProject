@@ -206,6 +206,9 @@
     "Inactive":"Inactive",
     "permanenceType":"Permanence type"
   },
+  "exportFiles":{
+    "maximumFileSize":"Maximum file size is 20MB"
+  },
   "department": {
     "workSummary":"Work summary",
     "totalAttendanceForTheDay":"Total attendance for the day",
@@ -712,7 +715,7 @@
     "actions":"actions",
     "addASchedule":"Add a schedule",
     "setAsActive":"Set as active",
-    "SectionType":"Section Type",
+    "SectionType":"Section Name",
     "departmentName":"Department Name",
     "partitionTypeRequired":"Partition type required",
     "code":"code",
@@ -725,7 +728,7 @@
     "WorkScheduleRequired":"Work schedule required",
     "chooseDate":"Choose date",
     "DateRequired":"Date required",
-    "GroupRepresentatives":"Group representatives",
+    "GroupRepresentatives":"Group Name",
     "groupName":"Group name",
     "groupNameRequired":"Group name required",
     "notes":"Notes",

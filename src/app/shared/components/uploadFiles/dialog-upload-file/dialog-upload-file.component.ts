@@ -160,16 +160,16 @@ export class DialogUploadFileComponent {
           const fileSize = pFileList.files[index];
           findIndexFileName = idCopyFiles.filter(file => file.name == pFileList.files[index].name);
           if(findIndexFileName.length < 2) {
-            if(fileSize?.size < (2 * 1024 * 1024)) {
+            if(fileSize?.size < (20 * 1024 * 1024)) {
               this.viewImage=[pFileList.files[index]];
               this.AttachmentsFiles=[{fileUpload:pFileList.files[index], detailsImage: false}];
               this.errorUploadFileIdCopy = "";
             } else {
-              this.errorUploadFileIdCopy = "The file size must be less than 2MB";
+              this.errorUploadFileIdCopy = "The file size must be less than 20MB";
             }
           } else {
-            if(fileSize?.size > (2 * 1024 * 1024)) {
-              this.errorUploadFileIdCopy = "The file size must be less than 2MB";
+            if(fileSize?.size > (20 * 1024 * 1024)) {
+              this.errorUploadFileIdCopy = "The file size must be less than 20MB";
             } else {
               this.errorUploadFileIdCopy = "The file is duplicate";
             }
@@ -179,8 +179,8 @@ export class DialogUploadFileComponent {
           for (let index = 0; index < this.viewImage.length; index++) {
             let filereaderTwo = new FileReader();
             const fileSize = this.viewImage[index];
-            if (fileSize?.size > (2 * 1024 * 1024)) {
-              this.errorUploadFileIdCopy = "The file size must be less than 2MB";
+            if (fileSize?.size > (20 * 1024 * 1024)) {
+              this.errorUploadFileIdCopy = "The file size must be less than 20MB";
               return;
             } else {
               this.imageArray = [];
