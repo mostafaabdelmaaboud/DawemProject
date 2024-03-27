@@ -833,5 +833,7 @@ export class AssignmentsComponent {
   ngOnDestroy() {
     this.destroy$.next(true);
     this.subscription.unsubscribe();
+    this.subscription.add();
+
   }
 }

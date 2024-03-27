@@ -1117,7 +1117,7 @@
                     </span>
                   </a>
     
-                  <mat-menu #notification="matMenu" style="margin-top: 1em;"
+                  <mat-menu #notification="matMenu" (closed)="closeMatMenu()" style="margin-top: 1em;"
                     class="dropdown-menu userDropDown deropdownNotification">
                     <span class="dropdown-menu-arrow"></span>
                     <div class="custom-mat-group custom-mat-group-notifaction" (click)="onLinkClick($event)">

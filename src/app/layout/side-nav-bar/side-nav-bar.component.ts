@@ -13,6 +13,7 @@ import { FormatDateService } from 'src/app/shared/services/format-date.service';
 import { Router } from '@angular/router';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-side-nav-bar',
@@ -22,6 +23,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class SideNavBarComponent {
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
 
+  
   items = Array.from({ length: 100000 }).map((_, i) => `Item #${i}`);
   currentLang = localStorage.getItem("lang");
   Newlang: string = '';
@@ -62,6 +64,7 @@ export class SideNavBarComponent {
   loadingNotification = true;
   notificationList: any[] = [];
   selectedTabIndex = 1;
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     public translate: TranslateService,
@@ -185,6 +188,7 @@ export class SideNavBarComponent {
 
   }
   numberNotification(showFirstOnly:boolean, unread:boolean) {
+    // .pipe(takeUntil(this.destroy$));
     this.numNotification = "";
     this.loadingNotification = true;
     if(showFirstOnly) {
@@ -380,6 +384,7 @@ export class SideNavBarComponent {
   }
   notificationType(type:any) {
     this.trigger.closeMenu();
+ 
     if(type >=0 && type <= 2) {
       this.router.navigate(["/user/vacations"]);
 
@@ -411,6 +416,9 @@ export class SideNavBarComponent {
     this.notificationService.getUnViewedNotificationCount().subscribe(data => {
       this.numNotification = data?.toString() === "0" ? "": data?.toString();
     });
+
+
+
     this.getUnViewedNotificationCount();
     this.formGroupUnRead.get("unRead")?.valueChanges.subscribe(data => {
       
@@ -854,6 +862,11 @@ export class SideNavBarComponent {
    
     }
  
+  }
+  closeMatMenu() {
+    this.destroy$.next(true);
+    
+    this.destroy$.unsubscribe();
   }
   changeLanguage(lang: any) {
     this.countries = [];
