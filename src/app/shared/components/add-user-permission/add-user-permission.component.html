@@ -52,7 +52,7 @@
                   <ng-template pTemplate="header">
                     <span class="p-input-icon-left input-search-dropdown">
 
-                      <i class="pi pi-search" (click)="searchDropdown(searchRoleId, 'RoleId')"></i>
+                      <i class="pi pi-search" (click)="searchDropdown(searchRoleId.value, 'RoleId')"></i>
                       <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchRoleId />
                     </span>
                   </ng-template>
@@ -80,7 +80,7 @@
                   <ng-template pTemplate="header">
                     <span class="p-input-icon-left input-search-dropdown">
 
-                      <i class="pi pi-search" (click)="searchDropdown(searchUserId, 'UserId')"></i>
+                      <i class="pi pi-search" (click)="searchDropdown(searchUserId.value, 'UserId')"></i>
                       <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchUserId />
                     </span>
                   </ng-template>
@@ -212,12 +212,12 @@
             <tr>
               <td colspan="9">
                 <div class="paginate d-flex align-items-center justify-content-end">
-                  <div class="NumberOfRowsPerPage d-flex align-items-center">
+                  <!-- <div class="NumberOfRowsPerPage d-flex align-items-center">
                     <span>{{"dashboard.numberOfRowsPerPage"|translate}}</span>
-                    <p-dropdown [options]="RowsPerPage" appendTo="body" optionLabel="name"
+                    <p-dropdown [options]="RowsPerPage" [(ngModel)]="defaultRowPerPage"  appendTo="body" optionLabel="name"
                       (onChange)="numberOfRowsPerPage($event)"></p-dropdown>
 
-                  </div>
+                  </div> -->
                   <div class="text-paginator d-flex align-items-center">
                     {{mathRound(totalItems / filteration.PageSize)}} - {{filteration.PageNumber + 1}}
 

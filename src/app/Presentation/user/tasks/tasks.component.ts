@@ -271,7 +271,7 @@ export class TasksComponent {
         }
       }
     });
-    delete this.filteration.PageNumber;
+    this.filteration.PageNumber = 0;
     this.getTasks(this.filteration);
   }
   exportTableToExcel() {

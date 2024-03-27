@@ -347,7 +347,7 @@ export class ZonesComponent {
         }
       }
     });
-    delete this.filteration.PageNumber;
+    this.filteration.PageNumber = 0;
     this.getZones(this.filteration);
   }
   numberOfRowsPerPage(data: any) {

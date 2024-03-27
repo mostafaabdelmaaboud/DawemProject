@@ -91,6 +91,8 @@ export class UserPermissionsComponent {
   opened = false;
   cards!: any;
   spinnerCards = false;
+  defaultRowPerPage = { name: '5', code: 5 };
+
   private _mobileQueryListener: () => void;
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
@@ -139,9 +141,8 @@ export class UserPermissionsComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
 
     ];
     this.getInformation();
@@ -263,7 +264,7 @@ export class UserPermissionsComponent {
         }
       }
     });
-    delete this.filteration.PageNumber;
+    this.filteration.PageNumber = 0;
     this.getPermissions(this.filteration);
   }
   exportTableToExcel() {
@@ -356,6 +357,7 @@ export class UserPermissionsComponent {
           setAsActive: translate.setAsActive,
           labelRadioButton: translate.type,
           firstRadio: translate.position,
+          titleFieldDisabled:"الكود",
           secondRadio: translate.user,
           titleRoleId: translate.positionType,
           placeholdeRoleId: translate.positionType,
@@ -486,6 +488,7 @@ export class UserPermissionsComponent {
           setAsActive: translate.setAsActive,
           labelRadioButton: translate.type,
           firstRadio: translate.position,
+          titleFieldDisabled:"الكود",
           secondRadio: translate.user,
           titleRoleId: translate.positionType,
           placeholdeRoleId: translate.positionType,

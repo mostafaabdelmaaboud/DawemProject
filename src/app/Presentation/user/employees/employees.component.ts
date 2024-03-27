@@ -79,10 +79,6 @@ export class EmployeesComponent {
       field: "joiningDate"
     },
     {
-      name: "رصيد الاجازات",
-      field: "vacationsBalance"
-    },
-    {
       name: "الإجراء",
       field: "actions"
     }
@@ -200,10 +196,6 @@ export class EmployeesComponent {
           field: "joiningDate"
         },
         {
-          name: data.vacationsBalance,
-          field: "vacationsBalance"
-        },
-        {
           name: data.action,
           field: "actions"
         }
@@ -228,10 +220,6 @@ export class EmployeesComponent {
           {
             name: data.joiningDate,
             field: "joiningDate"
-          },
-          {
-            name: data.vacationsBalance,
-            field: "vacationsBalance"
           },
           {
             name: data.action,
@@ -289,7 +277,7 @@ export class EmployeesComponent {
   
   exportTableToExcel() {
     let columns = [...this.columns];
-    delete columns[5]
+    delete columns[4]
 
     var options = { 
       fieldSeparator: ',',
@@ -320,8 +308,7 @@ export class EmployeesComponent {
               img: employee?.profileImagePath ? employee?.profileImagePath : "../../../../assets/img/5034901-200.png"
             },
             section: employee?.dapartmentName ? employee?.dapartmentName : "لا يوجد",
-            joiningDate: employee?.joiningDate ? moment(employee.joiningDate).format("DD/MM/YYYY") : "لا يوجد",
-            vacationsBalance: employee?.annualVacationBalance ? employee.annualVacationBalance : "0"
+            joiningDate: employee?.joiningDate ? moment(employee.joiningDate).format("DD/MM/YYYY") : "لا يوجد"
           })
         });
 
@@ -331,10 +318,7 @@ export class EmployeesComponent {
             orderNumber: employee.orderNumber,
             employeeName: employee.employeeName.name,
             section: employee.section,
-            joiningDate: employee.joiningDate,
-    
-            vacationsBalance: employee.vacationsBalance
-    
+            joiningDate: employee.joiningDate    
           }
         });
         this.isLoading = false;
@@ -431,7 +415,7 @@ export class EmployeesComponent {
       }
 
     });
-    delete this.filteration.PageNumber;
+    this.filteration.PageNumber = 0;
 
     this.getEmployees(this.filteration);
 
@@ -460,8 +444,7 @@ export class EmployeesComponent {
             img: employee?.profileImagePath ? employee?.profileImagePath : "../../../../assets/img/5034901-200.png"
           },
           section: employee?.dapartmentName ? employee?.dapartmentName : "لا يوجد",
-          joiningDate: employee?.joiningDate ? moment(employee.joiningDate).format("DD/MM/YYYY") : "لا يوجد",
-          vacationsBalance: employee?.annualVacationBalance ? employee.annualVacationBalance : "0"
+          joiningDate: employee?.joiningDate ? moment(employee.joiningDate).format("DD/MM/YYYY") : "لا يوجد"
         });
       });
       this.totalItems = data.totalCount
@@ -527,7 +510,7 @@ export class EmployeesComponent {
           mobileNumber: data.phoneNumber + " <span class='color-red'>*</span>",
           placeholdeMobileNumber: data.phoneNumber,
           validationtitleMobileNumber: data.phoneNumberRequired,
-          titleWorkSchedule: data.workSchedule + " <span class='color-red'>*</span>",
+          titleWorkSchedule: data.workSchedule,
           placeholderWorkSchedule: data.chooseYourWorkSchedule,
           validationtitleWorkSchedule: data.workScheduleRequired,
           fieldFirst: data.employeeName +" <span class='color-red'>*</span>",
@@ -592,8 +575,7 @@ export class EmployeesComponent {
         JobTitleId: result.JobTitleId.key,
         DepartmentId: result.DepartmentId.key,
         JoiningDate: moment(result.JoiningDate).format("MM/DD/YYYY"),
-        ScheduleId: result.ScheduleId.key,
-        AnnualVacationBalance: result.AnnualVacationBalance
+        ScheduleId: result.ScheduleId.key
 
       }));
 
@@ -688,7 +670,7 @@ export class EmployeesComponent {
           secondRadioEmployeeName: translate.civil,
           thirdRadioEmployeeName: translate.directContract,
           thirdRadioFour: translate.companyContracting,
-          titleWorkSchedule: translate.workSchedule + " <span class='color-red'>*</span>",
+          titleWorkSchedule: translate.workSchedule,
           placeholderWorkSchedule: translate.chooseYourWorkSchedule,
           validationtitleWorkSchedule: translate.workScheduleRequired,
           fieldFirst: translate.employeeName +" <span class='color-red'>*</span>",
@@ -751,9 +733,7 @@ export class EmployeesComponent {
         ProfileImageName: result.files[0]?.fileUpload?.name ? result.files[0]?.fileUpload?.name : "",
         DepartmentId: result.DepartmentId.key,
         JoiningDate: moment(result.JoiningDate).format("MM/DD/YYYY"),
-        ScheduleId: result.ScheduleId.key,
-        AnnualVacationBalance: result.AnnualVacationBalance
-
+        ScheduleId: result.ScheduleId.key
       }));
       result.files.forEach((file: any) => {
         if (file.detailsImage === false) {

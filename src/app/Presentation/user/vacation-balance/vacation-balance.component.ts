@@ -466,7 +466,7 @@ export class VacationBalanceComponent {
         }
       }
     });
-    delete this.filteration.PageNumber;
+    this.filteration.PageNumber = 0;
     this.getVacations(this.filteration);
   }
   exportTableToExcel() {

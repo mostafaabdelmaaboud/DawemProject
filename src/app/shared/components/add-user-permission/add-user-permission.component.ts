@@ -98,6 +98,7 @@ export class AddUserPermissionComponent {
   ];
   permissions: any[] = [];
 
+  defaultRowPerPage = { name: '5', code: 5 };
 
   private userPermissionsService = inject(UserPermissionsService);
 
@@ -376,11 +377,9 @@ export class AddUserPermissionComponent {
 
 
 
-
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
 
     ];
 
@@ -616,12 +615,14 @@ export class AddUserPermissionComponent {
     switch (type) {
       case 'RoleId':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listRoleId = [];
+                this.lastSearchQuery = "";
+
                 res.data?.forEach((day: any) => {
 
 
@@ -638,26 +639,20 @@ export class AddUserPermissionComponent {
 
       case 'UserId':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.userPermissionsService.usersForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listUserId = [];
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-
-
                   this.listUserId.push({ name: day.name, key: day.id });
-
                 });
-
-
               });
           }
-
         }
         break;
-
       default:
         break;
     }

@@ -262,7 +262,7 @@ export class RequestsComponent {
 
       }
     });
-    delete this.filteration.PageNumber;
+    this.filteration.PageNumber = 0;
     this.getRequests(this.filteration);
   }
   exportTableToExcel() {

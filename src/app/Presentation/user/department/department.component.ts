@@ -348,7 +348,7 @@ export class DepartmentComponent {
 
       }
     });
-    delete this.filteration.PageNumber;
+    this.filteration.PageNumber = 0;
 
     this.getDepartment(this.filteration);
   }

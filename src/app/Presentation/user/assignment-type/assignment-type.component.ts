@@ -154,7 +154,7 @@ export class AssignmentTypeComponent {
         }
       }
     });
-    delete this.filteration.PageNumber;
+    this.filteration.PageNumber = 0;
 
     this.getAssignments(this.filteration);
   }

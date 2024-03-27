@@ -301,7 +301,7 @@ export class SummonsComponent {
         }
       }
     });
-    delete this.filteration.PageNumber;
+    this.filteration.PageNumber = 0;
     this.getSummons(this.filteration);
   }
   exportTableToExcel() {

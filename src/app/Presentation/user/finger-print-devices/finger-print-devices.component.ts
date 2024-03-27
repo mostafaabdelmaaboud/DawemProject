@@ -164,7 +164,7 @@ export class FingerPrintDevicesComponent {
         }
       }
     });
-    delete this.filteration.PageNumber;
+    this.filteration.PageNumber = 0;
 
     this.getFingerprintDevices(this.filteration);
   }

@@ -362,7 +362,7 @@ export class JustificationsComponent {
 
       }
     });
-    delete this.filteration.PageNumber;
+    this.filteration.PageNumber = 0;
     this.getJustifications(this.filteration);
   }
   resetFilteration() {

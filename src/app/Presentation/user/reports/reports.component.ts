@@ -286,7 +286,7 @@ export class ReportsComponent {
             }
         }
       });
-      delete this.filteration.PageNumber;
+      this.filteration.PageNumber = 0;
       this.getreports(this.filteration);
       this.op.hide();
 

@@ -134,7 +134,7 @@ export class DialogAddAnEmployeeComponent {
   addBranchGroupForm: FormGroup = this.fb.group({
     AttendanceType: ['0'],
     employeeType: ['0'],
-    ScheduleId: ['', Validators.required],
+    ScheduleId: [''],
     isActive: [false],
     name: ['', Validators.required],
     employeeNumber: ['', [Validators.required, Validators.min(0)]],
@@ -146,7 +146,6 @@ export class DialogAddAnEmployeeComponent {
     email: ['', [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
     address: ['', Validators.required],
     fieldDisabled: [''],
-    AnnualVacationBalance: ['', [Validators.required, Validators.min(0)]],
     zoneIds: ['', Validators.required],
     idCopyFile: ['', Validators.required]
   });
@@ -348,7 +347,6 @@ export class DialogAddAnEmployeeComponent {
                   this.addBranchGroupForm.get("ScheduleId")?.setValue(this.workScheduleList[ScheduleId]);
                 }
               });
-              this.addBranchGroupForm.get("AnnualVacationBalance")?.setValue(data.annualVacationBalance);
               this.loading = false;
             },
             error: err => {
@@ -398,6 +396,8 @@ export class DialogAddAnEmployeeComponent {
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.jobTitleFirst = [];
+                this.lastSearchQuery = "";
+
                 res?.data?.forEach((jobTitle: any) => {
                   this.jobTitleFirst.push({ name: jobTitle.name, key: jobTitle.id })
                 });
@@ -414,6 +414,8 @@ export class DialogAddAnEmployeeComponent {
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listDirectManager = [];
+                this.lastSearchQuery = "";
+
                 res?.data?.forEach((jobTitle: any) => {
                   this.listDirectManager.push({ name: jobTitle.name, key: jobTitle.id })
                 });
@@ -434,6 +436,8 @@ export class DialogAddAnEmployeeComponent {
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.sectionList = [];
+                this.lastSearchQuery = "";
+
                 res?.data?.forEach((jobTitle: any) => {
                   this.sectionList.push({ name: jobTitle.name, key: jobTitle.id })
                 });
@@ -450,6 +454,8 @@ export class DialogAddAnEmployeeComponent {
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.workScheduleList = [];
+                this.lastSearchQuery = "";
+
                 res?.data?.forEach((jobTitle: any) => {
                   this.workScheduleList.push({ name: jobTitle.name, key: jobTitle.id })
                 });
@@ -467,11 +473,9 @@ export class DialogAddAnEmployeeComponent {
                 debounceTime(300),
                 distinctUntilChanged()).subscribe((res: any) => {
                   this.listZones = [];
+                  this.lastSearchQuery = "";
                   res.data?.forEach((day: any) => {
-  
-  
                     this.listZones.push({ name: day.name, key: day.id });
-  
                   });
   
   
@@ -605,12 +609,11 @@ export class DialogAddAnEmployeeComponent {
       this.getControl("JobTitleId")?.markAsDirty();
       this.getControl("DepartmentId")?.markAsDirty();
       this.getControl("JoiningDate")?.markAsDirty();
-      this.getControl("ScheduleId")?.markAsDirty(); this.getControl("directManager")?.markAsDirty();
+      this.getControl("directManager")?.markAsDirty();
       this.getControl("mobileNumber")?.markAsDirty();
       this.getControl("email")?.markAsDirty();
       this.getControl("address")?.markAsDirty();
       this.getControl("zoneIds")?.markAsDirty();
-      this.getControl("AnnualVacationBalance")?.markAsDirty();
       this.getControl("idCopyFile")?.markAsDirty();
 
     }

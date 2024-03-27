@@ -485,7 +485,7 @@ export class VacationsComponent {
         }
       }
     });
-    delete this.filteration.PageNumber;
+    this.filteration.PageNumber = 0;
     this.getVacations(this.filteration);
   }
   resetFilteration() {

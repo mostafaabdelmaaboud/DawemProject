@@ -160,9 +160,9 @@
               </header>
               <form [formGroup]="filterForm" class="formFilteration">
                 <div class="sectionFive mb-3">
-                  <label for="" class="label-input mb-2">{{'requests.requestNumber' | translate}}</label>
+                  <label for="" class="label-input mb-2">رقم الصلاحية</label>
                   <div class="content-password">
-                    <input type="number" formControlName="code" pInputText [placeholder]="'requests.requestNumber' | translate" class="w-100" />
+                    <input type="number" formControlName="code" pInputText placeholder="رقم الصلاحية" class="w-100" />
                   </div>
 
                 </div>
@@ -347,7 +347,7 @@
           <div class="paginate d-flex align-items-center justify-content-end">
             <div class="NumberOfRowsPerPage">
               <span>{{'dashboard.numberOfRowsPerPage' | translate}}</span>
-              <p-dropdown [options]="RowsPerPage" appendTo="body" optionLabel="name"
+              <p-dropdown [options]="RowsPerPage" [(ngModel)]="defaultRowPerPage" appendTo="body" optionLabel="name"
                 (onChange)="numberOfRowsPerPage($event)"></p-dropdown>
 
             </div>

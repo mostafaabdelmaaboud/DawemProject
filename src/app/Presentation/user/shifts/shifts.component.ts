@@ -242,7 +242,7 @@ export class ShiftsComponent {
 
       }
     });
-    delete this.filteration.PageNumber;
+    this.filteration.PageNumber = 0;
     this.getShifts(this.filteration);
   }
   exportTableToExcel() {
