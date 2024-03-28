@@ -525,7 +525,7 @@ export class DepartmentComponent {
         // a.download = fileName;
         // a.href = window.URL.createObjectURL(blob);
         // a.click();
-        saveAs(data.body, 'DepartmentEmptyDraft.xlsx')
+        saveAs(data.body, 'EmployeeAttendanceEmptyDraft.xlsx')
         this.loading = false;
 
 

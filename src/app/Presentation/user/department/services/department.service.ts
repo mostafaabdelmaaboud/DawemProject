@@ -43,10 +43,10 @@ export class DepartmentService {
     return this.http.get<any>(`${environment.baseUrl}EmployeeAttendance/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
   }
   exportDraft(): any {
-    return this.http.get<any>(`${environment.baseUrl}Employee/CreateExportDraft`, {observe:'response', responseType:'blob' as 'json'})
+    return this.http.get<any>(`${environment.baseUrl}EmployeeAttendance/CreateExportDraft`, {observe:'response', responseType:'blob' as 'json'})
   }
   importDataFromExcel(formData:FormData): any {
-    return this.http.post<any>(`${environment.baseUrl}Employee/CreateImportDataFromExcel`,formData,  {
+    return this.http.post<any>(`${environment.baseUrl}EmployeeAttendance/CreateImportDataFromExcel`,formData,  {
       reportProgress: true,
       observe: "events",
     });

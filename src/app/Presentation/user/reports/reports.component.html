@@ -68,12 +68,11 @@
                 </header>
                 <form [formGroup]="filterForm" class="formFilteration">
                 <div class="body-filteration position-relative">
-                    <div class="sectionFive mb-3">
+                      <div class="sectionFive mb-3">
                         <label for="" class="label-input mb-2">{{'requests.search' | translate}}</label>
                         <div class="content-password">
                           <input type="text" formControlName="FreeText" pInputText [placeholder]="'requests.search' | translate" class="w-100" />
                         </div>
-        
                       </div>
                       <div class="sectionThree mb-3">
                         <label class="title label-input mb-2">بحث بواسطة التاريخ (من-الي) <span class="color-red">*</span></label>
@@ -89,14 +88,12 @@
                             *ngIf="getControl('searchDate')?.hasError('required') && getControl('searchDate')?.dirty">
                             التاريخ مطلوب
                           </div>
-          
                         </div>
                         <div class="container-alerts mt-2"
                           *ngIf="dateTaskMultiple &&  !getControl('searchDate')?.hasError('required')">
                           <div class="alert alert-danger">
                             {{'justifications.theHistoryOfJustificationIsMultiple'|translate}}
                           </div>
-          
                         </div>
                         <!--End Custom Validators-->
                       </div>
@@ -127,41 +124,78 @@
                         </div> -->
                         <!--End Custom Validators-->
                       </div>
+                      <div class="sectionTwo mb-3">
+                        <label class="title label-input mb-2">طريقة التصفية</label>
+                        <div class="content-password w-multiSelect">
+                          <p-dropdown appendTo="body" formControlName="FilterType" [options]="FilterType"
+                          placeholder="إختر طريقة التصفية" optionLabel="name">
+  
+                          <ng-template let-option pTemplate="item">
+                            {{ option.name }}
+                          </ng-template>
+                        </p-dropdown>
+                
+                        </div>
+                        <!--Start Custom Validators-->
+                        <!-- <div class="container-alerts mt-2" *ngIf="getControl('EmployeesIds')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('EmployeesIds')?.hasError('required') && getControl('EmployeesIds')?.dirty">
+                            الموظفين مطلوبه
+                          </div>
+                        </div> -->
+                        <!--End Custom Validators-->
+                      </div>
+                      <div formGroupName="filterTypeGroup">
+                        <div class="sectionFive mb-3">
+                          <label for="" class="label-input mb-2">قيمة التصفية من ( {{nameFilterType}} )</label>
+                          <div class="content-password">
+                            <input type="number" formControlName="FilterTypeFrom" pInputText [placeholder]="'إدخل قيمة التصفية من ('+ nameFilterType +')'" class="w-100" />
+                          </div>
+                        </div>
+                        <div class="sectionFive mb-3">
+                          <label for="" class="label-input mb-2">قيمة التصفية إلي ( {{nameFilterType}} )</label>
+                          <div class="content-password">
+                            <input type="number" formControlName="FilterTypeTo" pInputText [placeholder]="'إدخل قيمة التصفية إلي ('+ nameFilterType +')'" class="w-100" />
+                          </div>
+                        </div>
+                               <!--Start Custom Validators-->
+                        <div class="container-alerts mt-2" *ngIf="getControl('filterTypeGroup')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('filterTypeGroup')?.hasError('noValueSelected')">
+                            يجب ادخال حقل واحد علي الاقل
+                          </div>
+                        </div>
+                        <!--End Custom Validators-->
+                      </div>
+                     
                     <div class="spinner d-flex justify-content-center align-items-center" *ngIf="loadingFilteration">
                         <mat-spinner></mat-spinner>
                       </div>
                 </div>
-             
                   <div class="footer-filter">
                     <button type="button" class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
                       (click)="filter()">{{'requests.filterResults' | translate}}
                       </button>
-    
                     <button (click)="resetFilteration()"
                       class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16" type="button">{{'requests.reset' | translate}}
                       </button>
                   </div>
                 </form>
-         
               </p-overlayPanel>
             </div>
           </div>
-          
         </div>
       </ng-template>
       <ng-template pTemplate="header">
         <tr>
           <ng-container *ngFor="let column of columns">
-        
             <ng-container *ngIf="column.field === 'actions'">
               <th>
-  
                 {{ column.name }}
               </th>
             </ng-container>
             <ng-container *ngIf="column.field != 'actions'">
               <th [pSortableColumn]="column.field">
-  
                 {{ column.name }} <p-sortIcon [field]="column.field"></p-sortIcon>
               </th>
             </ng-container>

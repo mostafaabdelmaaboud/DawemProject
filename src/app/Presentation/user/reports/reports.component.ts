@@ -76,7 +76,7 @@ export class ReportsComponent {
     }
   ];
   listEmployees: any[] = [];
-
+  FilterType: any[] = [];
   reports: any = [];
   reportsIsExport: any = [];
   isLoading = true;
@@ -109,7 +109,8 @@ export class ReportsComponent {
   mobileQuery: MediaQueryList;
   opened = false;
   defaultRowPerPage = { name: '5', code: 5 };
-
+  nameFilterType = "ساعات العمل";
+  requiredValidationField =false;
   private _mobileQueryListener: () => void;
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
@@ -144,6 +145,18 @@ export class ReportsComponent {
 
     });
   }
+  requiredValidator(group: FormGroup) {
+    const input1Value = group?.get("FilterTypeFrom")?.value;
+    const input2Value = group?.get("FilterTypeTo")?.value;
+    
+    if(this.requiredValidationField) {
+      if ((input1Value === "" && input2Value === "") || (input1Value === null && input2Value === null)) {
+        return { noValueSelected: true };
+      }
+    }
+
+    return null;
+  }
   ngOnInit(): void {
     if (this.mobileQuery.matches) {
       this.opened = true;
@@ -154,14 +167,40 @@ export class ReportsComponent {
     this.filterForm = this.fb.group({
       FreeText: [""],
       searchDate:[null, Validators.required],
-      EmployeesIds:[]
+      EmployeesIds:[],
+      FilterType:[],
+      filterTypeGroup: this.fb.group(
+        {
+          FilterTypeFrom: this.fb.control(null),
+          FilterTypeTo: this.fb.control(null),
+        },
+        {
+          validators: [this.requiredValidator.bind(this)],
+        }
+      ),
+      // FilterTypeFrom:[''],
+      // FilterTypeTo:['']
     });
+    this.filterForm.get("FilterType")?.valueChanges.subscribe(data => {
+      this.requiredValidationField = true;
+      this.nameFilterType = data.name;
+      this.requiredValidator(this.filterForm.get('filterTypeGroup') as FormGroup);
+
+    })
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
       { name: '2', code: 2 },
       { name: '5', code: 5 }
     ];
+    this.FilterType=[
+      { name: "الحضور الفعلي", key: 0 },
+      { name: "المغادرة مبكرا", key: 1 },
+      { name: "التأخير", key: 2 },
+      { name: "الوقت الإضافي", key: 3 },
+      { name: "الأجازات", key: 4 },
+      { name: "ساعات العمل", key: 5 }
 
+    ]
     this.getreports(this.filteration);
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
@@ -269,6 +308,12 @@ export class ReportsComponent {
         
       }
     }
+    
+    console.log(this.filterForm?.value);
+    
+    this.getControl("filterTypeGroup.FilterTypeFrom")?.setValue(this.getControl("filterTypeGroup.FilterTypeFrom")?.value);
+    this.getControl("filterTypeGroup.FilterTypeTo")?.setValue(this.getControl("filterTypeGroup.FilterTypeTo")?.value);
+
     if (this.filterForm.valid && !this.dateTaskMultiple) {
       Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
         if (typeof value  === 'string') {
@@ -278,10 +323,20 @@ export class ReportsComponent {
             }
           }
         } else {
-            if(key !="searchDate" && key !="EmployeesIds") {
+          
+            if(key !="searchDate" && key !="EmployeesIds" && key !="FilterType" && key !="filterTypeGroup") {
               this.filteration[key] = value;
             } else if(key ==="EmployeesIds") {
-              this.filteration[key] = value.map(item => item.key);
+              this.filteration[key] = value === null ? value : value?.map(item => item.key);
+
+            }  else if(key ==="FilterType") {
+              
+              this.filteration[key] = value === null ? value : value.key;
+
+            }else if(key ==="filterTypeGroup") {
+              
+              this.filteration['FilterTypeFrom'] = value.FilterTypeFrom;
+              this.filteration['FilterTypeTo'] = value.FilterTypeTo;
 
             }
         }
@@ -293,6 +348,10 @@ export class ReportsComponent {
     } else {
       // this.getControl("JustificationTypeId")?.markAsDirty();
       this.getControl("searchDate")?.markAsDirty();
+
+      this.getControl("filterTypeGroup.FilterTypeFrom")?.setValue(this.getControl("filterTypeGroup.FilterTypeFrom")?.value);
+      this.getControl("filterTypeGroup.FilterTypeTo")?.setValue(this.getControl("filterTypeGroup.FilterTypeTo")?.value)
+
       // this.getControl("time")?.markAsDirty();
 
       
