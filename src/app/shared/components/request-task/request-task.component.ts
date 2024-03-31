@@ -292,7 +292,7 @@ export class RequestTaskComponent {
     switch (type) {
       case 'TaskTypeId':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.tasksService.taskTypeDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
@@ -308,8 +308,8 @@ export class RequestTaskComponent {
         }
         break;
       case 'TaskEmployeeIds':
-        if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+        if (data || data === "" ) {
+          if (data !== this.lastSearchQuery || data === "") {
 
             this.lastSearchQuery = data;
             this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
@@ -331,7 +331,7 @@ export class RequestTaskComponent {
       case 'EmployeeId':
         if (data || data === "") {
 
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),

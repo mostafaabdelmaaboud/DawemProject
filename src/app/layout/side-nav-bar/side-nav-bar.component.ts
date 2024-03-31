@@ -61,10 +61,9 @@ export class SideNavBarComponent {
   notificationCount = 0;
   unReadView = false;
   notificationCountRequests = 0;
-  loadingNotification = true;
+  loadingNotification = false;
   notificationList: any[] = [];
   selectedTabIndex = 1;
-  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     public translate: TranslateService,
@@ -190,20 +189,62 @@ export class SideNavBarComponent {
   numberNotification(showFirstOnly:boolean, unread:boolean) {
     // .pipe(takeUntil(this.destroy$));
     this.numNotification = "";
-    this.loadingNotification = true;
     if(showFirstOnly) {
       this.notificationService.markAsViewed().subscribe(data => {
       });
     }
-    if(!unread) {
-      if(showFirstOnly) {
+    if(!this.loadingNotification) {
+      this.loadingNotification = true;
+      if(!unread) {
+        if(showFirstOnly) {
+            this.notificationService.listNotification(this.notificationFilter).subscribe({
+              next:data => {
+                // this.notificationList = [];
+                this.notificationCount = data.data.totalCount;
+                let totalCountPages = Math.ceil(this.notificationCount / 5);
+                
+
+                  if(totalCountPages > (this.notificationFilter.PageNumber + 1)) {
+                    if(this.notificationFilter.PageNumber == 0) {
+                      this.notificationFilter = {
+                        PageNumber: 0,
+                        PageSize: 5,
+                        PagingEnabled:true
+                      };
+                      this.notificationList = [];
+                    }
+                    data?.data?.notificationStores.forEach(item => {
+                      this.notificationList.push({
+                        shortMessege:item.shortMessege,
+                        fullMessege:item.fullMessege,
+                        iconUrl:item.iconUrl,
+                        id:item.id,
+                        isRead:item.isRead,
+                        notificationType:item.notificationType,
+                        priority:item.priority,
+                        date:this.formatDateService.formatDate(new Date(item.date)),
+                        employeeId:item.employeeId,
+                        status:item.status
+                      })
+                    });
+                  }
+             
+                this.loadingNotification = false;
+              },
+              error:err => {
+                this.loadingNotification = false;
+              }
+            })
+        } else {
+          
           this.notificationService.listNotification(this.notificationFilter).subscribe({
             next:data => {
               // this.notificationList = [];
               this.notificationCount = data.data.totalCount;
               let totalCountPages = Math.ceil(this.notificationCount / 5);
-              if(showFirstOnly) {
-                if(totalCountPages > (this.notificationFilter.PageNumber + 1)) {
+              
+
+                if((totalCountPages + 1) > (this.notificationFilter.PageNumber + 1)) {
                   if(this.notificationFilter.PageNumber == 0) {
                     this.notificationFilter = {
                       PageNumber: 0,
@@ -227,143 +268,116 @@ export class SideNavBarComponent {
                     })
                   });
                 }
-              } else {
-                data?.data?.notificationStores.forEach(item => {
-                  this.notificationList.push({
-                    shortMessege:item.shortMessege,
-                    fullMessege:item.fullMessege,
-                    iconUrl:item.iconUrl,
-                    id:item.id,
-                    isRead:item.isRead,
-                    notificationType:item.notificationType,
-                    priority:item.priority,
-                    date:this.formatDateService.formatDate(new Date(item.date)),
-                    employeeId:item.employeeId,
-                    status:item.status
-                  })
-                });
-              }
+        
               this.loadingNotification = false;
             },
             error:err => {
               this.loadingNotification = false;
             }
           })
+        }
       } else {
-        this.notificationService.listNotification(this.notificationFilter).subscribe({
-          next:data => {
-            // this.notificationList = [];
-            this.notificationCount = data.data.totalCount;
-            data?.data?.notificationStores.forEach(item => {
-              this.notificationList.push({
-                shortMessege:item.shortMessege,
-                fullMessege:item.fullMessege,
-                iconUrl:item.iconUrl,
-                id:item.id,
-                isRead:item.isRead,
-                notificationType:item.notificationType,
-                priority:item.priority,
-                date:this.formatDateService.formatDate(new Date(item.date)),
-                employeeId:item.employeeId,
-                status:item.status
-              })
-            });
-            this.loadingNotification = false;
-          },
-          error:err => {
-            this.loadingNotification = false;
-          }
-        })
-      }
-    } else {
-      if(showFirstOnly) {
+        if(showFirstOnly) {
+            this.notificationService.getUnreadNotifications(this.notificationFilter).subscribe({
+              next:data => {
+                
+      
+                // this.notificationList = [];
+                this.notificationCount = data.data.totalCount;
+                let totalCountPages = Math.ceil(this.notificationCount / 5);
+  
+                if(showFirstOnly) {
+  
+                  if(totalCountPages > (this.notificationFilter.PageNumber + 1)) {
+                    if(this.notificationFilter.PageNumber == 0) {
+                      this.notificationFilter = {
+                        PageNumber: 0,
+                        PageSize: 5,
+                        PagingEnabled:true
+                      };
+                      this.notificationList = [];
+                    }
+                    data?.data?.notificationStores.forEach(item => {
+                      this.notificationList.push({
+                        shortMessege:item.shortMessege,
+                        fullMessege:item.fullMessege,
+                        iconUrl:item.iconUrl,
+                        id:item.id,
+                        isRead:item.isRead,
+                        notificationType:item.notificationType,
+                        priority:item.priority,
+                        date:this.formatDateService.formatDate(new Date(item.date)),
+                        employeeId:item.employeeId,
+                        status:item.status
+                      })
+                    });
+                  }
+                } else {
+                  if((totalCountPages + 1) > (this.notificationFilter.PageNumber + 1)) {
+                    if(this.notificationFilter.PageNumber == 0) {
+                      this.notificationFilter = {
+                        PageNumber: 0,
+                        PageSize: 5,
+                        PagingEnabled:true
+                      };
+                      this.notificationList = [];
+                    }
+                    data?.data?.notificationStores.forEach(item => {
+                      this.notificationList.push({
+                        shortMessege:item.shortMessege,
+                        fullMessege:item.fullMessege,
+                        iconUrl:item.iconUrl,
+                        id:item.id,
+                        isRead:item.isRead,
+                        notificationType:item.notificationType,
+                        priority:item.priority,
+                        date:this.formatDateService.formatDate(new Date(item.date)),
+                        employeeId:item.employeeId,
+                        status:item.status
+                      })
+                    });
+                  }
+              
+                }
+                this.loadingNotification = false;
+        
+              },
+              error:err => {
+                this.loadingNotification = false;
+        
+              }
+            })
+  
+        } else {
+          
           this.notificationService.getUnreadNotifications(this.notificationFilter).subscribe({
             next:data => {
-              
-    
               // this.notificationList = [];
-              this.notificationCount = data.data.totalCount;
-              let totalCountPages = Math.ceil(this.notificationCount / 5);
-
-              if(showFirstOnly) {
-
-                if(totalCountPages > (this.notificationFilter.PageNumber + 1)) {
-                  if(this.notificationFilter.PageNumber == 0) {
-                    this.notificationFilter = {
-                      PageNumber: 0,
-                      PageSize: 5,
-                      PagingEnabled:true
-                    };
-                    this.notificationList = [];
-                  }
-                  data?.data?.notificationStores.forEach(item => {
-                    this.notificationList.push({
-                      shortMessege:item.shortMessege,
-                      fullMessege:item.fullMessege,
-                      iconUrl:item.iconUrl,
-                      id:item.id,
-                      isRead:item.isRead,
-                      notificationType:item.notificationType,
-                      priority:item.priority,
-                      date:this.formatDateService.formatDate(new Date(item.date)),
-                      employeeId:item.employeeId,
-                      status:item.status
-                    })
-                  });
-                }
-              } else {
-                data?.data?.notificationStores.forEach(item => {
-                  this.notificationList.push({
-                    shortMessege:item.shortMessege,
-                    fullMessege:item.fullMessege,
-                    iconUrl:item.iconUrl,
-                    id:item.id,
-                    isRead:item.isRead,
-                    notificationType:item.notificationType,
-                    priority:item.priority,
-                    date:this.formatDateService.formatDate(new Date(item.date)),
-                    employeeId:item.employeeId,
-                    status:item.status
-                  })
-                });
-              }
+              data?.data?.notificationStores.forEach(item => {
+                this.notificationList.push({
+                  shortMessege:item.shortMessege,
+                  fullMessege:item.fullMessege,
+                  iconUrl:item.iconUrl,
+                  id:item.id,
+                  isRead:item.isRead,
+                  notificationType:item.notificationType,
+                  priority:item.priority,
+                  date:this.formatDateService.formatDate(new Date(item.date)),
+                  employeeId:item.employeeId,
+                  status:item.status
+                })
+              });
               this.loadingNotification = false;
-      
+              this.notificationCount = data.data.totalCount;
             },
             error:err => {
               this.loadingNotification = false;
-      
             }
           })
-
-      } else {
-        
-        this.notificationService.getUnreadNotifications(this.notificationFilter).subscribe({
-          next:data => {
-            // this.notificationList = [];
-            data?.data?.notificationStores.forEach(item => {
-              this.notificationList.push({
-                shortMessege:item.shortMessege,
-                fullMessege:item.fullMessege,
-                iconUrl:item.iconUrl,
-                id:item.id,
-                isRead:item.isRead,
-                notificationType:item.notificationType,
-                priority:item.priority,
-                date:this.formatDateService.formatDate(new Date(item.date)),
-                employeeId:item.employeeId,
-                status:item.status
-              })
-            });
-            this.loadingNotification = false;
-            this.notificationCount = data.data.totalCount;
-          },
-          error:err => {
-            this.loadingNotification = false;
-          }
-        })
+        }
       }
     }
+
   }
   markAsRead(id:any) {
     this.loadingNotification = true;
@@ -864,9 +878,7 @@ export class SideNavBarComponent {
  
   }
   closeMatMenu() {
-    this.destroy$.next(true);
-    
-    this.destroy$.unsubscribe();
+
   }
   changeLanguage(lang: any) {
     this.countries = [];
