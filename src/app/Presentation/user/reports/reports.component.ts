@@ -296,12 +296,13 @@ export class ReportsComponent {
     switch (type) {
       case 'employeesIds':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.reportsService.EmployeesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listEmployees = [];
+                this.lastSearchQuery = "";
                 res?.data?.forEach((employee: any) => {
                   this.listEmployees.push({ name: employee.name, key: employee.id })
                 });

@@ -304,20 +304,16 @@ export class AddGroupComponent {
     switch (type) {
       case 'groupEmployees':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.groupsService.GetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listGroupEmployees = [];
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-
-
                   this.listGroupEmployees.push({ name: day.name, key: day.id });
-
                 });
-
-
               });
           }
 
@@ -325,20 +321,16 @@ export class AddGroupComponent {
         break;
       case 'groupManager':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.groupsService.GetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listGroupManager = [];
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-
-
                   this.listGroupManager.push({ name: day.name, key: day.id });
-
                 });
-
-
               });
           }
 
@@ -346,20 +338,16 @@ export class AddGroupComponent {
         break;
       case 'deputyDirector':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.groupsService.GetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listDeputyDirector = [];
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-
-
                   this.listDeputyDirector.push({ name: day.name, key: day.id });
-
                 });
-
-
               });
           }
 
@@ -367,23 +355,18 @@ export class AddGroupComponent {
         break;
       case 'zoneIds':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.sectionsService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listZones = [];
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-
-
                   this.listZones.push({ name: day.name, key: day.id });
-
                 });
-
-
               });
           }
-
         }
         break;
 

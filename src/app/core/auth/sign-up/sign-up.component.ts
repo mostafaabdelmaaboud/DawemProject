@@ -212,12 +212,13 @@ export class SignUpComponent {
     switch (type) {
       case 'companyCountryId':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.authService.getCountries({PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.general = [];
+                this.lastSearchQuery = "";
                 res.forEach((country: any) => {
                   this.general.push({ name: country.name, id: country.id })
                 });

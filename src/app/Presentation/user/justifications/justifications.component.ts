@@ -59,14 +59,9 @@ export class JustificationsComponent {
       field: "statusName"
     },
     {
-      name: "البدايه",
+      name: "تاريخ ووقت البدايه",
       field: "dateFrom"
     },
-    {
-      name: "النهاية",
-      field: "dateTo"
-    },
-
     {
       name: "الإجراء",
       field: "actions"
@@ -198,11 +193,6 @@ export class JustificationsComponent {
           field: "dateFrom"
         },
         {
-          name: data.theEnd,
-          field: "dateTo"
-        },
-    
-        {
           name: data.action,
           field: "actions"
         }
@@ -237,11 +227,6 @@ export class JustificationsComponent {
             field: "dateFrom"
           },
           {
-            name: data.theEnd,
-            field: "dateTo"
-          },
-      
-          {
             name: data.action,
             field: "actions"
           }
@@ -262,8 +247,42 @@ export class JustificationsComponent {
   }
   exportTableToExcel() {
 
-    let columns = [...this.columns];
-    delete columns[7]
+    let columns = [
+      {
+        name: "رقم الطلب",
+        field: "orderNumber",
+      },
+      {
+        name: "الرقم الوظيفي",
+        field: "employeeCode",
+      },
+      {
+        name: "اسم الموظف",
+        field: "employeeName",
+      },
+      {
+        name: "نوع التبرير",
+        field: "typeOfJustification"
+      },
+      {
+        name: "حالة الطلب للتبرير",
+        field: "statusName"
+      },
+      {
+        name: "تاريخ ووقت البدايه",
+        field: "dateFrom"
+      },
+      {
+        name: "تاريخ ووقت النهاية",
+        field: "dateTo"
+      },
+      {
+        name: "الإجراء",
+        field: "actions"
+      }
+  
+    ];
+    delete columns[7];
     var options = { 
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -296,8 +315,9 @@ export class JustificationsComponent {
             employeeCode:employee.employee.employeeNumber,
             typeOfJustification: employee.justificationTypeName,
             status:employee.status,
-            dateFrom: moment(new Date(employee.dateFrom)).format("MM/DD/YYYY"),
-            dateTo: moment(new Date(employee.dateTo)).format("MM/DD/YYYY"),
+            dateFrom: moment(new Date(employee.dateFrom)).format("MMMM Do YYYY, h:mm:ss a"),
+            dateTo: moment(new Date(employee.dateTo)).format("MMMM Do YYYY, h:mm:ss a"),
+
           })
         });
         let formatTable = this.justificationsIsExport.map(justification => {
@@ -411,8 +431,7 @@ export class JustificationsComponent {
           employeeCode:employee.employee.employeeNumber,
           typeOfJustification: employee.justificationTypeName,
           status:employee.status,
-          dateFrom: moment(new Date(employee.dateFrom)).format("MM/DD/YYYY"),
-          dateTo: moment(new Date(employee.dateTo)).format("MM/DD/YYYY"),
+          dateFrom: moment(new Date(employee.dateFrom)).format("MMMM Do YYYY, h:mm:ss a"),
         })
       });
       this.totalItems = data.totalCount

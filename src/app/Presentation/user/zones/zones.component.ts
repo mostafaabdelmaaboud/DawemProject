@@ -523,24 +523,25 @@ export class ZonesComponent {
       this.zonesService.importDataFromExcel(formData).pipe(takeUntil(this.uploadSub)).subscribe(
         {
           next: data => {
-
+            if (data.type === HttpEventType.Sent) {
+              this.dialogRefUploadFilesProgressBar = this.dialog.open(DialogUploadFileProgressBarComponent, {
+                id: 'uploadProgressBar',
+                width: "40vw",
+                data: {
+                  title: "upload files",
+                  message: "Files are Uploading...",
+                  buttonSend: "remove",
+                  buttonClose: "Cancel",
+                  actionsspaceBetween: true
+                },
+              });
+            }
             if (data.type === HttpEventType.UploadProgress) {
               this.isUploading = true;
-
               this.barWith = Math.round(100 / (data.total || 0) * data.loaded);
               if (!this.isDialogProgressBarOpen) {
                 this.isDialogProgressBarOpen = true;
-                this.dialogRefUploadFilesProgressBar = this.dialog.open(DialogUploadFileProgressBarComponent, {
-                  id: 'uploadProgressBar',
-                  width: "40vw",
-                  data: {
-                    title: "upload files",
-                    message: "Files are Uploading...",
-                    buttonSend: "remove",
-                    buttonClose: "Cancel",
-                    actionsspaceBetween: true
-                  },
-                });
+          
               }
               this.dialogRefUploadFilesProgressBar.componentInstance.barWithText = "يتم تحميل المف..." + this.barWith + "%";
               this.dialogRefUploadFilesProgressBar.componentInstance.barWidth = this.barWith;
@@ -723,12 +724,14 @@ export class ZonesComponent {
     switch (type) {
       case 'JobTitleId':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.zonesService.getJobTitles({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listJobTitle = [];
+                this.lastSearchQuery = "";
+
                 res?.data?.forEach((jobTitle: any) => {
                   this.listJobTitle.push({ name: jobTitle.name, key: jobTitle.id })
                 });
@@ -740,12 +743,14 @@ export class ZonesComponent {
       case 'DirectManagerId':
         if (data || data === "") {
 
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.zonesService.GetForDropDownZone({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe(res => {
                 this.listDirectManager = [];
+                this.lastSearchQuery = "";
+
                 res?.data?.forEach((jobTitle: any) => {
                   this.listDirectManager.push({ name: jobTitle.name, key: jobTitle.id })
                 });
@@ -761,12 +766,14 @@ export class ZonesComponent {
       case 'DepartmentId':
         if (data || data === "") {
 
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.zonesService.getDepartmentForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe(res => {
                 this.listDepratment = [];
+                this.lastSearchQuery = "";
+
                 res?.data?.forEach((jobTitle: any) => {
                   this.listDepratment.push({ name: jobTitle.name, key: jobTitle.id })
                 });
@@ -779,12 +786,14 @@ export class ZonesComponent {
         break;
       case 'ScheduleId':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.zonesService.getScheduleForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe(res => {
                 this.listSchedules = [];
+                this.lastSearchQuery = "";
+
                 res?.data?.forEach((jobTitle: any) => {
                   this.listSchedules.push({ name: jobTitle.name, key: jobTitle.id })
                 });

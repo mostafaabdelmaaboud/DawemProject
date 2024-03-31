@@ -471,12 +471,13 @@ this.listnotifyWays = [
     switch (type) {
       case 'Employees':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.summonsService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listEmployeeId = [];
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
                   this.listEmployeeId.push({ name: day.name, key: day.id });
                 });
@@ -487,17 +488,15 @@ this.listnotifyWays = [
 
       case 'Groups':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.summonsService.groupsForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listGroupId = [];
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-
-
                   this.listGroupId.push({ name: day.name, key: day.id });
-
                 });
 
 
@@ -508,17 +507,15 @@ this.listnotifyWays = [
         break;
       case 'Departments':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.summonsService.departmentForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listDepartmentId = [];
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-
-
                   this.listDepartmentId.push({ name: day.name, key: day.id });
-
                 });
 
 
@@ -529,7 +526,7 @@ this.listnotifyWays = [
         break;
       case 'Sanctions':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.summonsService.sanctionForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),

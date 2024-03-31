@@ -382,22 +382,16 @@ export class AddSchedualPlanComponent {
     switch (type) {
       case 'EmployeeId':
         if (data.value || data.value === "") {
-          if (data.value !== this.lastSearchQuery) {
+          if (data.value !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data.value;
             this.schedualPlanService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-
                 this.listEmployeeId = [];
-
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-
-
                   this.listEmployeeId.push({ name: day.name, key: day.id });
-
                 });
-
-
               });
           }
 
@@ -406,20 +400,16 @@ export class AddSchedualPlanComponent {
 
       case 'GroupId':
         if (data.value || data.value === "") {
-          if (data.value !== this.lastSearchQuery) {
+          if (data.value !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data.value;
             this.schedualPlanService.groupsForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listGroupId = [];
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-
-
                   this.listGroupId.push({ name: day.name, key: day.id });
-
                 });
-
-
               });
           }
 
@@ -427,20 +417,16 @@ export class AddSchedualPlanComponent {
         break;
       case 'DepartmentId':
         if (data.value || data.value === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data.value;
             this.schedualPlanService.departmentForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listDepartmentId = [];
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-
-
                   this.listDepartmentId.push({ name: day.name, key: day.id });
-
                 });
-
-
               });
           }
 
@@ -448,20 +434,16 @@ export class AddSchedualPlanComponent {
         break;
       case 'ScheduleId':
         if (data.value || data.value === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data.value;
             this.schedualPlanService.schedualForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listScheduleId = [];
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-
-
                   this.listScheduleId.push({ name: day.name, key: day.id });
-
                 });
-
-
               });
           }
 

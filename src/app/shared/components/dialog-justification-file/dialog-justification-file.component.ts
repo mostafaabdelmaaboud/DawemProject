@@ -123,8 +123,8 @@ export class DialogJustificationFileComponent {
                 }
               });
             }
-            this.info.dateFrom = moment(new Date(this.info.dateFrom)).format("MM/DD/YYYY");
-            this.info.dateTo = moment(new Date(this.info.dateTo)).format("MM/DD/YYYY");
+            this.info.dateFrom = moment(new Date(this.info.dateFrom)).format("MMMM Do YYYY, h:mm:ss a");
+            this.info.dateTo = moment(new Date(this.info.dateTo)).format("MMMM Do YYYY, h:mm:ss a");
 
             this.loading = false;
 

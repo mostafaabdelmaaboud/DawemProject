@@ -199,10 +199,8 @@ export class AddTableComponent {
             this.schedulesService.GetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-
                 let getIndexList = this.list.findIndex(dayList => dayList?.weekDay === weekDay);
                 if (getIndexList >= 0) {
-
                   this.list[getIndexList].data = res.data;
                 }
 

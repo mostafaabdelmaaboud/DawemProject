@@ -301,12 +301,13 @@ export class RequestForJustificationComponent {
     switch (type) {
       case 'JustificationTypeId':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.justificationsService.jusificationTypeDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.list = [];
+                this.lastSearchQuery = "";
                 res?.data?.forEach((item: any) => {
                   this.list.push({ name: item.name, key: item.id })
                 });
@@ -318,12 +319,13 @@ export class RequestForJustificationComponent {
       case 'EmployeeId':
         if (data || data === "") {
 
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listEmployees = [];
+                this.lastSearchQuery = "";
                 res?.data?.forEach((jobTitle: any) => {
                   this.listEmployees.push({ name: jobTitle.name, key: jobTitle.id })
                 });

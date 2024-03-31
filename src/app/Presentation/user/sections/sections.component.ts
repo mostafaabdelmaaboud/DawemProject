@@ -472,24 +472,26 @@ export class SectionsComponent {
       this.sectionsService.importDataFromExcel(formData).pipe(takeUntil(this.uploadSub)).subscribe(
         {
           next: data => {
-
+            if (data.type === HttpEventType.Sent) {
+              this.dialogRefUploadFilesProgressBar = this.dialog.open(DialogUploadFileProgressBarComponent, {
+                id: 'uploadProgressBar',
+                width: "40vw",
+                data: {
+                  title: "upload files",
+                  message: "Files are Uploading...",
+                  buttonSend: "remove",
+                  buttonClose: "Cancel",
+                  actionsspaceBetween: true
+                },
+              });
+            }
             if (data.type === HttpEventType.UploadProgress) {
               this.isUploading = true;
 
               this.barWith = Math.round(100 / (data.total || 0) * data.loaded);
               if (!this.isDialogProgressBarOpen) {
                 this.isDialogProgressBarOpen = true;
-                this.dialogRefUploadFilesProgressBar = this.dialog.open(DialogUploadFileProgressBarComponent, {
-                  id: 'uploadProgressBar',
-                  width: "40vw",
-                  data: {
-                    title: "upload files",
-                    message: "Files are Uploading...",
-                    buttonSend: "remove",
-                    buttonClose: "Cancel",
-                    actionsspaceBetween: true
-                  },
-                });
+        
               }
               this.dialogRefUploadFilesProgressBar.componentInstance.barWithText = "يتم تحميل المف..." + this.barWith + "%";
               this.dialogRefUploadFilesProgressBar.componentInstance.barWidth = this.barWith;

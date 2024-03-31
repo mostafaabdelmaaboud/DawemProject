@@ -61,12 +61,8 @@ export class AssignmentsComponent {
       field: "assignmentTime"
     },
     {
-      name: "البداية",
+      name: "تاريخ ووقت البدايه",
       field: "dateFrom"
-    },
-    {
-      name: "النهاية",
-      field: "dateTo"
     },
     {
       name: "حاله الطلب",
@@ -174,10 +170,6 @@ export class AssignmentsComponent {
           field: "dateFrom"
         },
         {
-          name: data.theEnd,
-          field: "dateTo"
-        },
-        {
           name: data.orderStatus,
           field: "statusName"
         },
@@ -215,10 +207,6 @@ export class AssignmentsComponent {
           {
             name: data.theBeginning,
             field: "dateFrom"
-          },
-          {
-            name: data.theEnd,
-            field: "dateTo"
           },
           {
             name: data.orderStatus,
@@ -282,7 +270,46 @@ export class AssignmentsComponent {
     this.getAssignments(this.filteration);
   }
   exportTableToExcel() {
-    let columns = [...this.columns];
+    let columns = [
+      {
+        name: "رقم الطلب",
+        field: "employeeCode",
+      },
+      {
+        name: "رقم الوظيفي",
+        field: "orderNumber",
+      },
+      {
+        name: "اسم الموظف",
+        field: "employeeName",
+      },
+      {
+        name: "نوع التكليف",
+        field: "assignmentTypeName"
+      },
+      {
+        name: "لوقت التكليف",
+        field: "assignmentTime"
+      },
+      {
+        name: "تاريخ ووقت البدايه",
+        field: "dateFrom"
+      },
+      {
+        name: "تاريخ ووقت النهاية",
+        field: "dateTo"
+      },
+      {
+        name: "حاله الطلب",
+        field: "statusName"
+      },
+  
+      {
+        name: "الإجراء",
+        field: "actions"
+      }
+  
+    ];
     delete columns[8]
     var options = { 
       fieldSeparator: ',',
@@ -316,8 +343,8 @@ export class AssignmentsComponent {
   
             assignmentTypeName: assignment.assignmentTypeName,
             statusName: assignment.statusName,
-            dateFrom: moment(new Date(assignment.dateFrom)).format("MM/DD/YYYY"),
-            dateTo: moment(new Date(assignment.dateTo)).format("MM/DD/YYYY"),
+            dateFrom: moment(new Date(assignment.dateFrom)).format("MMMM Do YYYY, h:mm:ss a"),
+            dateTo: moment(new Date(assignment.dateTo)).format("MMMM Do YYYY, h:mm:ss a"),
           })
         });
         let formatTable = this.assignmentsIsExport.map(assignment => {
@@ -410,8 +437,7 @@ export class AssignmentsComponent {
 
           assignmentTypeName: assignment.assignmentTypeName,
           statusName: assignment.statusName,
-          dateFrom: moment(new Date(assignment.dateFrom)).format("MM/DD/YYYY"),
-          dateTo: moment(new Date(assignment.dateTo)).format("MM/DD/YYYY"),
+          dateFrom: moment(new Date(assignment.dateFrom)).format("MMMM Do YYYY, h:mm:ss a")
         })
       });
       this.totalItems = data.totalCount

@@ -390,7 +390,7 @@ export class DialogAddAnEmployeeComponent {
     switch (type) {
       case 'JobTitleId':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.employeesService.getJobTitles({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
@@ -408,7 +408,7 @@ export class DialogAddAnEmployeeComponent {
         break;
       case 'directManager':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
@@ -430,7 +430,7 @@ export class DialogAddAnEmployeeComponent {
       case 'DepartmentId':
         if (data || data === "") {
 
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.employeesService.getDepartmentForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
@@ -448,7 +448,7 @@ export class DialogAddAnEmployeeComponent {
         break;
       case 'ScheduleId':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.employeesService.getScheduleForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
@@ -467,7 +467,7 @@ export class DialogAddAnEmployeeComponent {
         break;
         case 'zoneIds':
           if (data || data === "") {
-            if (data !== this.lastSearchQuery) {
+            if (data !== this.lastSearchQuery || data === "") {
               this.lastSearchQuery = data;
               this.sectionsService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
                 debounceTime(300),

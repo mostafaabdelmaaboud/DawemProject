@@ -360,20 +360,16 @@ export class DialogAddASectionComponent {
     switch (type) {
       case 'parentId':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.sectionsService.GetForDropDownDepartment({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listFirst = [];
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-
-
                   this.listFirst.push({ name: day.name, key: day.id });
-
                 });
-
-
               });
           }
 
@@ -381,20 +377,16 @@ export class DialogAddASectionComponent {
         break;
       case 'managerId':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.sectionsService.GetForDropDownEmployees({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listManager = [];
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-
-
                   this.listManager.push({ name: day.name, key: day.id });
-
                 });
-
-
               });
           }
 
@@ -402,20 +394,16 @@ export class DialogAddASectionComponent {
         break;
       case 'managerDelegatorIds':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.sectionsService.GetForDropDownEmployees({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listManagerDelegator = [];
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-
-
                   this.listManagerDelegator.push({ name: day.name, key: day.id });
-
                 });
-
-
               });
           }
 
@@ -423,20 +411,16 @@ export class DialogAddASectionComponent {
         break;
       case 'zoneIds':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery) {
+          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.sectionsService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.listZones = [];
+                this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-
-
                   this.listZones.push({ name: day.name, key: day.id });
-
                 });
-
-
               });
           }
 
