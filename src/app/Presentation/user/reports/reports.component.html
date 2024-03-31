@@ -151,12 +151,28 @@
                           <div class="content-password">
                             <input type="number" formControlName="FilterTypeFrom" pInputText [placeholder]="'إدخل قيمة التصفية من ('+ nameFilterType +')'" class="w-100" />
                           </div>
+                           <!--Start Custom Validators-->
+                           <div class="container-alerts mt-2" *ngIf="getControl('filterTypeGroup.FilterTypeFrom')?.errors">
+                            <div class="alert alert-danger"
+                              *ngIf="getControl('filterTypeGroup.FilterTypeFrom')?.hasError('numberIsBig')">
+                              عفوا نوع التصفية إلي يجب أن يكون أكبر من أو يساوي نوع التصفية من
+                            </div>
+                          </div>
+                        <!--End Custom Validators-->
                         </div>
                         <div class="sectionFive mb-3">
                           <label for="" class="label-input mb-2">قيمة التصفية إلي ( {{nameFilterType}} )</label>
                           <div class="content-password">
                             <input type="number" formControlName="FilterTypeTo" pInputText [placeholder]="'إدخل قيمة التصفية إلي ('+ nameFilterType +')'" class="w-100" />
                           </div>
+                          <!--Start Custom Validators-->
+                            <div class="container-alerts mt-2" *ngIf="getControl('filterTypeGroup.FilterTypeTo')?.errors">
+                              <div class="alert alert-danger"
+                                *ngIf="getControl('filterTypeGroup.FilterTypeTo')?.hasError('numberIsLess')">
+                                عفوا نوع التصفية من يجب أن يكون أقل من أو يساوي نوع التصفية إلي
+                              </div>
+                            </div>
+                          <!--End Custom Validators-->
                         </div>
                                <!--Start Custom Validators-->
                         <div class="container-alerts mt-2" *ngIf="getControl('filterTypeGroup')?.errors">

@@ -171,8 +171,8 @@ export class ReportsComponent {
       FilterType:[],
       filterTypeGroup: this.fb.group(
         {
-          FilterTypeFrom: this.fb.control(null),
-          FilterTypeTo: this.fb.control(null),
+          FilterTypeFrom: this.fb.control(null, this.minimumValidator('filterTypeGroup.FilterTypeTo')),
+          FilterTypeTo: this.fb.control(null, this.maximumValidator('filterTypeGroup.FilterTypeFrom')),
         },
         {
           validators: [this.requiredValidator.bind(this)],
@@ -206,7 +206,53 @@ export class ReportsComponent {
     //Add 'implements OnInit' to the class.
 
   }
+  minimumValidator(conInput: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value: string = control.value;
+      let checkMin = true;
+      
+      if (value != null) {
+        
 
+        if (this.filterForm.get(conInput)?.dirty && !this.filterForm.get(conInput)?.hasError('required')) {
+          
+          if(this.filterForm.get(conInput)?.value != null) {
+            if (value > this.filterForm.get(conInput)?.value) {
+              checkMin = false;
+            }
+          }
+         
+        }
+      }
+      // const hasNumber = /\d/.test(value);
+      return checkMin ? null : { numberIsBig: true };
+
+    };
+  }
+  maximumValidator(conInput: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value: string = control.value;
+      let checkMin = true;
+      
+
+      if (value != null) {
+        
+
+        if (this.filterForm.get(conInput)?.dirty && !this.filterForm.get(conInput)?.hasError('required')) {
+          if(this.filterForm.get(conInput)?.value != null) {
+            if (value < this.filterForm.get(conInput)?.value) {
+              
+  
+              checkMin = false;
+            }
+          }
+        
+        }
+      }
+      // const hasNumber = /\d/.test(value);
+      return checkMin ? null : { numberIsLess: true };
+    };
+  }
   getreports(filteration: any) {
     this.reports = [];
     this.isLoading = true;
@@ -297,6 +343,7 @@ export class ReportsComponent {
    
     dialogRefAddCurrency.componentInstance.id = data.id
   }
+  
   filter() {
     if (this.filterForm.value.searchDate != null) {
       if (this.filterForm.value.searchDate[1] === null) {
@@ -317,6 +364,7 @@ export class ReportsComponent {
     if (this.filterForm.valid && !this.dateTaskMultiple) {
       Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
         if (typeof value  === 'string') {
+          
           if(value != "") {
             if(key !="searchDate") {
               this.filteration[key] = value.trim();
@@ -327,17 +375,14 @@ export class ReportsComponent {
             if(key !="searchDate" && key !="EmployeesIds" && key !="FilterType" && key !="filterTypeGroup") {
               this.filteration[key] = value;
             } else if(key ==="EmployeesIds") {
-              this.filteration[key] = value === null ? value : value?.map(item => item.key);
-
+              if(value != "" && value != null) {
+                this.filteration[key] = value === null ? value : value?.map(item => item.key);
+              }
             }  else if(key ==="FilterType") {
-              
               this.filteration[key] = value === null ? value : value.key;
-
             }else if(key ==="filterTypeGroup") {
-              
               this.filteration['FilterTypeFrom'] = value.FilterTypeFrom;
               this.filteration['FilterTypeTo'] = value.FilterTypeTo;
-
             }
         }
       });
@@ -462,39 +507,7 @@ export class ReportsComponent {
     this.filteration = { ...this.filteration, PageNumber: event.page };
     this.getreports(this.filteration)
   }
-  minimumValidator(conInput: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const value: string = control.value;
-      let checkMin = true;
-      if (value != null) {
 
-        if (this.filterForm.get(conInput)?.dirty && !this.filterForm.get(conInput)?.hasError('required')) {
-          if (value > this.filterForm.get(conInput)?.value) {
-            checkMin = false;
-          }
-        }
-      }
-      // const hasNumber = /\d/.test(value);
-      return checkMin ? null : { numberIsBig: true };
-
-    };
-  }
-  maximumValidator(conInput: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const value: string = control.value;
-      let checkMin = true;
-
-      if (value != null) {
-        if (this.filterForm.get(conInput)?.dirty && !this.filterForm.get(conInput)?.hasError('required')) {
-          if (value < this.filterForm.get(conInput)?.value) {
-            checkMin = false;
-          }
-        }
-      }
-      // const hasNumber = /\d/.test(value);
-      return checkMin ? null : { numberIsLess: true };
-    };
-  }
   changePage(even: number) {
     this.filteration.page = even;
     let filteration = { ...this.filteration, page: even - 1 };

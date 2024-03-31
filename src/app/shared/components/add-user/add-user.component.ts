@@ -494,7 +494,7 @@ export class AddUserComponent {
     this.AttachmentsFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false
     this.submitted = true;
 
-    if (this.addBranchGroupForm.valid && this.submitted && !this.requiredCommercialRegFiles) {
+    if (this.addBranchGroupForm.valid && this.submitted) {
       this.submitted = false;
       this.submitClicked.emit({ ...this.addBranchGroupForm.value, files: this.AttachmentsFiles });
     } else {

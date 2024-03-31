@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Inject, Input, Output, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/core/auth/services/auth-service.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -15,6 +15,7 @@ import { HolidaysService } from 'src/app/Presentation/user/holidays/services/hol
 import { CheckboxModule } from 'primeng/checkbox';
 import * as moment from 'moment';
 import { PrimeNGConfig } from 'primeng/api';
+import uq from '@umalqura/core';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -65,11 +66,13 @@ interface UploadEvent {
   selector: 'app-add-aholiday',
   standalone: true,
   imports: [CommonModule, FormsModule, MatRadioModule, CheckboxModule, MatProgressSpinnerModule, ReactiveFormsModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
+  providers:[DatePipe],
   templateUrl: './add-aholiday.component.html',
   styleUrls: ['./add-aholiday.component.scss']
 })
 export class AddAholidayComponent {
   loading = false;
+  selectedDate!: Date;
 
   @Output() submitClicked = new EventEmitter<any>();
   @Input() submitted!: boolean;
@@ -88,13 +91,63 @@ export class AddAholidayComponent {
   });
   private holidaysService = inject(HolidaysService);
   @Input() id!: boolean;
-
+  dateFormat: string = 'mm/dd/yy';
   hijriLocale = {
-    dayNames: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"],
-    dayNamesShort: ["أحد", "اثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"],
-    dayNamesMin: ["أح", "إث", "ثل", "أر", "خم", "جم", "سب"],
-    monthNames: ["محرّم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"],
-    monthNamesShort: ["مح", "صف", "رب الأ", "رب الآ", "جم الأ", "جم الآ", "رج", "شع", "رم", "شو", "ذو الق", "ذو الح"],
+    dayNames: [
+      "الأحد",
+      "الاثنين",
+      "الثلاثاء",
+      "الأربعاء",
+      "الخميس",
+      "الجمعة",
+      "السبت"
+    ],
+    dayNamesShort: [
+      "أحد",
+      "اثنين",
+      "ثلاثاء",
+      "أربعاء",
+      "خميس",
+      "جمعة",
+      "سبت"
+    ],
+    dayNamesMin: [
+      "ح",
+      "ن",
+      "ث",
+      "ر",
+      "خ",
+      "ج",
+      "س"
+    ],
+    monthNames: [
+      "يناير",
+      "فبراير",
+      "مارس",
+      "أبريل",
+      "مايو",
+      "يونيو",
+      "يوليو",
+      "أغسطس",
+      "سبتمبر",
+      "أكتوبر",
+      "نوفمبر",
+      "ديسمبر"
+    ],
+    monthNamesShort: [
+      "يناير",
+      "فبراير",
+      "مارس",
+      "أبريل",
+      "مايو",
+      "يونيو",
+      "يوليو",
+      "أغسطس",
+      "سبتمبر",
+      "أكتوبر",
+      "نوفمبر",
+      "ديسمبر"
+    ],
     am: "صباحًا",
     pm: "مساءً",
     today: "اليوم",
@@ -108,9 +161,20 @@ export class AddAholidayComponent {
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
     private config: PrimeNGConfig,
+    private datePipe: DatePipe,
     private fb: FormBuilder
   ) {
     this.dialogRef.disableClose = true;
+    this.selectedDate = new Date();
+
+  }
+  convertToHijri(selectedDate: Date): any {
+    const formattedDate = this.datePipe.transform(selectedDate, 'yyyy-MM-dd', 'gregorian');
+    return formattedDate; // يجب أن يكون التاريخ بالتنسيق الميلادي (yyyy-MM-dd)
+  }
+  onDateSelect(selectedDate: Date): void {
+    const hijriDate = this.convertToHijri(selectedDate);
+    console.log('Hijri Date:', hijriDate);
   }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -181,6 +245,10 @@ export class AddAholidayComponent {
           clear: "مسح"
         }
         this.config.setTranslation(this.hijriLocale);
+        this.getControl("startDate")?.reset();
+        this.getControl("endDate")?.reset();
+        this.dateFormat ='mm/dd/yy';
+        this.selectedDate = new Date();
 
       } else {
 
@@ -189,7 +257,7 @@ export class AddAholidayComponent {
           dayNamesShort: ["أحد", "اثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"],
           dayNamesMin: ["أح", "إث", "ثل", "أر", "خم", "جم", "سب"],
           monthNames: ["محرّم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"],
-          monthNamesShort: ["مح", "صف", "رب الأ", "رب الآ", "جم الأ", "جم الآ", "رج", "شع", "رم", "شو", "ذو الق", "ذو الح"],
+          monthNamesShort: ["محرّم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"],
           am: "صباحًا",
           pm: "مساءً",
           today: "اليوم",
@@ -197,6 +265,14 @@ export class AddAholidayComponent {
           clear: "مسح"
         }
         this.config.setTranslation(this.hijriLocale);
+        this.dateFormat ='dd MM';
+
+        this.getControl("startDate")?.reset();
+        this.getControl("endDate")?.reset();
+        const today = new Date();
+        const d = uq(today);    
+        this.selectedDate = new Date(d.hy, d.hm - 1, d.hd);
+        
 
       }
     })

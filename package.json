@@ -31,6 +31,7 @@
     "@popperjs/core": "^2.11.6",
     "@types/googlemaps": "^3.43.3",
     "@types/pdfmake": "^0.2.8",
+    "@umalqura/core": "^0.0.7",
     "apexcharts": "^3.43.0",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.5",

@@ -45,7 +45,7 @@
         <label class="title" [innerHTML]="data!['titleCalendarFirst']|translate"></label>
         <div class="content-password">
           <div class="content-pCalendar-default" dir="ltr">
-            <p-calendar formControlName="startDate" appendTo="body" [locale]="hijriLocale"
+            <p-calendar formControlName="startDate" appendTo="body" [dateFormat]="dateFormat" [defaultDate]="selectedDate" [locale]="hijriLocale"
               [placeholder]="data!['placeholderCalendarFirst']|translate" [showIcon]="true"></p-calendar>
           </div>
         </div>
@@ -67,7 +67,7 @@
         <label class="title" [innerHTML]="data!['titleCalendarSecond']|translate"></label>
         <div class="content-password">
           <div class="content-pCalendar-default" dir="ltr">
-            <p-calendar formControlName="endDate" appendTo="body" [locale]="hijriLocale"
+            <p-calendar formControlName="endDate" appendTo="body" [dateFormat]="dateFormat" [defaultDate]="selectedDate" [locale]="hijriLocale"
               [placeholder]="data!['placeholderCalendarSecond']|translate" [showIcon]="true"></p-calendar>
           </div>
         </div>
