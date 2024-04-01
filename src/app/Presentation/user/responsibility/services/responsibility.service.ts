@@ -16,7 +16,7 @@ export class ResponsibilityService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}JobTitle/Get`, { params: queryParams })
+    return this.http.get<any>(`${environment.baseUrl}Responsibility/Get`, { params: queryParams })
   }
   getInformation(): Observable<any> {
 
