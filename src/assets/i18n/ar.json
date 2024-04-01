@@ -84,7 +84,8 @@
     "typesOfVacations": "أنواع الأجازات",
     "typesOfPermissions": "أنواع الأذونات",
     "typesOfMissions": "أنواع المهمات",
-    "searchDaum":"ابحث في داوم"
+    "searchDaum":"ابحث في داوم",
+    "responsibility":"المسؤوليات"
   },
   "dashboard": {
     "godBless":"حيّا الله",

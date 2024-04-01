@@ -126,7 +126,11 @@ const routes: Routes = [
         loadChildren: () => import('./user-permissions/user-permissions.module').then((m) => m.UserPermissionsModule),
         canActivate: [PermissionGuard]
       },
-
+      {
+        path: "responsibility",
+        loadChildren: () => import('./responsibility/responsibility.module').then((m) => m.ResponsibilityModule),
+        canActivate: [PermissionGuard]
+      },
       {
         path: "taskType",
         loadChildren: () => import('./task-type/task-type.module').then((m) => m.TaskTypeModule),
