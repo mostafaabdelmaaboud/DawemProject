@@ -90,13 +90,13 @@ export class ResponsibilityComponent {
     { name: "نسيان تسجيل انصراف", key: "2" },
     { name: "تسجيل حضور خاطئ", key: "3" },
     { name: "تسجيل انصراف خاطئ", key: "4" }
-
   ];
+  defaultRowPerPage = { name: '5', code: 5 };
+
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
-
     this._mobileQueryListener = () => {
       if (this.mobileQuery.matches) {
         this.opened = true;
@@ -105,13 +105,8 @@ export class ResponsibilityComponent {
       } else {
         this.opened = false;
         this.Responsibility = this.Responsibility;
-
         changeDetectorRef.detectChanges();
-
       }
-
-
-
     };
     this.mobileQuery.addListener(this._mobileQueryListener);
     translate.addLangs(['ar', 'en']);
@@ -137,9 +132,9 @@ export class ResponsibilityComponent {
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
-      { name: '5', code: 5 },
-      { name: '10', code: 10 },
-      { name: '25', code: 25 },
+      { name: '2', code: 2 },
+      { name: '5', code: 5 }
+
     ];
     this.getInformation();
 
