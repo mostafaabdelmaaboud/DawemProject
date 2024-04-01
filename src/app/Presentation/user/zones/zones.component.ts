@@ -186,11 +186,11 @@ export class ZonesComponent {
           field: "zoneName",
         },
         {
-          name: data.longitudinalLine,
+          name:  data.latitudinalLine,
           field: "Latit"
         },
         {
-          name: data.latitudinalLine,
+          name: data.longitudinalLine,
           field: "Long"
         },
         {
@@ -216,11 +216,11 @@ export class ZonesComponent {
             field: "zoneName",
           },
           {
-            name: data.longitudinalLine,
+            name: data.latitudinalLine,
             field: "Latit"
           },
           {
-            name: data.latitudinalLine,
+            name: data.longitudinalLine,
             field: "Long"
           },
           {

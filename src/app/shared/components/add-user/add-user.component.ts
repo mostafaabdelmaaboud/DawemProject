@@ -287,7 +287,7 @@ export class AddUserComponent {
                 dataDropdown.data?.forEach((list: any) => {
                   this.listRoles.push({ name: list.name, key: list.id });
                 });
-                data?.roles?.forEach((employee: any) => {
+                data?.responsibilities?.forEach((employee: any) => {
 
 
 

@@ -101,6 +101,6 @@ export class UsersService {
         }
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}Role/GetForDropDown`, { params: queryParams })
+    return this.http.get<any>(`${environment.baseUrl}Responsibility/GetForDropDown`, { params: queryParams })
   }
 }
