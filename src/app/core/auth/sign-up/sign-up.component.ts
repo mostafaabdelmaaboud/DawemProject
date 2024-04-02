@@ -6,6 +6,8 @@ import { ToastService } from 'src/app/shared/services/toast.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../services/auth-service.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { TermsAndConditionsComponent } from 'src/app/shared/components/terms-and-conditions/terms-and-conditions.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-sign-up',
@@ -15,6 +17,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 export class SignUpComponent {
   togglePassword = true;
   toggleConfirmPassword = true;
+  private dialog = inject(MatDialog);
 
   FormGroup: FormGroup = this.fb.group({
     name: ["", Validators.required],
@@ -234,7 +237,7 @@ export class SignUpComponent {
   }
   submit() {
 
-    if (this.FormGroup.valid && this.loading) {
+    if (this.FormGroup.valid && this.loading && this.FormGroup.value.agreed) {
       this.loading = false;
       // this.isLoading = true;
 
@@ -251,7 +254,7 @@ export class SignUpComponent {
         userMobileNumber:this.FormGroup.value.userMobileNumber,
         agreed: this.FormGroup.value.agreed ? this.FormGroup.value.agreed[0] : false,
       };
-
+      
       this.authService.signup(formatObject).subscribe(
         {
           next: (res: any) => {
@@ -286,7 +289,79 @@ export class SignUpComponent {
       this.FormGroup.get("userMobileNumber")?.markAsDirty();
       this.FormGroup.get("agreed")?.markAsDirty();
 
+      if(!this.FormGroup.value.agreed) {
+        this.toast.error("برجاء اختيار الشروط والاحكام", '', {
+          timeOut: 5000,
+          onActivateTick: true
+        });
+      }
+
     }
+  }
+  requestTermsAndConditions() {
+    const dialogRefAddCurrency = this.dialog.open(TermsAndConditionsComponent, {
+      width: "50vw",
+      data: {
+        title: "الشروط والأحكام",
+        setAsNecessary: "تعيين كضرورية",
+        titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
+        titleName: "الأسم<span class='color-red'>*</span>",
+        placeholdeName: "برجاء ادخال الأسم",
+        validationtitleName: "الأسم مطلوب",
+        buttonSend: "مقبول"
+      },
+    });
+    dialogRefAddCurrency.componentInstance.submitted = true;
+    dialogRefAddCurrency.componentInstance.editJobTitle = false;
+    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+      this.FormGroup.get("agreed")?.setValue(result);
+            dialogRefAddCurrency.close();
+
+      dialogRefAddCurrency.componentInstance.submitted = true;
+      // this.responsibilityService.createResponsibility(formData).subscribe(
+      //   {
+      //     next: (data: any) => {
+
+
+      //       dialogRefAddCurrency.componentInstance.submitted = true;
+
+      //       dialogRefAddCurrency.close();
+
+      //       const succressDialog = this.dialog.open(ToastSuccessComponent, {
+      //         width: "30vw",
+      //         data: {
+      //           title: "تم ارسال طلبك",
+      //           message: data.message,
+      //           buttonSend: "طلبات المسؤوليات"
+
+      //         },
+      //       });
+      //       this.getResponsibility(this.filteration);
+
+      //       setTimeout(() => {
+      //         succressDialog.close();
+
+      //       }, 2000);
+      //       succressDialog.componentInstance.submitted = true;
+      //       succressDialog.componentInstance.submitClicked.subscribe(result => {
+      //         succressDialog.close();
+      //       })
+
+      //     },
+      //     error: (err: any) => {
+
+      //       dialogRefAddCurrency.componentInstance.submitted = true;
+
+      //     }
+      //   }
+      // )
+    });
+    dialogRefAddCurrency.afterClosed().subscribe(result => {
+      if (result) {
+        this.FormGroup.get("agreed")?.setValue(result);
+
+      }
+    });
   }
   getControl(FormControl: string) {
     return this.FormGroup.get(FormControl);

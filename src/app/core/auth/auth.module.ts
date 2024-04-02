@@ -12,6 +12,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { SendEmailComponent } from './send-email/send-email.component';
 import { CheckEmailComponent } from './check-email/check-email.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     TranslateModule,
     DropdownModule,
     SharedModule,
+    MatDialogModule
+
 
   ]
 })

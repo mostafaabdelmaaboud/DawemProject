@@ -309,16 +309,18 @@
                 <div class="col-md-12 col-12">
                   <div class="sectionFive mb-3">
 
-                    <label for="sdad" class="mb-0 ml-15">{{'signup.iAgreeToTheTermsAndConditions' | translate}}</label>
-
-                    <p-checkbox name="category" [value]="true" formControlName="agreed" inputId="sdad"></p-checkbox>
-                    <!--Start Custom Validators-->
+                    <!-- <label for="sdad" class="mb-0 ml-15">{{'signup.iAgreeToTheTermsAndConditions' | translate}}
+                      الشروط والاحكام
+                    </label> -->
+                    <label for="sdad" class="mb-0 ml-15 TermsAndConditions" (click)="requestTermsAndConditions()">
+                      موافق علي الشروط والاحكام
+                    </label>
+                    <!-- <p-checkbox name="category" [value]="true" formControlName="agreed" inputId="sdad"></p-checkbox> -->
                     <div class="alert alert-danger mt-3"
                       *ngIf="getControl('agreed')?.hasError('required') && getControl('agreed')?.dirty">
-                      {{'signup.termsAndConditionsAreRequired' | translate}}
+                      برجاء اختيار الشروط والاحكام
                     </div>
 
-                    <!--End Custom Validators-->
                   </div>
                 </div>
 
