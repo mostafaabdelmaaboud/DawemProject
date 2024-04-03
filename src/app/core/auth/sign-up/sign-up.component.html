@@ -20,7 +20,6 @@
                 <div>{{ selectedCountry.name }}</div>
               </div>
             </ng-container>
-
           </ng-template>
           <ng-template let-country pTemplate="item">
             <ng-container *ngIf="country.code != 'AR'">
@@ -51,7 +50,6 @@
                 <div class="col-md-6 col-12">
                   <div class="sectionFive mb-3">
                     <label for="" class="label-input mb-2">{{'signup.name' | translate}} <span class="color-red">*</span></label>
-
                     <!--Start Custom Validators-->
                     <div class="content-input position-relative">
                       <div class="content-password">
@@ -64,7 +62,6 @@
                         </div>
                       </div>
                     </div>
-
                     <!--End Custom Validators-->
                   </div>
                 </div>
@@ -85,7 +82,6 @@
                       </div>
                       <!--End Custom Validators-->
                     </div>
-
                   </div>
                 </div>
                 <div class="col-md-6 col-12">
@@ -97,7 +93,6 @@
                           [placeholder]="'signup.country' | translate" optionLabel="name">
                           <ng-template pTemplate="header">
                             <span class="p-input-icon-left input-search-dropdown">
-              
                               <i class="pi pi-search"  (click)="searchDropdown(searchcompanyCountryId.value, 'companyCountryId')"></i>
                               <input type="text" placeholder="بحث" (keyup.enter)="searchDropdown(searchcompanyCountryId.value, 'companyCountryId')" pInputText #searchcompanyCountryId />
                             </span>
@@ -116,7 +111,6 @@
                       </div>
                       <!--End Custom Validators-->
                     </div>
-
                   </div>
                 </div>
                 <div class="col-md-6 col-12">
@@ -136,7 +130,6 @@
                       </div>
                       <!--End Custom Validators-->
                     </div>
-
                   </div>
                 </div>
                 <div class="col-md-6 col-12">
@@ -157,7 +150,6 @@
                       </div>
                       <!--End Custom Validators-->
                     </div>
-
                   </div>
                 </div>
                 <div class="col-md-6 col-12">
@@ -186,11 +178,11 @@
                       </div>
                     </div>
                     <!-- <div class="container-alerts mb-2" *ngIf="getControl('bankAccount.bankName')?.errors">
-                                              <div class="alert alert-danger"
-                                                *ngIf="getControl('bankAccount.bankName')?.hasError('required') && getControl('bankAccount.bankName')?.dirty">
-                                                Bank Name is required
-                                              </div>
-                                            </div> -->
+                      <div class="alert alert-danger"
+                        *ngIf="getControl('bankAccount.bankName')?.hasError('required') && getControl('bankAccount.bankName')?.dirty">
+                        Bank Name is required
+                      </div>
+                    </div> -->
                   </div>
                 </div>
                 <div class="col-md-6 col-12">
@@ -226,11 +218,11 @@
                       </div> -->
                     </div>
                     <!-- <div class="container-alerts mb-2" *ngIf="getControl('bankAccount.bankName')?.errors">
-                                                              <div class="alert alert-danger"
-                                                                *ngIf="getControl('bankAccount.bankName')?.hasError('required') && getControl('bankAccount.bankName')?.dirty">
-                                                                Bank Name is required
-                                                              </div>
-                                                            </div> -->
+                      <div class="alert alert-danger"
+                        *ngIf="getControl('bankAccount.bankName')?.hasError('required') && getControl('bankAccount.bankName')?.dirty">
+                        Bank Name is required
+                      </div>
+                    </div> -->
                   </div>
                 </div>
                 <div class="col-md-6 col-12">
@@ -248,6 +240,10 @@
                           *ngIf="getControl('userEmail')?.hasError('required') && getControl('userEmail')?.dirty">
                           {{'signup.userEmailIsRequired' | translate}} 
                         </div>
+                        <div class="alert alert-danger"
+                        *ngIf="getControl('userEmail')?.hasError('pattern') && !getControl('userEmail')?.hasError('required')">
+                        البريد الألكتروني غير صحيح
+                      </div>
                       </div>
                       <!--End Custom Validators-->
                     </div>
@@ -262,7 +258,7 @@
                         <span class="dropdown-code">
                           <!-- {{code}} -->
                           <p-dropdown appendTo="body" [options]="countriesPhone" [(ngModel)]="isCurrentCountry"  [ngModelOptions]="{standalone: true}"
-                 optionLabel="name" (onChange)="selectCountry()">
+                            optionLabel="name" (onChange)="selectCountry()">
                           <ng-template let-option pTemplate="selectedItem">
                             <div class="d-flex align-items-center gap-2" >
                               <span class="image-country-mobilePhone select-country-image">
@@ -273,7 +269,6 @@
                         </ng-template>
                           <ng-template pTemplate="header">
                             <span class="p-input-icon-left input-search-dropdown">
-              
                               <i class="pi pi-search"  (click)="searchDropdown(searchcompanyCountryId.value, 'companyCountryId')"></i>
                               <input type="text" placeholder="بحث" (keyup.enter)="searchDropdown(searchcompanyCountryId.value, 'companyCountryId')" pInputText #searchcompanyCountryId />
                             </span>
@@ -285,11 +280,9 @@
                             <span class="item-text">{{ option.name }}</span>
                           </ng-template>
                         </p-dropdown>
-
                         </span>
                         <input type="text" pInputText formControlName="userMobileNumber"
                           [placeholder]="'signup.userPhoneNumber' | translate" class="w-100" />
-                    
                       </div>
                       <div class="container-alerts" *ngIf="getControl('userMobileNumber')?.errors">
                         <div class="alert alert-danger"
@@ -302,10 +295,68 @@
                       </div>
                       </div>
                     </div>
-
+                  </div>
+                </div>
+                <div class="col-md-6 col-12">
+                  <div class="sectionFive mb-3">
+                    <label for="" class="label-input mb-2">عدد الموظفين <span
+                        class="color-red">*</span></label>
+                    <div class="content-input position-relative">
+                      <div class="content-password">
+                        <input type="number" pInputText formControlName="numberOfEmployees"
+                          placeholder="عدد الموظفين" class="w-100" />
+                      </div>
+                      <!--Start Custom Validators-->
+                      <div class="container-alerts" *ngIf="getControl('numberOfEmployees')?.errors">
+                        <div class="alert alert-danger"
+                          *ngIf="getControl('numberOfEmployees')?.hasError('required') && getControl('numberOfEmployees')?.dirty">
+                          عدد الموظفين مطلوب 
+                        </div>
+                      </div>
+                      <!--End Custom Validators-->
+                    </div>
 
                   </div>
                 </div>
+                <div class="col-md-12 col-12">
+                  <div class="sectionFive mb-3">
+                    <label class="label-input mb-1">فترة تجريبيه ؟</label>
+                    <div class="container-radio-button">
+                      <mat-radio-group aria-label="Select an option" color="primary" formControlName="IsTrial">
+                        <mat-radio-button [value]="false">إشتراك 
+                        </mat-radio-button>
+                        <mat-radio-button [value]="true">فتره تجريبيه</mat-radio-button>
+      
+                      </mat-radio-group>
+                    </div>
+      
+                  </div>
+                </div>
+                <ng-container *ngIf="subscription">
+                  <div class="col-md-6 col-12">
+                    <div class="sectionFive mb-3">
+                      <label for="" class="label-input mb-2">مدة الإشتراك بالشهور  <span
+                          class="color-red">*</span></label>
+                      <div class="content-input position-relative">
+                        <div class="content-password">
+                          <input type="number" pInputText formControlName="subscriptionDurationInMonths"
+                            placeholder="مدة الإشتراك بالشهور" class="w-100" />
+                        </div>
+                        <!--Start Custom Validators-->
+                        <div class="container-alerts" *ngIf="getControl('subscriptionDurationInMonths')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('subscriptionDurationInMonths')?.hasError('required') && getControl('subscriptionDurationInMonths')?.dirty">
+                            مدة الإشتراك بالشهور مطلوب
+                          </div>
+                        </div>
+                        <!--End Custom Validators-->
+                      </div>
+  
+                    </div>
+                  </div>
+                </ng-container>
+          
+          
                 <div class="col-md-12 col-12">
                   <div class="sectionFive mb-3">
 
@@ -345,11 +396,8 @@
             ؟</div>
         </div>
       </div>
-
-
     </div>
   </div>
-
 </div>
 <div class="spinner d-flex justify-content-center align-items-center loading" *ngIf="isLoading">
   <mat-spinner></mat-spinner>

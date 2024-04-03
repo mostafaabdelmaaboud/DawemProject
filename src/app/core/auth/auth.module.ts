@@ -13,6 +13,7 @@ import { SendEmailComponent } from './send-email/send-email.component';
 import { CheckEmailComponent } from './check-email/check-email.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     CommonModule,
     AuthRoutingModule,
     TranslateModule,
+    MatRadioModule,
     DropdownModule,
     SharedModule,
     MatDialogModule

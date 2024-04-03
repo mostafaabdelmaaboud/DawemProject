@@ -26,6 +26,11 @@
     flex-direction: column;
   }
 }
+:host .container-radio-button {
+  .mat-mdc-radio-group {
+    margin: 0 -25px
+  }
+}
 
 .loading {
   margin: 0px;

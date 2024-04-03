@@ -27,12 +27,15 @@ export class SignUpComponent {
     companyEmail: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
     password: ["", [Validators.required, Validators.minLength(5)]],
     confirmPassword: ["", [Validators.required, Validators.minLength(5), , this.passwordMatchValidator()]],
-
+    numberOfEmployees: ["", Validators.required],
     userEmail: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
     userMobileNumber: ["", [Validators.required]],
+    IsTrial: [false],
+    subscriptionDurationInMonths: ["", [Validators.required]],
     agreed: [, Validators.required],
 
   });
+  subscription = true;
   code="+20";
   private authService = inject(AuthService);
   currentLang = localStorage.getItem("lang");
@@ -111,7 +114,19 @@ export class SignUpComponent {
     }
     this.getCountries();
     this.getCountriesbyPhone();
+    this.FormGroup.get("IsTrial")?.valueChanges.subscribe(data => {
 
+      if (data) {
+        this.subscription = false;
+
+        this.FormGroup.removeControl("subscriptionDurationInMonths");
+      } else {
+        this.FormGroup.addControl("subscriptionDurationInMonths", this.fb.control("", [Validators.required]));
+
+        this.subscription = true;
+
+      }
+    })
   }
   getCountries() {
     this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
@@ -241,7 +256,7 @@ export class SignUpComponent {
       this.loading = false;
       // this.isLoading = true;
 
-      let formatObject = {
+      let formatObject:any = {
         name: this.FormGroup.value.name,
         companyName: this.FormGroup.value.companyName,
         companyCountryId: this.FormGroup.value.companyCountryId.id,
@@ -252,8 +267,14 @@ export class SignUpComponent {
         userEmail: this.FormGroup.value.userEmail,
         userMobileCountryId:this.isCurrentCountry.id,
         userMobileNumber:this.FormGroup.value.userMobileNumber,
+        numberOfEmployees:this.FormGroup.value.numberOfEmployees,
         agreed: this.FormGroup.value.agreed ? this.FormGroup.value.agreed[0] : false,
       };
+      if(this.subscription) {
+        formatObject.subscriptionDurationInMonths = this.FormGroup.value.subscriptionDurationInMonths;
+      } else {
+        formatObject.subscriptionDurationInMonths = null;
+      }
       
       this.authService.signup(formatObject).subscribe(
         {
@@ -283,12 +304,14 @@ export class SignUpComponent {
       this.FormGroup.get("companyAddress")?.markAsDirty();
       this.FormGroup.get("companyEmail")?.markAsDirty();
       this.FormGroup.get("password")?.markAsDirty();
-
+      this.FormGroup.get("numberOfEmployees")?.markAsDirty();
+      if(this.subscription) {
+        this.FormGroup.get("subscriptionDurationInMonths")?.markAsDirty();
+      }
       this.FormGroup.get("confirmPassword")?.markAsDirty();
       this.FormGroup.get("userEmail")?.markAsDirty();
       this.FormGroup.get("userMobileNumber")?.markAsDirty();
       this.FormGroup.get("agreed")?.markAsDirty();
-
       if(!this.FormGroup.value.agreed) {
         this.toast.error("برجاء اختيار الشروط والاحكام", '', {
           timeOut: 5000,

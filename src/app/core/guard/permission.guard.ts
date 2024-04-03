@@ -97,28 +97,16 @@ export class PermissionGuard implements CanActivate {
 
     } else if (state.url.includes("sections")) {
       return this.permissionsUserService.checkPermission({ type: "component", screenCode: 2 });
-
-
     } else if (state.url.includes("groups")) {
       return this.permissionsUserService.checkPermission({ type: "component", screenCode: 14 });
-
-
     } else if (state.url.includes("jobTitles")) {
       return this.permissionsUserService.checkPermission({ type: "component", screenCode: 17 });
-
-
     } else if (state.url.includes("fingerPrintDevice")) {
       return this.permissionsUserService.checkPermission({ type: "component", screenCode: 13 });
-
-
     } else if (state.url.includes("permissionType")) {
       return this.permissionsUserService.checkPermission({ type: "component", screenCode: 21 });
-
-
     } else if (state.url.includes("taskType")) {
       return this.permissionsUserService.checkPermission({ type: "component", screenCode: 33 });
-
-
     } else if (state.url.includes("summons")) {
       return this.permissionsUserService.checkPermission({ type: "component", screenCode: 39 });
     } else if (state.url.includes("sanctions")) {
