@@ -241,7 +241,7 @@ export class UserPermissionsComponent {
         this.permissions.push({
           id: permission.id,
           code: permission.code,
-          roleOrUserName: permission.roleOrUserName,
+          roleOrUserName: permission.responsibilityOrUserName ? permission.responsibilityOrUserName : "لا يوجد",
           forTypeName: permission.forTypeName,
           allowedScreensCount: permission.allowedScreensCount,
           isActive: permission.isActive ? "نشط" : 'غير نشط'
@@ -291,7 +291,7 @@ export class UserPermissionsComponent {
           this.permissionsIsExport.push({
             id: permission.id,
             code: permission.code,
-            roleOrUserName: permission.roleOrUserName,
+            roleOrUserName: permission.responsibilityOrUserName ? permission.responsibilityOrUserName : "لا يوجد",
             forTypeName: permission.forTypeName,
             allowedScreensCount: permission.allowedScreensCount,
             isActive: permission.isActive ? "نشط" : 'غير نشط'
@@ -360,7 +360,7 @@ export class UserPermissionsComponent {
           titleFieldDisabled:"الكود",
           secondRadio: translate.user,
           titleRoleId: "نوع المسؤولية",
-          placeholdeRoleId: translate.positionType,
+          placeholdeRoleId: "نوع المسؤولية",
           ValidationRoleId: translate.positionTypeRequired,
           titleUserId: translate.userType,
           placeholdeUserId: translate.userType,
@@ -491,7 +491,7 @@ export class UserPermissionsComponent {
           titleFieldDisabled:"الكود",
           secondRadio: translate.user,
           titleRoleId: "نوع المسؤولية",
-          placeholdeRoleId: translate.positionType,
+          placeholdeRoleId:"نوع المسؤولية",
           ValidationRoleId: translate.positionTypeRequired,
           titleUserId: translate.userType,
           placeholdeUserId: translate.userType,

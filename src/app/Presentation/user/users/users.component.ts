@@ -483,7 +483,7 @@ export class UsersComponent {
         mobileCountryId:dialogRefAddCurrency.componentInstance.isCurrentCountry.id,
         Password: result.Password,
         ConfirmPassword: result.ConfirmPassword,
-        Roles: result.Roles.map((role: any) => role.key),
+        Responsibilities: result.Roles.map((role: any) => role.key),
         IsAdmin: Array.isArray(result.IsAdmin) ? result.IsAdmin[0] : result.IsAdmin
       }));
       // if (result?.zoneIds?.length > 0) {
@@ -586,15 +586,11 @@ export class UsersComponent {
         },
       });
     });
-  
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editUser = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
-
     // dialogRefAddCurrency.componentInstance.list = this.categories;
-
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-
       let formData = new FormData();
       formData.append("UpdateUserModelString", JSON.stringify({
         id: data.id,
@@ -606,7 +602,7 @@ export class UsersComponent {
         mobileCountryId:dialogRefAddCurrency.componentInstance.isCurrentCountry.id,
         Password: result.Password,
         ConfirmPassword: result.ConfirmPassword,
-        Roles: result.Roles.map((role: any) => role.key),
+        Responsibilities: result.Roles.map((role: any) => role.key),
         IsAdmin: Array.isArray(result.IsAdmin) ? result.IsAdmin[0] : result.IsAdmin
       }));
       result.files.forEach((file: any) => {
@@ -622,13 +618,8 @@ export class UsersComponent {
       this.usersService.updateUser(formData).subscribe(
         {
           next: (data: any) => {
-
-
             dialogRefAddCurrency.componentInstance.submitted = true;
-
             dialogRefAddCurrency.close();
-
-       
             let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
             this.translate.get("users").subscribe(translate => {
               succressDialog = this.dialog.open(ToastSuccessComponent, {
@@ -641,24 +632,18 @@ export class UsersComponent {
               });
             });
             this.getUsers(this.filteration);
-
             setTimeout(() => {
               succressDialog.close();
-
             }, 2000);
             succressDialog.componentInstance.submitted = true;
             dialogRefAddCurrency.componentInstance.loading = false;
-
             succressDialog.componentInstance.submitClicked.subscribe(result => {
               succressDialog.close();
             })
-
           },
           error: (err: any) => {
             dialogRefAddCurrency.componentInstance.loading = false;
-
             dialogRefAddCurrency.componentInstance.submitted = true;
-
           }
         }
       )

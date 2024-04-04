@@ -233,15 +233,12 @@ export class AddUserComponent {
                   this.addBranchGroupForm.get("idCopyFile")?.setValue(data.profileImageName);
 
                 }
-
                 // this.employeesService.downloadImage(data.profileImagePath).subscribe(response => {
                 //   const blob = new Blob([response]);
                 //   const file = new File([blob], data.profileImageName);
-
                 //   this.AttachmentsFiles.push({ imageSrc: data.profileImagePath, fileUpload: file, detailsImage: true });
                 // });
               }
-
               // IsActive: [false],
               //   Name: ["", Validators.required],
               //     Email: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
@@ -278,22 +275,14 @@ export class AddUserComponent {
                   this.addBranchGroupForm.get("EmployeeId")?.setValue(this.listEmployees[indexEmployeeId]);
                 }
               });
-
-              this.usersService.getRolesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids: data?.roles }).subscribe(dataDropdown => {
-
-
-
+              this.usersService.getRolesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids: data?.responsibilities }).subscribe(dataDropdown => {
                 this.listRoles = [];
                 dataDropdown.data?.forEach((list: any) => {
                   this.listRoles.push({ name: list.name, key: list.id });
                 });
-                data?.responsibilities?.forEach((employee: any) => {
-
-
-
-                  let indexRole = this.listRoles.findIndex(list => list.key === employee);
-
-
+                data?.responsibilities?.forEach((responsibility: any) => {
+                  debugger;
+                  let indexRole = this.listRoles.findIndex(list => list.key === responsibility);
                   if (indexRole >= 0) {
                     if (Array.isArray(this.getControl("Roles")?.value)) {
                       this.getControl("Roles")?.patchValue(([{ name: this.listRoles[indexRole].name, key: this.listRoles[indexRole].key }, ...this.getControl("Roles")?.value]));

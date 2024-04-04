@@ -162,7 +162,7 @@ export class AddUserPermissionComponent {
     isActive: [true],
     fieldDisabled: [""],
     ForType: ['0', Validators.required],
-    RoleId: ['', Validators.required],
+    ResponsibilityId: ['', Validators.required],
   });
   uploadedCommercialRegFiles: any[] = [];
   requiredCommercialRegFiles = false;
@@ -296,15 +296,15 @@ export class AddUserPermissionComponent {
 
 
 
-                  if (data.roleId != null) {
-                    this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.roleId }).subscribe(dataDropdown => {
+                  if (data.responsibilityId != null) {
+                    this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.responsibilityId }).subscribe(dataDropdown => {
                       this.listRoleId = [];
                       dataDropdown.data?.forEach((list: any) => {
                         this.listRoleId.push({ name: list.name, key: list.id });
                       });
-                      let indexRoleId = this.listRoleId.findIndex(list => list.key === data.roleId);
+                      let indexRoleId = this.listRoleId.findIndex(list => list.key === data.responsibilityId);
                       if (indexRoleId >= 0) {
-                        this.getControl("RoleId")?.setValue(this.listRoleId[indexRoleId]);
+                        this.getControl("ResponsibilityId")?.setValue(this.listRoleId[indexRoleId]);
 
                       }
 
@@ -353,7 +353,7 @@ export class AddUserPermissionComponent {
       if (data === "0") {
         this.addBranchGroupForm.removeControl("UserId");
 
-        this.addBranchGroupForm.addControl("RoleId", this.fb.control("", [Validators.required]));
+        this.addBranchGroupForm.addControl("ResponsibilityId", this.fb.control("", [Validators.required]));
         this.RoleToggle = true;
         this.userIdToggle = false;
 
@@ -363,7 +363,7 @@ export class AddUserPermissionComponent {
 
       } else if (data === "1") {
 
-        this.addBranchGroupForm.removeControl("RoleId");
+        this.addBranchGroupForm.removeControl("ResponsibilityId");
 
         this.addBranchGroupForm.addControl("UserId", this.fb.control("", [Validators.required]));
 
@@ -407,7 +407,7 @@ export class AddUserPermissionComponent {
             });
             let indexRoleId = this.listRoleId.findIndex(list => list.key === role.roleId);
             if (indexRoleId >= 0) {
-              this.getControl("RoleId")?.setValue(this.listRoleId[indexRoleId]);
+              this.getControl("ResponsibilityId")?.setValue(this.listRoleId[indexRoleId]);
 
             }
 
@@ -468,13 +468,13 @@ export class AddUserPermissionComponent {
 
 
 
-        if (role.roleId != null) {
-          this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: role.roleId }).subscribe(dataDropdown => {
+        if (role.responsibilityId != null) {
+          this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: role.responsibilityId }).subscribe(dataDropdown => {
             this.listRoleId = [];
             dataDropdown.data?.forEach((list: any) => {
               this.listRoleId.push({ name: list.name, key: list.id });
             });
-            let indexRoleId = this.listRoleId.findIndex(list => list.key === role.roleId);
+            let indexRoleId = this.listRoleId.findIndex(list => list.key === role.responsibilityId);
             if (indexRoleId >= 0) {
               this.getControl("RoleId")?.setValue(this.listRoleId[indexRoleId]);
 
@@ -696,7 +696,7 @@ export class AddUserPermissionComponent {
       this.submitted = false;
 
       formatObject.ForType = Number(this.addBranchGroupForm.value.ForType);
-      formatObject.RoleId = formatObject.ForType === 0 ? this.addBranchGroupForm.value.RoleId.key : null;
+      formatObject.ResponsibilityId = formatObject.ForType === 0 ? this.addBranchGroupForm.value.ResponsibilityId.key : null;
       formatObject.UserId = formatObject.ForType === 1 ? this.addBranchGroupForm.value.UserId.key : null;
       formatObject.IsActive = this.addBranchGroupForm.get("isActive")?.value;
 
@@ -705,7 +705,7 @@ export class AddUserPermissionComponent {
       this.submitClicked.emit(formatObject);
     } else {
       this.getControl("UserId")?.markAsDirty();
-      this.getControl("RoleId")?.markAsDirty();
+      this.getControl("ResponsibilityId")?.markAsDirty();
       if (formatObject.PermissionScreens.length == 0) {
         this.translate.get("userPermissions").subscribe(translate => {
           this.toast.error(translate.pleaseSelectApermissionPeriod);
