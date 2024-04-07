@@ -281,7 +281,6 @@ export class AddUserComponent {
                   this.listRoles.push({ name: list.name, key: list.id });
                 });
                 data?.responsibilities?.forEach((responsibility: any) => {
-                  debugger;
                   let indexRole = this.listRoles.findIndex(list => list.key === responsibility);
                   if (indexRole >= 0) {
                     if (Array.isArray(this.getControl("Roles")?.value)) {

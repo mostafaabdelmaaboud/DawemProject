@@ -1,6 +1,6 @@
 <div class="header-comp d-flex align-items-center">
     <span class="title-head">
-      ملخص سجلات التخلف عن الإستدعاء
+      ملخص سجلات الإستدعاءات
     </span>
     <div class="field-calendar-header">
       <p-calendar [(ngModel)]="date" [showIcon]="true" dateFormat="yy MM"></p-calendar>
@@ -10,7 +10,7 @@
     <div class="row" *ngIf="!spinnerCards">
       <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
         <div class="custom-card-dashboard">
-          <span class="title-card-dashboard Primary-700">عدد سجلات التخلف عن الإستدعاء</span>
+          <span class="title-card-dashboard Primary-700">عدد سجلات الإستدعاءات</span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
             <span class="number-card-dashboard">{{cards?.totalCount}}</span>
             <span class="icon-card-dashboard">
@@ -30,7 +30,7 @@
       </div>
       <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
         <div class="custom-card-dashboard">
-          <span class="title-card-dashboard Success-700">سجلات التخلف عن الإستدعاء النشطة</span>
+          <span class="title-card-dashboard Success-700">سجلات الإستدعاءات النشطة</span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
             <span class="number-card-dashboard">{{cards?.activeCount}}</span>
             <span class="icon-card-dashboard">
@@ -53,7 +53,7 @@
       </div>
       <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
         <div class="custom-card-dashboard">
-          <span class="title-card-dashboard Error-700">سجلات التخلف عن الإستدعاء المعطلة</span>
+          <span class="title-card-dashboard Error-700">سجلات الإستدعاءات المعطلة</span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
             <span class="number-card-dashboard">{{cards?.deletedCount}}</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
@@ -71,7 +71,7 @@
       </div>
       <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
         <div class="custom-card-dashboard">
-          <span class="title-card-dashboard Warning-700 ">سجلات التخلف عن الإستدعاء المعلقة</span>
+          <span class="title-card-dashboard Warning-700 ">سجلات الإستدعاءات المعلقة</span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
             <span class="number-card-dashboard">{{cards?.notActiveCount}}</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
@@ -111,7 +111,7 @@
       <ng-template pTemplate="caption">
         <div class="custom-header-table d-flex justify-content-between align-items-center">
           <h2 class="title-table m-0">
-            سجلات التخلف عن الإستدعاء
+            سجلات الإستدعاءات
             <!-- <span class="subTitlte ml-2">(30 FLS )</span> -->
           </h2>
           <div class="custom-filteration d-flex align-items-center">

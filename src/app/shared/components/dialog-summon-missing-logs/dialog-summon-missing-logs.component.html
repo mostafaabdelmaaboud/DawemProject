@@ -9,21 +9,14 @@
       </button>
     </header>
     <div class="body-dialog p-15 f-s-16">
-        <div class="sectionTwo mb-3 line-bellow">
-            <label class="title">رقم الموظف</label>
-            <div class="content-password">
-              {{info?.code ? info?.code : "لا يوجد"}}
-            </div>
-          </div>
       <div class="sectionTwo mb-3 line-bellow">
         <label class="title">اسم الموظف</label>
         <div class="content-password">
           {{info?.employeeName ? info?.employeeName : "لا يوجد"}}
         </div>
       </div>
-         
       <div class="sectionTwo mb-3 line-bellow">
-        <label class="title">رقم الاستدعاء</label>
+        <label class="title">كود الاستدعاء</label>
         <div class="content-password">
           {{info?.summonCode ? info?.summonCode : "لا يوجد"}}
         </div>
@@ -35,9 +28,9 @@
         </div>
       </div>
       <div class="sectionTwo mb-3 line-bellow">
-        <label class="title">نوع الاستدعاء</label>
+        <label class="title">حالة الاستدعاء</label>
         <div class="content-password">
-          {{info?.summonForTypeName ? info?.summonForTypeName : "لا يوجد"}}
+          {{info?.summonStatusName ? info?.summonStatusName : "لا يوجد"}}
         </div>
       </div>
       <div class="sectionTwo mb-3 line-bellow">
@@ -53,11 +46,40 @@
         </div>
       </div>
       <div class="sectionTwo mb-3 line-bellow">
-        <label class="title">تم التنبية </label>
+        <label class="title">عدد الجزاءات</label>
         <div class="content-password">
-          {{info?.doneNotify ? 'نعم' : "لا"}}
+          {{info?.sanctionsCount ? info?.sanctionsCount :"0"}}
         </div>
       </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">قام بالإستدعاء</label>
+        <div class="content-password">
+          {{info?.doneSummon ? "نعم" :"لا"}}
+        </div>
+      </div>
+      <ng-container *ngIf="info?.doneSummon">
+        <div class="sectionTwo mb-3 line-bellow">
+          <label class="title">تاريخ القيام بالاستدعاء</label>
+          <div class="content-password">
+            {{info?.doneDate}}
+          </div>
+        </div>
+      </ng-container>
+        <div class="sectionTwo mb-3 line-bellow">
+          <label class="title">الجزاءات</label>
+          <div class="content-password">
+            <ul class="m-0" style="list-style-type:disc" *ngIf="info?.summonSanctions.length > 0">
+              <ng-container *ngFor="let summon of info?.summonSanctions">
+                <li>
+                  {{summon}}
+                </li>
+              </ng-container>
+            </ul>
+            <ng-container *ngIf="info?.summonSanctions.length === 0">
+              لا يوجد
+            </ng-container>
+          </div>
+        </div>
  
     </div>
   </div>

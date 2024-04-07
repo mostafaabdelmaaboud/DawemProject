@@ -67,10 +67,10 @@ export class DialogSummonMissingLogsComponent {
     this.loading = true;
     if (this.id) {
 
-      this.summonMissingLogsService.summonGetInfo({ summonMissingLogId: this.id }).subscribe(data => {
+      this.summonMissingLogsService.summonGetInfo({ summonLogId: this.id }).subscribe(data => {
         this.info = data;
-        this.info.summonDate = moment(new Date(this.info.dateAndTime)).format("MMMM Do YYYY, h:mm:ss a")
-
+        this.info.summonDate = moment(new Date(this.info.summonDate)).format("MMMM Do YYYY, h:mm:ss a");
+        this.info.doneDate = this.info.doneDate? moment(new Date(this.info.summonDate)).format("MM/DD/YYYY") : this.info.doneDate;
         this.loading = false;
 
       })

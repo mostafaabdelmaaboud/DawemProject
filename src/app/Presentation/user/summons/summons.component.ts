@@ -33,16 +33,24 @@ export class SummonsComponent {
   private summonsService = inject(SummonsService);
   columns: any[] = [
     {
-      name: "رقم الاستدعاء",
+      name: "كود الإستدعاء",
       field: "code",
+    },
+    {
+      name: "حالة الإستدعاء",
+      field: "summonStatusName",
     },
     {
       name: "نوع الاستدعاء",
       field: "forTypeName",
     },
     {
+      name:"عدد الموظفين المستهدفين",
+      field: "numberOfTargetedEmployees",
+    },
+    {
       name: "تاريخ ووقت الاستدعاء",
-      field: "dateAndTime"
+      field: "LocalDateAndTime"
     },
     {
       name: "الإجراء",
@@ -161,8 +169,9 @@ export class SummonsComponent {
           id: summon.id,
           code: summon.code,
           forTypeName: summon.forTypeName,
-          dateAndTime: moment(new Date(summon.dateAndTime)).format("MMMM Do YYYY, h:mm:ss a") ,
-
+          summonStatusName: summon.summonStatusName,
+          numberOfTargetedEmployees: summon.numberOfTargetedEmployees,
+          LocalDateAndTime: moment(new Date(summon.LocalDateAndTime)).format("MMMM Do YYYY, h:mm:ss a") ,
           isActive: summon.isActive
         })
       });
@@ -220,7 +229,7 @@ export class SummonsComponent {
       formData.allowedTime = result.allowedTime;
       formData.TimeType = result.TimeType.key;
       formData.notifyWays = result.notifyWays.map((list: any) => list.key);
-      formData.DateAndTime = moment(result.dateAndTime).format("YYYY-MM-DD hh:mm");
+      formData.LocalDateAndTime = moment(result.LocalDateAndTime).format("YYYY-MM-DD hh:mm");
       dialogRefAddCurrency.componentInstance.loading = true;
       this.summonsService.createSummon(formData).subscribe(
         {
@@ -306,7 +315,7 @@ export class SummonsComponent {
   }
   exportTableToExcel() {
     let columns = [...this.columns];
-    delete columns[3]
+    delete columns[5]
     var options = { 
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -329,7 +338,9 @@ export class SummonsComponent {
             id: summon.id,
             code: summon.code,
             forTypeName: summon.forTypeName,
-            dateAndTime: moment(new Date(summon.dateAndTime)).format("MMMM Do YYYY, h:mm:ss a") ,
+            summonStatusName: summon.summonStatusName,
+            numberOfTargetedEmployees: summon.numberOfTargetedEmployees,
+            LocalDateAndTime: moment(new Date(summon.LocalDateAndTime)).format("MMMM Do YYYY, h:mm:ss a") ,
   
             isActive: summon.isActive
           })
@@ -338,7 +349,9 @@ export class SummonsComponent {
           return {
             code: summon.code,
             forTypeName: summon.forTypeName,
-            dateAndTime: summon.dateAndTime
+            summonStatusName: summon.summonStatusName,
+            numberOfTargetedEmployees: summon.numberOfTargetedEmployees,
+            LocalDateAndTime: summon.LocalDateAndTime
           }
         })
         this.isLoading = false;
@@ -432,7 +445,7 @@ export class SummonsComponent {
 
       formData.notifyWays = result.notifyWays.map((list: any) => list.key);
 
-      formData.DateAndTime = moment(result.dateAndTime).format("YYYY-MM-DD hh:mm");
+      formData.LocalDateAndTime = moment(result.LocalDateAndTime).format("YYYY-MM-DD hh:mm");
       
       dialogRefAddCurrency.componentInstance.loading = true;
 

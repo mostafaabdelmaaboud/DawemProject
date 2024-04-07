@@ -15,11 +15,11 @@ export class SummonMissingLogsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}SummonMissingLog/Get`, { params: queryParams })
+    return this.http.get<any>(`${environment.baseUrl}SummonLog/Get`, { params: queryParams })
   }
   getInformation(): Observable<any> {
 
-    return this.http.get<any>(`${environment.baseUrl}SummonMissingLog/GetSummonMissingLogsInformations`).pipe(map(data => data.data));
+    return this.http.get<any>(`${environment.baseUrl}SummonLog/GetSummonLogsInformations`).pipe(map(data => data.data));
   }
   GetForDropDown(params: any) {
     let queryParams = new HttpParams();
@@ -164,6 +164,6 @@ export class SummonMissingLogsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}SummonMissingLog/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
+    return this.http.get<any>(`${environment.baseUrl}SummonLog/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
   }
 }

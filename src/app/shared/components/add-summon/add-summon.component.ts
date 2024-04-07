@@ -117,7 +117,7 @@ export class AddSummonComponent {
     Employees: ['', Validators.required],
 
     Sanctions: ["", Validators.required],
-    dateAndTime: ['', Validators.required]
+    LocalDateAndTime: ['', Validators.required]
 
   });
   uploadedCommercialRegFiles: any[] = [];
@@ -192,7 +192,7 @@ this.listnotifyWays = [
                   
                   this.getControl("isActive")?.setValue(data.isActive);
 
-                  this.getControl("dateAndTime")?.setValue(new Date(data.dateAndTime));
+                  this.getControl("LocalDateAndTime")?.setValue(new Date(data.LocalDateAndTime));
                   this.getControl("allowedTime")?.setValue(data.allowedTime);
 
                   this.getControl("forAllEmployees")?.setValue(data.forAllEmployees ? true : false);
@@ -565,7 +565,7 @@ this.listnotifyWays = [
       this.getControl("Employees")?.markAsDirty();
       this.getControl("Groups")?.markAsDirty();
       this.getControl("Sanctions")?.markAsDirty();
-      this.getControl("dateAndTime")?.markAsDirty();
+      this.getControl("LocalDateAndTime")?.markAsDirty();
       this.getControl("Departments")?.markAsDirty();
       this.getControl("allowedTime")?.markAsDirty();
       this.getControl("notifyWays")?.markAsDirty();

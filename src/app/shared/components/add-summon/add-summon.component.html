@@ -176,14 +176,14 @@
                   <label class="title">تاريخ ووقت الاستدعاء <span class="color-red">*</span></label>
                   <div class="content-password">
                     <div class="content-pCalendar-default" dir="ltr">
-                      <p-calendar formControlName="dateAndTime" [showTime]="true" [showSeconds]="true" appendTo="body"
+                      <p-calendar formControlName="LocalDateAndTime" [showTime]="true" [showSeconds]="true" appendTo="body"
                         placeholder="تاريخ ووقت الاستدعاء" [showIcon]="true"></p-calendar>
                     </div>
                   </div>
                   <!--Start Custom Validators-->
-                  <div class="container-alerts mt-2" *ngIf="getControl('dateAndTime')?.errors">
+                  <div class="container-alerts mt-2" *ngIf="getControl('LocalDateAndTime')?.errors">
                     <div class="alert alert-danger"
-                      *ngIf="getControl('dateAndTime')?.hasError('required') && getControl('dateAndTime')?.dirty">
+                      *ngIf="getControl('LocalDateAndTime')?.hasError('required') && getControl('LocalDateAndTime')?.dirty">
                       {{data!['validationCalendar']|translate}}
                     </div>
                   </div>

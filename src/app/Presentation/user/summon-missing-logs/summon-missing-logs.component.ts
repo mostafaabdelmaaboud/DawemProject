@@ -33,20 +33,20 @@ export class SummonMissingLogsComponent {
   private summonMissingLogsService = inject(SummonMissingLogsService);
   columns: any[] = [
     {
-      name: "رقم الموظف",
-      field: "code",
+      name: "كود الاستدعاء",
+      field: "summonCode",
     },
     {
       name: "اسم الموظف",
       field: "employeeName",
     },
     {
-      name: "رقم الاستدعاء",
-      field: "summonCode",
-    },
-    {
       name: "تاريخ ووقت الاستدعاء",
       field: "summonDate"
+    },
+    {
+      name: "عدد الجزاءات",
+      field: "sanctionsCount"
     },
     {
       name: "تم التنبية",
@@ -168,12 +168,11 @@ export class SummonMissingLogsComponent {
       data.data.forEach((summon: any) => {
         this.summons.push({
           id: summon.id,
-          code: summon.code,
           summonCode: summon.summonCode,
           employeeName: summon.employeeName,
           summonDate: moment(new Date(summon.summonDate)).format("MMMM Do YYYY, h:mm:ss a") ,
+          sanctionsCount: summon.sanctionsCount,
           doneNotify: summon.doneNotify ? 'نعم' : 'لا',
-
           isActive: summon.isActive
         })
       });
@@ -276,7 +275,7 @@ export class SummonMissingLogsComponent {
     const dialogRefAddCurrency = this.dialog.open(DialogSummonMissingLogsComponent, {
       width: "40vw",
       data: {
-        title: "ملف سجلات التخلف عن الإستدعاء"
+        title: "ملف سجلات الإستدعاءات"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id
@@ -335,21 +334,21 @@ export class SummonMissingLogsComponent {
         data.data.forEach((summon: any) => {
           this.summonsIsExport.push({
             id: summon.id,
-            code: summon.code,
             summonCode: summon.summonCode,
             employeeName: summon.employeeName,
-            summonDate: moment(new Date(summon.summonDate)).format("MMMM Do YYYY, h:mm:ss a") ,
+            summonDate: moment(new Date(summon.summonDate)).format("MMMM Do YYYY, h:mm:ss a"),
+            sanctionsCount: summon.sanctionsCount,
+
             doneNotify: summon.doneNotify ? 'نعم' : 'لا',
-  
             isActive: summon.isActive
           })
         });
         let formatTable = this.summonsIsExport.map(summon => {
           return {
-            code: summon.code,
             employeeName: summon.employeeName,
             summonCode: summon.summonCode,
             summonDate: summon.summonDate,
+            sanctionsCount: summon.sanctionsCount,
             doneNotify: summon.doneNotify
           }
         })
@@ -536,19 +535,7 @@ export class SummonMissingLogsComponent {
           }
         }
       )
-
-
     })
-
-
-
-
-
-
-
-
-
-
   }
   onPageChange(event: any) {
     this.filteration = { ...this.filteration, PageNumber: event.page };

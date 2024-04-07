@@ -90,7 +90,6 @@ export class UsersService {
     if (filter) {
 
       Object.entries(filter).forEach(([key, value]: any) => {
-        debugger;
         if (key === "ids") {
           value.forEach((id: any) => {
             queryParams = queryParams.append(key, id)

@@ -17,6 +17,13 @@
   
       </div>
       <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">حالة الإستدعاء</label>
+        <div class="content-password">
+          {{info?.summonStatusName ? info?.summonStatusName : "لا يوجد"}}
+        </div>
+  
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
         <label class="title"> نوع الاستدعاء</label>
         <div class="content-password">
           {{info?.forTypeName ? info?.forTypeName : "لا يوجد"}}
@@ -53,7 +60,13 @@
       <div class="sectionTwo mb-3 line-bellow">
         <label class="title"> تاريخ ووقت الاستدعاء</label>
         <div class="content-password">
-          {{info?.dateAndTime ? info?.dateAndTime : "لا يوجد"}}
+          {{info?.LocalDateAndTime ? info?.LocalDateAndTime : "لا يوجد"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">عدد الموظفين المستهدفين</label>
+        <div class="content-password">
+          {{info?.numberOfTargetedEmployees ? info?.numberOfTargetedEmployees :"0"}}
         </div>
       </div>
       <div class="sectionTwo mb-3 line-bellow">
