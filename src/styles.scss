@@ -804,7 +804,9 @@ html[lang="en"] {
 .background-Warning-700 {
   background-color: var(--Warning-700);
 }
-
+.disabled-field {
+  opacity: 0.6;
+}
 .p-dropdown:not(.p-disabled):hover,
 .p-dropdown:not(.p-disabled).p-focus {
   box-shadow: none !important;

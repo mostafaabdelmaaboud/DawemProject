@@ -1,0 +1,422 @@
+
+<div class="position-relative">
+    <div class="header-comp d-flex align-items-center mt-3">
+      <span class="title-head">
+        ملف الشركة
+      </span>
+    </div>
+    <div class="container-login mb-4 d-flex justify-content-between align-items-center position-relative">
+
+        <div class="content-login">
+          <div class="header text-center">
+            <h3 class="title">تحديث الملف الشخصي</h3>
+            <p class="sub-text">قم بي تحديث الملف الشخصي للمتابعة</p>
+          </div>
+          <div class="form">
+            <form class="w-100" [formGroup]="FormGroup" (submit)="submit()">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-md-6 col-12">
+                    <div class="sectionFive mb-3">
+                      <label for="" class="label-input mb-2">{{'signup.name' | translate}}</label>
+                      <!--Start Custom Validators-->
+                      <div class="content-input position-relative disabled-field">
+                        <div class="content-password">
+                          <input type="text" pInputText formControlName="name" [readOnly]="true" [placeholder]="'signup.enterTheName' | translate" class="w-100" />
+                        </div>
+                        <!-- <div class="container-alerts" *ngIf="getControl('name')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('name')?.hasError('required') && getControl('name')?.dirty">
+                            {{'signup.nameIsRequired' | translate}} 
+                          </div>
+                        </div> -->
+                      </div>
+                      <!--End Custom Validators-->
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="sectionFive mb-3">
+                      <label for="" class="label-input mb-2">كود الشركة</label>
+                      <!--Start Custom Validators-->
+                      <div class="content-input position-relative disabled-field">
+                        <div class="content-password">
+                          <input type="text" pInputText formControlName="code" [readOnly]="true" [placeholder]="'signup.enterTheName' | translate" class="w-100" />
+                        </div>
+                        <!-- <div class="container-alerts" *ngIf="getControl('name')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('name')?.hasError('required') && getControl('name')?.dirty">
+                            {{'signup.nameIsRequired' | translate}} 
+                          </div>
+                        </div> -->
+                      </div>
+                      <!--End Custom Validators-->
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="sectionFive mb-3">
+                      <label for="" class="label-input mb-2">كود التحقق لي لشركة</label>
+                      <!--Start Custom Validators-->
+                      <div class="content-input position-relative disabled-field">
+                        <div class="content-password">
+                          <input type="text" pInputText formControlName="identityCode" [readOnly]="true" [placeholder]="'signup.enterTheName' | translate" class="w-100" />
+                        </div>
+                        <!-- <div class="container-alerts" *ngIf="getControl('name')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('name')?.hasError('required') && getControl('name')?.dirty">
+                            {{'signup.nameIsRequired' | translate}} 
+                          </div>
+                        </div> -->
+                      </div>
+                      <!--End Custom Validators-->
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="sectionFive mb-3">
+                      <label for="" class="label-input mb-2">{{'signup.companyName' | translate}} </label>
+                      <div class="content-input position-relative">
+                        <div class="content-password">
+                          <input type="text" pInputText formControlName="companyName" [placeholder]="'signup.enterTheCompanyName' | translate"
+                            class="w-100" />
+                        </div>
+                        <!--Start Custom Validators-->
+                        <div class="container-alerts" *ngIf="getControl('companyName')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('companyName')?.hasError('required') && getControl('companyName')?.dirty">
+                            {{'signup.companyNameIsRequired' | translate}}
+                          </div>
+                        </div>
+                        <!--End Custom Validators-->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="sectionTwo mb-3">
+                      <label class="label-input mb-2">{{'signup.country' | translate}} </label>
+                      <div class="content-input position-relative">
+                        <div class="content-password">
+                          <p-dropdown appendTo="body" [options]="general" formControlName="companyCountryId"
+                            [placeholder]="'signup.country' | translate" optionLabel="name">
+                            <ng-template pTemplate="header">
+                              <span class="p-input-icon-left input-search-dropdown">
+                                <i class="pi pi-search"  (click)="searchDropdown(searchcompanyCountryId.value, 'companyCountryId')"></i>
+                                <input type="text" placeholder="بحث" (keyup.enter)="searchDropdown(searchcompanyCountryId.value, 'companyCountryId')" pInputText #searchcompanyCountryId />
+                              </span>
+                            </ng-template>
+                            <ng-template let-option pTemplate="item">
+                              {{ option.name }}
+                            </ng-template>
+                          </p-dropdown>
+                        </div>
+                        <!--Start Custom Validators-->
+                        <div class="container-alerts" *ngIf="getControl('companyCountryId')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('companyCountryId')?.hasError('required') && getControl('companyCountryId')?.dirty">
+                            {{'signup.pleaseCountryIsRequired' | translate}}
+                          </div>
+                        </div>
+                        <!--End Custom Validators-->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="sectionTwo mb-3">
+                      <label class="label-input mb-2">اللغة المفضلة </label>
+                      <div class="content-input position-relative">
+                        <div class="content-password">
+                          <p-dropdown appendTo="body" [options]="preferredLanguages" formControlName="preferredLanguageId"
+                            placeholder="اللغات" optionLabel="name">
+                            <ng-template pTemplate="header">
+                              <span class="p-input-icon-left input-search-dropdown">
+                                <i class="pi pi-search"  (click)="searchDropdown(searchpreferredLanguageId.value, 'preferredLanguageId')"></i>
+                                <input type="text" placeholder="بحث" (keyup.enter)="searchDropdown(searchpreferredLanguageId.value, 'preferredLanguageId')" pInputText #searchpreferredLanguageId />
+                              </span>
+                            </ng-template>
+                            <ng-template let-option pTemplate="item">
+                              {{ option.name }}
+                            </ng-template>
+                          </p-dropdown>
+                        </div>
+                        <!--Start Custom Validators-->
+                        <!-- <div class="container-alerts" *ngIf="getControl('preferredLanguageId')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('preferredLanguageId')?.hasError('required') && getControl('preferredLanguageId')?.dirty">
+                            {{'signup.pleaseCountryIsRequired' | translate}}
+                          </div>
+                        </div> -->
+                        <!--End Custom Validators-->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="sectionFive mb-3">
+                      <label for="" class="label-input mb-2">{{'signup.companyAddress' | translate}} </label>
+                      <div class="content-input position-relative">
+                        <div class="content-password">
+                          <input type="text" pInputText formControlName="companyAddress" [placeholder]="'signup.enterCompanyAddress' | translate"
+                            class="w-100" />
+                        </div>
+                        <!--Start Custom Validators-->
+                        <div class="container-alerts" *ngIf="getControl('companyAddress')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('companyAddress')?.hasError('required') && getControl('companyAddress')?.dirty">
+                            {{'signup.companyAddressIsRequired' | translate}}
+                          </div>
+                        </div>
+                        <!--End Custom Validators-->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="sectionFive mb-3">
+                      <label for="" class="label-input mb-2">{{'signup.companyEmail' | translate}}</label>
+                      <div class="content-input position-relative">
+                        <div class="content-password">
+                          <input type="text" pInputText formControlName="companyEmail"
+                            [placeholder]="'signup.companyEmail' | translate" class="w-100" />
+                        </div>
+                        <!--Start Custom Validators-->
+                        <div class="container-alerts" *ngIf="getControl('companyEmail')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('companyEmail')?.hasError('required') && getControl('companyEmail')?.dirty">
+                            {{'signup.companyEmailIsRequired' | translate}}
+                          </div>
+                        </div>
+                        <!--End Custom Validators-->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="section-field c-f mb-3">
+                      <label class="mb-2 d-block f-s-16 label-form">{{'login.password' | translate}} </label>
+                      <div class="content-input position-relative">
+                        <span class="p-input-icon-right w-100 field-password">
+                          <i class="pi pi-lock"></i>
+                          <input [type]="togglePassword ? 'password' : 'text'" formControlName="password" class="w-100"
+                            pInputText [placeholder]="'login.password' | translate" />
+                          <span (click)="togglePassword = !togglePassword">
+                            <i class=" pi pi-eye" *ngIf="togglePassword"></i>
+                            <i class=" pi pi-eye-slash" *ngIf="!togglePassword"></i>
+                          </span>
+                        </span>
+                        <div class="container-alerts mb-2" *ngIf="getControl('password')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('password')?.hasError('required') && getControl('password')?.dirty">
+                            {{'login.PasswordRequired' | translate}}
+                          </div>
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('password')?.hasError('minlength') && !getControl('password')?.hasError('required')">
+                            {{'login.TheMinimumNumberOfCharactersIsFive' | translate}}
+                          </div>
+                        </div>
+                      </div>
+                      <!-- <div class="container-alerts mb-2" *ngIf="getControl('bankAccount.bankName')?.errors">
+                        <div class="alert alert-danger"
+                          *ngIf="getControl('bankAccount.bankName')?.hasError('required') && getControl('bankAccount.bankName')?.dirty">
+                          Bank Name is required
+                        </div>
+                      </div> -->
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="section-field c-f mb-3">
+                      <label class="mb-2 d-block f-s-16 label-form">{{'signup.confirmPassword' | translate}}</label>
+                      <div class="content-input position-relative">
+                        <span class="p-input-icon-right w-100 field-password">
+                          <i class="pi pi-lock"></i>
+                          <input [type]="toggleConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword"
+                            class="w-100" pInputText [placeholder]="'signup.confirmPassword' | translate" />
+                          <span (click)="toggleConfirmPassword = !toggleConfirmPassword">
+                            <i class=" pi pi-eye" *ngIf="toggleConfirmPassword"></i>
+                            <i class=" pi pi-eye-slash" *ngIf="!toggleConfirmPassword"></i>
+                          </span>
+                        </span>
+                        <div class="container-alerts mb-2" *ngIf="getControl('confirmPassword')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('confirmPassword')?.hasError('required') && getControl('confirmPassword')?.dirty">
+                            {{'signup.confirmPasswordIsRequired' | translate}}
+                          </div>
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('confirmPassword')?.hasError('passwordMismatch') && !getControl('confirmPassword')?.hasError('required')">
+                             {{'users.passwordMisMatch' | translate}}
+                          </div>
+                        </div>
+                        <!-- <div class="container-alerts mb-2"
+                          *ngIf="getControl('confirmPassword')?.value != getControl('password')?.value && !getControl('confirmPassword')?.hasError('required')">
+  
+                          <div class="alert alert-danger">
+                            تأكيد كلمة المرور
+                          </div>
+                        </div> -->
+                      </div>
+                      <!-- <div class="container-alerts mb-2" *ngIf="getControl('bankAccount.bankName')?.errors">
+                        <div class="alert alert-danger"
+                          *ngIf="getControl('bankAccount.bankName')?.hasError('required') && getControl('bankAccount.bankName')?.dirty">
+                          Bank Name is required
+                        </div>
+                      </div> -->
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="sectionFive mb-3">
+                      <label for="" class="label-input mb-2">{{'signup.userEmail' | translate}}</label>
+                      <div class="content-input position-relative">
+                        <div class="content-password">
+                          <input type="text" pInputText formControlName="userEmail"
+                            [placeholder]="'signup.userEmail' | translate" class="w-100" />
+                        </div>
+                        <!--Start Custom Validators-->
+                        <div class="container-alerts" *ngIf="getControl('userEmail')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('userEmail')?.hasError('required') && getControl('userEmail')?.dirty">
+                            {{'signup.userEmailIsRequired' | translate}} 
+                          </div>
+                          <div class="alert alert-danger"
+                          *ngIf="getControl('userEmail')?.hasError('pattern') && !getControl('userEmail')?.hasError('required')">
+                          البريد الألكتروني غير صحيح
+                        </div>
+                        </div>
+                        <!--End Custom Validators-->
+                      </div>
+  
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="sectionFive mb-3">
+                      <label for="" class="label-input mb-2">{{'signup.userPhoneNumber' | translate}} </label>
+                      <div class="content-input position-relative">
+                        <div class="content-password position-relative content-phone-number">
+                          <span class="dropdown-code">
+                            <!-- {{code}} -->
+                            <p-dropdown appendTo="body" [options]="countriesPhone" [(ngModel)]="isCurrentCountry"  [ngModelOptions]="{standalone: true}"
+                              optionLabel="name" (onChange)="selectCountry()">
+                            <ng-template let-option pTemplate="selectedItem">
+                              <div class="d-flex align-items-center gap-2" >
+                                <span class="image-country-mobilePhone select-country-image">
+                                  <img [src]="option.flagPath" width="25" height="25" [alt]="option.countryISOCode">
+                                </span>
+                                  <div>{{ option.dial }}+</div>
+                              </div>
+                          </ng-template>
+                            <ng-template pTemplate="header">
+                              <span class="p-input-icon-left input-search-dropdown">
+                                <i class="pi pi-search"  (click)="searchDropdown(searchcompanyCountryId.value, 'companyCountryId')"></i>
+                                <input type="text" placeholder="بحث" (keyup.enter)="searchDropdown(searchcompanyCountryId.value, 'companyCountryId')" pInputText #searchcompanyCountryId />
+                              </span>
+                            </ng-template>
+                            <ng-template let-option pTemplate="item">
+                              <span class="image-country-mobilePhone item-c-mobilePhone">
+                                <img [src]="option.flagPath" width="30" height="30" [alt]="option.countryISOCode">
+                              </span>
+                              <span class="item-text">{{ option.name }}</span>
+                            </ng-template>
+                          </p-dropdown>
+                          </span>
+                          <input type="text" pInputText formControlName="userMobileNumber"
+                            [placeholder]="'signup.userPhoneNumber' | translate" class="w-100" />
+                        </div>
+                        <div class="container-alerts" *ngIf="getControl('userMobileNumber')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('userMobileNumber')?.hasError('required') && getControl('userMobileNumber')?.dirty">
+                            {{'signup.userPhoneNumberIsRequired' | translate}}
+                          </div>
+                          <div class="alert alert-danger"
+                          *ngIf="getControl('userMobileNumber')?.hasError('pattern') && getControl('userMobileNumber')?.dirty">
+                          {{'signup.phoneNumberIsIncorrect' | translate}}
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="sectionFive mb-3">
+                      <label for="" class="label-input mb-2">عدد الموظفين <span
+                          class="color-red">*</span></label>
+                      <div class="content-input position-relative">
+                        <div class="content-password">
+                          <input type="number" pInputText formControlName="numberOfEmployees"
+                            placeholder="عدد الموظفين" class="w-100" />
+                        </div>
+                        <!--Start Custom Validators-->
+                        <div class="container-alerts" *ngIf="getControl('numberOfEmployees')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('numberOfEmployees')?.hasError('required') && getControl('numberOfEmployees')?.dirty">
+                            عدد الموظفين مطلوب 
+                          </div>
+                        </div>
+                        <!--End Custom Validators-->
+                      </div>
+  
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-12">
+                    <div class="sectionFive mb-3">
+                      <label class="label-input mb-1">فترة تجريبيه ؟</label>
+                      <div class="container-radio-button">
+                        <mat-radio-group aria-label="Select an option" color="primary" formControlName="IsTrial">
+                          <mat-radio-button [value]="false">إشتراك 
+                          </mat-radio-button>
+                          <mat-radio-button [value]="true">فتره تجريبيه</mat-radio-button>
+        
+                        </mat-radio-group>
+                      </div>
+        
+                    </div>
+                  </div>
+                  <ng-container *ngIf="subscription">
+                    <div class="col-md-6 col-12">
+                      <div class="sectionFive mb-3">
+                        <label for="" class="label-input mb-2">مدة الإشتراك بالشهور  <span
+                            class="color-red">*</span></label>
+                        <div class="content-input position-relative">
+                          <div class="content-password">
+                            <input type="number" pInputText formControlName="subscriptionDurationInMonths"
+                              placeholder="مدة الإشتراك بالشهور" class="w-100" />
+                          </div>
+                          <!--Start Custom Validators-->
+                          <div class="container-alerts" *ngIf="getControl('subscriptionDurationInMonths')?.errors">
+                            <div class="alert alert-danger"
+                              *ngIf="getControl('subscriptionDurationInMonths')?.hasError('required') && getControl('subscriptionDurationInMonths')?.dirty">
+                              مدة الإشتراك بالشهور مطلوب
+                            </div>
+                          </div>
+                          <!--End Custom Validators-->
+                        </div>
+    
+                      </div>
+                    </div>
+                  </ng-container>
+            
+            
+                  <div class="col-md-12 col-12">
+                    <div class="sectionFive mb-3">
+  
+                      <!-- <label for="sdad" class="mb-0 ml-15">{{'signup.iAgreeToTheTermsAndConditions' | translate}}
+                        الشروط والاحكام
+                      </label> -->
+                      <label for="sdad" class="mb-0 ml-15 TermsAndConditions" (click)="requestTermsAndConditions()">
+                        موافق علي الشروط والاحكام
+                      </label>
+                      <!-- <p-checkbox name="category" [value]="true" formControlName="agreed" inputId="sdad"></p-checkbox> -->
+                      <div class="alert alert-danger mt-3"
+                        *ngIf="getControl('agreed')?.hasError('required') && getControl('agreed')?.dirty">
+                        برجاء اختيار الشروط والاحكام
+                      </div>
+  
+                    </div>
+                  </div>
+  
+                </div>
+              </div>
+  
+  
+              <button class="btn btn-primary w-100 button-submit">{{loading ? 'ارسال' :
+                ('login.loading' | translate) + '....'}}</button>
+            </form>
+
+          </div>
+        </div>
+
+      </div>
+  </div>
+  
+  

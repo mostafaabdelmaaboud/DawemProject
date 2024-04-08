@@ -132,6 +132,11 @@ const routes: Routes = [
         canActivate: [PermissionGuard]
       },
       {
+        path: "updateCompany",
+        loadChildren: () => import('./update-company/update-company.module').then((m) => m.UpdateCompanyModule),
+        canActivate: [PermissionGuard]
+      },
+      {
         path: "taskType",
         loadChildren: () => import('./task-type/task-type.module').then((m) => m.TaskTypeModule),
         canActivate: [PermissionGuard]

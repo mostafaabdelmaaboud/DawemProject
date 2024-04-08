@@ -44,7 +44,15 @@ export class AuthService {
     }
     return this.http.get<any>(`${environment.baseUrl}Lookups/GetCountries`, { params: queryParams }).pipe(map(data => data.data))
   }
-  
+  getLanguages(filter: any) {
+    let queryParams = new HttpParams();
+    if (filter) {
+      Object.entries(filter).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}Lookups/GetLanguages`, { params: queryParams }).pipe(map(data => data.data))
+  }
   logout() {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
