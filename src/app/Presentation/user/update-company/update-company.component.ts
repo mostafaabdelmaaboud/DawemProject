@@ -8,6 +8,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { TermsAndConditionsComponent } from 'src/app/shared/components/terms-and-conditions/terms-and-conditions.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from 'src/app/core/auth/services/auth-service.service';
+import { base64ToFile, ImageCroppedEvent } from 'ngx-image-cropper';
 @Component({
   selector: 'app-update-company',
   templateUrl: './update-company.component.html',
@@ -19,22 +20,22 @@ export class UpdateCompanyComponent {
   private dialog = inject(MatDialog);
 
   FormGroup: FormGroup = this.fb.group({
-    name: ["", Validators.required],
-    companyName: ["", Validators.required],
-    companyCountryId: ["", Validators.required],
-    companyAddress: ["", Validators.required],
-    companyEmail: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
-    password: ["", [Validators.required, Validators.minLength(5)]],
-    confirmPassword: ["", [Validators.required, Validators.minLength(5), , this.passwordMatchValidator()]],
-    numberOfEmployees: ["", Validators.required],
-    userEmail: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
-    userMobileNumber: ["", [Validators.required]],
+    name: [""],
+    companyName: [""],
+    website: [""],
+    companyCountryId: [""],
+    headquarterAddress: [""],
+    headquarterLocation:[""],
+    numberOfEmployees: [""],
+    totalNumberOfEmployees: [""],
+    industries: [""],
+    email: ["", [Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
+    userMobileNumber: [""],
     IsTrial: [false],
     code:[''],
     preferredLanguageId:[''],
     identityCode:[''],
-    subscriptionDurationInMonths: ["", [Validators.required]],
-    agreed: [, Validators.required],
+    agreed: [],
 
   });
   subscription = true;
@@ -50,6 +51,12 @@ export class UpdateCompanyComponent {
   isCurrentCountry;
   private router = inject(Router)
   selectedCountry: any = { name: 'عربي', code: 'AR' };
+  imageChangedEvent: any;
+  selectImage = false;
+  userPicture: any;
+  companyLogo:any;
+  croppedImage: any;
+  industries:any[] = [];
   constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService) {
   }
   ngOnInit(): void {
@@ -123,14 +130,25 @@ export class UpdateCompanyComponent {
       if (data) {
         this.subscription = false;
 
-        this.FormGroup.removeControl("subscriptionDurationInMonths");
       } else {
-        this.FormGroup.addControl("subscriptionDurationInMonths", this.fb.control("", [Validators.required]));
 
         this.subscription = true;
 
       }
     })
+  }
+  addIndustries() {
+    if(this.FormGroup.get("industries")?.value) {
+      let valueText = this.FormGroup.get("industries")?.value;
+      let findIndexIndustries = this.industries.findIndex(item => item.Name === valueText);
+      if(findIndexIndustries <0) {
+        this.industries.push({Id:0, Name:valueText});
+        this.FormGroup.get("industries")?.reset();
+      }
+    }
+  }
+  removeIndustry(index) {
+    this.industries.splice(index, 1);
   }
   getCountries() {
     this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
@@ -178,17 +196,7 @@ export class UpdateCompanyComponent {
       }
     });
   }
-  passwordMatchValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const value: string = control.value;
-      let passwordMismatch = false;
-      if (value != "") {
-        passwordMismatch = this.getControl('password')?.value != value;
 
-      }
-      return passwordMismatch ? { passwordMismatch: true } : null;
-    };
-  }
 
   lastSearchQuery = "";
 
@@ -244,21 +252,14 @@ export class UpdateCompanyComponent {
         name: this.FormGroup.value.name,
         companyName: this.FormGroup.value.companyName,
         companyCountryId: this.FormGroup.value.companyCountryId.id,
-        companyAddress: this.FormGroup.value.companyAddress,
-        companyEmail: this.FormGroup.value.companyEmail,
-        password: this.FormGroup.value.password,
-        confirmPassword: this.FormGroup.value.confirmPassword,
-        userEmail: this.FormGroup.value.userEmail,
+        email: this.FormGroup.value.email,
         userMobileCountryId:this.isCurrentCountry.id,
         userMobileNumber:this.FormGroup.value.userMobileNumber,
         numberOfEmployees:this.FormGroup.value.numberOfEmployees,
+        totalNumberOfEmployees:this.FormGroup.value.totalNumberOfEmployees,
         agreed: this.FormGroup.value.agreed ? this.FormGroup.value.agreed[0] : false,
       };
-      if(this.subscription) {
-        formatObject.subscriptionDurationInMonths = this.FormGroup.value.subscriptionDurationInMonths;
-      } else {
-        formatObject.subscriptionDurationInMonths = null;
-      }
+ 
       
       // this.authService.signup(formatObject).subscribe(
       //   {
@@ -282,15 +283,9 @@ export class UpdateCompanyComponent {
       this.FormGroup.get("name")?.markAsDirty();
       this.FormGroup.get("companyName")?.markAsDirty();
       this.FormGroup.get("companyCountryId")?.markAsDirty();
-      this.FormGroup.get("companyAddress")?.markAsDirty();
-      this.FormGroup.get("companyEmail")?.markAsDirty();
-      this.FormGroup.get("password")?.markAsDirty();
-      this.FormGroup.get("numberOfEmployees")?.markAsDirty();
-      if(this.subscription) {
-        this.FormGroup.get("subscriptionDurationInMonths")?.markAsDirty();
-      }
-      this.FormGroup.get("confirmPassword")?.markAsDirty();
-      this.FormGroup.get("userEmail")?.markAsDirty();
+      this.FormGroup.get("email")?.markAsDirty();
+
+      this.FormGroup.get("email")?.markAsDirty();
       this.FormGroup.get("userMobileNumber")?.markAsDirty();
       this.FormGroup.get("agreed")?.markAsDirty();
       if(!this.FormGroup.value.agreed) {
@@ -301,6 +296,29 @@ export class UpdateCompanyComponent {
       }
 
     }
+  }
+  profileImgChooseEvent(event: any) {
+    this.imageChangedEvent = event;
+    this.selectImage = true;
+    this.userPicture = event.target.files[0];
+  }
+
+  imageCropped(event: ImageCroppedEvent) {
+    this.croppedImage = event.objectUrl;
+    const file = new File([new Blob([this.croppedImage])], this.userPicture.name, {type: event.blob?.type});
+    this.userPicture = file;
+    this.companyLogo = this.userPicture;
+  }
+  imageLoaded() {
+    // show cropper
+  }
+
+  cropperReady() {
+    // cropper ready
+  }
+
+  loadImageFailed() {
+    // show message
   }
   requestTermsAndConditions() {
     const dialogRefAddCurrency = this.dialog.open(TermsAndConditionsComponent, {

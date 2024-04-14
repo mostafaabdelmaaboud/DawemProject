@@ -807,6 +807,9 @@ html[lang="en"] {
 .disabled-field {
   opacity: 0.6;
 }
+.mat-drawer {
+  z-index: 0 !important;
+}
 .p-dropdown:not(.p-disabled):hover,
 .p-dropdown:not(.p-disabled).p-focus {
   box-shadow: none !important;

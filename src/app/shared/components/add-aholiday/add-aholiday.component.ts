@@ -174,7 +174,6 @@ export class AddAholidayComponent {
   }
   onDateSelect(selectedDate: Date): void {
     const hijriDate = this.convertToHijri(selectedDate);
-    console.log('Hijri Date:', hijriDate);
   }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.

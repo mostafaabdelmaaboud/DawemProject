@@ -8,6 +8,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { DropdownModule } from 'primeng/dropdown';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 
 @NgModule({
@@ -18,6 +20,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     CommonModule,
     UpdateCompanyRoutingModule,
     TranslateModule,
+    ImageCropperModule,
+    InputTextareaModule,
     MatRadioModule,
     DropdownModule,
     SharedModule,

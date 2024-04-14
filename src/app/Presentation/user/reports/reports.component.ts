@@ -357,7 +357,6 @@ export class ReportsComponent {
       }
     }
     
-    console.log(this.filterForm?.value);
     
     this.getControl("filterTypeGroup.FilterTypeFrom")?.setValue(this.getControl("filterTypeGroup.FilterTypeFrom")?.value);
     this.getControl("filterTypeGroup.FilterTypeTo")?.setValue(this.getControl("filterTypeGroup.FilterTypeTo")?.value);
