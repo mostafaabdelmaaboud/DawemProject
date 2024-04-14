@@ -30,12 +30,10 @@ export class UpdateCompanyComponent {
     totalNumberOfEmployees: [""],
     industries: [""],
     email: ["", [Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
-    userMobileNumber: [""],
     IsTrial: [false],
     code:[''],
     preferredLanguageId:[''],
     identityCode:[''],
-    agreed: [],
 
   });
   subscription = true;
@@ -106,21 +104,7 @@ export class UpdateCompanyComponent {
 
 
       } 
-      // else if (this.currentLang == "ind") {
-      //   this.selectedCountry = { name: 'India', code: 'IN' };
-      //   document.documentElement.setAttribute('lang', 'en');
-      //   this.translate.use("ind");
-      //   this.countries = [
-      //     { name: 'India', code: 'IN' },
-      //     { name: 'arabic', code: 'AR' },
-      //     { name: 'english', code: 'US' }
-      //   ];
-      //   this.selectedCountry = { name: 'India', code: 'IN' };
-      //   this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(/^\d{10}$/)])
 
-      //   this.code= "+91";
-
-      // }
     }
     this.getCountries();
     this.getLanguages();
@@ -174,11 +158,7 @@ export class UpdateCompanyComponent {
       }
     });
   }
-  selectCountry() {
-    const pattern = new RegExp(`^\\d{${this.isCurrentCountry.phoneLength}}$`);
-    this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(pattern)])
-    this.code= "+"+this.isCurrentCountry.phoneLength;
-  }
+
   getCountriesbyPhone() {
     this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
       next: data => {
@@ -188,7 +168,6 @@ export class UpdateCompanyComponent {
           this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath });
           if(country.isCurrentCountry) {
             this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath };
-            this.selectCountry();
           }
         });
       },
@@ -244,7 +223,7 @@ export class UpdateCompanyComponent {
   }
   submit() {
 
-    if (this.FormGroup.valid && this.loading && this.FormGroup.value.agreed) {
+    if (this.FormGroup.valid && this.loading) {
       this.loading = false;
       // this.isLoading = true;
 
@@ -254,10 +233,8 @@ export class UpdateCompanyComponent {
         companyCountryId: this.FormGroup.value.companyCountryId.id,
         email: this.FormGroup.value.email,
         userMobileCountryId:this.isCurrentCountry.id,
-        userMobileNumber:this.FormGroup.value.userMobileNumber,
         numberOfEmployees:this.FormGroup.value.numberOfEmployees,
-        totalNumberOfEmployees:this.FormGroup.value.totalNumberOfEmployees,
-        agreed: this.FormGroup.value.agreed ? this.FormGroup.value.agreed[0] : false,
+        totalNumberOfEmployees:this.FormGroup.value.totalNumberOfEmployees
       };
  
       
@@ -285,15 +262,7 @@ export class UpdateCompanyComponent {
       this.FormGroup.get("companyCountryId")?.markAsDirty();
       this.FormGroup.get("email")?.markAsDirty();
 
-      this.FormGroup.get("email")?.markAsDirty();
-      this.FormGroup.get("userMobileNumber")?.markAsDirty();
-      this.FormGroup.get("agreed")?.markAsDirty();
-      if(!this.FormGroup.value.agreed) {
-        this.toast.error("برجاء اختيار الشروط والاحكام", '', {
-          timeOut: 5000,
-          onActivateTick: true
-        });
-      }
+ 
 
     }
   }
@@ -336,7 +305,6 @@ export class UpdateCompanyComponent {
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editJobTitle = false;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      this.FormGroup.get("agreed")?.setValue(result);
             dialogRefAddCurrency.close();
 
       dialogRefAddCurrency.componentInstance.submitted = true;
@@ -380,7 +348,6 @@ export class UpdateCompanyComponent {
     });
     dialogRefAddCurrency.afterClosed().subscribe(result => {
       if (result) {
-        this.FormGroup.get("agreed")?.setValue(result);
 
       }
     });
