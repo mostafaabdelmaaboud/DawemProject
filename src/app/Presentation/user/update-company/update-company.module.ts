@@ -10,6 +10,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { GooglePlaceDirective, GooglePlaceModule } from 'ngx-google-places-autocomplete-esb';
+import { AgmCircle, AgmCoreModule } from '@agm/core';
+import { FileUploadModule } from 'primeng/fileupload';
 
 
 @NgModule({
@@ -23,9 +26,13 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     ImageCropperModule,
     InputTextareaModule,
     MatRadioModule,
+    FileUploadModule,
     DropdownModule,
     SharedModule,
+    AgmCoreModule,
     MatDialogModule
-  ]
+  ],
+  providers: [GooglePlaceDirective]
+
 })
 export class UpdateCompanyModule { }

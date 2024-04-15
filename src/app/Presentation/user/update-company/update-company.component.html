@@ -24,7 +24,7 @@
                       <span class="icon-upload" *ngIf="!croppedImage">
                           <i class="pi pi-cloud-upload"></i>
                       </span>
-                      <img [src]="croppedImage ? croppedImage : 'assets/img/old_logo.png'"
+                      <img [src]="croppedImage ? croppedImage : defaultImage"
                           id="profileImage" alt="Profile" class="rounded-circle">
                   </div>
                 </div>
@@ -34,11 +34,11 @@
                 <div class="row">
                   <div class="col-md-6 col-12">
                     <div class="sectionFive mb-3">
-                      <label for="" class="label-input mb-2">{{'signup.name' | translate}}</label>
+                      <label for="" class="label-input mb-2"> {{'signup.companyName' | translate}}</label>
                       <!--Start Custom Validators-->
                       <div class="content-input position-relative disabled-field">
                         <div class="content-password">
-                          <input type="text" pInputText formControlName="name" [readOnly]="true" [placeholder]="'signup.enterTheName' | translate" class="w-100" />
+                          <input type="text" pInputText formControlName="name" [readOnly]="true"  [placeholder]="'signup.enterTheCompanyName' | translate" class="w-100" />
                         </div>
                         <!-- <div class="container-alerts" *ngIf="getControl('name')?.errors">
                           <div class="alert alert-danger"
@@ -81,7 +81,7 @@
                       <!--End Custom Validators-->
                     </div>
                   </div>
-                  <div class="col-md-6 col-12">
+                  <!-- <div class="col-md-6 col-12">
                     <div class="sectionFive mb-3">
                       <label for="" class="label-input mb-2">{{'signup.companyName' | translate}} </label>
                       <div class="content-input position-relative">
@@ -92,7 +92,7 @@
         
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                   <!-- <div class="col-md-6 col-12">
                     <div class="sectionFive mb-3">
                       <label for="" class="label-input mb-2">موقع الشركة </label>
@@ -174,6 +174,18 @@
                   </div> -->
                   <div class="col-md-6 col-12">
                     <div class="sectionFive mb-3">
+                      <label for="" class="label-input mb-2">رقم البريدي للفرع الرئيسي</label>
+                      <div class="content-input position-relative">
+                        <div class="content-password">
+                          <input type="text" pInputText formControlName="headquarterPostalCode" placeholder="رقم البريدي للفرع الرئيسي"
+                            class="w-100" />
+                        </div>
+        
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="sectionFive mb-3">
                       <label for="" class="label-input mb-2">عنوان الفرع الرئيسي</label>
                       <div class="content-input position-relative">
                         <div class="content-password textarea-w-100">
@@ -196,26 +208,44 @@
                   <div class="col-md-6 col-12">
                     <div class="sectionFive mb-3">
                       <label for="" class="label-input mb-2">مكان الفرع الرئيسي</label>
-                      <div class="content-input position-relative">
-                        <div class="content-password textarea-w-100">
+                      <div class="content-input position-relative mb-3">
+                        <!-- <div class="content-password textarea-w-100">
              
                             <textarea rows="5" cols="30" pInputTextarea formControlName="headquarterLocation" placeholder="مكان الفرع الرئيسي" [autoResize]="true"></textarea>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-12">
-                    <div class="sectionFive mb-3">
-                      <label for="" class="label-input mb-2">رقم البريدي للفرع الرئيسي</label>
-                      <div class="content-input position-relative">
+                            
+                        </div> -->
                         <div class="content-password">
-                          <input type="text" pInputText formControlName="companyName" placeholder="رقم البريدي للفرع الرئيسي"
-                            class="w-100" />
+                          <input type="text" pInputText #searchMapRef formControlName="headquarterLocation" [placeholder]="'zones.searchOnMap'|translate" class="w-100" />
                         </div>
-        
+                      </div>
+                      <div class="body-map">
+                        <agm-map [latitude]="latitude" [scrollwheel]="false" [longitude]="longitude" [zoom]="zoomLevel"
+                          [disableDefaultUI]="false" [zoomControl]="true" (mapClick)="onMapClickEvent($event)">
+                          <agm-marker *ngFor="let mapMarker of markers; let i = index"
+                            (markerClick)="onMarkerClickEvent(mapMarker.label, i)" [latitude]="mapMarker.latitude"
+                            [longitude]="mapMarker.longitude" [label]="mapMarker.label ? mapMarker.label : ''"
+                            [markerDraggable]="mapMarker.draggable" (dragEnd)="markerDragEnd(mapMarker, $event)">
+                          </agm-marker>
+                          <agm-circle [latitude]="latitude" [longitude]="longitude" [radius]="radius" [fillColor]="'red'"
+                            [circleDraggable]="false" [editable]="false">
+                          </agm-circle>
+                        </agm-map>
+                        <div class="container-alerts mt-2" *ngIf="getControl('latitude')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('latitude')?.hasError('required') && getControl('latitude')?.dirty">
+                            latitude is required
+                          </div>
+                        </div>
+                        <div class="container-alerts mt-2" *ngIf="getControl('longitude')?.errors">
+                          <div class="alert alert-danger"
+                            *ngIf="getControl('longitude')?.hasError('required') && getControl('longitude')?.dirty">
+                            longitude is required
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
+                
                   <!-- <div class="col-md-6 col-12">
                     <div class="sectionFive mb-3">
                       <label for="" class="label-input mb-2">{{'signup.companyEmail' | translate}}</label>
@@ -337,16 +367,83 @@
                   </div>
 
                   <div class="col-md-6 col-12">
-                    <div class="sectionFive mb-3">
+                    <div class="sectionFive">
                       <label class="label-input mb-2">حالة الشركة</label>
                       <div class="state-company">
-                        <span class="active">نشط</span>
-                        <span class="inActive d-none">غير نشط</span>
+                        <span class="active" *ngIf="FormGroup.get('isActive')?.value">نشط</span>
+                        <span class="inActive" *ngIf="!FormGroup.get('isActive')?.value">غير نشط</span>
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-6 col-12">
-                    <div class="sectionFive mb-3">
+                  <div class="col-12">
+               
+                    <div class="section-workingDays mb-3">
+                      <label class="mb-2 d-block f-s-16">ارفاق ملف</label>
+                      <div class="item uploadFiles">
+                        <!-- accept="image/*" -->
+                        <p-fileUpload name="uploadedCommercialRegFiles[]" chooseIcon="pi pi-cloud-upload" [customUpload]="true"
+                        chooseLabel="اختار الملف ليتم رفعه"  accept="image/png, image/gif, image/jpeg, application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" (onSelect)="onFileChange($event, 2)" [multiple]="true"
+                          [showUploadButton]="false" [showCancelButton]="false">
+                          <ng-template pTemplate="content">
+              
+                            <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length">
+                              <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
+                                <div>
+                                  <img [src]="viewImagesIdCopy[i]" width="50" height="100" alt="">
+              
+                                </div>
+                                <div class="p-fileupload-filename">
+                                  <span class="d-block">{{"employees.name"|translate}}:</span>
+                                  {{ file.fileUpload.name
+                                  }}
+                                </div>
+                                <div>
+                                  <span class="d-block">{{"employees.size"|translate}}:</span>
+                                  {{
+                                  file.fileUpload.size }}
+                                </div>
+                                <div>
+                                  <button class="p-element p-button p-component p-button-icon-only"
+                                    (click)="onRemoveCommercialReg(file.fileUpload)">
+                                    <span class="p-button-icon pi pi-times" aria-hidden="true">
+              
+                                    </span>
+                                  </button>
+              
+                                </div>
+                              </li>
+                            </ul>
+                          </ng-template>
+                        </p-fileUpload>
+                        <span class="maximum-size">{{'employees.maximumFileSize'|translate}} </span>
+                      </div>
+                        <!--Start Custom Validators-->
+                        <div class="container-alerts mt-s-16">
+                          <div class="alert alert-danger mb-3" *ngIf="errorUploadFileIdCopy">
+                              {{errorUploadFileIdCopy}}
+                          </div>
+                          <div class="alert alert-danger mb-3"
+                              *ngIf="errorUploadFileIdCopyIsRequired && getControl('idCopyFile')?.dirty">
+                              {{errorUploadFileIdCopyIsRequired}}
+                          </div>
+                          <div class="alert alert-danger mb-3"
+                              *ngIf="getControl('idCopyFile')?.hasError('required') && getControl('idCopyFile')?.dirty">
+                              Upload Files is Required
+                          </div>
+                        </div>
+                      <!--End Custom Validators-->
+                      <!--
+                      <div class="container-alerts mb-2" *ngIf="uploadedCommercialRegFiles.length<= 0 && requiredCommercialRegFiles">
+                        <div class="alert alert-danger">
+                          مطلوب تحميل الملف
+                        </div>
+              
+                      </div> -->
+              
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="sectionFive">
                       <label for="" class="label-input mb-2">مجالات عمل الشركة</label>
                       <div class="content-input position-relative">
                         <div class="content-password">
@@ -357,7 +454,7 @@
                               placeholder="مجالات عمل الشركة" class="w-100" />
                               <div class="chips-industries">
                                 <ng-container *ngFor="let industry of industries; let i =index">
-                                  <span class="chips"><i class="pi pi-times-circle ml-2" (click)="removeIndustry(i)"></i> {{industry.Name}}</span>
+                                  <span class="chips"><i class="pi pi-times-circle ml-2" (click)="removeIndustry(i)"></i> {{industry.name}}</span>
                                 </ng-container>
                               </div>
                             </div>
@@ -373,6 +470,11 @@
   
                     </div>
                   </div>
+                  <div class="col-12">
+                    <div class="sectionFive mb-3">
+                      <label for="" class="label-input mb-2 TermsAndConditions" (click)="addBranch()">فروع الشركة</label>
+                    </div>
+                  </div>
                 </div>
               </div>
   
@@ -384,6 +486,9 @@
           </div>
         </div>
 
+      </div>
+      <div class="spinner d-flex justify-content-center align-items-start" *ngIf="loadingData">
+        <mat-spinner></mat-spinner>
       </div>
   </div>
   <div class="alert-action " *ngIf="selectImage">

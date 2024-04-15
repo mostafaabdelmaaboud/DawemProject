@@ -271,7 +271,6 @@ export class AddZoneComponent {
   ngAfterViewInit() {
     this.autoComplete = new google.maps.places.Autocomplete(this.searchMapRef.nativeElement)
     this.autoComplete.addListener("place_changed", () => {
-
       // const place = this.autoComplete?.getPlace();
 
       const place: any = this.autoComplete?.getPlace();
