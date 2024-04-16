@@ -11,6 +11,7 @@ import { AuthService } from 'src/app/core/auth/services/auth-service.service';
 import { base64ToFile, ImageCroppedEvent } from 'ngx-image-cropper';
 import { AddBranchComponent } from 'src/app/shared/components/add-branch/add-branch.component';
 import { UpdateCompanyService } from './services/update-company.service';
+import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 export interface MapMarker {
   latitude: number;
   longitude: number;
@@ -101,7 +102,7 @@ export class UpdateCompanyComponent {
   viewImagesIdCopy: any[] = [];
   imageArray: any[] = [];
   requiredCommercialRegFiles = false;
-
+  editBefore:any = {};
   constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService,
     private updateCompanyService:UpdateCompanyService,
     private cd: ChangeDetectorRef
@@ -157,15 +158,10 @@ export class UpdateCompanyComponent {
       } 
 
     }
-    // this.getCountries();
-    // this.getLanguages();
-    // this.getCompany();
-
     let countries = this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let getLanguages = this.authService.getLanguages({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let company = this.updateCompanyService.getCompany();
 
-    // let employeeForDropDown = this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     this.loadingData = true;
     combineLatest({
       countries,
@@ -173,62 +169,44 @@ export class UpdateCompanyComponent {
       company
     }).subscribe({
       next:data => {
-        
         this.general = [];
         this.preferredLanguages = [];
-  
         data.countries?.forEach((country: any) => {
           this.general.push({ name: country.name, id: country.id })
         });
         data.getLanguages?.forEach((country: any) => {
           this.preferredLanguages.push({ name: country.name, id: country.id })
         });
-    // FormGroup: FormGroup = this.fb.group({
-        //   name: [""],
-        //   website: [""],
-        //   companyCountryId: [""],
-        //   headquarterAddress: [""],
-        //   headquarterLocation:[""],
-        //   headquarterPostalCode:[""],
-        //   numberOfEmployees: [""],
-        //   totalNumberOfEmployees: [""],
-        //   industries: [""],
-        //   email: ["", [Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
-        //   code:[''],
-        //   preferredLanguageId:[''],
-        //   latitude: ['', Validators.required],
-        //   longitude: ['', Validators.required],
-        //   identityCode:[''],
-        // });
-        
-  
-        this.FormGroup.get("name")?.setValue(data.company?.name);
-        this.FormGroup.get("website")?.setValue(data.company?.webSite);
-        
-        let findIndexCountry = this.general.findIndex((country:any) => country.id === data.company?.countryId);
+        this.editBefore = data.company;
+        this.FormGroup.get("name")?.setValue(this.editBefore?.name);
+        this.FormGroup.get("website")?.setValue(this.editBefore?.webSite);
+        let findIndexCountry = this.general.findIndex((country:any) => country.id === this.editBefore?.countryId);
         if(findIndexCountry >=0) {
           this.FormGroup.get("companyCountryId")?.setValue(this.general[findIndexCountry]);
         }
-        this.FormGroup.get("headquarterAddress")?.setValue(data.company?.headquarterAddress);
-        this.FormGroup.get("headquarterLocation")?.setValue(data.company?.headquarterLocation);
-        this.FormGroup.get("headquarterPostalCode")?.setValue(data.company?.headquarterLocation);
-        this.FormGroup.get("numberOfEmployees")?.setValue(data.company?.numberOfEmployees);
-        this.FormGroup.get("totalNumberOfEmployees")?.setValue(data.company?.totalNumberOfEmployees);
-        this.FormGroup.get("email")?.setValue(data.company?.email);
-        this.FormGroup.get("code")?.setValue(data.company?.code);
-        let findIndexPreferredLanguages = this.preferredLanguages.findIndex((language:any) => language.id === data.company?.preferredLanguageId);
+        this.FormGroup.get("headquarterAddress")?.setValue(this.editBefore?.headquarterAddress);
+        this.FormGroup.get("headquarterLocation")?.setValue(this.editBefore?.headquarterLocation);
+        this.FormGroup.get("headquarterPostalCode")?.setValue(this.editBefore?.headquarterPostalCode);
+        this.FormGroup.get("numberOfEmployees")?.setValue(this.editBefore?.numberOfEmployees);
+        this.FormGroup.get("totalNumberOfEmployees")?.setValue(this.editBefore?.totalNumberOfEmployees);
+        this.FormGroup.get("email")?.setValue(this.editBefore?.email);
+        this.FormGroup.get("code")?.setValue(this.editBefore?.code);
+        let findIndexPreferredLanguages = this.preferredLanguages.findIndex((language:any) => language.id === this.editBefore?.preferredLanguageId);
         if(findIndexCountry >=0) {
           this.FormGroup.get("preferredLanguageId")?.setValue(this.preferredLanguages[findIndexPreferredLanguages]);
+          this.editBefore.preferredLanguageId = this.preferredLanguages[findIndexPreferredLanguages];
         }
-        this.FormGroup.get("identityCode")?.setValue(data.company?.identityCode);
-        this.FormGroup.get("isActive")?.setValue(data.company?.isActive);
-        this.industries =data.company?.industries;
-        this.branches =  data.company?.branches.map((branch:any) => {
-          return{...branch, uniqId:branch.id}
+        this.FormGroup.get("identityCode")?.setValue(this.editBefore?.identityCode);
+        this.FormGroup.get("isActive")?.setValue(this.editBefore?.isActive);
+        this.industries =this.editBefore?.industries.map(industry => {
+          return {...industry, editIndustries:false}
         });
-        this.defaultImage = data.company?.logoImagePath;
-        if (data.company?.attachments.length) {
-          data.company?.attachments.forEach((attachment: any) => {
+        this.branches =  this.editBefore?.branches.map((branch:any) => {
+          return{...branch, uniqId:branch.id, editBranch:false}
+        });
+        this.defaultImage = this.editBefore?.logoImagePath;
+        if (this.editBefore?.attachments.length) {
+          this.editBefore?.attachments.forEach((attachment: any) => {
             var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
             let fileExt = attachment.fileName.substring(attachment.fileName.lastIndexOf('.'));
             if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
@@ -261,19 +239,14 @@ export class UpdateCompanyComponent {
           });
         }
         this.loadingData = false;
-  
-  console.log(data.company);
       },
       error:err=> {
         this.loadingData = false;
       }
-    }
-      )
+    })
   }
-  
   onMarkerClickEvent(mapLabel: any, mapIndx: number) {
   }
-
   onMapClickEvent($event: any) {
     this.latitude = $event.coords.lat;
     this.longitude = $event.coords.lng;
@@ -328,7 +301,7 @@ export class UpdateCompanyComponent {
       let valueText = this.FormGroup.get("industries")?.value;
       let findIndexIndustries = this.industries.findIndex(item => item.Name === valueText);
       if(findIndexIndustries <0) {
-        this.industries.push({id:0, name:valueText});
+        this.industries.push({id:0, name:valueText, editIndustries:true});
         this.FormGroup.get("industries")?.reset();
       }
     }
@@ -458,46 +431,15 @@ export class UpdateCompanyComponent {
     }
   }
   submit() {
-
     if (this.FormGroup.valid && this.loading) {
-      this.loading = false;
       let formData = new FormData();
       let formDataObject: any = {};
-
-
-      // formDataObject.zoneIds = [];
-      // if (result?.zoneIds?.length > 0) {
-      //   result?.zoneIds?.forEach((direct: any) => {
-      //     formDataObject.zoneIds.push(direct.key);
-      //   });
-      // }
-      // this.FormGroup.get("preferredLanguageId")
-      console.log( this.FormGroup.value);
-      console.log(" this.companyLogo", this.companyLogo)
-
-      // formData.append("UpdateCompanyModelString", JSON.stringify({
-      //   PreferredLanguageId: this.FormGroup?.value?.preferredLanguageId?.id ? this.FormGroup?.value?.preferredLanguageId?.id : null,
-      //   WebSite: this.FormGroup?.value?.website ? this.FormGroup?.value?.website : null,
-      //   HeadquarterAddress: this.FormGroup?.value?.headquarterAddress ? this.FormGroup?.value?.headquarterAddress : null,
-      //   HeadquarterLocation:  this.FormGroup?.value?.headquarterLocation ? this.FormGroup?.value?.headquarterLocation : null,
-      //   HeadquarterPostalCode:this.FormGroup?.value?.headquarterPostalCode ? this.FormGroup?.value?.headquarterPostalCode : null,
-      //   Email: this.FormGroup?.value?.email ? this.FormGroup?.value?.email : null,
-      //   TotalNumberOfEmployees: this.FormGroup?.value?.totalNumberOfEmployees ?  this.FormGroup?.value?.totalNumberOfEmployees: null,
-      //   LogoImageName:this.companyLogo ? this.companyLogo.name : null,
-      //   ImportDefaultData: null,
-      //   Industries: this.industries,
-      //   Branches:this.branches,
-      //   zoneIds:formDataObject.zoneIds,
-      //   JobTitleId: result.JobTitleId.key,
-      //   ProfileImageName: result.files[0]?.fileUpload?.name ? result.files[0]?.fileUpload?.name : "",
-      //   DepartmentId: result.DepartmentId.key,
-      //   JoiningDate: moment(result.JoiningDate).format("MM/DD/YYYY"),
-      //   ScheduleId: result.ScheduleId.key
-      // }));
-      if(this.companyLogo) {
-          formData.append("ProfileImageFile", this.companyLogo, this.companyLogo.name);
-      }
-      this.AttachmentsFiles
+      let filterIndustriesEdit = this.industries.filter((industry:any) => {
+        return industry.editIndustries === true
+      });
+      let filterEditBranch = this.branches.filter((branch:any) => {
+        return branch.editBranch === true
+      });
       let filterAttachmentsFiles = this.AttachmentsFiles.filter((attachement:any) => attachement.detailsImage === false);
       if(filterAttachmentsFiles.length > 0) {
         filterAttachmentsFiles.forEach((file: any) => {
@@ -506,53 +448,72 @@ export class UpdateCompanyComponent {
           }
         });
       }
-      // result.files.forEach((file: any) => {
-      //   if (file.detailsImage === false) {
-      //     formData.append("ProfileImageFile",  file.fileUpload.name);
-
-      //   } else {
-          
-      //     formData.append("ProfileImageName", file.fileUpload.name);
-
-      //   }
-      // });
-      // this.isLoading = true;
-
-      let formatObject:any = {
-        name: this.FormGroup.value.name,
-        companyCountryId: this.FormGroup.value.companyCountryId.id,
-        email: this.FormGroup.value.email,
-        userMobileCountryId:this.isCurrentCountry.id,
-        numberOfEmployees:this.FormGroup.value.numberOfEmployees,
-        totalNumberOfEmployees:this.FormGroup.value.totalNumberOfEmployees
-      };
- 
       
-      // this.authService.signup(formatObject).subscribe(
-      //   {
-      //     next: (res: any) => {
-      //       this.toast.success(res.message);
+      if(
+        (this.FormGroup?.value?.preferredLanguageId?.id && this.editBefore.preferredLanguageId?.id != this.FormGroup?.value?.preferredLanguageId?.id) ||
+        (this.FormGroup?.value?.website && this.FormGroup?.value?.website != this.editBefore.webSite) ||
+        (this.FormGroup?.value?.headquarterAddress && this.FormGroup?.value?.headquarterAddress != this.editBefore.headquarterAddress) ||
+        (this.FormGroup?.value?.headquarterLocation && this.FormGroup?.value?.headquarterLocation != this.editBefore.headquarterLocation) ||
+        (this.FormGroup?.value?.headquarterPostalCode && this.FormGroup?.value?.headquarterPostalCode != this.editBefore.headquarterPostalCode) ||
+        (this.FormGroup?.value?.email && this.FormGroup?.value?.email != this.editBefore.email) ||
+        (this.FormGroup?.value?.totalNumberOfEmployees && this.FormGroup?.value?.totalNumberOfEmployees != this.editBefore.totalNumberOfEmployees) ||
+        this.companyLogo != undefined ||
+        filterIndustriesEdit.length > 0 ||
+        filterEditBranch.length > 0 ||
+        filterAttachmentsFiles.length > 0
+      ) {
+        
+        formData.append("UpdateCompanyModelString", JSON.stringify({
+          PreferredLanguageId: (this.FormGroup?.value?.preferredLanguageId?.id &&this.editBefore.preferredLanguageId?.id != this.FormGroup?.value?.preferredLanguageId?.id) ? this.FormGroup?.value?.preferredLanguageId?.id : null,
+          WebSite: (this.FormGroup?.value?.website && this.FormGroup?.value?.website != this.editBefore.webSite) ? this.FormGroup?.value?.website : null,
+          HeadquarterAddress: (this.FormGroup?.value?.headquarterAddress && this.FormGroup?.value?.headquarterAddress != this.editBefore.headquarterAddress) ? this.FormGroup?.value?.headquarterAddress : null,
+          HeadquarterLocation:  (this.FormGroup?.value?.headquarterLocation && this.FormGroup?.value?.headquarterLocation != this.editBefore.headquarterLocation) ? this.FormGroup?.value?.headquarterLocation : null,
+          HeadquarterPostalCode:(this.FormGroup?.value?.headquarterPostalCode && this.FormGroup?.value?.headquarterPostalCode != this.editBefore.headquarterPostalCode) ? this.FormGroup?.value?.headquarterPostalCode : null,
+          Email: (this.FormGroup?.value?.email && this.FormGroup?.value?.email != this.editBefore.email) ? this.FormGroup?.value?.email : null,
+          TotalNumberOfEmployees: (this.FormGroup?.value?.totalNumberOfEmployees && this.FormGroup?.value?.totalNumberOfEmployees != this.editBefore.totalNumberOfEmployees) ?  this.FormGroup?.value?.totalNumberOfEmployees: null,
+          LogoImageName:this.companyLogo ? this.companyLogo.name : null,
+          ImportDefaultData: null,
+          Industries:filterIndustriesEdit.length > 0 ? filterIndustriesEdit.map((Industry:any) => {
+            return {id:Industry.id,name:Industry.name}
+          }) : null,
+          Branches:filterEditBranch.length > 0 ?filterEditBranch.map((branch:any) => {
+            return {id:branch.id,name:branch.name, address:branch.address, location:branch.location,postalCode:branch.postalCode}
+          }) : null,
+        }));
+        if(this.companyLogo) {
+            formData.append("ProfileImageFile", this.companyLogo, this.companyLogo.name);
+        }
+        this.loading = false;
+        this.updateCompanyService.updateCompany(formData).subscribe({
+          next:data => {
+            this.loading = true;
+  
+            const succressDialog = this.dialog.open(ToastSuccessComponent, {
+              width: "30vw",
+              data: {
+                title: "تم تحديث الملف الشخصي",
+                message: data.message,
+                buttonSend: "الملف الشخصي"
+              },
+            });
+            setTimeout(() => {
+              succressDialog.close();
+            }, 2000);
+            succressDialog.componentInstance.submitted = true;
+            succressDialog.componentInstance.submitClicked.subscribe(result => {
+              succressDialog.close();
+            })
+          },
+          error:err => {
+            this.loading = true;
 
-    
+          }
+        })
+      } else {
+        this.loading = true;
 
-      //       this.router.navigate(["/login"]);
-
-
-      //     },
-      //     error: err => {
-      //       this.toast.error(err.error.message);
-
-      //       this.loading = true;
-      //     }
-      //   }
-      // )
-    } else {
-      this.FormGroup.get("name")?.markAsDirty();
-      this.FormGroup.get("companyCountryId")?.markAsDirty();
-      this.FormGroup.get("email")?.markAsDirty();
-
- 
-
+        this.toast.error("لم يتم تغير حقل");
+      }
     }
   }
   addBranch() {
@@ -565,77 +526,16 @@ export class UpdateCompanyComponent {
         buttonSend: "ارسال الفروع"
       },
     });
-  
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editVacation = false;
-    
     dialogRefAddCurrency.componentInstance.branches = this.branches;
-
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      this.branches = result;
-                  dialogRefAddCurrency.componentInstance.submitted = true;
-
-                  dialogRefAddCurrency.close();
-
-      // let formData: any = {};
-      // formData.isActive = result.isActive;
-      // formData.ForType = Number(result.ForType);
-      // formData.EmployeeId = result.EmployeeId ? result.EmployeeId.key : null;
-      // formData.GroupId = result.GroupId ? result.GroupId.key : null;
-      // formData.DepartmentId = result.DepartmentId ? result.DepartmentId.key : null;
-      // formData.Balance = result.Balance;
-
-      // formData.DefaultVacationType = result.VacationType.key;
-
-      // formData.Year = moment(new Date(result.Year)).format("yy");
-      // formData.notes = result.notes;
-
-      // dialogRefAddCurrency.componentInstance.loading = true;
-      // this.vacationBalanceService.createVacation(formData).subscribe(
-      //   {
-      //     next: data => {
-
-
-      //       dialogRefAddCurrency.componentInstance.submitted = true;
-      //       dialogRefAddCurrency.componentInstance.loading = false;
-
-      //       dialogRefAddCurrency.close();
-      //       let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
-      //       this.translate.get("vacationBalance").subscribe(translate => {
-      //          succressDialog = this.dialog.open(ToastSuccessComponent, {
-      //           width: "30vw",
-      //           data: {
-      //             title: translate.yourRequestHasBeenSent,
-      //             message: data.message,
-      //             buttonSend: translate.vacationBalanceRequests
-      //           },
-      //         });
-      //       });
-       
-      //       this.getVacations(this.filteration);
-      //       setTimeout(() => {
-      //         succressDialog.close();
-
-      //       }, 2000);
-
-      //       succressDialog.componentInstance.submitted = true;
-      //       succressDialog.componentInstance.submitClicked.subscribe(result => {
-      //         succressDialog.close();
-
-      //       })
-
-      //     },
-      //     error: err => {
-      //       dialogRefAddCurrency.componentInstance.submitted = true;
-      //       dialogRefAddCurrency.componentInstance.loading = false;
-
-      //     }
-      //   }
-      // )
+      this.branches = {...result, editBranch:true};
+      dialogRefAddCurrency.componentInstance.submitted = true;
+      dialogRefAddCurrency.close();
     });
     dialogRefAddCurrency.afterClosed().subscribe(result => {
       if (result) {
-
       }
     });
   }

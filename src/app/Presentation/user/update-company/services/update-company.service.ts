@@ -18,4 +18,9 @@ export class UpdateCompanyService {
     // }
     return this.http.get<any>(`${environment.baseUrl}Company/GetById`).pipe(map(data => data.data));
   }
+  updateCompany(formData: FormData) {
+
+    return this.http.put<any>(`${environment.baseUrl}Company/Update`, formData)
+
+  }
 }
