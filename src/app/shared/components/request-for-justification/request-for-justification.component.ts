@@ -174,6 +174,7 @@ export class RequestForJustificationComponent {
                       });
                       this.viewImagesIdCopy.push(attachment.filePath);
                     }
+          
                     this.AttachmentsFiles.push({ fileUpload: {
                       ...file,
                       lastModified:file.lastModified,

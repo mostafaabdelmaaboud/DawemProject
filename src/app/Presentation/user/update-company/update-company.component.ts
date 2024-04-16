@@ -42,8 +42,8 @@ export class UpdateCompanyComponent {
     email: ["", [Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
     code:[''],
     preferredLanguageId:[''],
-    latitude: [''],
-    longitude: [''],
+    HeadquarterLocationLatitude: [''],
+    HeadquarterLocationLongitude: [''],
     identityCode:[''],
   });
   branches:any[]= []
@@ -97,6 +97,7 @@ export class UpdateCompanyComponent {
   };
   errorUploadFileIdCopyIsRequired!: string;
   AttachmentsFiles: any[] = [];
+  AttachmentsNames:any[] = [];
   errorUploadFileIdCopy!: string;
   public viewImage: any[] = [];
   viewImagesIdCopy: any[] = [];
@@ -205,12 +206,55 @@ export class UpdateCompanyComponent {
           return{...branch, uniqId:branch.id, editBranch:false}
         });
         this.defaultImage = this.editBefore?.logoImagePath;
+        
+        if (this.editBefore?.logoImagePath) {
+          var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
+          let fileExt = this.editBefore?.logoImagePath.substring(this.editBefore?.logoImagePath.lastIndexOf('.'));
+          if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
+            let file!:File;
+            if(fileExt?.toLowerCase().includes("xlsx") || fileExt?.toLowerCase().includes("xls")) {
+               file = new File([this.editBefore?.logoImagePath], `excel-file${validExts}`, {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+              });
+              this.defaultImage = "assets/img/excel.png";
+            } else if(fileExt?.toLowerCase().includes("pdf")) {
+               file = new File([this.editBefore?.logoImagePath], `pdf-file${validExts}`, {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+              });
+              this.defaultImage="assets/img/pdf.png";
+            } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
+               file = new File([this.editBefore?.logoImagePath],`img-file${validExts}`, {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+              });
+              this.defaultImage=this.editBefore?.logoImagePath;
+            }
+            this.companyLogo = {
+              ...file,
+              lastModified:file.lastModified,
+              size:file.size,
+              type:file.type,
+              name:this.editBefore?.profileImageName,
+            };
+            // this.addBranchGroupForm.get("idCopyFile")?.setValue(this.editBefore?.profileImageName);
+
+          }
+          // this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: {
+          //   name:data.profileImageName
+          // }, detailsImage: true });
+
+          // this.employeesService.downloadImage(data.profileImagePath).subscribe(response => {
+          //   const blob = new Blob([response]);
+          //   const file = new File([blob], data.profileImageName);
+
+          //   this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: file, detailsImage: true });
+          // });
+        }
         if (this.editBefore?.attachments.length) {
           this.editBefore?.attachments.forEach((attachment: any) => {
             var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
             let fileExt = attachment.fileName.substring(attachment.fileName.lastIndexOf('.'));
             if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
-              let file!:File;
+              let file!:any;
               if(fileExt?.toLowerCase().includes("xlsx") || fileExt?.toLowerCase().includes("xls")) {
                  file = new File([attachment.filePath], `excel-file${validExts}`, {
                   type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -218,17 +262,22 @@ export class UpdateCompanyComponent {
                 this.viewImagesIdCopy.push("assets/img/excel.png");
               } else if(fileExt?.toLowerCase().includes("pdf")) {
                  file = new File([attachment.filePath], `pdf-file${validExts}`, {
-                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                  type: 'application/pdf',
                 });
                 this.viewImagesIdCopy.push("assets/img/pdf.png");
               } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
-                 file = new File([attachment.filePath],`img-file${validExts}`, {
-                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                 file = new File([new Blob([attachment.filePath])],`img-file${validExts}`, {
+                  type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
                 });
                 this.viewImagesIdCopy.push(attachment.filePath);
               }
+              // const file = new File([new Blob([this.croppedImage])], this.userPicture.name, {type: event.blob?.type});
+
+              // const file = new File([new Blob([this.croppedImage])], this.userPicture.name, {type: event.blob?.type});
+              
               this.AttachmentsFiles.push({ fileUpload: {
-                ...file,
+                lastModifiedDate:file?.lastModifiedDate,
+                webkitRelativePath:file.webkitRelativePath,
                 lastModified:file.lastModified,
                 size:file.size,
                 type:file.type,
@@ -250,8 +299,9 @@ export class UpdateCompanyComponent {
   onMapClickEvent($event: any) {
     this.latitude = $event.coords.lat;
     this.longitude = $event.coords.lng;
-    this.getControl("latitude")?.setValue(this.latitude);
-    this.getControl("longitude")?.setValue(this.longitude);
+    
+    this.getControl("HeadquarterLocationLatitude")?.setValue(this.latitude);
+    this.getControl("HeadquarterLocationLongitude")?.setValue(this.longitude);
     this.markers = [{
       latitude: this.latitude,
       longitude: this.longitude,
@@ -260,8 +310,8 @@ export class UpdateCompanyComponent {
     }]
   }
   markerDragEnd(marker: any, $event: any) {
-    this.getControl("latitude")?.setValue(marker.latitude);
-    this.getControl("longitude")?.setValue(marker.longitude);
+    this.getControl("HeadquarterLocationLatitude")?.setValue(marker.latitude);
+    this.getControl("HeadquarterLocationLongitude")?.setValue(marker.longitude);
     this.latitude = marker.latitude;
     this.longitude = marker.longitude;
     // this.markers = [{
@@ -355,9 +405,14 @@ export class UpdateCompanyComponent {
   onRemoveCommercialReg(event: any) {
 
     let indexFile = this.AttachmentsFiles.findIndex(item => item.fileUpload.lastModified === event.lastModified);
+    let indexFileAttachmentsNames = this.AttachmentsNames.findIndex(item => item === event.name);
+    this.AttachmentsNames
     this.AttachmentsFiles.splice(indexFile, 1)
     this.AttachmentsFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
-
+    
+    if(indexFileAttachmentsNames >=0) {
+      this.AttachmentsNames.splice(indexFileAttachmentsNames, 1)
+    }
   }
   async onFileChange(pFileList: any, stepIndex: number) {
     
@@ -374,6 +429,8 @@ export class UpdateCompanyComponent {
             if(fileSize?.size < (2 * 1024 * 1024)) {
               this.viewImage.push(pFileList.files[index]);
               this.AttachmentsFiles.push({fileUpload:pFileList.files[index], detailsImage: false});
+              this.AttachmentsNames.push(pFileList.files[index].name);
+
               this.errorUploadFileIdCopy = "";
             } else {
               this.errorUploadFileIdCopy = "The file size must be less than 2MB";
@@ -440,14 +497,7 @@ export class UpdateCompanyComponent {
       let filterEditBranch = this.branches.filter((branch:any) => {
         return branch.editBranch === true
       });
-      let filterAttachmentsFiles = this.AttachmentsFiles.filter((attachement:any) => attachement.detailsImage === false);
-      if(filterAttachmentsFiles.length > 0) {
-        filterAttachmentsFiles.forEach((file: any) => {
-          if (file.detailsImage === false) {
-            formData.append("Attachments", file.fileUpload, file.fileUpload.name);
-          }
-        });
-      }
+
       
       if(
         (this.FormGroup?.value?.preferredLanguageId?.id && this.editBefore.preferredLanguageId?.id != this.FormGroup?.value?.preferredLanguageId?.id) ||
@@ -457,12 +507,12 @@ export class UpdateCompanyComponent {
         (this.FormGroup?.value?.headquarterPostalCode && this.FormGroup?.value?.headquarterPostalCode != this.editBefore.headquarterPostalCode) ||
         (this.FormGroup?.value?.email && this.FormGroup?.value?.email != this.editBefore.email) ||
         (this.FormGroup?.value?.totalNumberOfEmployees && this.FormGroup?.value?.totalNumberOfEmployees != this.editBefore.totalNumberOfEmployees) ||
-        this.companyLogo != undefined ||
+        this.FormGroup?.value?.HeadquarterLocationLatitude ||
+        this.FormGroup?.value?.HeadquarterLocationLongitude ||
         filterIndustriesEdit.length > 0 ||
-        filterEditBranch.length > 0 ||
-        filterAttachmentsFiles.length > 0
+        this.AttachmentsNames.length > 0 ||
+        filterEditBranch.length > 0
       ) {
-        
         formData.append("UpdateCompanyModelString", JSON.stringify({
           PreferredLanguageId: (this.FormGroup?.value?.preferredLanguageId?.id &&this.editBefore.preferredLanguageId?.id != this.FormGroup?.value?.preferredLanguageId?.id) ? this.FormGroup?.value?.preferredLanguageId?.id : null,
           WebSite: (this.FormGroup?.value?.website && this.FormGroup?.value?.website != this.editBefore.webSite) ? this.FormGroup?.value?.website : null,
@@ -471,7 +521,10 @@ export class UpdateCompanyComponent {
           HeadquarterPostalCode:(this.FormGroup?.value?.headquarterPostalCode && this.FormGroup?.value?.headquarterPostalCode != this.editBefore.headquarterPostalCode) ? this.FormGroup?.value?.headquarterPostalCode : null,
           Email: (this.FormGroup?.value?.email && this.FormGroup?.value?.email != this.editBefore.email) ? this.FormGroup?.value?.email : null,
           TotalNumberOfEmployees: (this.FormGroup?.value?.totalNumberOfEmployees && this.FormGroup?.value?.totalNumberOfEmployees != this.editBefore.totalNumberOfEmployees) ?  this.FormGroup?.value?.totalNumberOfEmployees: null,
-          LogoImageName:this.companyLogo ? this.companyLogo.name : null,
+          LogoImageName:this.userPicture ? this.userPicture.name : null,
+          HeadquarterLocationLatitude:this.FormGroup?.value?.HeadquarterLocationLatitude ? this.FormGroup?.value?.HeadquarterLocationLatitude  : null,
+          HeadquarterLocationLongitude:this.FormGroup?.value?.HeadquarterLocationLongitude ? this.FormGroup?.value?.HeadquarterLocationLongitude : null,
+          AttachmentsNames:this.AttachmentsNames.length >0 ? this.AttachmentsNames : null,
           ImportDefaultData: null,
           Industries:filterIndustriesEdit.length > 0 ? filterIndustriesEdit.map((Industry:any) => {
             return {id:Industry.id,name:Industry.name}
@@ -480,8 +533,21 @@ export class UpdateCompanyComponent {
             return {id:branch.id,name:branch.name, address:branch.address, location:branch.location,postalCode:branch.postalCode}
           }) : null,
         }));
+   
         if(this.companyLogo) {
             formData.append("ProfileImageFile", this.companyLogo, this.companyLogo.name);
+        } else {
+          formData.append("ProfileImageFile", JSON.stringify(null));
+        }
+        
+        if(this.AttachmentsFiles.length > 0) {
+          
+
+          this.AttachmentsFiles.forEach((file: any) => {
+              formData.append("Attachments", file.fileUpload, file.fileUpload.name);
+          });
+        } else {
+          formData.append("Attachments", JSON.stringify(null));
         }
         this.loading = false;
         this.updateCompanyService.updateCompany(formData).subscribe({
