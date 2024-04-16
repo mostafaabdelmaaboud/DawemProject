@@ -243,12 +243,12 @@ export class DialogAddAnEmployeeComponent {
                     this.viewImagesIdCopy = ["assets/img/excel.png"];
                   } else if(fileExt?.toLowerCase().includes("pdf")) {
                      file = new File([data?.profileImagePath], `pdf-file${validExts}`, {
-                      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                      type: 'application/pdf',
                     });
                     this.viewImagesIdCopy=["assets/img/pdf.png"];
                   } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
                      file = new File([data?.profileImagePath],`img-file${validExts}`, {
-                      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                      type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
                     });
                     this.viewImagesIdCopy=[data?.profileImagePath];
                   }

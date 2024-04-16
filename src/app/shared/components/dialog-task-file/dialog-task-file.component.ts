@@ -97,7 +97,7 @@ export class DialogTaskFileComponent {
 
                   } else if(fileExt?.toLowerCase().includes("pdf")) {
                      file = new File([attachment.filePath], `pdf-file${validExts}`, {
-                      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                      type: 'application/pdf',
                     });
                     this.AttachmentsFiles.push({ imageSrc: "assets/img/pdf.png", download:attachment.filePath, fileUpload: {
                       lastModified:file.lastModified,
@@ -107,7 +107,7 @@ export class DialogTaskFileComponent {
                     }, detailsImage: true });
                   } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
                      file = new File([attachment.filePath],`img-file${validExts}`, {
-                      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                      type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
                     });
                     this.AttachmentsFiles.push({ imageSrc: attachment.filePath, download:attachment.filePath, fileUpload: {
                       lastModified:file.lastModified,

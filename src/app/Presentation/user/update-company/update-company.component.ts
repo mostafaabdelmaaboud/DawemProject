@@ -219,12 +219,12 @@ export class UpdateCompanyComponent {
               this.defaultImage = "assets/img/excel.png";
             } else if(fileExt?.toLowerCase().includes("pdf")) {
                file = new File([this.editBefore?.logoImagePath], `pdf-file${validExts}`, {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                type: 'application/pdf',
               });
               this.defaultImage="assets/img/pdf.png";
             } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
                file = new File([this.editBefore?.logoImagePath],`img-file${validExts}`, {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
               });
               this.defaultImage=this.editBefore?.logoImagePath;
             }

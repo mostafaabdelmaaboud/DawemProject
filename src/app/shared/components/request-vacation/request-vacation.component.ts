@@ -159,12 +159,12 @@ export class RequestVacationComponent {
                       this.viewImagesIdCopy.push("assets/img/excel.png");
                     } else if(fileExt?.toLowerCase().includes("pdf")) {
                        file = new File([attachment.filePath], `pdf-file${validExts}`, {
-                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        type: 'application/pdf',
                       });
                       this.viewImagesIdCopy.push("assets/img/pdf.png");
                     } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
                        file = new File([attachment.filePath],`img-file${validExts}`, {
-                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
                       });
                       this.viewImagesIdCopy.push(attachment.filePath);
                     }
