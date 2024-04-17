@@ -13,6 +13,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { GooglePlaceDirective, GooglePlaceModule } from 'ngx-google-places-autocomplete-esb';
 import { AgmCircle, AgmCoreModule } from '@agm/core';
 import { FileUploadModule } from 'primeng/fileupload';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { FileUploadModule } from 'primeng/fileupload';
     DropdownModule,
     SharedModule,
     AgmCoreModule,
+    InputSwitchModule,
     MatDialogModule
   ],
   providers: [GooglePlaceDirective]

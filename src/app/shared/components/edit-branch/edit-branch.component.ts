@@ -28,7 +28,6 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PaginatorModule } from 'primeng/paginator';
 import { AgmCoreModule } from '@agm/core';
-import { EditBranchComponent } from '../edit-branch/edit-branch.component';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -95,13 +94,13 @@ interface UploadEvent {
   files: File[];
 }
 @Component({
-  selector: 'app-add-branch',
+  selector: 'app-edit-branch',
   standalone: true,
   imports: [CommonModule,TableModule, FormsModule,AgmCoreModule,NgxPaginationModule,PaginatorModule, ReactiveFormsModule, MatRadioModule, MultiSelectModule, MatProgressSpinnerModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
-  templateUrl: './add-branch.component.html',
-  styleUrls: ['./add-branch.component.scss']
+  templateUrl: './edit-branch.component.html',
+  styleUrls: ['./edit-branch.component.scss']
 })
-export class AddBranchComponent {
+export class EditBranchComponent {
   loading = false;
 
   private dialog = inject(MatDialog);
@@ -110,7 +109,9 @@ export class AddBranchComponent {
   
   list: any[] = [
   ];
-  @Input() editVacation!: boolean;
+  @Input() editBranch!: boolean;
+  @Input() objectBranch!: any;
+
   @Input() id!: string;
   RowsPerPage!: any[];
 
@@ -127,7 +128,7 @@ export class AddBranchComponent {
   autoComplete!: google.maps.places.Autocomplete | undefined;
   latitude: number = -1.2921;
   radius = 0;
-  editBranch = false;
+  formatObject:any= {};
   longitude: number = 36.8219;
   listVacationType: any[] = [];
   columns: any[] = [
@@ -167,22 +168,22 @@ export class AddBranchComponent {
   addBranchGroupForm: FormGroup = this.fb.group({
     Name: ["", Validators.required],
     Address: ["", Validators.required],
-    Latitude:['', Validators.required],
-    Longitude:['', Validators.required],
+    Latitude:[''],
+    Longitude:[''],
     PostalCode: ["", Validators.required]
   });
   uploadedCommercialRegFiles: any[] = [];
   requiredCommercialRegFiles = false;
   mobileQuery: MediaQueryList;
   subscription!: Subscription;
-  indexIncrement = 1;
+  uniqId:any;
   private _mobileQueryListener: () => void;
   clonedProducts: { [s: string]: any } = {};
   defaultRowPerPage = { name: '5', code: 5 };
   markers: MapMarker[] = [
   ]
   constructor(
-    public dialogRef: MatDialogRef<AddBranchComponent>,
+    public dialogRef: MatDialogRef<EditBranchComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | any,
     private changeDetectorRef: ChangeDetectorRef,
     public translate: TranslateService,
@@ -232,8 +233,23 @@ export class AddBranchComponent {
       { name: '5', code: 5 }
 
     ];
-    this.getBranches(this.filteration);
-    
+    if(this.editBranch) {
+      this.addBranchGroupForm.get("Name")?.setValue(this.objectBranch?.name);
+      this.addBranchGroupForm.get("Address")?.setValue(this.objectBranch?.address);
+      this.addBranchGroupForm.get("Latitude")?.setValue(this.objectBranch?.latitude);
+      this.addBranchGroupForm.get("Longitude")?.setValue(this.objectBranch?.longitude);
+      this.addBranchGroupForm.get("PostalCode")?.setValue(this.objectBranch?.postalCode);
+      this.formatObject.id = this.objectBranch?.id;
+      this.formatObject.uniqId = this.objectBranch?.uniqId;
+   
+      this.markers = [{
+        latitude: this.objectBranch?.latitude,
+        longitude: this.objectBranch?.longitude,
+        label: 'Point A',
+        draggable: true
+      }]
+
+    }
   }
   onMarkerClickEvent(mapLabel: any, mapIndx: number) {
   }
@@ -262,10 +278,7 @@ export class AddBranchComponent {
     //   draggable: true
     // }];
   }
-  onPageChange(event: any) {
-    this.filteration = { ...this.filteration, PageNumber: event.page };
-    this.getBranches(this.filteration)
-  }
+
   mathRound(data: any) {
     return Math.ceil(data)
   }
@@ -294,37 +307,10 @@ export class AddBranchComponent {
 
     })
   }
-  numberOfRowsPerPage(data: any) {
-    this.filteration = { ...this.filteration, PageSize: data.value.code };
-    this.getBranches(this.filteration)
-  }
-  reasonOfRefuse(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
-      width: "30vw",
-      data: {
-        title: "هل متأكد من حذف الفرع؟",
-        titleClose: "تراجع",
-        buttonSend: "حذف"
-      },
-    });
 
-    reasonOfRefuseDialog.componentInstance.submitted = true;
-    reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
-      reasonOfRefuseDialog.componentInstance.submitted = false;
-    
-      let findIndexBranch = this.branches.findIndex((branch:any) =>branch.id === data.id)
-    this.branches.splice(findIndexBranch, 1);
-    reasonOfRefuseDialog.componentInstance.submitted = true;
-    reasonOfRefuseDialog.close();
-    })
-  }
-  getBranches(filteration) {
-this.isLoading = false;
-this.totalItems = this.branches.length;
 
-  }
-  nodeSelect(data: any) {
-  }
+
+
   lastSearchQuery = "";
 
   searchDropdown(data: any, type: string) {
@@ -410,86 +396,37 @@ this.totalItems = this.branches.length;
     this.clonedProducts[branch.uniqId as string] = { ...branch };
 }
 
-onRowEditSave(branch: any) {
-    // if (branch.price > 0) {
-    //     delete this.clonedProducts[branch.uniqId as string];
-    //     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'branch is updated' });
-    // } else {
-    //     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid Price' });
-    // }
-    let dialogRefAddCurrency = this.dialog.open(EditBranchComponent, {
-      width: "80vw",
-      maxWidth:"80vw",
-      data: {
-        title: "تعديل فرع",
-        titleClose:"أغلاق",
-        buttonSend: "تعديل الفرع"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editBranch = true;
-    
-
-    dialogRefAddCurrency.componentInstance.objectBranch = branch;
-
-    
-    dialogRefAddCurrency.componentInstance.branches = this.branches;
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      
-      
-      let findIndexBranches = this.branches.findIndex(branch => branch.uniqId === result.uniqId);
-      let editAfteFindIndexBranches = this.editAfterBranches.findIndex(branch => branch.uniqId === result.uniqId);
-
-      
-      if(findIndexBranches >=0) {
-        this.branches[findIndexBranches] = {...result,editBranch:true};
-
-      }
-      if(editAfteFindIndexBranches >=0) {
-        this.editAfterBranches[editAfteFindIndexBranches] =  {...result,editBranch:true};
-      }
-      this.editBranch = true;
-      
-
-      
-
-      dialogRefAddCurrency.componentInstance.submitted = true;
-      dialogRefAddCurrency.close();
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
-      }
-    });
-
-}
 
 onRowEditCancel(branch: any, index: number) {
     this.branches[index] = this.clonedProducts[branch.uniqId as string];
     delete this.clonedProducts[branch.uniqId as string];
-
 }
-addBranch() {
+editBranchAfterChange() {
   
-  if (this.addBranchGroupForm.valid && this.submitted) {
+
+  if ((this.addBranchGroupForm.valid && this.submitted) &&(
+    this.addBranchGroupForm.get("Name")?.value != this.objectBranch?.name ||
+    this.addBranchGroupForm.get("Address")?.value != this.objectBranch?.address ||
+    this.addBranchGroupForm.get("Latitude")?.value != this.objectBranch?.latitude ||
+    this.addBranchGroupForm.get("Longitude")?.value != this.objectBranch?.longitude ||
+    this.addBranchGroupForm.get("PostalCode")?.value != this.objectBranch?.postalCode
+  )) {
     // this.submitted = false;
     
 
-    let formatObject = {
-      id:0,
-      uniqId:`${this.indexIncrement}AddBranch`,
+    this.formatObject = {
+      ...this.formatObject,
       name:this.addBranchGroupForm.get("Name")?.value,
       address: this.addBranchGroupForm.get("Address")?.value,
       latitude:this.addBranchGroupForm.get("Latitude")?.value,
       longitude:this.addBranchGroupForm.get("Longitude")?.value,
-      postalCode: this.addBranchGroupForm.get("PostalCode")?.value,
-      editBranch:true
+      postalCode: this.addBranchGroupForm.get("PostalCode")?.value
     }
     
 
-    this.branches.push(formatObject);
-    this.editAfterBranches.push(formatObject);
-    this.indexIncrement++;
-    this.getBranches(this.filteration);
+    this.editAfterBranches.push(this.formatObject);
+    this.submitClicked.emit(this.formatObject);
+
     this.addBranchGroupForm.reset();
 
     // this.dialogRef.close(true);
@@ -511,28 +448,7 @@ addBranch() {
 
   }
 }
-  request() {
-    
-    if ((this.editAfterBranches.length > 0 || this.editBranch) && this.submitted) {
-      this.submitted = false;
-      let formatBranches = this.branches.map((branch:any) => {
-        return {
-          id:branch.id,
-          name:branch.name,
-          address: branch.address,
-          Latitude:branch.Latitude,
-          Longitude:branch.Longitude,
-          postalCode: branch.postalCode
-        }
-      })
-      this.submitClicked.emit(this.branches);
-      // this.dialogRef.close(true);
-    } else {
-      this.toast.error("من فضلك ادخل الفرع");
 
-    }
-
-  }
   close(): void {
     this.dialogRef.close(false);
   }

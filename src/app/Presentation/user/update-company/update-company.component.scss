@@ -11,6 +11,10 @@
       min-height: 100%
     }
   }
+  :host ::ng-deep .p-inputswitch {
+    width: 2.8rem;
+    height: 1.46rem;
+  }
   .TermsAndConditions {
     text-decoration: underline;
     color: blue;

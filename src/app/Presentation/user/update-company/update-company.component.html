@@ -133,28 +133,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-6 col-12">
-                    <div class="sectionTwo mb-3">
-                      <label class="label-input mb-2">اللغة المفضلة </label>
-                      <div class="content-input position-relative">
-                        <div class="content-password">
-                          <p-dropdown appendTo="body" [options]="preferredLanguages" formControlName="preferredLanguageId"
-                            placeholder="اللغات" optionLabel="name">
-                            <ng-template pTemplate="header">
-                              <span class="p-input-icon-left input-search-dropdown">
-                                <i class="pi pi-search"  (click)="searchDropdown(searchpreferredLanguageId.value, 'preferredLanguageId')"></i>
-                                <input type="text" placeholder="بحث" (keyup.enter)="searchDropdown(searchpreferredLanguageId.value, 'preferredLanguageId')" pInputText #searchpreferredLanguageId />
-                              </span>
-                            </ng-template>
-                            <ng-template let-option pTemplate="item">
-                              {{ option.name }}
-                            </ng-template>
-                          </p-dropdown>
-                        </div>
-
-                      </div>
-                    </div>
-                  </div>
+             
                   <!-- <div class="col-md-6 col-12">
                     <div class="sectionFive mb-3">
                       <label for="" class="label-input mb-2">{{'signup.companyAddress' | translate}} </label>
@@ -172,42 +151,11 @@
                       </div>
                     </div>
                   </div> -->
-                  <div class="col-md-6 col-12">
-                    <div class="sectionFive mb-3">
-                      <label for="" class="label-input mb-2">رقم البريدي للفرع الرئيسي</label>
-                      <div class="content-input position-relative">
-                        <div class="content-password">
-                          <input type="text" pInputText formControlName="headquarterPostalCode" placeholder="رقم البريدي للفرع الرئيسي"
-                            class="w-100" />
-                        </div>
-        
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6 col-12">
-                    <div class="sectionFive mb-3">
-                      <label for="" class="label-input mb-2">عنوان الفرع الرئيسي</label>
-                      <div class="content-input position-relative">
-                        <div class="content-password textarea-w-100">
-                          <!-- <input type="text" pInputText formControlName="companyName" [placeholder]="'signup.enterTheCompanyName' | translate"
-                            class="w-100" /> -->
-                            <textarea rows="5" cols="30" pInputTextarea formControlName="headquarterAddress" placeholder="عنوان الفرع الرئيسي" [autoResize]="true"></textarea>
-
-                        </div>
-                        <!--Start Custom Validators-->
-                        <!-- <div class="container-alerts" *ngIf="getControl('companyName')?.errors">
-                          <div class="alert alert-danger"
-                            *ngIf="getControl('companyName')?.hasError('required') && getControl('companyName')?.dirty">
-                            {{'signup.companyNameIsRequired' | translate}}
-                          </div>
-                        </div> -->
-                        <!--End Custom Validators-->
-                      </div>
-                    </div>
-                  </div>
+           
+              
                   <div class="col-md-6 col-12">
                     <div class="sectionFive mb-3 position-relative">
-                      <label for="" class="label-input mb-2">مكان الفرع الرئيسي</label>
+                      <label for="" class="label-input mb-2">عنوان الفرع الرئيسي</label>
                       <div class="content-input position-relative mb-3">
                         <!-- <div class="content-password textarea-w-100">
              
@@ -215,7 +163,7 @@
                             
                         </div> -->
                         <div class="content-password">
-                          <input type="text" pInputText #searchMapRef formControlName="headquarterLocation" [placeholder]="'zones.searchOnMap'|translate" class="w-100" />
+                          <input type="text" pInputText #searchMapRef formControlName="headquarterAddress" [placeholder]="'zones.searchOnMap'|translate" class="w-100" />
                         </div>
                       </div>
                       <div class="body-map">
@@ -245,7 +193,18 @@
                       </div>
                     </div>
                   </div>
-                
+                  <div class="col-md-6 col-12">
+                    <div class="sectionFive mb-3">
+                      <label for="" class="label-input mb-2">رقم البريدي للفرع الرئيسي</label>
+                      <div class="content-input position-relative">
+                        <div class="content-password">
+                          <input type="text" pInputText formControlName="headquarterPostalCode" placeholder="رقم البريدي للفرع الرئيسي"
+                            class="w-100" />
+                        </div>
+        
+                      </div>
+                    </div>
+                  </div>
                   <!-- <div class="col-md-6 col-12">
                     <div class="sectionFive mb-3">
                       <label for="" class="label-input mb-2">{{'signup.companyEmail' | translate}}</label>
@@ -315,21 +274,22 @@
                   </div> -->
                   <div class="col-md-6 col-12">
                     <div class="sectionFive mb-3">
-                      <label for="" class="label-input mb-2">{{'signup.userEmail' | translate}}</label>
+                      <label for="" class="label-input mb-2">بريد الالكتروني للشركة <span class="color-red">*</span></label>
                       <div class="content-input position-relative">
                         <div class="content-password">
                           <input type="text" pInputText formControlName="email"
                             [placeholder]="'signup.userEmail' | translate" class="w-100" />
                         </div>
                         <!--Start Custom Validators-->
-                        <div class="container-alerts" *ngIf="getControl('userEmail')?.errors">
-                          <!-- <div class="alert alert-danger"
-                            *ngIf="getControl('userEmail')?.hasError('required') && getControl('userEmail')?.dirty">
-                            {{'signup.userEmailIsRequired' | translate}} 
-                          </div> -->
+                        <div class="container-alerts" *ngIf="getControl('email')?.errors">
                           <div class="alert alert-danger"
-                          *ngIf="getControl('userEmail')?.hasError('pattern') && !getControl('userEmail')?.hasError('required')">
-                          البريد الألكتروني غير صحيح
+                            *ngIf="getControl('email')?.hasError('required') && getControl('email')?.dirty">
+                            البريد الألكتروني للشركة مطلوب 
+                          </div>
+
+                          <div class="alert alert-danger"
+                          *ngIf="getControl('email')?.hasError('pattern') && !getControl('email')?.hasError('required')">
+                          البريد الألكتروني للشركة غير صحيح 
                         </div>
                         </div>
                         <!--End Custom Validators-->
@@ -440,6 +400,45 @@
               
                       </div> -->
               
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="sectionTwo mb-3">
+                      <label class="label-input mb-2">اللغة المفضلة لإستيراد البيانات</label>
+                      <div class="content-input position-relative">
+                        <div class="content-password">
+                          <p-inputSwitch formControlName="ImportDefaultData"></p-inputSwitch>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12" *ngIf="showPreferredLanguage">
+                    <div class="sectionTwo mb-3">
+                      <label class="label-input mb-2">إختر اللغة المفضلة لإستيراد البيانات</label>
+                      <div class="content-input position-relative">
+                        <div class="content-password">
+                          <p-dropdown appendTo="body" [options]="preferredLanguages" formControlName="preferredLanguageId"
+                            placeholder="اللغات" optionLabel="name">
+                            <ng-template pTemplate="header">
+                              <span class="p-input-icon-left input-search-dropdown">
+                                <i class="pi pi-search"  (click)="searchDropdown(searchpreferredLanguageId.value, 'preferredLanguageId')"></i>
+                                <input type="text" placeholder="بحث" (keyup.enter)="searchDropdown(searchpreferredLanguageId.value, 'preferredLanguageId')" pInputText #searchpreferredLanguageId />
+                              </span>
+                            </ng-template>
+                            <ng-template let-option pTemplate="item">
+                              {{ option.name }}
+                            </ng-template>
+                          </p-dropdown>
+                        </div>
+                           <!--Start Custom Validators-->
+                          <div class="container-alerts mt-2" *ngIf="getControl('preferredLanguageId')?.errors">
+                            <div class="alert alert-danger" *ngIf="getControl('preferredLanguageId')?.hasError('required') && getControl('preferredLanguageId')?.dirty">
+                              اللغة المفضلة مطلوبة
+                            </div>
+                          </div>
+                          <!--End Custom Validators-->
+
+                      </div>
                     </div>
                   </div>
                   <div class="col-12">

@@ -34,20 +34,20 @@ export class UpdateCompanyComponent {
     website: [""],
     companyCountryId: [""],
     headquarterAddress: [""],
-    headquarterLocation:[""],
     headquarterPostalCode:[""],
     numberOfEmployees: [""],
     totalNumberOfEmployees: [""],
     industries: [""],
-    email: ["", [Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
+    email: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
     code:[''],
-    preferredLanguageId:[''],
+    ImportDefaultData:[false],
     HeadquarterLocationLatitude: [''],
     HeadquarterLocationLongitude: [''],
     identityCode:[''],
   });
   branches:any[]= []
   subscription = true;
+  showPreferredLanguage = false;
   code="+20";
   private authService = inject(AuthService);
   currentLang = localStorage.getItem("lang");
@@ -159,6 +159,24 @@ export class UpdateCompanyComponent {
       } 
 
     }
+   this.getInformation();
+    this.FormGroup.get("ImportDefaultData")?.valueChanges.subscribe(data => {
+
+      if (data) {
+        this.showPreferredLanguage = true;
+        this.FormGroup.addControl("preferredLanguageId", this.fb.control("", [Validators.required]));
+
+      } else {
+        this.FormGroup.removeControl("preferredLanguageId");
+
+        this.showPreferredLanguage = false;
+
+      }
+    })
+  }
+  onMarkerClickEvent(mapLabel: any, mapIndx: number) {
+  }
+  getInformation() {
     let countries = this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let getLanguages = this.authService.getLanguages({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let company = this.updateCompanyService.getCompany();
@@ -186,87 +204,120 @@ export class UpdateCompanyComponent {
           this.FormGroup.get("companyCountryId")?.setValue(this.general[findIndexCountry]);
         }
         this.FormGroup.get("headquarterAddress")?.setValue(this.editBefore?.headquarterAddress);
-        this.FormGroup.get("headquarterLocation")?.setValue(this.editBefore?.headquarterLocation);
         this.FormGroup.get("headquarterPostalCode")?.setValue(this.editBefore?.headquarterPostalCode);
         this.FormGroup.get("numberOfEmployees")?.setValue(this.editBefore?.numberOfEmployees);
         this.FormGroup.get("totalNumberOfEmployees")?.setValue(this.editBefore?.totalNumberOfEmployees);
         this.FormGroup.get("email")?.setValue(this.editBefore?.email);
         this.FormGroup.get("code")?.setValue(this.editBefore?.code);
         let findIndexPreferredLanguages = this.preferredLanguages.findIndex((language:any) => language.id === this.editBefore?.preferredLanguageId);
-        if(findIndexCountry >=0) {
+        if(findIndexPreferredLanguages >=0) {
+          this.FormGroup.get("ImportDefaultData")?.setValue(true);
           this.FormGroup.get("preferredLanguageId")?.setValue(this.preferredLanguages[findIndexPreferredLanguages]);
           this.editBefore.preferredLanguageId = this.preferredLanguages[findIndexPreferredLanguages];
         }
+        if(this.editBefore?.headquarterLocationLatitude != null &&this.editBefore?.headquarterLocationLongtude  != null) {
+          this.markers = [{
+            latitude: this.editBefore?.headquarterLocationLatitude,
+            longitude: this.editBefore?.headquarterLocationLongtude,
+            label: 'Point A',
+            draggable: true
+          }]
+        }
+   
         this.FormGroup.get("identityCode")?.setValue(this.editBefore?.identityCode);
         this.FormGroup.get("isActive")?.setValue(this.editBefore?.isActive);
         this.industries =this.editBefore?.industries.map(industry => {
           return {...industry, editIndustries:false}
         });
         this.branches =  this.editBefore?.branches.map((branch:any) => {
-          return{...branch, uniqId:branch.id, editBranch:false}
+          return{...branch, uniqId:`${branch.id}editBranch`, editBranch:false}
         });
-        this.defaultImage = this.editBefore?.logoImagePath;
         
-        if (this.editBefore?.logoImagePath) {
-          var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
-          let fileExt = this.editBefore?.logoImagePath.substring(this.editBefore?.logoImagePath.lastIndexOf('.'));
-          if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
-            let file!:File;
-            if(fileExt?.toLowerCase().includes("xlsx") || fileExt?.toLowerCase().includes("xls")) {
-               file = new File([this.editBefore?.logoImagePath], `excel-file${validExts}`, {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-              });
-              this.defaultImage = "assets/img/excel.png";
-            } else if(fileExt?.toLowerCase().includes("pdf")) {
-               file = new File([this.editBefore?.logoImagePath], `pdf-file${validExts}`, {
-                type: 'application/pdf',
-              });
-              this.defaultImage="assets/img/pdf.png";
-            } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
-               file = new File([this.editBefore?.logoImagePath],`img-file${validExts}`, {
-                type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
-              });
-              this.defaultImage=this.editBefore?.logoImagePath;
+  
+        const img = new Image();
+          
+        // إضافة معالج حدث للتحقق مما إذا تم تحميل الصورة بنجاح
+        img.onload = () => {
+          
+
+          if (this.editBefore?.logoImagePath) {
+            
+            var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
+            let fileExt = this.editBefore?.logoImageName.substring(this.editBefore?.logoImageName.lastIndexOf('.'));
+            if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
+              let file!:File;
+              if(fileExt?.toLowerCase().includes("xlsx") || fileExt?.toLowerCase().includes("xls")) {
+                 file = new File([this.editBefore?.logoImagePath], this.editBefore?.logoImageName, {
+                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                });
+                this.defaultImage = "assets/img/excel.png";
+              } else if(fileExt?.toLowerCase().includes("pdf")) {
+                 file = new File([this.editBefore?.logoImagePath], this.editBefore?.logoImageName, {
+                  type: 'application/pdf',
+                });
+                
+
+                this.defaultImage="assets/img/pdf.png";
+              } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
+                 file = new File([new Blob([this.editBefore?.logoImagePath])],this.editBefore?.logoImageName, {
+                  type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
+                });
+              
+                
+
+                this.defaultImage=this.editBefore?.logoImagePath;
+              }
+  
+              
+
+  
+              this.companyLogo = file;
+  
+              // this.addBranchGroupForm.get("idCopyFile")?.setValue(this.editBefore?.logoImagePath);
+  
             }
-            this.companyLogo = {
-              ...file,
-              lastModified:file.lastModified,
-              size:file.size,
-              type:file.type,
-              name:this.editBefore?.profileImageName,
-            };
-            // this.addBranchGroupForm.get("idCopyFile")?.setValue(this.editBefore?.profileImageName);
-
+            // this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: {
+            //   name:data.logoImagePath
+            // }, detailsImage: true });
+  
+            // this.employeesService.downloadImage(data.profileImagePath).subscribe(response => {
+            //   const blob = new Blob([response]);
+            //   const file = new File([blob], data.logoImagePath);
+  
+            //   this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: file, detailsImage: true });
+            // });
           }
-          // this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: {
-          //   name:data.profileImageName
-          // }, detailsImage: true });
-
-          // this.employeesService.downloadImage(data.profileImagePath).subscribe(response => {
-          //   const blob = new Blob([response]);
-          //   const file = new File([blob], data.profileImageName);
-
-          //   this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: file, detailsImage: true });
-          // });
-        }
+          // هنا يمكنك إضافة منطق إذا كانت الصورة تم تحميلها بنجاح
+        };
+        
+        // إضافة معالج حدث للتحقق مما إذا كان هناك خطأ في تحميل الصورة
+        img.onerror = () => {
+          
+          console.log(`Failed to load image from path: ${this.editBefore?.logoImagePath}`);
+          // هنا يمكنك إضافة منطق إذا كانت هناك مشكلة في تحميل الصورة
+        };
+        img.src = this.editBefore?.logoImagePath;
+        // checkImagePath(imagePath: string): void {
+      
+        // }
         if (this.editBefore?.attachments.length) {
           this.editBefore?.attachments.forEach((attachment: any) => {
             var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
             let fileExt = attachment.fileName.substring(attachment.fileName.lastIndexOf('.'));
             if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
-              let file!:any;
+              let file!:File;
               if(fileExt?.toLowerCase().includes("xlsx") || fileExt?.toLowerCase().includes("xls")) {
-                 file = new File([attachment.filePath], `excel-file${validExts}`, {
+                 file = new File([attachment.filePath], attachment.fileName, {
                   type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 });
                 this.viewImagesIdCopy.push("assets/img/excel.png");
               } else if(fileExt?.toLowerCase().includes("pdf")) {
-                 file = new File([attachment.filePath], `pdf-file${validExts}`, {
+                 file = new File([attachment.filePath], attachment.fileName, {
                   type: 'application/pdf',
                 });
                 this.viewImagesIdCopy.push("assets/img/pdf.png");
               } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
-                 file = new File([new Blob([attachment.filePath])],`img-file${validExts}`, {
+                 file = new File([new Blob([attachment.filePath])],attachment.fileName, {
                   type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
                 });
                 this.viewImagesIdCopy.push(attachment.filePath);
@@ -274,15 +325,26 @@ export class UpdateCompanyComponent {
               // const file = new File([new Blob([this.croppedImage])], this.userPicture.name, {type: event.blob?.type});
 
               // const file = new File([new Blob([this.croppedImage])], this.userPicture.name, {type: event.blob?.type});
+              const img = new Image();
+          
+              // إضافة معالج حدث للتحقق مما إذا تم تحميل الصورة بنجاح
+              img.onload = () => {
+                
+
+                this.AttachmentsFiles.push({ fileUpload: file, detailsImage: true });
+                // هنا يمكنك إضافة منطق إذا كانت الصورة تم تحميلها بنجاح
+              };
               
-              this.AttachmentsFiles.push({ fileUpload: {
-                lastModifiedDate:file?.lastModifiedDate,
-                webkitRelativePath:file.webkitRelativePath,
-                lastModified:file.lastModified,
-                size:file.size,
-                type:file.type,
-                name:attachment.fileName,
-              }, detailsImage: true });
+              // إضافة معالج حدث للتحقق مما إذا كان هناك خطأ في تحميل الصورة
+              img.onerror = () => {
+                
+                console.log(`Failed to load image from path: ${attachment.filePath}`);
+                // هنا يمكنك إضافة منطق إذا كانت هناك مشكلة في تحميل الصورة
+              };
+              
+              // محاولة تحميل الصورة من المسار المحدد
+              img.src = attachment.filePath;
+            
 
             }
           });
@@ -293,8 +355,6 @@ export class UpdateCompanyComponent {
         this.loadingData = false;
       }
     })
-  }
-  onMarkerClickEvent(mapLabel: any, mapIndx: number) {
   }
   onMapClickEvent($event: any) {
     this.latitude = $event.coords.lat;
@@ -494,16 +554,17 @@ export class UpdateCompanyComponent {
       let filterIndustriesEdit = this.industries.filter((industry:any) => {
         return industry.editIndustries === true
       });
+      
+
+      
+
       let filterEditBranch = this.branches.filter((branch:any) => {
         return branch.editBranch === true
       });
-
-      
       if(
         (this.FormGroup?.value?.preferredLanguageId?.id && this.editBefore.preferredLanguageId?.id != this.FormGroup?.value?.preferredLanguageId?.id) ||
         (this.FormGroup?.value?.website && this.FormGroup?.value?.website != this.editBefore.webSite) ||
         (this.FormGroup?.value?.headquarterAddress && this.FormGroup?.value?.headquarterAddress != this.editBefore.headquarterAddress) ||
-        (this.FormGroup?.value?.headquarterLocation && this.FormGroup?.value?.headquarterLocation != this.editBefore.headquarterLocation) ||
         (this.FormGroup?.value?.headquarterPostalCode && this.FormGroup?.value?.headquarterPostalCode != this.editBefore.headquarterPostalCode) ||
         (this.FormGroup?.value?.email && this.FormGroup?.value?.email != this.editBefore.email) ||
         (this.FormGroup?.value?.totalNumberOfEmployees && this.FormGroup?.value?.totalNumberOfEmployees != this.editBefore.totalNumberOfEmployees) ||
@@ -511,33 +572,42 @@ export class UpdateCompanyComponent {
         this.FormGroup?.value?.HeadquarterLocationLongitude ||
         filterIndustriesEdit.length > 0 ||
         this.AttachmentsNames.length > 0 ||
+        this.companyLogo ||
         filterEditBranch.length > 0
       ) {
         formData.append("UpdateCompanyModelString", JSON.stringify({
-          PreferredLanguageId: (this.FormGroup?.value?.preferredLanguageId?.id &&this.editBefore.preferredLanguageId?.id != this.FormGroup?.value?.preferredLanguageId?.id) ? this.FormGroup?.value?.preferredLanguageId?.id : null,
-          WebSite: (this.FormGroup?.value?.website && this.FormGroup?.value?.website != this.editBefore.webSite) ? this.FormGroup?.value?.website : null,
-          HeadquarterAddress: (this.FormGroup?.value?.headquarterAddress && this.FormGroup?.value?.headquarterAddress != this.editBefore.headquarterAddress) ? this.FormGroup?.value?.headquarterAddress : null,
-          HeadquarterLocation:  (this.FormGroup?.value?.headquarterLocation && this.FormGroup?.value?.headquarterLocation != this.editBefore.headquarterLocation) ? this.FormGroup?.value?.headquarterLocation : null,
-          HeadquarterPostalCode:(this.FormGroup?.value?.headquarterPostalCode && this.FormGroup?.value?.headquarterPostalCode != this.editBefore.headquarterPostalCode) ? this.FormGroup?.value?.headquarterPostalCode : null,
-          Email: (this.FormGroup?.value?.email && this.FormGroup?.value?.email != this.editBefore.email) ? this.FormGroup?.value?.email : null,
-          TotalNumberOfEmployees: (this.FormGroup?.value?.totalNumberOfEmployees && this.FormGroup?.value?.totalNumberOfEmployees != this.editBefore.totalNumberOfEmployees) ?  this.FormGroup?.value?.totalNumberOfEmployees: null,
+          PreferredLanguageId: this.FormGroup?.value?.preferredLanguageId?.id ? this.FormGroup?.value?.preferredLanguageId?.id : null,
+          WebSite: this.FormGroup?.value?.website ? this.FormGroup?.value?.website : null,
+          HeadquarterAddress: this.FormGroup?.value?.headquarterAddress ? this.FormGroup?.value?.headquarterAddress : null,
+          HeadquarterPostalCode:this.FormGroup?.value?.headquarterPostalCode? this.FormGroup?.value?.headquarterPostalCode : null,
+          Email: this.FormGroup?.value?.email,
+          TotalNumberOfEmployees: this.FormGroup?.value?.totalNumberOfEmployees ?  this.FormGroup?.value?.totalNumberOfEmployees: null,
           LogoImageName:this.userPicture ? this.userPicture.name : null,
           HeadquarterLocationLatitude:this.FormGroup?.value?.HeadquarterLocationLatitude ? this.FormGroup?.value?.HeadquarterLocationLatitude  : null,
           HeadquarterLocationLongitude:this.FormGroup?.value?.HeadquarterLocationLongitude ? this.FormGroup?.value?.HeadquarterLocationLongitude : null,
           AttachmentsNames:this.AttachmentsNames.length >0 ? this.AttachmentsNames : null,
-          ImportDefaultData: null,
+          ImportDefaultData: this.FormGroup?.value?.ImportDefaultData,
           Industries:filterIndustriesEdit.length > 0 ? filterIndustriesEdit.map((Industry:any) => {
             return {id:Industry.id,name:Industry.name}
           }) : null,
-          Branches:filterEditBranch.length > 0 ?filterEditBranch.map((branch:any) => {
-            return {id:branch.id,name:branch.name, address:branch.address, location:branch.location,postalCode:branch.postalCode}
+          Branches:this.branches.length > 0 ?this.branches.map((branch:any) => {
+            return {
+              Id:branch.id,
+              Name:branch.name, 
+              Address:branch.address, 
+              Latitude:branch.latitude,
+              Longitude:branch.longitude,
+              PostalCode:branch.postalCode
+            }
           }) : null,
         }));
-   
+        
         if(this.companyLogo) {
-            formData.append("ProfileImageFile", this.companyLogo, this.companyLogo.name);
+          
+
+            formData.append("LogoImageFile", this.companyLogo, this.companyLogo.name);
         } else {
-          formData.append("ProfileImageFile", JSON.stringify(null));
+          formData.append("LogoImageFile", JSON.stringify(null));
         }
         
         if(this.AttachmentsFiles.length > 0) {
@@ -553,7 +623,8 @@ export class UpdateCompanyComponent {
         this.updateCompanyService.updateCompany(formData).subscribe({
           next:data => {
             this.loading = true;
-  
+            this.getInformation();
+
             const succressDialog = this.dialog.open(ToastSuccessComponent, {
               width: "30vw",
               data: {
@@ -580,6 +651,11 @@ export class UpdateCompanyComponent {
 
         this.toast.error("لم يتم تغير حقل");
       }
+    } else {
+      this.getControl("preferredLanguageId")?.markAsDirty();
+      this.getControl("email")?.markAsDirty();
+
+    
     }
   }
   addBranch() {
@@ -596,7 +672,11 @@ export class UpdateCompanyComponent {
     dialogRefAddCurrency.componentInstance.editVacation = false;
     dialogRefAddCurrency.componentInstance.branches = this.branches;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      this.branches = {...result, editBranch:true};
+      
+
+      this.branches =result;
+      
+
       dialogRefAddCurrency.componentInstance.submitted = true;
       dialogRefAddCurrency.close();
     });
