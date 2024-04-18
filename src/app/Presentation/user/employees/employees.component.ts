@@ -583,13 +583,12 @@ export class EmployeesComponent {
         formData.append("ProfileImageFile", file.fileUpload, file.fileUpload.name);
       });
       dialogRefAddCurrency.componentInstance.submitted = false;
-
+      dialogRefAddCurrency.componentInstance.loading = true;
       this.employeesService.createEmployee(formData).subscribe(
         {
           next: data => {
-
             dialogRefAddCurrency.componentInstance.submitted = true;
-
+            dialogRefAddCurrency.componentInstance.loading = false;
             dialogRefAddCurrency.close();
             let succressDialog:any;
             this.translate.get("employees").subscribe(translate => {
@@ -602,27 +601,18 @@ export class EmployeesComponent {
                 },
               });
             })
-          
             this.getEmployees(this.filteration);
-
             setTimeout(() => {
               succressDialog.close();
-
             }, 2000);
-
             succressDialog.componentInstance.submitted = true;
             succressDialog.componentInstance.submitClicked.subscribe(result => {
-
-
               succressDialog.close();
-
             })
-
           },
           error: err => {
-
+            dialogRefAddCurrency.componentInstance.loading = false;
             dialogRefAddCurrency.componentInstance.submitted = true;
-
           }
         }
       )

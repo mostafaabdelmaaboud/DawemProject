@@ -203,9 +203,7 @@ export class DialogAddAnEmployeeComponent {
       data.employeeForDropDown?.data?.forEach((jobTitle: any) => {
         this.listDirectManager.push({ name: jobTitle.name, key: jobTitle.id })
       });
-      data.GetForDropDownZones?.data?.forEach((day: any) => {
-        this.listZones.push({ name: day.name, key: day.id });
-      });
+ 
       data.employeesService?.data?.forEach((jobTitle: any) => {
         this.jobTitleFirst.push({ name: jobTitle.name, key: jobTitle.id })
       });
@@ -230,6 +228,23 @@ export class DialogAddAnEmployeeComponent {
         this.employeesService.employeeGetById({ employeeId: this.id }).subscribe(
           {
             next: data => {
+              this.sectionsService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids:data?.zoneIds}).subscribe(datainside => {
+                this.listZones = [];
+                datainside?.data?.forEach((day: any) => {
+                  this.listZones.push({ name: day.name, key: day.id });
+                });
+
+                data?.zoneIds?.forEach((zone: any) => {
+                  let indexZones = this.listZones.findIndex(list => list.key === zone);
+                  if (indexZones >= 0) {
+                    if (Array.isArray(this.getControl("zoneIds")?.value)) {
+                      this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }, ...this.getControl("zoneIds")?.value]));
+                    } else {
+                      this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }]));
+                    }
+                  }
+                });
+              });
 
               if (data?.profileImagePath) {
                 var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
@@ -303,16 +318,7 @@ export class DialogAddAnEmployeeComponent {
               this.addBranchGroupForm.get("name")?.setValue(data.name);
               this.addBranchGroupForm.get("employeeType")?.setValue(data.employeeType.toString());
               this.addBranchGroupForm.get("employeeNumber")?.setValue(data.employeeNumber);
-              data?.zoneIds?.forEach((zone: any) => {
-                let indexZones = this.listZones.findIndex(list => list.key === zone);
-                if (indexZones >= 0) {
-                  if (Array.isArray(this.getControl("zoneIds")?.value)) {
-                    this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }, ...this.getControl("zoneIds")?.value]));
-                  } else {
-                    this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }]));
-                  }
-                }
-              });
+           
 
               this.employeesService.getJobTitles({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.jobTitleId }).subscribe(dataDropdown => {
 
@@ -358,7 +364,9 @@ export class DialogAddAnEmployeeComponent {
       }
       if (!this.editEmployee) {
         this.loading = false;
-        
+        data.GetForDropDownZones?.data?.forEach((day: any) => {
+          this.listZones.push({ name: day.name, key: day.id });
+        });
         if(this.departmentID >= 0) {
           
           this.employeesService.getDepartmentForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, id: this.departmentID }).subscribe(dataDropdown => {

@@ -190,6 +190,7 @@ export class UpdateCompanyComponent {
       next:data => {
         this.general = [];
         this.preferredLanguages = [];
+        this.AttachmentsFiles = [];
         data.countries?.forEach((country: any) => {
           this.general.push({ name: country.name, id: country.id })
         });
@@ -231,15 +232,10 @@ export class UpdateCompanyComponent {
         });
         this.branches =  this.editBefore?.branches.map((branch:any) => {
           return{...branch, uniqId:`${branch.id}editBranch`, editBranch:false}
-        });
-        
-  
+        });  
         const img = new Image();
-          
         // إضافة معالج حدث للتحقق مما إذا تم تحميل الصورة بنجاح
         img.onload = () => {
-          
-
           if (this.editBefore?.logoImagePath) {
             
             var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
@@ -268,9 +264,6 @@ export class UpdateCompanyComponent {
                 this.defaultImage=this.editBefore?.logoImagePath;
               }
   
-              
-
-  
               this.companyLogo = file;
   
               // this.addBranchGroupForm.get("idCopyFile")?.setValue(this.editBefore?.logoImagePath);
@@ -292,7 +285,7 @@ export class UpdateCompanyComponent {
         
         // إضافة معالج حدث للتحقق مما إذا كان هناك خطأ في تحميل الصورة
         img.onerror = () => {
-          
+          this.defaultImage = 'assets/img/old_logo.png';
           console.log(`Failed to load image from path: ${this.editBefore?.logoImagePath}`);
           // هنا يمكنك إضافة منطق إذا كانت هناك مشكلة في تحميل الصورة
         };
@@ -611,8 +604,6 @@ export class UpdateCompanyComponent {
         }
         
         if(this.AttachmentsFiles.length > 0) {
-          
-
           this.AttachmentsFiles.forEach((file: any) => {
               formData.append("Attachments", file.fileUpload, file.fileUpload.name);
           });
@@ -620,6 +611,8 @@ export class UpdateCompanyComponent {
           formData.append("Attachments", JSON.stringify(null));
         }
         this.loading = false;
+        this.loadingData = true;
+
         this.updateCompanyService.updateCompany(formData).subscribe({
           next:data => {
             this.loading = true;

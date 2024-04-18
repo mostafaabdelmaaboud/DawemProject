@@ -171,7 +171,7 @@ export class SummonsComponent {
           forTypeName: summon.forTypeName,
           summonStatusName: summon.summonStatusName,
           numberOfTargetedEmployees: summon.numberOfTargetedEmployees,
-          LocalDateAndTime: moment(new Date(summon.LocalDateAndTime)).format("MMMM Do YYYY, h:mm:ss a") ,
+          LocalDateAndTime: moment(new Date(summon.localDateAndTime)).format("MMMM Do YYYY, h:mm:ss a") ,
           isActive: summon.isActive
         })
       });
@@ -229,7 +229,7 @@ export class SummonsComponent {
       formData.allowedTime = result.allowedTime;
       formData.TimeType = result.TimeType.key;
       formData.notifyWays = result.notifyWays.map((list: any) => list.key);
-      formData.LocalDateAndTime = moment(result.LocalDateAndTime).format("YYYY-MM-DD hh:mm");
+      formData.LocalDateAndTime = moment(result.LocalDateAndTime).format("YYYY-MM-DD HH:mm:ss");
       dialogRefAddCurrency.componentInstance.loading = true;
       this.summonsService.createSummon(formData).subscribe(
         {
@@ -445,7 +445,7 @@ export class SummonsComponent {
 
       formData.notifyWays = result.notifyWays.map((list: any) => list.key);
 
-      formData.LocalDateAndTime = moment(result.LocalDateAndTime).format("YYYY-MM-DD hh:mm");
+      formData.LocalDateAndTime = moment(result.LocalDateAndTime).format("YYYY-MM-DD HH:mm:ss");
       
       dialogRefAddCurrency.componentInstance.loading = true;
 

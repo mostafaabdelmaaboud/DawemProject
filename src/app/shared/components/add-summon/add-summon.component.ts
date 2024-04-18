@@ -14,6 +14,7 @@ import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MatRadioModule } from '@angular/material/radio';
 import { SummonsService } from 'src/app/Presentation/user/summons/services/summons.service';
+import moment from 'moment';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -192,7 +193,7 @@ this.listnotifyWays = [
                   
                   this.getControl("isActive")?.setValue(data.isActive);
 
-                  this.getControl("LocalDateAndTime")?.setValue(new Date(data.LocalDateAndTime));
+                  this.getControl("LocalDateAndTime")?.setValue(new Date(data.localDateAndTime));
                   this.getControl("allowedTime")?.setValue(data.allowedTime);
 
                   this.getControl("forAllEmployees")?.setValue(data.forAllEmployees ? true : false);
@@ -555,7 +556,6 @@ this.listnotifyWays = [
   }
 
   request() {
-
     if (this.addBranchGroupForm.valid && this.submitted) {
       this.submitted = false;
       this.submitClicked.emit(this.addBranchGroupForm.value);

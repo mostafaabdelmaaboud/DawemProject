@@ -225,7 +225,7 @@ export class SummonMissingLogsComponent {
       formData.allowedTime = result.allowedTime;
       formData.TimeType = result.TimeType.key;
       formData.notifyWays = result.notifyWays.map((list: any) => list.key);
-      formData.DateAndTime = moment(result.dateAndTime).format("YYYY-MM-DD hh:mm");
+      formData.DateAndTime = moment(result.dateAndTime).format("YYYY-MM-DD HH:mm:ss");
       
       dialogRefAddCurrency.componentInstance.loading = true;
       this.summonMissingLogsService.createSummon(formData).subscribe(
@@ -444,7 +444,7 @@ export class SummonMissingLogsComponent {
 
       formData.notifyWays = result.notifyWays.map((list: any) => list.key);
 
-      formData.DateAndTime = moment(result.dateAndTime).format("YYYY-MM-DD hh:mm");
+      formData.DateAndTime = moment(result.dateAndTime).format("YYYY-MM-DD HH:mm:ss");
       
       dialogRefAddCurrency.componentInstance.loading = true;
 

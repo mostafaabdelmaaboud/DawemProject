@@ -12,9 +12,18 @@ export class ReportsService {
     let queryParams = new HttpParams();
     if (filter) {
       Object.entries(filter).forEach(([key, value]: any) => {
-        queryParams = queryParams.set(key, value);
+        if (key === "EmployeesIds") {
+          value.forEach((id: any) => {
+            queryParams = queryParams.append(key, id)
+
+          });
+        } else {
+          queryParams = queryParams.set(key, value);
+
+        }
       })
     }
+    
     return this.http.get<any>(`${environment.baseUrl}AttendanceSummaryReport/GetAttendanceSummary`, { params: queryParams })
   }
 

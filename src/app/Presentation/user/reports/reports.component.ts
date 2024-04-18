@@ -81,12 +81,12 @@ export class ReportsComponent {
   reportsIsExport: any = [];
   isLoading = true;
   dateTaskMultiple = false;
-
+  todayDate = moment(new Date().setDate(1)).format("MM-DD-YYYY");
   filteration: any = {
     PageSize: 5,
     PageNumber: 0,
-    DateFrom:"10-18-2023",
-    DateTo:"12-12-2023",
+    DateFrom:this.todayDate,
+    DateTo:moment(new Date()).format("MM-DD-YYYY"),
     PagingEnabled: true
   };
 
@@ -111,12 +111,12 @@ export class ReportsComponent {
   defaultRowPerPage = { name: '5', code: 5 };
   nameFilterType = "ساعات العمل";
   requiredValidationField =false;
+  showFilterValue = false;
   private _mobileQueryListener: () => void;
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
-
     this._mobileQueryListener = () => {
       if (this.mobileQuery.matches) {
         this.opened = true;
@@ -125,13 +125,8 @@ export class ReportsComponent {
       } else {
         this.opened = false;
         this.reports = this.reports;
-
         changeDetectorRef.detectChanges();
-
       }
-
-
-
     };
     this.mobileQuery.addListener(this._mobileQueryListener);
     translate.addLangs(['ar', 'en']);
@@ -171,21 +166,38 @@ export class ReportsComponent {
       FilterType:[],
       filterTypeGroup: this.fb.group(
         {
-          FilterTypeFrom: this.fb.control(null, this.minimumValidator('filterTypeGroup.FilterTypeTo')),
-          FilterTypeTo: this.fb.control(null, this.maximumValidator('filterTypeGroup.FilterTypeFrom')),
+          // FilterTypeFrom: this.fb.control(null, [Validators.required, this.minimumValidator('filterTypeGroup.FilterTypeTo')]),
+          // FilterTypeTo: this.fb.control(null, [Validators.required,this.maximumValidator('filterTypeGroup.FilterTypeFrom')]),
         },
-        {
-          validators: [this.requiredValidator.bind(this)],
-        }
+        // {
+        //   validators: [this.requiredValidator.bind(this)],
+        // }
       ),
       // FilterTypeFrom:[''],
       // FilterTypeTo:['']
     });
+    this.listEmployees=[];
+    this.reportsService.EmployeesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
+      next:data => {
+        data?.forEach((employee: any) => {
+          this.listEmployees.push({ name: employee.name, key: employee.id });
+        });
+      },
+      error:err => {
+      }
+    });
     this.filterForm.get("FilterType")?.valueChanges.subscribe(data => {
-      this.requiredValidationField = true;
-      this.nameFilterType = data.name;
-      this.requiredValidator(this.filterForm.get('filterTypeGroup') as FormGroup);
-
+      if(data === null) {
+        this.showFilterValue = false;
+        (this.getControl("filterTypeGroup") as FormGroup).removeControl("FilterTypeFrom");
+        (this.getControl("filterTypeGroup") as FormGroup).removeControl("FilterTypeTo");
+      } else {
+        (this.getControl("filterTypeGroup") as FormGroup).addControl("FilterTypeFrom", this.fb.control(null, [Validators.required, this.minimumValidator('filterTypeGroup.FilterTypeTo')]));
+        (this.getControl("filterTypeGroup") as FormGroup).addControl("FilterTypeTo", this.fb.control(null, [Validators.required,this.maximumValidator('filterTypeGroup.FilterTypeFrom')]));
+        this.showFilterValue = true;
+        this.requiredValidationField = true;
+        this.nameFilterType = data.name;
+      }
     })
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
@@ -202,6 +214,8 @@ export class ReportsComponent {
 
     ]
     this.getreports(this.filteration);
+    let startDate = new Date(moment(new Date().setDate(1)).format("MM-DD-YYYY"));
+    this.filterForm.get("searchDate")?.setValue([startDate, new Date()]);
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
@@ -300,10 +314,11 @@ export class ReportsComponent {
             this.lastSearchQuery = data;
             this.reportsService.EmployeesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
-              distinctUntilChanged()).subscribe((res: any) => {
+              distinctUntilChanged()).subscribe((data: any) => {
                 this.listEmployees = [];
+                
                 this.lastSearchQuery = "";
-                res?.data?.forEach((employee: any) => {
+                data?.forEach((employee: any) => {
                   this.listEmployees.push({ name: employee.name, key: employee.id })
                 });
               });
@@ -317,18 +332,19 @@ export class ReportsComponent {
   }
   openFilter() {
     if(!this.loadingFilteration) {
-      this.loadingFilteration = true;
-      this.reportsService.EmployeesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
-        next:data => {
-          data?.forEach((employee: any) => {
-            this.listEmployees.push({ name: employee.name, key: employee.id });
-          });
-          this.loadingFilteration = false;
-        },
-        error:err => {
-          this.loadingFilteration = false;
-        }
-      });
+      // this.listEmployees=[];
+      // this.loadingFilteration = true;
+      // this.reportsService.EmployeesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
+      //   next:data => {
+      //     data?.forEach((employee: any) => {
+      //       this.listEmployees.push({ name: employee.name, key: employee.id });
+      //     });
+      //     this.loadingFilteration = false;
+      //   },
+      //   error:err => {
+      //     this.loadingFilteration = false;
+      //   }
+      // });
     }
   }
   dialogScheduleFile(data: any) {
@@ -379,10 +395,14 @@ export class ReportsComponent {
                 this.filteration[key] = value === null ? value : value?.map(item => item.key);
               }
             }  else if(key ==="FilterType") {
-              this.filteration[key] = value === null ? value : value.key;
+              if(this.showFilterValue) {
+                this.filteration[key] = value === null ? value : value.key;
+              }
             }else if(key ==="filterTypeGroup") {
-              this.filteration['FilterTypeFrom'] = value.FilterTypeFrom;
-              this.filteration['FilterTypeTo'] = value.FilterTypeTo;
+              if(this.showFilterValue) {
+                this.filteration['FilterTypeFrom'] = value.FilterTypeFrom;
+                this.filteration['FilterTypeTo'] = value.FilterTypeTo;
+              }
             }
         }
       });
@@ -392,10 +412,12 @@ export class ReportsComponent {
 
     } else {
       // this.getControl("JustificationTypeId")?.markAsDirty();
+      this.getControl("filterTypeGroup.FilterTypeFrom")?.markAsDirty();
+      this.getControl("filterTypeGroup.FilterTypeTo")?.markAsDirty();
       this.getControl("searchDate")?.markAsDirty();
-
-      this.getControl("filterTypeGroup.FilterTypeFrom")?.setValue(this.getControl("filterTypeGroup.FilterTypeFrom")?.value);
-      this.getControl("filterTypeGroup.FilterTypeTo")?.setValue(this.getControl("filterTypeGroup.FilterTypeTo")?.value)
+    
+      // this.getControl("filterTypeGroup.FilterTypeFrom")?.setValue(this.getControl("filterTypeGroup.FilterTypeFrom")?.value);
+      // this.getControl("filterTypeGroup.FilterTypeTo")?.setValue(this.getControl("filterTypeGroup.FilterTypeTo")?.value)
 
       // this.getControl("time")?.markAsDirty();
 
@@ -486,11 +508,14 @@ export class ReportsComponent {
     }
   }
   resetFilteration() {
-    this.filterForm.get("FreeText")?.setValue("");
-
+    this.filterForm.reset();
+    this.filterForm.get("searchDate")?.setValue([new Date(), new Date()]);
+    this.dateTaskMultiple = false;
     this.filteration = {
       PageSize: 5,
       PageNumber: 0,
+      DateFrom:this.todayDate,
+      DateTo:this.todayDate,
       PagingEnabled: true
     };
     this.getreports(this.filteration);

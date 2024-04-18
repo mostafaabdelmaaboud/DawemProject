@@ -96,10 +96,10 @@ export class LoginComponent {
         if(permissionStatus.state === "granted") {
           this.requestPermission();
         } else {
-          this.toast.error("Error querying Notification permission: " + permissionStatus.state, '', {
-            timeOut: 10000,
-            onActivateTick: true
-          });  
+          // this.toast.error("Error querying Notification permission: " + permissionStatus.state, '', {
+          //   timeOut: 10000,
+          //   onActivateTick: true
+          // });  
         }
       }).catch(error => {
         console.error('Error querying Notification permission:', error);
