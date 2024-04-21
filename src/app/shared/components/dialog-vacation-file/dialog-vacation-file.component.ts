@@ -82,7 +82,7 @@ export class DialogVacationFileComponent {
                 //   const file = new File([blob], attachment.fileName);
                 //   this.AttachmentsFiles.push({ imageSrc: attachment.filePath, fileUpload: file, detailsImage: true });
                 // });
-                var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
+                var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg");
                 let fileExt = attachment.fileName.substring(attachment.fileName.lastIndexOf('.'));
                 if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
                   let file!:File;
@@ -107,7 +107,7 @@ export class DialogVacationFileComponent {
                       type:file.type,
                       name:attachment.fileName,
                     }, detailsImage: true });
-                  } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
+                  } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("jpg") || fileExt?.toLowerCase().includes("gif")) {
                      file = new File([attachment.filePath],`img-file${validExts}`, {
                       type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
                     });

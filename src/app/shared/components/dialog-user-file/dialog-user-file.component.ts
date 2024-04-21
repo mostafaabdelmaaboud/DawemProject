@@ -79,9 +79,10 @@ export class DialogUserFileComponent {
 
           next: data => {
             this.info = data;
+            
 
             if (data?.profileImagePath) {
-              var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
+              var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg");
               let fileExt = data?.profileImageName?.substring(data?.profileImageName?.lastIndexOf('.'));
               if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
                 let file!:File;
@@ -106,10 +107,11 @@ export class DialogUserFileComponent {
                     type:file.type,
                     name:data?.profileImageName,
                   }, detailsImage: true });
-                } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
+                } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("jpg") || fileExt?.toLowerCase().includes("gif")) {
                    file = new File([data?.profileImagePath],`img-file${validExts}`, {
                     type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
                   });
+                  
                   this.AttachmentsFiles.push({ imageSrc: data?.profileImagePath, download:data?.profileImagePath, fileUpload: {
                     lastModified:file.lastModified,
                     size:file.size,

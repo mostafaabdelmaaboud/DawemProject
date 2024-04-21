@@ -63,6 +63,8 @@ export class UpdateCompanyComponent {
   imageChangedEvent: any;
   selectImage = false;
   userPicture: any;
+  userPictureCopy: any;
+
   companyLogo:any;
   croppedImage: any;
   industries:any[] = [];
@@ -237,48 +239,52 @@ export class UpdateCompanyComponent {
         // إضافة معالج حدث للتحقق مما إذا تم تحميل الصورة بنجاح
         img.onload = () => {
           if (this.editBefore?.logoImagePath) {
-            
-            var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
+            var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg");
             let fileExt = this.editBefore?.logoImageName.substring(this.editBefore?.logoImageName.lastIndexOf('.'));
             if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
               let file!:File;
               if(fileExt?.toLowerCase().includes("xlsx") || fileExt?.toLowerCase().includes("xls")) {
-                 file = new File([this.editBefore?.logoImagePath], this.editBefore?.logoImageName, {
-                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                });
+                this.updateCompanyService.downloadFile(this.editBefore?.logoImagePath).subscribe(blob => {
+                  const reader = new FileReader();
+              reader.onload = (e: any) => {
+                
+                file = this.base64ToFile(e.target.result, this.editBefore?.logoImageName);
+              };
+              reader.readAsDataURL(blob);
+              })
                 this.defaultImage = "assets/img/excel.png";
+                this.userPicture = {name:this.editBefore?.logoImageName};
               } else if(fileExt?.toLowerCase().includes("pdf")) {
-                 file = new File([this.editBefore?.logoImagePath], this.editBefore?.logoImageName, {
-                  type: 'application/pdf',
-                });
+                this.updateCompanyService.downloadFile(this.editBefore?.logoImagePath).subscribe(blob => {
+                  const reader = new FileReader();
+              reader.onload = (e: any) => {
                 
+                file = this.base64ToFile(e.target.result, this.editBefore?.logoImageName);
 
+              };
+              reader.readAsDataURL(blob);
+              })
                 this.defaultImage="assets/img/pdf.png";
-              } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
-                 file = new File([new Blob([this.editBefore?.logoImagePath])],this.editBefore?.logoImageName, {
-                  type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
-                });
-              
+                this.userPicture =  {name:this.editBefore?.logoImageName};
+              } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("jpg") || fileExt?.toLowerCase().includes("gif")) {
                 
 
+                this.updateCompanyService.downloadFile(this.editBefore?.logoImagePath).subscribe(blob => {
+                    const reader = new FileReader();
+                reader.onload = (e: any) => {
+                  
+                  file = this.base64ToFile(e.target.result, this.editBefore?.logoImageName);
+
+                };
+                reader.readAsDataURL(blob);
+                })
                 this.defaultImage=this.editBefore?.logoImagePath;
+                this.userPicture =  {name:this.editBefore?.logoImageName};
               }
-  
-              this.companyLogo = file;
-  
-              // this.addBranchGroupForm.get("idCopyFile")?.setValue(this.editBefore?.logoImagePath);
-  
+              
+              this.companyLogo = file;  
             }
-            // this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: {
-            //   name:data.logoImagePath
-            // }, detailsImage: true });
-  
-            // this.employeesService.downloadImage(data.profileImagePath).subscribe(response => {
-            //   const blob = new Blob([response]);
-            //   const file = new File([blob], data.logoImagePath);
-  
-            //   this.uploadedFiles.push({ imageSrc: data.profileImagePath, fileUpload: file, detailsImage: true });
-            // });
+
           }
           // هنا يمكنك إضافة منطق إذا كانت الصورة تم تحميلها بنجاح
         };
@@ -295,7 +301,7 @@ export class UpdateCompanyComponent {
         // }
         if (this.editBefore?.attachments.length) {
           this.editBefore?.attachments.forEach((attachment: any) => {
-            var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
+            var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg");
             let fileExt = attachment.fileName.substring(attachment.fileName.lastIndexOf('.'));
             if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
               let file!:File;
@@ -309,7 +315,7 @@ export class UpdateCompanyComponent {
                   type: 'application/pdf',
                 });
                 this.viewImagesIdCopy.push("assets/img/pdf.png");
-              } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
+              } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("jpg") || fileExt?.toLowerCase().includes("gif")) {
                  file = new File([new Blob([attachment.filePath])],attachment.fileName, {
                   type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
                 });
@@ -481,6 +487,8 @@ export class UpdateCompanyComponent {
           if(findIndexFileName.length < 2) {
             if(fileSize?.size < (2 * 1024 * 1024)) {
               this.viewImage.push(pFileList.files[index]);
+              
+    
               this.AttachmentsFiles.push({fileUpload:pFileList.files[index], detailsImage: false});
               this.AttachmentsNames.push(pFileList.files[index].name);
 
@@ -568,6 +576,7 @@ export class UpdateCompanyComponent {
         this.companyLogo ||
         filterEditBranch.length > 0
       ) {
+        
         formData.append("UpdateCompanyModelString", JSON.stringify({
           PreferredLanguageId: this.FormGroup?.value?.preferredLanguageId?.id ? this.FormGroup?.value?.preferredLanguageId?.id : null,
           WebSite: this.FormGroup?.value?.website ? this.FormGroup?.value?.website : null,
@@ -681,15 +690,36 @@ export class UpdateCompanyComponent {
   profileImgChooseEvent(event: any) {
     this.imageChangedEvent = event;
     this.selectImage = true;
-    this.userPicture = event.target.files[0];
+    
+    this.userPictureCopy = event.target.files[0];
   }
 
   imageCropped(event: ImageCroppedEvent) {
-    this.croppedImage = event.objectUrl;
-    const file = new File([new Blob([this.croppedImage])], this.userPicture.name, {type: event.blob?.type});
-    this.userPicture = file;
+    console.log(event)
+    this.croppedImage = event.base64;
+    // const file = new File([new Blob([this.croppedImage])], this.userPicture.name, {type: event.blob?.type});
+    const fileToReturn = this.base64ToFile(
+      event.base64,
+      this.userPictureCopy.name,
+    );
+    
+    this.userPicture = fileToReturn;
     this.companyLogo = this.userPicture;
     
+  }
+  base64ToFile(data, filename) {
+
+    const arr = data.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    let u8arr = new Uint8Array(n);
+
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], filename, { type: mime });
   }
   imageLoaded() {
     // show cropper

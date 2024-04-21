@@ -34,50 +34,54 @@ export class HttpConfigInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     if (request.method == "GET" || request.method == "PATCH") {
       let token: any;
-
-      if (typeof localStorage.getItem("token") === 'string') {
-        token = `Bearer ${JSON?.parse(localStorage.getItem("token") as string)}`
-
-      } else {
-        if (JSON.stringify(localStorage.getItem("token"))) {
-          token = `Bearer ${JSON?.parse(JSON.stringify(localStorage.getItem("token")))}`
+      if (
+        !request.url.includes("/api/Browse/Browse") 
+      ) {
+        if (typeof localStorage.getItem("token") === 'string') {
+          token = `Bearer ${JSON?.parse(localStorage.getItem("token") as string)}`
+  
+        } else {
+          if (JSON.stringify(localStorage.getItem("token"))) {
+            token = `Bearer ${JSON?.parse(JSON.stringify(localStorage.getItem("token")))}`
+          }
+        }
+        // request.headers.set("token", this.authService.getToken());
+        // request.headers.set("Content-Type", "application/json");
+        if (!request.url.includes("assets/i18n")) {
+          let translate = this.injector.get(TranslateService)
+          if (translate.currentLang == "ar") {
+            request = request.clone({
+              headers: request.headers
+                .set("Authorization", token).set("lang", "ar")
+              // .set(
+              //   "fingerPrint",
+              //   this.cookieService.get("fingerPrint") || "123456"
+              // ),
+            })
+          } else {
+            request = request.clone({
+              headers: request.headers
+                .set("Authorization", token).set("lang", "en")
+              // .set(
+              //   "fingerPrint",
+              //   this.cookieService.get("fingerPrint") || "123456"
+              // ),
+            });
+          } 
+  
+       
+        }
+  
+        if (request.url.includes("/notification/list")) {
+          request = request.clone({
+            headers: request.headers.set(
+              "x-device-token",
+              localStorage.getItem("deviceToken") as string
+            ),
+          });
         }
       }
-      // request.headers.set("token", this.authService.getToken());
-      // request.headers.set("Content-Type", "application/json");
-      if (!request.url.includes("assets/i18n")) {
-        let translate = this.injector.get(TranslateService)
-        if (translate.currentLang == "ar") {
-          request = request.clone({
-            headers: request.headers
-              .set("Authorization", token).set("lang", "ar")
-            // .set(
-            //   "fingerPrint",
-            //   this.cookieService.get("fingerPrint") || "123456"
-            // ),
-          })
-        } else {
-          request = request.clone({
-            headers: request.headers
-              .set("Authorization", token).set("lang", "en")
-            // .set(
-            //   "fingerPrint",
-            //   this.cookieService.get("fingerPrint") || "123456"
-            // ),
-          });
-        } 
-
-     
-      }
-
-      if (request.url.includes("/notification/list")) {
-        request = request.clone({
-          headers: request.headers.set(
-            "x-device-token",
-            localStorage.getItem("deviceToken") as string
-          ),
-        });
-      }
+    
     } else if (request.method == "POST" || request.method == "PUT" || request.method == "DELETE") {
       if (
         request.url.includes("/SignIn") ||

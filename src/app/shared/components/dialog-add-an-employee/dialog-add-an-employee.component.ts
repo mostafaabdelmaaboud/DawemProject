@@ -147,7 +147,7 @@ export class DialogAddAnEmployeeComponent {
     address: ['', Validators.required],
     fieldDisabled: [''],
     zoneIds: ['', Validators.required],
-    idCopyFile: ['', Validators.required]
+    idCopyFile: ['']
   });
   AttachmentsFiles: any[] = [];
   requiredCommercialRegFiles = false;
@@ -247,7 +247,7 @@ export class DialogAddAnEmployeeComponent {
               });
 
               if (data?.profileImagePath) {
-                var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
+                var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg");
                 let fileExt = data.profileImageName.substring(data.profileImageName.lastIndexOf('.'));
                 if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
                   let file!:File;
@@ -261,7 +261,7 @@ export class DialogAddAnEmployeeComponent {
                       type: 'application/pdf',
                     });
                     this.viewImagesIdCopy=["assets/img/pdf.png"];
-                  } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
+                  } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("jpg") || fileExt?.toLowerCase().includes("gif")) {
                      file = new File([data?.profileImagePath],`img-file${validExts}`, {
                       type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
                     });

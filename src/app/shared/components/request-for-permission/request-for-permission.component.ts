@@ -152,7 +152,7 @@ export class RequestForPermissionComponent {
 
               if (data?.attachments.length) {
                 data?.attachments.forEach((attachment: any) => {
-                  var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif");
+                  var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg");
                   let fileExt = attachment.fileName.substring(attachment.fileName.lastIndexOf('.'));
                   if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
                     let file!:File;
@@ -166,7 +166,7 @@ export class RequestForPermissionComponent {
                         type: 'application/pdf',
                       });
                       this.viewImagesIdCopy.push("assets/img/pdf.png");
-                    } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("gif")) {
+                    } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("jpg") || fileExt?.toLowerCase().includes("gif")) {
                        file = new File([attachment.filePath],`img-file${validExts}`, {
                         type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
                       });
