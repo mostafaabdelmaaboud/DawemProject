@@ -54,9 +54,10 @@
             <img [src]="file.imageSrc" width="200" height="200" alt="">
 
           </div>
-          <div class="p-fileupload-filename">
+          <div class="p-fileupload-filename" [title]="file.fileUpload.name">
             <span class="d-block">{{"employees.name"|translate}}:</span>
-            {{ file.fileUpload.name
+            {{
+            (file.fileUpload.name | slice:0:70) + '......' 
             }}
           </div>
           <div>

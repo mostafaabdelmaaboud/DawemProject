@@ -247,7 +247,7 @@ export class DialogAddAnEmployeeComponent {
               });
 
               if (data?.profileImagePath) {
-                var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg");
+                var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg",".xlsx", ".xls", ".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
                 let fileExt = data.profileImageName.substring(data.profileImageName.lastIndexOf('.'));
                 if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
                   let file!:File;
@@ -261,6 +261,9 @@ export class DialogAddAnEmployeeComponent {
                       type: 'application/pdf',
                     });
                     this.viewImagesIdCopy=["assets/img/pdf.png"];
+                  } else if(fileExt.toLowerCase().includes("docx") || fileExt.toLowerCase().includes("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
+                    this.viewImagesIdCopy=[data?.profileImagePath];
+
                   } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("jpg") || fileExt?.toLowerCase().includes("gif")) {
                      file = new File([data?.profileImagePath],`img-file${validExts}`, {
                       type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
@@ -521,7 +524,11 @@ export class DialogAddAnEmployeeComponent {
   onRemoveCommercialReg(event: any) {
     
     let indexFile = this.AttachmentsFiles.findIndex(item => item.fileUpload.lastModified === event.lastModified);
-    this.AttachmentsFiles.splice(indexFile, 1)
+    if(indexFile >=0) {
+      this.AttachmentsFiles.splice(indexFile, 1);
+      this.viewImagesIdCopy.splice(indexFile, 1);
+      this.viewImage.splice(indexFile, 1);
+    }
     this.AttachmentsFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
     if(this.requiredCommercialRegFiles) {
       this.addBranchGroupForm.get("idCopyFile")?.setValue("");
@@ -565,14 +572,16 @@ export class DialogAddAnEmployeeComponent {
             } else {
               this.imageArray = [];
               this.errorUploadFileIdCopy = "";
-              var validExts = new Array(".xlsx", ".xls");
+              var validExts = new Array(".xlsx", ".xls", ".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
               let fileExt = this.viewImage[index]?.name.substring(this.viewImage[index]?.name.lastIndexOf('.'));
               await filereaderTwo.readAsDataURL(this.viewImage[index]);
               filereaderTwo.onload = () => {
-                if((filereaderTwo.result as string).includes("application/pdf")) {
+                if(fileExt.toLowerCase().includes("pdf")) {
                   this.imageArray =["assets/img/pdf.png"];
-                } else if(validExts.indexOf(fileExt) >= 0) {
+                } else if(fileExt.toLowerCase().includes("xlsx") || fileExt.toLowerCase().includes("xls")) {
                   this.imageArray=["assets/img/excel.png"];
+                } else if(fileExt.toLowerCase().includes("docx") || fileExt.toLowerCase().includes("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
+                  this.imageArray=["assets/img/word.png"];
                 } else {
                   this.imageArray= [filereaderTwo.result];
                 }

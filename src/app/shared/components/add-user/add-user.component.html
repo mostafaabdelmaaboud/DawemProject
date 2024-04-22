@@ -220,7 +220,7 @@
         <div class="item uploadFiles">
           <!-- accept="image/*" -->
           <p-fileUpload name="uploadedCommercialRegFiles[]" chooseIcon="pi pi-cloud-upload" [customUpload]="true"
-            [chooseLabel]="data!['chooseLabel']|translate" accept="image/png, image/gif, image/jpeg, application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" (onSelect)="onFileChange($event, 2)" [showUploadButton]="false"
+            [chooseLabel]="data!['chooseLabel']|translate" accept="image/png, image/gif, image/jpeg, application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel,.docx, application/vnd.openxmlformats-officedocument.wordprocessingml.document" (onSelect)="onFileChange($event, 2)" [showUploadButton]="false"
             [showCancelButton]="false">
             <ng-template pTemplate="content">
 
@@ -230,9 +230,10 @@
                     <img [src]="viewImagesIdCopy[i]" width="50" height="100" alt="">
 
                   </div>
-                  <div class="p-fileupload-filename">
+                  <div class="p-fileupload-filename" [title]="file.fileUpload.name">
                     <span class="d-block">{{"employees.name"|translate}}:</span>
-                    {{ file.fileUpload.name
+                    {{
+                    file.fileUpload.name.length > 69 ? (file.fileUpload.name | slice:0:70) + '......' : file.fileUpload.name
                     }}
                   </div>
                   <div>

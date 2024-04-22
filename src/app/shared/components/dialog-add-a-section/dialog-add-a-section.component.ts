@@ -218,36 +218,29 @@ export class DialogAddASectionComponent {
                     }
 
                   });
-
-                  data?.zoneIds?.forEach((zone: any) => {
-
-                    let indexZones = this.listZones.findIndex(list => list.key === zone);
-
-
-                    if (indexZones >= 0) {
-                      if (Array.isArray(this.getControl("zoneIds")?.value)) {
-                        this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }, ...this.getControl("zoneIds")?.value]));
-                      } else {
-                        this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }]));
+                  this.sectionsService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids: data?.zoneIds}).subscribe(dataDropdown => {
+                    this.listZones = [];
+                    dataDropdown.data?.forEach((list: any) => {
+                      this.listZones.push({ name: list.name, key: list.id });
+                    });
+                    data?.zoneIds?.forEach((zone: any) => {
+                      let indexZones = this.listZones.findIndex(list => list.key === zone);
+                      if (indexZones >= 0) {
+                        if (Array.isArray(this.getControl("zoneIds")?.value)) {
+                          this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }, ...this.getControl("zoneIds")?.value]));
+                        } else {
+                          this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }]));
+                        }
                       }
-                    }
-
-                  });
-
+                    });
+                  })
                   this.sectionsService.GetForDropDownEmployees({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids: data?.managerDelegatorIds }).subscribe(dataDropdown => {
                     this.listManagerDelegator = [];
-
-
                     dataDropdown.data?.forEach((list: any) => {
                       this.listManagerDelegator.push({ name: list.name, key: list.id });
                     });
-
-
                     data?.managerDelegatorIds?.forEach((employee: any) => {
-
                       let indexEmployees = this.listManagerDelegator.findIndex(list => list.key === employee);
-
-
                       if (indexEmployees >= 0) {
                         if (Array.isArray(this.getControl("managerDelegatorIds")?.value)) {
                           this.getControl("managerDelegatorIds")?.patchValue(([{ name: this.listManagerDelegator[indexEmployees].name, key: this.listManagerDelegator[indexEmployees].key }, ...this.getControl("managerDelegatorIds")?.value]));

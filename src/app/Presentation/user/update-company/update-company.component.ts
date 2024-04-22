@@ -100,6 +100,7 @@ export class UpdateCompanyComponent {
   errorUploadFileIdCopyIsRequired!: string;
   AttachmentsFiles: any[] = [];
   AttachmentsNames:any[] = [];
+  removeArrachementsName = false;
   errorUploadFileIdCopy!: string;
   public viewImage: any[] = [];
   viewImagesIdCopy: any[] = [];
@@ -229,9 +230,7 @@ export class UpdateCompanyComponent {
    
         this.FormGroup.get("identityCode")?.setValue(this.editBefore?.identityCode);
         this.FormGroup.get("isActive")?.setValue(this.editBefore?.isActive);
-        this.industries =this.editBefore?.industries.map(industry => {
-          return {...industry, editIndustries:false}
-        });
+        this.industries =this.editBefore?.industries;
         this.branches =  this.editBefore?.branches.map((branch:any) => {
           return{...branch, uniqId:`${branch.id}editBranch`, editBranch:false}
         });  
@@ -301,8 +300,10 @@ export class UpdateCompanyComponent {
         // }
         if (this.editBefore?.attachments.length) {
           this.editBefore?.attachments.forEach((attachment: any) => {
-            var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg");
+            var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg",".xlsx", ".xls", ".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
             let fileExt = attachment.fileName.substring(attachment.fileName.lastIndexOf('.'));
+            
+
             if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
               let file!:File;
               if(fileExt?.toLowerCase().includes("xlsx") || fileExt?.toLowerCase().includes("xls")) {
@@ -310,39 +311,61 @@ export class UpdateCompanyComponent {
                   type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 });
                 this.viewImagesIdCopy.push("assets/img/excel.png");
+                this.AttachmentsFiles.push({ fileUpload: file, detailsImage: true });
+
               } else if(fileExt?.toLowerCase().includes("pdf")) {
                  file = new File([attachment.filePath], attachment.fileName, {
                   type: 'application/pdf',
                 });
                 this.viewImagesIdCopy.push("assets/img/pdf.png");
-              } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("jpg") || fileExt?.toLowerCase().includes("gif")) {
-                 file = new File([new Blob([attachment.filePath])],attachment.fileName, {
-                  type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
+                this.AttachmentsFiles.push({ fileUpload: file, detailsImage: true });
+
+              } else if(fileExt.toLowerCase().includes("docx") || fileExt.toLowerCase().includes("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
+                file = new File([attachment.filePath], attachment.fileName, {
+                  type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                 });
+                this.viewImagesIdCopy.push("assets/img/word.png");
+                this.AttachmentsFiles.push({ fileUpload: file, detailsImage: true });
+
+              } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("jpg") || fileExt?.toLowerCase().includes("gif")) {
+                //  file = new File([new Blob([attachment.filePath])],attachment.fileName, {
+                //   type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
+                // });
+
+                const img = new Image();
+          
+                // إضافة معالج حدث للتحقق مما إذا تم تحميل الصورة بنجاح
+                img.onload = () => {
+                  this.updateCompanyService.downloadFile(attachment.filePath).subscribe(blob => {
+                    const reader = new FileReader();
+                    reader.onload = (e: any) => {
+                      
+                      file = this.base64ToFile(e.target.result, attachment.fileName);
+                      this.AttachmentsFiles.push({ fileUpload: file, detailsImage: true });
+
+                    };
+                    reader.readAsDataURL(blob);
+                  })
+                  
+                  // هنا يمكنك إضافة منطق إذا كانت الصورة تم تحميلها بنجاح
+                };
+                
+                // إضافة معالج حدث للتحقق مما إذا كان هناك خطأ في تحميل الصورة
+                img.onerror = () => {
+                  
+                  console.log(`Failed to load image from path: ${attachment.filePath}`);
+                  // هنا يمكنك إضافة منطق إذا كانت هناك مشكلة في تحميل الصورة
+                };
+                
+  
+                // محاولة تحميل الصورة من المسار المحدد
+                img.src = attachment.filePath;
                 this.viewImagesIdCopy.push(attachment.filePath);
               }
               // const file = new File([new Blob([this.croppedImage])], this.userPicture.name, {type: event.blob?.type});
 
               // const file = new File([new Blob([this.croppedImage])], this.userPicture.name, {type: event.blob?.type});
-              const img = new Image();
-          
-              // إضافة معالج حدث للتحقق مما إذا تم تحميل الصورة بنجاح
-              img.onload = () => {
-                
-
-                this.AttachmentsFiles.push({ fileUpload: file, detailsImage: true });
-                // هنا يمكنك إضافة منطق إذا كانت الصورة تم تحميلها بنجاح
-              };
-              
-              // إضافة معالج حدث للتحقق مما إذا كان هناك خطأ في تحميل الصورة
-              img.onerror = () => {
-                
-                console.log(`Failed to load image from path: ${attachment.filePath}`);
-                // هنا يمكنك إضافة منطق إذا كانت هناك مشكلة في تحميل الصورة
-              };
-              
-              // محاولة تحميل الصورة من المسار المحدد
-              img.src = attachment.filePath;
+        
             
 
             }
@@ -463,14 +486,23 @@ export class UpdateCompanyComponent {
   }
   onRemoveCommercialReg(event: any) {
 
-    let indexFile = this.AttachmentsFiles.findIndex(item => item.fileUpload.lastModified === event.lastModified);
+    let indexFile = this.AttachmentsFiles.findIndex(item => item.fileUpload.name === event.name);
+    
     let indexFileAttachmentsNames = this.AttachmentsNames.findIndex(item => item === event.name);
-    this.AttachmentsNames
-    this.AttachmentsFiles.splice(indexFile, 1)
+    if(indexFile >=0) {
+      this.viewImagesIdCopy.splice(indexFile, 1);
+      this.AttachmentsFiles.splice(indexFile, 1);    
+      this.removeArrachementsName = true;
+
+    }
+
     this.AttachmentsFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
     
+
     if(indexFileAttachmentsNames >=0) {
-      this.AttachmentsNames.splice(indexFileAttachmentsNames, 1)
+      this.AttachmentsNames.splice(indexFileAttachmentsNames, 1);
+  this.removeArrachementsName = true;
+  
     }
   }
   async onFileChange(pFileList: any, stepIndex: number) {
@@ -488,10 +520,10 @@ export class UpdateCompanyComponent {
             if(fileSize?.size < (2 * 1024 * 1024)) {
               this.viewImage.push(pFileList.files[index]);
               
-    
+              
               this.AttachmentsFiles.push({fileUpload:pFileList.files[index], detailsImage: false});
               this.AttachmentsNames.push(pFileList.files[index].name);
-
+              console.log(this.AttachmentsFiles);
               this.errorUploadFileIdCopy = "";
             } else {
               this.errorUploadFileIdCopy = "The file size must be less than 2MB";
@@ -505,28 +537,33 @@ export class UpdateCompanyComponent {
           }
         }
         if(this.errorUploadFileIdCopy === "" && findIndexFileName.length < 2 && this.viewImage.length > 0) {
-          for (let index = 0; index < this.viewImage.length; index++) {
+          for (let index = 0; index < this.AttachmentsFiles.length; index++) {
             let filereaderTwo = new FileReader();
-            const fileSize = this.viewImage[index];
+            const fileSize = this.AttachmentsFiles[index]?.fileUpload;
             if (fileSize?.size > (2 * 1024 * 1024)) {
               this.errorUploadFileIdCopy = "The file size must be less than 2MB";
               return;
             } else {
               this.imageArray = [];
               this.errorUploadFileIdCopy = "";
-              var validExts = new Array(".xlsx", ".xls");
-              let fileExt = this.viewImage[index]?.name.substring(this.viewImage[index]?.name.lastIndexOf('.'));
-              await filereaderTwo.readAsDataURL(this.viewImage[index]);
+              var validExts = new Array(".xlsx", ".xls", ".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+              let fileExt = this.AttachmentsFiles[index]?.fileUpload?.name.substring(this.AttachmentsFiles[index]?.fileUpload?.name.lastIndexOf('.'));
+              await filereaderTwo.readAsDataURL(this.AttachmentsFiles[index]?.fileUpload);
               filereaderTwo.onload = () => {
-                if((filereaderTwo.result as string).includes("application/pdf")) {
+                
+                if(fileExt.toLowerCase().includes("pdf")) {
                   this.imageArray.push("assets/img/pdf.png");
-                } else if(validExts.indexOf(fileExt) >= 0) {
+                } else if(fileExt.toLowerCase().includes("xlsx") || fileExt.toLowerCase().includes("xls")) {
                   this.imageArray.push("assets/img/excel.png");
-                } else {
+                } else if(fileExt.toLowerCase().includes("docx") || fileExt.toLowerCase().includes("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
+                  this.imageArray.push("assets/img/word.png")
+                }  else {
                   this.imageArray.push(filereaderTwo.result);
                 }
+                this.viewImagesIdCopy = this.imageArray;
+
               }
-              this.viewImagesIdCopy = this.imageArray;
+              
               this.errorUploadFileIdCopyIsRequired = "";
             }
           }
@@ -551,14 +588,6 @@ export class UpdateCompanyComponent {
   submit() {
     if (this.FormGroup.valid && this.loading) {
       let formData = new FormData();
-      let formDataObject: any = {};
-      let filterIndustriesEdit = this.industries.filter((industry:any) => {
-        return industry.editIndustries === true
-      });
-      
-
-      
-
       let filterEditBranch = this.branches.filter((branch:any) => {
         return branch.editBranch === true
       });
@@ -571,7 +600,8 @@ export class UpdateCompanyComponent {
         (this.FormGroup?.value?.totalNumberOfEmployees && this.FormGroup?.value?.totalNumberOfEmployees != this.editBefore.totalNumberOfEmployees) ||
         this.FormGroup?.value?.HeadquarterLocationLatitude ||
         this.FormGroup?.value?.HeadquarterLocationLongitude ||
-        filterIndustriesEdit.length > 0 ||
+        this.industries.length > 0 ||
+        this.removeArrachementsName ||
         this.AttachmentsNames.length > 0 ||
         this.companyLogo ||
         filterEditBranch.length > 0
@@ -589,9 +619,7 @@ export class UpdateCompanyComponent {
           HeadquarterLocationLongitude:this.FormGroup?.value?.HeadquarterLocationLongitude ? this.FormGroup?.value?.HeadquarterLocationLongitude : null,
           AttachmentsNames:this.AttachmentsNames.length >0 ? this.AttachmentsNames : null,
           ImportDefaultData: this.FormGroup?.value?.ImportDefaultData,
-          Industries:filterIndustriesEdit.length > 0 ? filterIndustriesEdit.map((Industry:any) => {
-            return {id:Industry.id,name:Industry.name}
-          }) : null,
+          Industries:this.industries.length > 0 ? this.industries : null,
           Branches:this.branches.length > 0 ?this.branches.map((branch:any) => {
             return {
               Id:branch.id,

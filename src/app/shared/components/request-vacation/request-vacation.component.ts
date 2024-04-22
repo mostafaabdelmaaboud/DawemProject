@@ -148,22 +148,27 @@ export class RequestVacationComponent {
 
               if (data?.attachments.length) {
                 data?.attachments.forEach((attachment: any) => {
-                  var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg");
+                  var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg",".gif", ".jpg",".xlsx", ".xls", ".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
                   let fileExt = attachment.fileName.substring(attachment.fileName.lastIndexOf('.'));
                   if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
                     let file!:File;
                     if(fileExt?.toLowerCase().includes("xlsx") || fileExt?.toLowerCase().includes("xls")) {
-                       file = new File([attachment.filePath], `excel-file${validExts}`, {
+                       file = new File([attachment.filePath], attachment.fileName, {
                         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                       });
                       this.viewImagesIdCopy.push("assets/img/excel.png");
                     } else if(fileExt?.toLowerCase().includes("pdf")) {
-                       file = new File([attachment.filePath], `pdf-file${validExts}`, {
+                       file = new File([attachment.filePath], attachment.fileName, {
                         type: 'application/pdf',
                       });
                       this.viewImagesIdCopy.push("assets/img/pdf.png");
+                    } else if(fileExt.toLowerCase().includes("docx") || fileExt.toLowerCase().includes("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
+                      file = new File([attachment.filePath],attachment.fileName, {
+                        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                      });
+                      this.viewImagesIdCopy.push("assets/img/word.png");    
                     } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("jpg") || fileExt?.toLowerCase().includes("gif")) {
-                       file = new File([attachment.filePath],`img-file${validExts}`, {
+                       file = new File([attachment.filePath],attachment.fileName, {
                         type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
                       });
                       this.viewImagesIdCopy.push(attachment.filePath);
@@ -271,7 +276,11 @@ export class RequestVacationComponent {
   onRemoveCommercialReg(event: any) {
 
     let indexFile = this.AttachmentsFiles.findIndex(item => item.fileUpload.lastModified === event.lastModified);
-    this.AttachmentsFiles.splice(indexFile, 1)
+    if(indexFile >=0) {
+      this.AttachmentsFiles.splice(indexFile, 1);
+      this.viewImagesIdCopy.splice(indexFile, 1);
+      this.viewImage.splice(indexFile, 1);
+    }
     this.AttachmentsFiles.length === 0 ? this.requiredCommercialRegFiles = true : this.requiredCommercialRegFiles = false;
     if(this.requiredCommercialRegFiles) {
       this.addBranchGroupForm.get("idCopyFile")?.setValue("");
@@ -363,10 +372,12 @@ export class RequestVacationComponent {
               let fileExt = this.viewImage[index]?.name.substring(this.viewImage[index]?.name.lastIndexOf('.'));
               await filereaderTwo.readAsDataURL(this.viewImage[index]);
               filereaderTwo.onload = () => {
-                if((filereaderTwo.result as string).includes("application/pdf")) {
+                if(fileExt.toLowerCase().includes("pdf")) {
                   this.imageArray.push("assets/img/pdf.png");
-                } else if(validExts.indexOf(fileExt) >= 0) {
+                } else if(fileExt.toLowerCase().includes("xlsx") || fileExt.toLowerCase().includes("xls")) {
                   this.imageArray.push("assets/img/excel.png");
+                } else if(fileExt.toLowerCase().includes("docx") || fileExt.toLowerCase().includes("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
+                  this.imageArray.push("assets/img/word.png")
                 } else {
                   this.imageArray.push(filereaderTwo.result);
                 }

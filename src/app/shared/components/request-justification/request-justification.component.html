@@ -132,9 +132,10 @@
                     <img [src]="file.imageSrc" width="50" alt="">
 
                   </div>
-                  <div class="p-fileupload-filename">
+                  <div class="p-fileupload-filename" [title]="file.fileUpload.name">
                     <span class="d-block">name:</span>
-                    {{ file.fileUpload.name
+                    {{
+                    file.fileUpload.name.length > 69 ? (file.fileUpload.name | slice:0:70) + '......' : file.fileUpload.name
                     }}
                   </div>
                   <div>
