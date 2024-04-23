@@ -70,7 +70,7 @@ export class DialogSummonMissingLogsComponent {
       this.summonMissingLogsService.summonGetInfo({ summonLogId: this.id }).subscribe(data => {
         this.info = data;
         this.info.summonDate = moment(new Date(this.info.summonDate)).format("MMMM Do YYYY, h:mm:ss a");
-        this.info.doneDate = this.info.doneDate? moment(new Date(this.info.summonDate)).format("MM/DD/YYYY") : this.info.doneDate;
+        this.info.doneDate = this.info.doneDate? moment(new Date(this.info.doneDate)).format("MM/DD/YYYY") : this.info.doneDate;
         this.loading = false;
 
       })

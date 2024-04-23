@@ -50,10 +50,7 @@ export class LoginComponent {
       document.documentElement.setAttribute('lang', 'ar');
       this.translate.use("ar");
     } else {
-
-   
       this.selectedCountry = { name: 'arabic', code: 'AR' };
-
       if (this.currentLang == "ar") {
         document.documentElement.setAttribute('lang', 'ar');
         this.translate.use("ar");
@@ -62,7 +59,6 @@ export class LoginComponent {
           { name: 'انجليزي', code: 'US' }
         ];
         this.selectedCountry = { name: 'عربي', code: 'AR' };
-
       }
       else if (this.currentLang == "en") {
         this.selectedCountry = { name: 'english', code: 'US' };
@@ -85,9 +81,7 @@ export class LoginComponent {
       //     { name: 'english', code: 'US' }
       //   ];
       //   this.selectedCountry = { name: 'India', code: 'IN' };
-
       // }
-
     }
     this.isLoading = false;
     if ('Notification' in window && navigator.permissions) {

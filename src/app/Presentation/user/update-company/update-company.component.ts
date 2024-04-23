@@ -523,7 +523,6 @@ export class UpdateCompanyComponent {
               
               this.AttachmentsFiles.push({fileUpload:pFileList.files[index], detailsImage: false});
               this.AttachmentsNames.push(pFileList.files[index].name);
-              console.log(this.AttachmentsFiles);
               this.errorUploadFileIdCopy = "";
             } else {
               this.errorUploadFileIdCopy = "The file size must be less than 2MB";
@@ -723,7 +722,6 @@ export class UpdateCompanyComponent {
   }
 
   imageCropped(event: ImageCroppedEvent) {
-    console.log(event)
     this.croppedImage = event.base64;
     // const file = new File([new Blob([this.croppedImage])], this.userPicture.name, {type: event.blob?.type});
     const fileToReturn = this.base64ToFile(

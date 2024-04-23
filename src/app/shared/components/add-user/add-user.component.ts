@@ -203,7 +203,7 @@ export class AddUserComponent {
               // }
               
               if (data?.profileImagePath) {
-                var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg",".xlsx", ".xls", ".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+                var validExts = new Array(".png", ".jpeg",".gif", ".jpg");
                 let fileExt = data.profileImageName.substring(data.profileImageName.lastIndexOf('.'));
                 if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
                   let file!:File;

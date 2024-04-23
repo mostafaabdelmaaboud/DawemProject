@@ -69,7 +69,7 @@ export class DialogSummonFileComponent {
 
       this.summonsService.summonGetInfo({ summonId: this.id }).subscribe(data => {
         this.info = data;
-        this.info.LocalDateAndTime = moment(new Date(this.info.LocalDateAndTime)).format("MMMM Do YYYY, h:mm:ss a")
+        this.info.localDateAndTime = moment(new Date(this.info.localDateAndTime)).format("MMMM Do YYYY, h:mm:ss a")
 
         this.loading = false;
 

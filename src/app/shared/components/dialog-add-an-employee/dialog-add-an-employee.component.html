@@ -339,11 +339,11 @@
         </div>
       </div>
       <div class="section-workingDays mb-3">
-        <label class="mb-2 d-block f-s-16">{{data!['uploadFile']|translate}}</label>
+        <label class="mb-2 d-block f-s-16">ارفاق صوره</label>
         <div class="item uploadFiles">
           <!-- accept="image/*" -->
-          <p-fileUpload name="files[]" chooseIcon="pi pi-cloud-upload" accept="image/png, image/gif, image/jpeg, application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel,.docx, application/vnd.openxmlformats-officedocument.wordprocessingml.document" [customUpload]="true"
-            [chooseLabel]="data!['chooseLabel']|translate" (onSelect)="onFileChange($event, 2)" [showUploadButton]="false"
+          <p-fileUpload name="files[]" chooseIcon="pi pi-cloud-upload" accept="image/png, image/gif, image/jpeg, image/jpg" [customUpload]="true"
+            chooseLabel="اختار صورة ليتم رفعه" (onSelect)="onFileChange($event, 2)" [showUploadButton]="false"
             [showCancelButton]="false">
             <ng-template pTemplate="content">
 
@@ -377,7 +377,7 @@
               </ul>
             </ng-template>
           </p-fileUpload>
-          <span class="maximum-size">{{"employees.maximumFileSize"|translate}}</span>
+          <span class="maximum-size">الحد الأقصي لحجم الصورة 2 ميجابايت</span>
         </div>
                <!--Start Custom Validators-->
                <div class="container-alerts mt-s-16">
