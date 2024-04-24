@@ -107,7 +107,7 @@ export class PreSignUpComponent {
     } 
   }
   submit() {
-    this.router.navigate(["/signUp"], {queryParams:{CompanyVerificationCode:this.FormGroup.value.CompanyVerificationCode,EmployeeNumber:this.FormGroup.value.EmployeeNumber}});
+    // this.router.navigate(["/signUp"], {queryParams:{CompanyVerificationCode:this.FormGroup.value.CompanyVerificationCode,EmployeeNumber:this.FormGroup.value.EmployeeNumber}});
 
     if (this.FormGroup.valid && this.loading) {
       this.loading = false;

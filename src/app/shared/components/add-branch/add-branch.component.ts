@@ -272,14 +272,14 @@ export class AddBranchComponent {
   ngAfterViewInit() {
     this.autoComplete = new google.maps.places.Autocomplete(this.searchMapRef.nativeElement)
     this.autoComplete.addListener("place_changed", () => {
-      
+
       // const place = this.autoComplete?.getPlace();
       const place: any = this.autoComplete?.getPlace();
       if (place.geometry && place.geometry.location) {
         const latitude = place.geometry.location.lat();
         const longitude = place.geometry.location.lng();
-        this.getControl("latitude")?.setValue(latitude);
-        this.getControl("longitude")?.setValue(longitude);
+        this.getControl("Latitude")?.setValue(latitude);
+        this.getControl("Longitude")?.setValue(longitude);
 
         this.latitude = latitude;
         this.longitude = longitude;

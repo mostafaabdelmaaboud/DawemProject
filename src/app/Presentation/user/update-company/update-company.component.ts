@@ -178,6 +178,7 @@ export class UpdateCompanyComponent {
     })
   }
   onMarkerClickEvent(mapLabel: any, mapIndx: number) {
+    
   }
   getInformation() {
     let countries = this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
@@ -379,6 +380,7 @@ export class UpdateCompanyComponent {
     })
   }
   onMapClickEvent($event: any) {
+    
     this.latitude = $event.coords.lat;
     this.longitude = $event.coords.lng;
     
@@ -392,6 +394,7 @@ export class UpdateCompanyComponent {
     }]
   }
   markerDragEnd(marker: any, $event: any) {
+    
     this.getControl("HeadquarterLocationLatitude")?.setValue(marker.latitude);
     this.getControl("HeadquarterLocationLongitude")?.setValue(marker.longitude);
     this.latitude = marker.latitude;
@@ -407,13 +410,14 @@ export class UpdateCompanyComponent {
     this.autoComplete = new google.maps.places.Autocomplete(this.searchMapRef.nativeElement)
     this.autoComplete.addListener("place_changed", () => {
       
+      
       // const place = this.autoComplete?.getPlace();
       const place: any = this.autoComplete?.getPlace();
       if (place.geometry && place.geometry.location) {
         const latitude = place.geometry.location.lat();
         const longitude = place.geometry.location.lng();
-        this.getControl("latitude")?.setValue(latitude);
-        this.getControl("longitude")?.setValue(longitude);
+        this.getControl("HeadquarterLocationLatitude")?.setValue(latitude);
+        this.getControl("HeadquarterLocationLongitude")?.setValue(longitude);
 
         this.latitude = latitude;
         this.longitude = longitude;
