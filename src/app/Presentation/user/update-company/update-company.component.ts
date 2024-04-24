@@ -220,18 +220,32 @@ export class UpdateCompanyComponent {
           this.FormGroup.get("preferredLanguageId")?.setValue(this.preferredLanguages[findIndexPreferredLanguages]);
           this.editBefore.preferredLanguageId = this.preferredLanguages[findIndexPreferredLanguages];
         }
+        
         if(this.editBefore?.headquarterLocationLatitude != null &&this.editBefore?.headquarterLocationLongtude  != null) {
+          this.getControl("HeadquarterLocationLatitude")?.setValue(this.editBefore?.headquarterLocationLatitude);
+          this.getControl("HeadquarterLocationLongitude")?.setValue(this.editBefore?.headquarterLocationLongtude);
+  
+          this.latitude = this.editBefore?.headquarterLocationLatitude;
+          this.longitude = this.editBefore?.headquarterLocationLongtude;
           this.markers = [{
             latitude: this.editBefore?.headquarterLocationLatitude,
             longitude: this.editBefore?.headquarterLocationLongtude,
             label: 'Point A',
             draggable: true
-          }]
+          }];
+          // this.markers = [{
+          //   latitude: this.editBefore?.headquarterLocationLatitude,
+          //   longitude: this.editBefore?.headquarterLocationLongtude,
+          //   label: 'Point A',
+          //   draggable: true
+          // }]
         }
    
         this.FormGroup.get("identityCode")?.setValue(this.editBefore?.identityCode);
         this.FormGroup.get("isActive")?.setValue(this.editBefore?.isActive);
-        this.industries =this.editBefore?.industries;
+        this.industries =this.editBefore?.industries.map(industry => {
+          return {...industry , editIndustries:false}
+        });
         this.branches =  this.editBefore?.branches.map((branch:any) => {
           return{...branch, uniqId:`${branch.id}editBranch`, editBranch:false}
         });  
@@ -444,6 +458,9 @@ export class UpdateCompanyComponent {
   }
   removeIndustry(index) {
     this.industries.splice(index, 1);
+    this.industries = this.industries.map(industry => {
+     return  {...industry, editIndustries:true}
+    })
   }
   lastSearchQuery = "";
   searchDropdown(data: any, type: string) {
@@ -594,6 +611,10 @@ export class UpdateCompanyComponent {
       let filterEditBranch = this.branches.filter((branch:any) => {
         return branch.editBranch === true
       });
+      let filterEditIndustries = this.branches.filter((Industry:any) => {
+        return Industry.editIndustries === true
+      });
+      
       if(
         (this.FormGroup?.value?.preferredLanguageId?.id && this.editBefore.preferredLanguageId?.id != this.FormGroup?.value?.preferredLanguageId?.id) ||
         (this.FormGroup?.value?.website && this.FormGroup?.value?.website != this.editBefore.webSite) ||
@@ -601,9 +622,9 @@ export class UpdateCompanyComponent {
         (this.FormGroup?.value?.headquarterPostalCode && this.FormGroup?.value?.headquarterPostalCode != this.editBefore.headquarterPostalCode) ||
         (this.FormGroup?.value?.email && this.FormGroup?.value?.email != this.editBefore.email) ||
         (this.FormGroup?.value?.totalNumberOfEmployees && this.FormGroup?.value?.totalNumberOfEmployees != this.editBefore.totalNumberOfEmployees) ||
-        this.FormGroup?.value?.HeadquarterLocationLatitude ||
-        this.FormGroup?.value?.HeadquarterLocationLongitude ||
-        this.industries.length > 0 ||
+        this.FormGroup?.value?.HeadquarterLocationLatitude != this.editBefore.headquarterLocationLatitude ||
+        this.FormGroup?.value?.HeadquarterLocationLongitude != this.editBefore.headquarterLocationLongtude ||
+        filterEditIndustries.length > 0 ||
         this.removeArrachementsName ||
         this.AttachmentsNames.length > 0 ||
         this.companyLogo ||

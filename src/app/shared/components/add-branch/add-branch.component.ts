@@ -314,6 +314,9 @@ export class AddBranchComponent {
     
       let findIndexBranch = this.branches.findIndex((branch:any) =>branch.id === data.id)
     this.branches.splice(findIndexBranch, 1);
+    this.branches = this.branches.map(branch => {
+      return {...branch, editBranch:true}
+    })
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.close();
     })

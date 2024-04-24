@@ -199,15 +199,18 @@ export class LoginComponent {
             let parseJson = JSON.parse(formatObjectPermissions);
             if (parseJson.isAdmin || parseJson.availablePermissions.length > 0) {
               this.authService.setToken(res.data.token);
-              this.toast.success(res.message,"", {timeOut: 1000});
-              this.router.navigate(["/user/dashboard"]);
-              this.isLoading = false;
+              setTimeout(() => {
+                this.isLoading = false;
+                this.loading = true;
+                this.toast.success(res.message,"", {timeOut: 2000});
+                this.router.navigate(["/user/dashboard"]);
+              }, 1000);
             } else {
               this.toast.error("you don't have permissions");
             this.isLoading = false;
+            this.loading = true;
             }
             // this.isLoading = false;
-            this.loading = true;
           },
           error: err => {
             this.toast.error(err.error.message);

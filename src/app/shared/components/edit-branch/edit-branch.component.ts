@@ -241,7 +241,8 @@ export class EditBranchComponent {
       this.addBranchGroupForm.get("PostalCode")?.setValue(this.objectBranch?.postalCode);
       this.formatObject.id = this.objectBranch?.id;
       this.formatObject.uniqId = this.objectBranch?.uniqId;
-   
+      this.latitude =this.objectBranch?.latitude;
+      this.longitude = this.objectBranch?.longitude;
       this.markers = [{
         latitude: this.objectBranch?.latitude,
         longitude: this.objectBranch?.longitude,
