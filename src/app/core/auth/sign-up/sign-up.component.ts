@@ -1,7 +1,7 @@
 import { FormBuilder, FormGroup, Validators, FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Component, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../services/auth-service.service';
@@ -20,18 +20,11 @@ export class SignUpComponent {
   private dialog = inject(MatDialog);
 
   FormGroup: FormGroup = this.fb.group({
-    name: ["", Validators.required],
-    companyName: ["", Validators.required],
-    companyCountryId: ["", Validators.required],
-    companyAddress: ["", Validators.required],
-    companyEmail: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
+    CompanyVerificationCode: ["", Validators.required],
+    EmployeeNumber: ["", Validators.required],
+    OTP: ["", Validators.required],
     password: ["", [Validators.required, Validators.minLength(5)]],
     confirmPassword: ["", [Validators.required, Validators.minLength(5), , this.passwordMatchValidator()]],
-    numberOfEmployees: ["", Validators.required],
-    userEmail: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
-    userMobileNumber: ["", [Validators.required]],
-    IsTrial: [false],
-    subscriptionDurationInMonths: ["", [Validators.required]],
     agreed: [, Validators.required],
 
   });
@@ -45,13 +38,24 @@ export class SignUpComponent {
   general: any[] = [];
   countriesPhone: any[] = [];
   isCurrentCountry;
-  private router = inject(Router)
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  CompanyVerificationCode:any;
+  EmployeeNumber:any;
   selectedCountry: any = { name: 'عربي', code: 'AR' };
+
   constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService) {
   }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+    if (this.route.snapshot.queryParamMap.get("CompanyVerificationCode") && this.route.snapshot.queryParamMap.get("EmployeeNumber")) {
+      this.CompanyVerificationCode = this.route.snapshot.queryParamMap.get("CompanyVerificationCode") as string;
+      this.EmployeeNumber = this.route.snapshot.queryParamMap.get("EmployeeNumber") as string;
+      this.FormGroup.get("CompanyVerificationCode")?.setValue(this.CompanyVerificationCode);
+      this.FormGroup.get("EmployeeNumber")?.setValue(this.EmployeeNumber);
+
+    }
     this.countries = [
       { name: 'عربي', code: 'AR' },
       { name: 'انجليزي', code: 'US' }
@@ -255,62 +259,36 @@ export class SignUpComponent {
     if (this.FormGroup.valid && this.loading && this.FormGroup.value.agreed) {
       this.loading = false;
       // this.isLoading = true;
-
       let formatObject:any = {
-        name: this.FormGroup.value.name,
-        companyName: this.FormGroup.value.companyName,
-        companyCountryId: this.FormGroup.value.companyCountryId.id,
-        companyAddress: this.FormGroup.value.companyAddress,
-        companyEmail: this.FormGroup.value.companyEmail,
+        CompanyVerificationCode: this.FormGroup.value.CompanyVerificationCode,
+        EmployeeNumber: this.FormGroup.value.EmployeeNumber,
+        OTP: this.FormGroup.value.OTP,
         password: this.FormGroup.value.password,
-        confirmPassword: this.FormGroup.value.confirmPassword,
-        userEmail: this.FormGroup.value.userEmail,
-        userMobileCountryId:this.isCurrentCountry.id,
-        userMobileNumber:this.FormGroup.value.userMobileNumber,
-        numberOfEmployees:this.FormGroup.value.numberOfEmployees,
-        agreed: this.FormGroup.value.agreed ? this.FormGroup.value.agreed[0] : false,
+        confirmPassword: this.FormGroup.value.confirmPassword
       };
-      if(this.subscription) {
-        formatObject.subscriptionDurationInMonths = this.FormGroup.value.subscriptionDurationInMonths;
-      } else {
-        formatObject.subscriptionDurationInMonths = null;
-      }
-      
       this.authService.signup(formatObject).subscribe(
         {
           next: (res: any) => {
             this.toast.success(res.message);
-
             // this.authService.setToken(res.data.token);
             // this.isLoading = false;
-
             this.router.navigate(["/login"]);
-
             // this.loading = true;
-
           },
           error: err => {
             this.toast.error(err.error.message);
             // this.isLoading = false;
-
             this.loading = true;
           }
         }
       )
     } else {
-      this.FormGroup.get("name")?.markAsDirty();
-      this.FormGroup.get("companyName")?.markAsDirty();
-      this.FormGroup.get("companyCountryId")?.markAsDirty();
-      this.FormGroup.get("companyAddress")?.markAsDirty();
-      this.FormGroup.get("companyEmail")?.markAsDirty();
+
+      this.FormGroup.get("CompanyVerificationCode")?.markAsDirty();
+      this.FormGroup.get("EmployeeNumber")?.markAsDirty();
+      this.FormGroup.get("OTP")?.markAsDirty();
       this.FormGroup.get("password")?.markAsDirty();
-      this.FormGroup.get("numberOfEmployees")?.markAsDirty();
-      if(this.subscription) {
-        this.FormGroup.get("subscriptionDurationInMonths")?.markAsDirty();
-      }
       this.FormGroup.get("confirmPassword")?.markAsDirty();
-      this.FormGroup.get("userEmail")?.markAsDirty();
-      this.FormGroup.get("userMobileNumber")?.markAsDirty();
       this.FormGroup.get("agreed")?.markAsDirty();
       if(!this.FormGroup.value.agreed) {
         this.toast.error("برجاء اختيار الشروط والاحكام", '', {
@@ -318,7 +296,6 @@ export class SignUpComponent {
           onActivateTick: true
         });
       }
-
     }
   }
   requestTermsAndConditions() {

@@ -76,7 +76,11 @@ export class AuthService {
 
   }
   signup(data: any) {
-    return this.http.post(environment.baseUrl + "Authentication/RequestResetPassword", data)
+    return this.http.post(environment.baseUrl + "User/SignUp", data)
+
+  }
+  preSignup(data: any) {
+    return this.http.post(environment.baseUrl + "EmployeeOTP/PreSignUp", data)
 
   }
   ResetPassword(data: any) {

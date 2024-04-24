@@ -12,10 +12,7 @@
   <div class="body-dialog p-15 f-s-16">
     <form [formGroup]="addBranchGroupForm">
       <div class="section1 d-flex justify-content-between">
-        <div class="col">
-          <label class="title">{{data!['setAsNecessary']|translate}}</label>
-          <p-inputSwitch formControlName="IsActive"></p-inputSwitch>
-        </div>
+    
 
 
       </div>
@@ -41,91 +38,6 @@
           <div class="alert alert-danger"
             *ngIf="getControl('EmployeeId')?.hasError('required') && getControl('EmployeeId')?.dirty">
             {{data!['EmployeeIdValidation']|translate}}
-          </div>
-        </div>
-        <!--End Custom Validators-->
-      </div>
-      <div class="sectionFive mb-3">
-        <label for="" class="label-input mb-2" [innerHTML]="data!['titleName']|translate"></label>
-        <div class="content-password">
-          <input type="text" pInputText formControlName="Name" [placeholder]="data!['placeholdeName']|translate"
-            class="w-100" />
-        </div>
-        <!--Start Custom Validators-->
-        <div class="container-alerts mt-2" *ngIf="getControl('Name')?.errors">
-          <div class="alert alert-danger" *ngIf="getControl('Name')?.hasError('required') && getControl('Name')?.dirty">
-            {{data!['nameValidation']|translate}}
-
-          </div>
-        </div>
-        <!--End Custom Validators-->
-      </div>
- 
-      <div class="sectionFive mb-3">
-        <label for="" class="label-input mb-2">{{"users.phoneNumber"|translate}} <span class="color-red">*</span></label>
-        <div class="content-input position-relative">
-          <div class="content-password position-relative content-phone-number">
-            <span class="dropdown-code">
-              <!-- {{code}} -->
-              <p-dropdown appendTo="body" [options]="countriesPhone" [(ngModel)]="isCurrentCountry"  [ngModelOptions]="{standalone: true}"
-     optionLabel="name" (onChange)="selectCountry()">
-              <ng-template let-option pTemplate="selectedItem">
-                <div class="d-flex align-items-center gap-2">
-                  <span class="image-country-mobilePhone select-country-image">
-                    <img [src]="option.flagPath" width="25" height="25" [alt]="option.countryISOCode">
-                  </span>
-                    <div>{{ option.dial }}+</div>
-                </div>
-            </ng-template>
-              <ng-template pTemplate="header">
-                <span class="p-input-icon-left input-search-dropdown">
-  
-                  <i class="pi pi-search"  (click)="searchDropdown(searchcompanyCountryId.value, 'companyCountryId')"></i>
-                  <input type="text" placeholder="بحث" (keyup.enter)="searchDropdown(searchcompanyCountryId.value, 'companyCountryId')" pInputText #searchcompanyCountryId />
-                </span>
-              </ng-template>
-              <ng-template let-option pTemplate="item">
-                <span class="image-country-mobilePhone item-c-mobilePhone">
-                  <img [src]="option.flagPath" width="30" height="30" [alt]="option.countryISOCode">
-                </span>
-                <span class="item-text">{{ option.name }}</span>
-              </ng-template>
-            </p-dropdown>
-  
-            </span>
-            <input type="text" pInputText formControlName="MobileNumber" [placeholder]="'users.phoneNumber'|translate" class="w-100" />
-
-          </div>
-        
-          <div class="container-alerts mt-2" *ngIf="getControl('MobileNumber')?.errors">
-            <div class="alert alert-danger"
-              *ngIf="getControl('MobileNumber')?.hasError('required') && getControl('MobileNumber')?.dirty">
-              {{"employees.phoneNumberRequired"|translate}}
-            </div>
-            <div class="alert alert-danger"
-            *ngIf="getControl('MobileNumber')?.hasError('pattern') && getControl('MobileNumber')?.dirty">
-            {{"employees.phoneNumberIsIncorrect"|translate}}
-          </div>
-          </div>
-        </div>
-
-
-      </div>
-      <div class="sectionFive mb-3">
-        <label for="" class="label-input mb-2" [innerHTML]="data!['titleEmail']|translate"></label>
-        <div class="content-password">
-          <input type="email" pInputText formControlName="Email" [placeholder]="data!['placeholdeEmail']|translate"
-            class="w-100" />
-        </div>
-        <!--Start Custom Validators-->
-        <div class="container-alerts mt-2" *ngIf="getControl('Email')?.errors">
-          <div class="alert alert-danger"
-            *ngIf="getControl('Email')?.hasError('required') && getControl('Email')?.dirty">
-            {{data!['EmailValidation']|translate}}
-          </div>
-          <div class="alert alert-danger"
-            *ngIf="getControl('Email')?.hasError('pattern') && getControl('Email')?.dirty">
-            {{"employees.invalidEmail"|translate}}
           </div>
         </div>
         <!--End Custom Validators-->
@@ -186,7 +98,6 @@
           </div>
         </div>
       </ng-container>
-     
       <div class="sectionTwo mb-3">
         <label class="title" [innerHTML]="data!['Roles']|translate"></label>
         <div class="content-password">
@@ -215,68 +126,7 @@
         </div>
         <!--End Custom Validators-->
       </div>
-      <div class="section-workingDays mb-3">
-        <label class="mb-2 d-block f-s-16">ارفاق صوره</label>
-        <div class="item uploadFiles">
-          <!-- accept="image/*" -->
-          <p-fileUpload name="uploadedCommercialRegFiles[]" chooseIcon="pi pi-cloud-upload" [customUpload]="true"
-          chooseLabel="اختار صورة ليتم رفعه" accept="image/png, image/gif, image/jpeg, image/jpg" (onSelect)="onFileChange($event, 2)" [showUploadButton]="false"
-            [showCancelButton]="false">
-            <ng-template pTemplate="content">
 
-              <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length">
-                <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
-                  <div>
-                    <img [src]="viewImagesIdCopy[i]" width="50" height="100" alt="">
-
-                  </div>
-                  <div class="p-fileupload-filename" [title]="file.fileUpload.name">
-                    <span class="d-block">{{"employees.name"|translate}}:</span>
-                    {{
-                    file.fileUpload.name.length > 69 ? (file.fileUpload.name | slice:0:70) + '......' : file.fileUpload.name
-                    }}
-                  </div>
-                  <div>
-                    <span class="d-block">{{"employees.size"|translate}}:</span>
-                    {{
-                    file.fileUpload.size }}
-                  </div>
-                  <div>
-                    <button class="p-element p-button p-component p-button-icon-only"
-                      (click)="onRemoveCommercialReg(file.fileUpload)">
-                      <span class="p-button-icon pi pi-times" aria-hidden="true">
-
-                      </span>
-                    </button>
-
-                  </div>
-                </li>
-              </ul>
-            </ng-template>
-          </p-fileUpload>
-          <span class="maximum-size">الحد الأقصي لحجم الصورة 2 ميجابايت</span>
-         <!--Start Custom Validators-->
-         <div class="container-alerts mt-s-16">
-          <div class="alert alert-danger mb-3" *ngIf="errorUploadFileIdCopy">
-              {{errorUploadFileIdCopy}}
-          </div>
-          <div class="alert alert-danger mb-3"
-              *ngIf="errorUploadFileIdCopyIsRequired && getControl('idCopyFile')?.dirty">
-              {{errorUploadFileIdCopyIsRequired}}
-          </div>
-      
-      </div>
-      <!--End Custom Validators-->
-        </div>
-        <!--
-        <div class="container-alerts mb-2" *ngIf="uploadedCommercialRegFiles.length<= 0 && requiredCommercialRegFiles">
-          <div class="alert alert-danger">
-            مطلوب تحميل الملف
-          </div>
-
-        </div> -->
-
-      </div>
       <div class="field-checkbox mb-1">
         <p-checkbox name="category" formControlName="IsAdmin" [value]="true" [binary]="true"
           inputId="IsAdmin"></p-checkbox>

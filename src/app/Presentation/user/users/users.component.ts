@@ -473,35 +473,24 @@ export class UsersComponent {
     dialogRefAddCurrency.componentInstance.editUser = false;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
 
-      let formData = new FormData();
-      formData.append("CreateUserModelString", JSON.stringify({
-        IsActive: result.IsActive,
-        Name: result.Name,
-        EmployeeId: result.EmployeeId.key,
-        Email: result.Email,
-        MobileNumber: result.MobileNumber,
-        mobileCountryId:dialogRefAddCurrency.componentInstance.isCurrentCountry.id,
-        Password: result.Password,
-        ConfirmPassword: result.ConfirmPassword,
-        Responsibilities: result.Roles.map((role: any) => role.key),
-        IsAdmin: Array.isArray(result.IsAdmin) ? result.IsAdmin[0] : result.IsAdmin
-      }));
+      let formDataObject:any = {};
+      formDataObject = {
+        employeeId: result.EmployeeId.key,
+        password: result.Password,
+        confirmPassword: result.ConfirmPassword,
+        responsibilities: result.Roles.map((role: any) => role.key),
+        isAdmin: Array.isArray(result.IsAdmin) ? result.IsAdmin[0] : result.IsAdmin
+      }
       // if (result?.zoneIds?.length > 0) {
       //   result?.zoneIds?.forEach((direct: any) => {
       //     formData.zoneIds.push(direct.key);
       //   });
       // }
-      result.files.forEach((file: any) => {
-        if (file.detailsImage === false) {
-          formData.append("ProfileImageFile", file.fileUpload, file.fileUpload.name);
-        } else {
-          formData.append("ProfileImageName", file.fileUpload.name);
-        }
-      });
+
       dialogRefAddCurrency.componentInstance.submitted = false;
       dialogRefAddCurrency.componentInstance.loading = true;
 
-      this.usersService.createUser(formData).subscribe(
+      this.usersService.createUser(formDataObject).subscribe(
         {
           next: (data: any) => {
             dialogRefAddCurrency.componentInstance.submitted = true;
@@ -591,31 +580,18 @@ export class UsersComponent {
     dialogRefAddCurrency.componentInstance.id = data.id;
     // dialogRefAddCurrency.componentInstance.list = this.categories;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData = new FormData();
-      formData.append("UpdateUserModelString", JSON.stringify({
+
+      let formDataObject:any = {};
+      formDataObject = {
         id: data.id,
-        IsActive: result.IsActive,
-        Name: result.Name,
-        EmployeeId: result.EmployeeId.key,
-        Email: result.Email,
-        MobileNumber: result.MobileNumber,
-        mobileCountryId:dialogRefAddCurrency.componentInstance.isCurrentCountry.id,
-        Password: result.Password,
-        ConfirmPassword: result.ConfirmPassword,
-        Responsibilities: result.Roles.map((role: any) => role.key),
-        IsAdmin: Array.isArray(result.IsAdmin) ? result.IsAdmin[0] : result.IsAdmin
-      }));
-      result.files.forEach((file: any) => {
-        if (file.detailsImage === false) {
-          formData.append("ProfileImageFile", file.fileUpload, file.fileUpload.name);
-        } else {
-          formData.append("ProfileImageName", file.fileUpload.name);
-        }
-      });
+        employeeId: result.EmployeeId.key,
+        responsibilities: result.Roles.map((role: any) => role.key),
+        isAdmin: Array.isArray(result.IsAdmin) ? result.IsAdmin[0] : result.IsAdmin
+      }
       dialogRefAddCurrency.componentInstance.submitted = false;
       dialogRefAddCurrency.componentInstance.loading = true;
 
-      this.usersService.updateUser(formData).subscribe(
+      this.usersService.updateUser(formDataObject).subscribe(
         {
           next: (data: any) => {
             dialogRefAddCurrency.componentInstance.submitted = true;
