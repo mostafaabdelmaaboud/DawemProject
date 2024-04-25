@@ -5,6 +5,7 @@ import { SummonMissingLogsRoutingModule } from './summon-missing-logs-routing.mo
 import { SummonMissingLogsComponent } from './summon-missing-logs.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { MatRadioModule } from '@angular/material/radio';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     SummonMissingLogsRoutingModule,
     MatDialogModule,
+    MatRadioModule,
     SharedModule
   ]
 })

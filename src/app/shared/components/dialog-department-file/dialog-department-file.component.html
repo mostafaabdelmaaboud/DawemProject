@@ -73,18 +73,61 @@
           </ng-container>
         </div>
       </div>
-      <div class="sectionTwo mb-3 line-bellow">
+      <!-- <div class="sectionTwo mb-3 line-bellow">
         <label class="title">{{"department.theDifference"|translate}}</label>
         <div class="content-password">
-          <ng-container *ngIf="info?.timeGap">
-            {{info?.timeGap}}
+          <ng-container *ngIf="info?.workingHours">
+            {{info?.workingHours}}
           </ng-container>
-          <ng-container *ngIf="!info?.timeGap">
+          <ng-container *ngIf="!info?.workingHours">
+            {{"department.nothing"|translate}}
+          </ng-container>
+        </div>
+      </div> -->
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">التأخير</label>
+        <div class="content-password">
+          <ng-container *ngIf="info?.lateArrivals">
+            {{info?.lateArrivals}}
+          </ng-container>
+          <ng-container *ngIf="!info?.lateArrivals">
             {{"department.nothing"|translate}}
           </ng-container>
         </div>
       </div>
- 
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">الحضور مبكرا</label>
+        <div class="content-password">
+          <ng-container *ngIf="info?.earlyDepartures">
+            {{info?.earlyDepartures}}
+          </ng-container>
+          <ng-container *ngIf="!info?.earlyDepartures">
+            {{"department.nothing"|translate}}
+          </ng-container>
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">ساعات العمل</label>
+        <div class="content-password">
+          <ng-container *ngIf="info?.workingHours">
+            {{info?.workingHours}}
+          </ng-container>
+          <ng-container *ngIf="!info?.workingHours">
+            {{"department.nothing"|translate}}
+          </ng-container>
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">الوقت الإضافي</label>
+        <div class="content-password">
+          <ng-container *ngIf="info?.overTime">
+            {{info?.overTime}}
+          </ng-container>
+          <ng-container *ngIf="!info?.overTime">
+            {{"department.nothing"|translate}}
+          </ng-container>
+        </div>
+      </div>
       <div class="sectionTwo mb-3 line-bellow">
         <label class="title">{{"department.fingerprint"|translate}}</label>
         <ng-container *ngFor="let finger of info?.fingerprints">

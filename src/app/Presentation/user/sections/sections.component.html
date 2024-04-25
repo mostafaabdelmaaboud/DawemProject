@@ -126,12 +126,12 @@
               <input pInputText type="text" #search (input)="dt1.filterGlobal(search.value, 'contains')"
                 placeholder="Search..." />
             </span> -->
-            <button (click)="exportDraft()" class="btn btn-outline-primary action-button-t d-flex align-items-center">
+            <button *ngIf="showActions({actionCode:0})" (click)="exportDraft()" class="btn btn-outline-primary action-button-t d-flex align-items-center">
               <i class="pi pi-download"></i>
   
               <span>تحميل ملف الاقسام</span>
             </button>
-            <button (click)="CreateImportDataFromExcel()" class="btn btn-outline-primary action-button-t d-flex align-items-center">
+            <button *ngIf="showActions({actionCode:0})" (click)="CreateImportDataFromExcel()" class="btn btn-outline-primary action-button-t d-flex align-items-center">
               <i class="pi pi-upload"></i>
   
               <span>رفع ملف الاقسام</span>

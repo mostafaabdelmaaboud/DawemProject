@@ -155,20 +155,45 @@
                 </header>
                 <form [formGroup]="filterForm" class="formFilteration">
                   <div class="sectionFive mb-3">
-                    <label for="" class="label-input mb-2">رقم الطلب</label>
-                    <div class="content-password">
-                      <input type="number" formControlName="code" pInputText placeholder="رقم الطلب" class="w-100" />
-                    </div>
-  
-                  </div>
-                  <div class="sectionFive mb-3">
                     <label for="" class="label-input mb-2">بحث</label>
                     <div class="content-password">
                       <input type="text" formControlName="FreeText" pInputText placeholder="بحث" class="w-100" />
                     </div>
   
                   </div>
-                  
+                  <div class="sectionFive mb-3">
+                    <label for="" class="label-input mb-2">كود الإستدعاء</label>
+                    <div class="content-password">
+                      <input type="number" formControlName="SummonCode" pInputText placeholder="كود الإستدعاء" class="w-100" />
+                    </div>
+                  </div>
+                  <div class="sectionFive mb-3">
+                    <label for="" class="label-input mb-2">الرقم الوظيفي للموظف</label>
+                    <div class="content-password">
+                      <input type="number" formControlName="EmployeeNumber" pInputText placeholder="الرقم الوظيفي للموظف" class="w-100" />
+                    </div>
+                  </div>
+                  <div class="sectionThree mb-3">
+                    <label class="title label-input mb-2">تاريخ الإستدعاء</label>
+                    <div class="content-password">
+                      <div class="content-pCalendar-default" dir="ltr">
+                        <p-calendar formControlName="SummonDate" appendTo="body"
+                          placeholder="اختيار التاريخ" [showIcon]="true"></p-calendar>
+                      </div>
+                    </div>
+            
+                  </div>
+                  <div class="section-radios mb-3">
+                    <label class="title label-input mb-2">حالة القيام بالإستدعاء </label>
+            
+                    <div class="container-radio-button">
+                      <mat-radio-group aria-label="Select an option" color="primary" formControlName="SummonDoneStatus">
+                        <mat-radio-button value="0">قام بالإستدعاء
+                        </mat-radio-button>
+                        <mat-radio-button value="1"> لم يقم بالإستدعاء</mat-radio-button>
+                      </mat-radio-group>
+                    </div>
+                  </div>
               
   
                

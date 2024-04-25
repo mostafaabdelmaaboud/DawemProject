@@ -322,24 +322,31 @@ export class AddUserComponent {
 
         }
         break;
-      case 'EmployeeId':
+      case 'Roles':
         if (data || data === "") {
 
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
-            this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+            this.usersService.getRolesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listEmployees = [];
+                this.listRoles = [];
                 this.lastSearchQuery = "";
 
                 res?.data?.forEach((jobTitle: any) => {
-                  this.listEmployees.push({ name: jobTitle.name, key: jobTitle.id })
+                  this.listRoles.push({ name: jobTitle.name, key: jobTitle.id })
                 });
               });
           }
 
         }
+        // let rolesDropDown = this.usersService.getRolesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+        // this.listRoles = [];
+        // this.listEmployees = [];
+  
+        // data.rolesDropDown?.data?.forEach((jobTitle: any) => {
+        //   this.listRoles.push({ name: jobTitle.name, key: jobTitle.id })
+        // });
         break;
       default:
         break;

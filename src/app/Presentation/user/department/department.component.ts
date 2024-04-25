@@ -66,7 +66,7 @@ export class DepartmentComponent {
       field: "status"
     },
     {
-      name: "الفرق",
+      name: "ساعات العمل",
       field: "timeGap"
     },
     {
@@ -126,7 +126,6 @@ export class DepartmentComponent {
     private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
     this.mobileQuery = media.matchMedia('(max-width: 520px)');
-
     this._mobileQueryListener = () => {
       if (this.mobileQuery.matches) {
         this.opened = true;
@@ -135,20 +134,14 @@ export class DepartmentComponent {
       } else {
         this.opened = false;
         this.department = this.department;
-
         changeDetectorRef.detectChanges();
-
       }
-
-
-
     };
     this.mobileQuery.addListener(this._mobileQueryListener);
     translate.addLangs(['ar', 'en']);
     translate.setDefaultLang('ar');
     const browserLang: any = translate.getBrowserLang();
     let lang = browserLang.match(/ar|en/) ? browserLang : 'ar';
-
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
       this.date = new Date();
@@ -199,7 +192,7 @@ export class DepartmentComponent {
           field: "status"
         },
         {
-          name: data.theDifference,
+          name: "ساعات العمل",
           field: "timeGap"
         },
         {
@@ -236,7 +229,7 @@ export class DepartmentComponent {
             field: "status"
           },
           {
-            name: data.theDifference,
+            name: "ساعات العمل",
             field: "timeGap"
           },
           {
@@ -286,7 +279,7 @@ export class DepartmentComponent {
             audience: attendacne.checkInTime.replaceAll(' ', '') ? attendacne.checkInTime : "لا يوجد",
             dismissing: attendacne.checkOutTime.replaceAll(' ', '') ? attendacne.checkOutTime : "لا يوجد",
             status: attendacne.status,
-            timeGap: attendacne.timeGap
+            timeGap: attendacne.workingHours
           })
         });
   
@@ -409,7 +402,7 @@ export class DepartmentComponent {
           audience: attendacne.checkInTime.replaceAll(' ', '') ? attendacne.checkInTime : "لا يوجد",
           dismissing: attendacne.checkOutTime.replaceAll(' ', '') ? attendacne.checkOutTime : "لا يوجد",
           status: attendacne.status,
-          timeGap: attendacne.timeGap
+          timeGap: attendacne.workingHours
         })
       });
 

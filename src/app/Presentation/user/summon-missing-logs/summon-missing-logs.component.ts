@@ -124,7 +124,10 @@ export class SummonMissingLogsComponent {
     }
     this.filterForm = this.fb.group({
       FreeText: [""],
-      code: [""],
+      SummonCode: [""],
+      EmployeeNumber:[""],
+      SummonDate:[""],
+      SummonDoneStatus:["1"]
 
     });
     this.categories.push({ name: "adasd", key: "adsas" });
@@ -296,14 +299,31 @@ export class SummonMissingLogsComponent {
     )
   }
   filter() {
+    // Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
+    //   if (typeof value  === 'string') {
+    //     if(value != "") {
+    //       this.filteration[key] = value.trim();
+    //     }
+    //   } else {
+    //     if(value >=0) {
+    //       this.filteration[key] = value;
+    //     }
+    //   }
+    // });
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
-      if (typeof value  === 'string') {
-        if(value != "") {
-          this.filteration[key] = value.trim();
+     if (key === "SummonDate") {
+        if (value != "") {
+          this.filteration[key] = moment(value).format("MM-DD-YYYY")
         }
       } else {
-        if(value >=0) {
-          this.filteration[key] = value;
+        if (typeof value  === 'string') {
+          if(value != "") {
+            this.filteration[key] = value.trim();
+          }
+        } else {
+          if(value >=0) {
+            this.filteration[key] = value;
+          }
         }
       }
     });
@@ -383,8 +403,8 @@ export class SummonMissingLogsComponent {
 
   }
   resetFilteration() {
-    this.filterForm.get("FreeText")?.setValue("");
-    this.filterForm.get("code")?.setValue("");
+    this.filterForm.reset();
+    this.filterForm.get("SummonDoneStatus")?.setValue("1");
 
     this.filteration = {
       PageSize: 5,

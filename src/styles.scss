@@ -87,7 +87,9 @@ body,
 .mat-typography h2 {
   margin: 0;
 }
-
+.pi.pi-search {
+  cursor: pointer !important;
+}
 * {
   line-height: 25px;
 }
