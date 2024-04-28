@@ -28,11 +28,13 @@ import { TabViewModule } from 'primeng/tabview';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
+import { SideNavBarAdminComponent } from '../layout/side-nav-bar-admin/side-nav-bar-admin.component';
 
 
 @NgModule({
   declarations: [
     SideNavBarComponent,
+    SideNavBarAdminComponent,
     NotPermissionComponent
   ],
   imports: [

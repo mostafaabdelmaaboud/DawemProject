@@ -6,8 +6,8 @@ import { NotPermissionComponent } from './layout/not-permission/not-permission.c
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-
   { path: '', loadChildren: () => import('./core/auth/auth.module').then((m) => m.AuthModule), canActivate: [LoginGuard] },
+  { path: 'admin', loadChildren: () => import('./core/auth-admin/auth.module').then((m) => m.AuthModule), canActivate: [LoginGuard] },
   { path: 'user', loadChildren: () => import('./Presentation/user/user.module').then(m => m.UserModule), canActivate: [AuthGuard] },
   { path: "notPermission", component: NotPermissionComponent }
 
