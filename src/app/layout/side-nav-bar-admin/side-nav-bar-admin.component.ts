@@ -108,16 +108,15 @@ export class SideNavBarAdminComponent {
     event.preventDefault();
     event.stopPropagation();
   }
-  onScrollDown() {
-    let totalCountPages = Math.ceil(this.notificationCount / 5);
-    if(totalCountPages > (this.notificationFilter.PageNumber + 1)) {
-      this.notificationFilter.PageNumber++;
-      this.numberNotification(false, this.unReadView);
-    }
-    // numberNotification
-  }
-  onScrollUp() {
-  }
+  // onScrollDown() {
+  //   let totalCountPages = Math.ceil(this.notificationCount / 5);
+  //   if(totalCountPages > (this.notificationFilter.PageNumber + 1)) {
+  //     this.notificationFilter.PageNumber++;
+  //     this.numberNotification(false, this.unReadView);
+  //   }
+  // }
+  // onScrollUp() {
+  // }
   isToday(dateToCheck: any): boolean {
     const today = new Date();
 
@@ -141,15 +140,7 @@ export class SideNavBarAdminComponent {
   }
   tabChanged(tabChangeEvent: any): void {
     if (tabChangeEvent.index === 0) {
-
       delete this.notificationFilter.type;
-      // this.webSocketService
-      //   .notificationList(this.notificationFilter)
-      //   .subscribe((data) => {
-      //     this.notificationCount = data.count;
-      //     this.AllnotificationList = data.rows;
-      //     this.changeDetectorRef.detectChanges();
-      //   });
       this.notificationCount = 22;
       this.AllnotificationList = [
         {
@@ -165,18 +156,8 @@ export class SideNavBarAdminComponent {
 
     } else {
       this.loadingNotification = true;
-
       this.notificationFilter.type = "request";
-      // this.webSocketService
-      //   .notificationList(this.notificationFilter)
-      //   .subscribe((data) => {
-      //     this.notificationCountRequests = data.count;
-      //     this.RequestnotificationList = data.rows;
-      //     this.loadingNotification = false;
-      //     this.changeDetectorRef.detectChanges();
-      //   });
       this.notificationCountRequests = 22;
-  
       this.loadingNotification = false;
       this.changeDetectorRef.detectChanges();
     }
@@ -186,199 +167,186 @@ export class SideNavBarAdminComponent {
     return this.getPermissions()?.availablePermissions[findIndexPermission]?.screenName
 
   }
-  numberNotification(showFirstOnly:boolean, unread:boolean) {
-    // .pipe(takeUntil(this.destroy$));
-    this.numNotification = "";
-    if(showFirstOnly) {
-      this.notificationService.markAsViewed().subscribe(data => {
-      });
-    }
-    if(!this.loadingNotification) {
-      this.loadingNotification = true;
-      if(!unread) {
-        if(showFirstOnly) {
-            this.notificationService.listNotification(this.notificationFilter).subscribe({
-              next:data => {
-                // this.notificationList = [];
-                this.notificationCount = data.data.totalCount;
-                let totalCountPages = Math.ceil(this.notificationCount / 5);
-                
-
-                  if(totalCountPages > (this.notificationFilter.PageNumber + 1)) {
-                    if(this.notificationFilter.PageNumber == 0) {
-                      this.notificationFilter = {
-                        PageNumber: 0,
-                        PageSize: 5,
-                        PagingEnabled:true
-                      };
-                      this.notificationList = [];
-                    }
-                    data?.data?.notificationStores.forEach(item => {
-                      this.notificationList.push({
-                        shortMessege:item.shortMessege,
-                        fullMessege:item.fullMessege,
-                        iconUrl:item.iconUrl,
-                        id:item.id,
-                        isRead:item.isRead,
-                        notificationType:item.notificationType,
-                        priority:item.priority,
-                        date:this.formatDateService.formatDate(new Date(item.date)),
-                        employeeId:item.employeeId,
-                        status:item.status
-                      })
-                    });
-                  }
+  // numberNotification(showFirstOnly:boolean, unread:boolean) {
+  //   this.numNotification = "";
+  //   if(showFirstOnly) {
+  //     this.notificationService.markAsViewed().subscribe(data => {
+  //     });
+  //   }
+  //   if(!this.loadingNotification) {
+  //     this.loadingNotification = true;
+  //     if(!unread) {
+  //       if(showFirstOnly) {
+  //           this.notificationService.listNotification(this.notificationFilter).subscribe({
+  //             next:data => {
+  //               this.notificationCount = data.data.totalCount;
+  //               let totalCountPages = Math.ceil(this.notificationCount / 5);
+  //                 if(totalCountPages > (this.notificationFilter.PageNumber + 1)) {
+  //                   if(this.notificationFilter.PageNumber == 0) {
+  //                     this.notificationFilter = {
+  //                       PageNumber: 0,
+  //                       PageSize: 5,
+  //                       PagingEnabled:true
+  //                     };
+  //                     this.notificationList = [];
+  //                   }
+  //                   data?.data?.notificationStores.forEach(item => {
+  //                     this.notificationList.push({
+  //                       shortMessege:item.shortMessege,
+  //                       fullMessege:item.fullMessege,
+  //                       iconUrl:item.iconUrl,
+  //                       id:item.id,
+  //                       isRead:item.isRead,
+  //                       notificationType:item.notificationType,
+  //                       priority:item.priority,
+  //                       date:this.formatDateService.formatDate(new Date(item.date)),
+  //                       employeeId:item.employeeId,
+  //                       status:item.status
+  //                     })
+  //                   });
+  //                 }
              
-                this.loadingNotification = false;
-              },
-              error:err => {
-                this.loadingNotification = false;
-              }
-            })
-        } else {
+  //               this.loadingNotification = false;
+  //             },
+  //             error:err => {
+  //               this.loadingNotification = false;
+  //             }
+  //           })
+  //       } else {
           
-          this.notificationService.listNotification(this.notificationFilter).subscribe({
-            next:data => {
-              // this.notificationList = [];
-              this.notificationCount = data.data.totalCount;
-              let totalCountPages = Math.ceil(this.notificationCount / 5);
+  //         this.notificationService.listNotification(this.notificationFilter).subscribe({
+  //           next:data => {
+  //             this.notificationCount = data.data.totalCount;
+  //             let totalCountPages = Math.ceil(this.notificationCount / 5);
+  //               if((totalCountPages + 1) > (this.notificationFilter.PageNumber + 1)) {
+  //                 if(this.notificationFilter.PageNumber == 0) {
+  //                   this.notificationFilter = {
+  //                     PageNumber: 0,
+  //                     PageSize: 5,
+  //                     PagingEnabled:true
+  //                   };
+  //                   this.notificationList = [];
+  //                 }
+  //                 data?.data?.notificationStores.forEach(item => {
+  //                   this.notificationList.push({
+  //                     shortMessege:item.shortMessege,
+  //                     fullMessege:item.fullMessege,
+  //                     iconUrl:item.iconUrl,
+  //                     id:item.id,
+  //                     isRead:item.isRead,
+  //                     notificationType:item.notificationType,
+  //                     priority:item.priority,
+  //                     date:this.formatDateService.formatDate(new Date(item.date)),
+  //                     employeeId:item.employeeId,
+  //                     status:item.status
+  //                   })
+  //                 });
+  //               }
+        
+  //             this.loadingNotification = false;
+  //           },
+  //           error:err => {
+  //             this.loadingNotification = false;
+  //           }
+  //         })
+  //       }
+  //     } else {
+  //       if(showFirstOnly) {
+  //           this.notificationService.getUnreadNotifications(this.notificationFilter).subscribe({
+  //             next:data => {
+  //               this.notificationCount = data.data.totalCount;
+  //               let totalCountPages = Math.ceil(this.notificationCount / 5);
+  //               if(showFirstOnly) {
+  //                 if(totalCountPages > (this.notificationFilter.PageNumber + 1)) {
+  //                   if(this.notificationFilter.PageNumber == 0) {
+  //                     this.notificationFilter = {
+  //                       PageNumber: 0,
+  //                       PageSize: 5,
+  //                       PagingEnabled:true
+  //                     };
+  //                     this.notificationList = [];
+  //                   }
+  //                   data?.data?.notificationStores.forEach(item => {
+  //                     this.notificationList.push({
+  //                       shortMessege:item.shortMessege,
+  //                       fullMessege:item.fullMessege,
+  //                       iconUrl:item.iconUrl,
+  //                       id:item.id,
+  //                       isRead:item.isRead,
+  //                       notificationType:item.notificationType,
+  //                       priority:item.priority,
+  //                       date:this.formatDateService.formatDate(new Date(item.date)),
+  //                       employeeId:item.employeeId,
+  //                       status:item.status
+  //                     })
+  //                   });
+  //                 }
+  //               } else {
+  //                 if((totalCountPages + 1) > (this.notificationFilter.PageNumber + 1)) {
+  //                   if(this.notificationFilter.PageNumber == 0) {
+  //                     this.notificationFilter = {
+  //                       PageNumber: 0,
+  //                       PageSize: 5,
+  //                       PagingEnabled:true
+  //                     };
+  //                     this.notificationList = [];
+  //                   }
+  //                   data?.data?.notificationStores.forEach(item => {
+  //                     this.notificationList.push({
+  //                       shortMessege:item.shortMessege,
+  //                       fullMessege:item.fullMessege,
+  //                       iconUrl:item.iconUrl,
+  //                       id:item.id,
+  //                       isRead:item.isRead,
+  //                       notificationType:item.notificationType,
+  //                       priority:item.priority,
+  //                       date:this.formatDateService.formatDate(new Date(item.date)),
+  //                       employeeId:item.employeeId,
+  //                       status:item.status
+  //                     })
+  //                   });
+  //                 }
               
-
-                if((totalCountPages + 1) > (this.notificationFilter.PageNumber + 1)) {
-                  if(this.notificationFilter.PageNumber == 0) {
-                    this.notificationFilter = {
-                      PageNumber: 0,
-                      PageSize: 5,
-                      PagingEnabled:true
-                    };
-                    this.notificationList = [];
-                  }
-                  data?.data?.notificationStores.forEach(item => {
-                    this.notificationList.push({
-                      shortMessege:item.shortMessege,
-                      fullMessege:item.fullMessege,
-                      iconUrl:item.iconUrl,
-                      id:item.id,
-                      isRead:item.isRead,
-                      notificationType:item.notificationType,
-                      priority:item.priority,
-                      date:this.formatDateService.formatDate(new Date(item.date)),
-                      employeeId:item.employeeId,
-                      status:item.status
-                    })
-                  });
-                }
+  //               }
+  //               this.loadingNotification = false;
         
-              this.loadingNotification = false;
-            },
-            error:err => {
-              this.loadingNotification = false;
-            }
-          })
-        }
-      } else {
-        if(showFirstOnly) {
-            this.notificationService.getUnreadNotifications(this.notificationFilter).subscribe({
-              next:data => {
-                
-      
-                // this.notificationList = [];
-                this.notificationCount = data.data.totalCount;
-                let totalCountPages = Math.ceil(this.notificationCount / 5);
-  
-                if(showFirstOnly) {
-  
-                  if(totalCountPages > (this.notificationFilter.PageNumber + 1)) {
-                    if(this.notificationFilter.PageNumber == 0) {
-                      this.notificationFilter = {
-                        PageNumber: 0,
-                        PageSize: 5,
-                        PagingEnabled:true
-                      };
-                      this.notificationList = [];
-                    }
-                    data?.data?.notificationStores.forEach(item => {
-                      this.notificationList.push({
-                        shortMessege:item.shortMessege,
-                        fullMessege:item.fullMessege,
-                        iconUrl:item.iconUrl,
-                        id:item.id,
-                        isRead:item.isRead,
-                        notificationType:item.notificationType,
-                        priority:item.priority,
-                        date:this.formatDateService.formatDate(new Date(item.date)),
-                        employeeId:item.employeeId,
-                        status:item.status
-                      })
-                    });
-                  }
-                } else {
-                  if((totalCountPages + 1) > (this.notificationFilter.PageNumber + 1)) {
-                    if(this.notificationFilter.PageNumber == 0) {
-                      this.notificationFilter = {
-                        PageNumber: 0,
-                        PageSize: 5,
-                        PagingEnabled:true
-                      };
-                      this.notificationList = [];
-                    }
-                    data?.data?.notificationStores.forEach(item => {
-                      this.notificationList.push({
-                        shortMessege:item.shortMessege,
-                        fullMessege:item.fullMessege,
-                        iconUrl:item.iconUrl,
-                        id:item.id,
-                        isRead:item.isRead,
-                        notificationType:item.notificationType,
-                        priority:item.priority,
-                        date:this.formatDateService.formatDate(new Date(item.date)),
-                        employeeId:item.employeeId,
-                        status:item.status
-                      })
-                    });
-                  }
-              
-                }
-                this.loadingNotification = false;
+  //             },
+  //             error:err => {
+  //               this.loadingNotification = false;
         
-              },
-              error:err => {
-                this.loadingNotification = false;
-        
-              }
-            })
+  //             }
+  //           })
   
-        } else {
+  //       } else {
           
-          this.notificationService.getUnreadNotifications(this.notificationFilter).subscribe({
-            next:data => {
-              // this.notificationList = [];
-              data?.data?.notificationStores.forEach(item => {
-                this.notificationList.push({
-                  shortMessege:item.shortMessege,
-                  fullMessege:item.fullMessege,
-                  iconUrl:item.iconUrl,
-                  id:item.id,
-                  isRead:item.isRead,
-                  notificationType:item.notificationType,
-                  priority:item.priority,
-                  date:this.formatDateService.formatDate(new Date(item.date)),
-                  employeeId:item.employeeId,
-                  status:item.status
-                })
-              });
-              this.loadingNotification = false;
-              this.notificationCount = data.data.totalCount;
-            },
-            error:err => {
-              this.loadingNotification = false;
-            }
-          })
-        }
-      }
-    }
+  //         this.notificationService.getUnreadNotifications(this.notificationFilter).subscribe({
+  //           next:data => {
+  //             data?.data?.notificationStores.forEach(item => {
+  //               this.notificationList.push({
+  //                 shortMessege:item.shortMessege,
+  //                 fullMessege:item.fullMessege,
+  //                 iconUrl:item.iconUrl,
+  //                 id:item.id,
+  //                 isRead:item.isRead,
+  //                 notificationType:item.notificationType,
+  //                 priority:item.priority,
+  //                 date:this.formatDateService.formatDate(new Date(item.date)),
+  //                 employeeId:item.employeeId,
+  //                 status:item.status
+  //               })
+  //             });
+  //             this.loadingNotification = false;
+  //             this.notificationCount = data.data.totalCount;
+  //           },
+  //           error:err => {
+  //             this.loadingNotification = false;
+  //           }
+  //         })
+  //       }
+  //     }
+  //   }
 
-  }
+  // }
   markAsRead(id:any) {
     this.loadingNotification = true;
 
@@ -424,27 +392,27 @@ export class SideNavBarAdminComponent {
   ngOnInit(): void {
     let permission = JSON.parse(localStorage.getItem('permissions') as string)
     this.isAdmin = permission?.isAdmin;
-    this.notificationService.getNotification().subscribe(data => {
-      this.numNotification = data?.NotificationData?.UnViewdNotificationCount;
-    });
-    this.notificationService.getUnViewedNotificationCount().subscribe(data => {
-      this.numNotification = data?.toString() === "0" ? "": data?.toString();
-    });
+    // this.notificationService.getNotification().subscribe(data => {
+    //   this.numNotification = data?.NotificationData?.UnViewdNotificationCount;
+    // });
+    // this.notificationService.getUnViewedNotificationCount().subscribe(data => {
+    //   this.numNotification = data?.toString() === "0" ? "": data?.toString();
+    // });
 
 
 
-    this.getUnViewedNotificationCount();
-    this.formGroupUnRead.get("unRead")?.valueChanges.subscribe(data => {
+    // this.getUnViewedNotificationCount();
+    // this.formGroupUnRead.get("unRead")?.valueChanges.subscribe(data => {
       
-      this.unReadView = data;
-      this.notificationFilter = {
-        PageNumber: 0,
-        PageSize: 5,
-        PagingEnabled:true
-      };
-      this.notificationList = [];
-      this.numberNotification(false,this.unReadView)
-    })
+    //   this.unReadView = data;
+    //   this.notificationFilter = {
+    //     PageNumber: 0,
+    //     PageSize: 5,
+    //     PagingEnabled:true
+    //   };
+    //   this.notificationList = [];
+    //   this.numberNotification(false,this.unReadView)
+    // })
     if (this.currentLang === undefined || this.currentLang === null) {
       this.countries = [
         { name: 'عربي', code: 'AR' },
@@ -840,9 +808,10 @@ export class SideNavBarAdminComponent {
       this.cloneArrayComponents = [...this.listComponents];
 
     }
-    this.dashboardService.getInformationProfile().subscribe(data => {
-      this.profile = data;
-    })
+    // admin names
+    // this.dashboardService.getInformationProfile().subscribe(data => {
+    //   this.profile = data;
+    // })
   }
   getUnViewedNotificationCount() {
     this.notificationService.dataUnViewedNotificationCount().subscribe(data => {

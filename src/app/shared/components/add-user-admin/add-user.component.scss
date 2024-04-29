@@ -1,0 +1,236 @@
+.footer-dialog {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.title-Dialog {
+  color: #0D3671;
+  font-size: 20px;
+}
+
+:host ::ng-deep .p-inputswitch {
+  width: 2.8rem;
+  height: 1.46rem;
+}
+
+:host ::ng-deep .p-dropdown {
+  width: 100% !important;
+}
+
+.code {
+  height: 97% !important;
+}
+:host ::ng-deep .p-calendar {
+  width: 100%;
+}
+
+
+
+.title {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.body-dialog {
+  height: 70vh;
+  overflow-y: auto;
+}
+
+:host ::ng-deep .content-pCalendar-default {
+  .p-inputtext {
+    border-width: 1px 0px 1px 1px;
+    padding-right: 0;
+  }
+
+  .p-button {
+    background-color: transparent;
+    color: rgba(48, 133, 254, 1) !important;
+    border-color: #ced4da !important;
+    border-width: 1px 1px 1px 0px !important;
+    padding-left: 0 !important;
+  }
+}
+
+.button-action {
+  padding: 10px 15px;
+  border: 0;
+  font-size: 16px;
+}
+
+
+.icon-close i {
+  font-size: 20px;
+  color: gray;
+}
+
+.iconCloseDialog {
+  background-color: transparent;
+  border: 0;
+  align-items: center;
+  display: flex;
+}
+
+.p-fileupload-row {
+  display: flex;
+  align-items: center;
+}
+
+:host ::ng-deep .p-fileupload-files {
+  display: none !important;
+}
+
+:host ::ng-deep .p-fileupload-row {
+  justify-content: space-between;
+}
+
+:host ::ng-deep .p-fileupload-buttonbar,
+:host ::ng-deep .p-fileupload-content {
+  border: 0;
+  padding: 0;
+  background-color: white;
+}
+
+
+:host ::ng-deep .p-fileupload-row>div {
+  text-align: center;
+}
+
+:host ::ng-deep .p-fileupload-row .p-button {
+  background: #3085FE !important;
+  border: 1px solid #3085FE !important;
+}
+
+.maximum-size {
+  font-size: 14px;
+  color: rgba(108, 117, 125, 1);
+  margin-top: 7px !important;
+  display: block;
+}
+
+:host ::ng-deep .p-fileupload-content .p-progressbar {
+  display: none !important;
+}
+
+:host ::ng-deep .p-fileupload-row {
+  margin-bottom: 10px;
+  margin-top: 10px;
+
+}
+
+:host ::ng-deep .p-button .p-button-label {
+  flex: initial;
+  font-weight: 600;
+}
+
+:host ::ng-deep .p-button .p-button-icon-left {
+  color: rgba(48, 133, 254, 1);
+}
+
+:host ::ng-deep .p-fileupload-choose,
+:host ::ng-deep .p-fileupload-choose:hover {
+  background: white !important;
+  height: initial;
+  font-size: 16px;
+  box-shadow: none !important;
+  width: 100%;
+  color: #7D8B9E;
+  text-align: center;
+  border: 1px solid #CBD5E1;
+  margin: 0 !important;
+  padding: 25px 15px !important;
+  height: initial;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+  display: flex !important;
+  justify-content: center;
+}
+
+:host ::ng-deep .p-fileupload-row .p-fileupload-filename {
+  width: 36% !important;
+  padding: 0 10px !important;
+}
+
+:host ::ng-deep .p-fileupload-row>div:last-of-type {
+  width: 10% !important;
+  max-width: 36% !important;
+}
+
+:host ::ng-deep .p-fileupload-row>div:last-of-type button {
+  width: 100% !important;
+}
+
+:host ::ng-deep .p-fileupload-row>div {
+  text-align: center;
+}
+
+:host ::ng-deep .p-fileupload-content .p-progressbar {
+  display: none !important;
+}
+
+:host ::ng-deep .p-fileupload-row {
+  margin-bottom: 10px;
+  margin-top: 10px;
+
+}
+
+:host ::ng-deep .p-fileupload-row img {
+  width: 100%;
+  object-fit: contain;
+}
+
+:host .container-radio-button {
+  .mat-mdc-radio-group {
+    margin: 0 -25px
+  }
+}
+
+:host ::ng-deep .p-multiselect {
+  width: 100%;
+}
+
+:host ::ng-deep .p-multiselect .p-multiselect-label.p-placeholder,
+:host ::ng-deep .p-multiselect-label {
+  font-family: "Cairo";
+}
+
+.field-password {
+  >span {
+    position: absolute;
+    top: 0;
+    left: 0px;
+    color: var(--color-blue);
+    cursor: pointer;
+    width: 42px;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    align-items: center;
+  }
+
+  >input {
+    padding-left: 40px;
+  }
+
+  >input::placeholder {
+    font-size: 15px;
+    color: #a0a7ab;
+  }
+}
+
+:host ::ng-deep .p-fileupload .p-fileupload-row>div {
+  padding: 0px;
+}
+
+:host ::ng-deep p-calendar.ng-dirty.ng-invalid {
+  .p-button {
+    border-color: #e24c4c !important;
+  }
+}
+
+:host ::ng-deep p-calendar.ng-dirty.ng-invalid>.p-calendar>.p-inputtext {
+  border-color: #e24c4c !important;
+}

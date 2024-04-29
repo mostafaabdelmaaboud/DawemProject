@@ -1,0 +1,222 @@
+<div class="container-Dialog">
+  <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+    <h3 class="title-Dialog m-0">
+      {{data!['title']|translate}}
+
+    </h3>
+    <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+      <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+      <i class="pi pi-times-circle"></i>
+    </button>
+  </header>
+  <div class="body-dialog p-15 f-s-16">
+    <form [formGroup]="addBranchGroupForm">
+      <div class="section1 d-flex justify-content-between">
+        <div class="col">
+          <label class="title">{{data!['setAsNecessary']|translate}}</label>
+          <p-inputSwitch formControlName="IsActive"></p-inputSwitch>
+        </div>
+
+
+      </div>
+
+      <div class="sectionFive mb-3">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['titleName']|translate"></label>
+        <div class="content-password">
+          <input type="text" pInputText formControlName="Name" [placeholder]="data!['placeholdeName']|translate"
+            class="w-100" />
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts mt-2" *ngIf="getControl('Name')?.errors">
+          <div class="alert alert-danger" *ngIf="getControl('Name')?.hasError('required') && getControl('Name')?.dirty">
+            {{data!['nameValidation']|translate}}
+
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+ 
+
+      <div class="sectionFive mb-3">
+        <label for="" class="label-input mb-2" [innerHTML]="data!['titleEmail']|translate"></label>
+        <div class="content-password">
+          <input type="email" pInputText formControlName="Email" [placeholder]="data!['placeholdeEmail']|translate"
+            class="w-100" />
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts mt-2" *ngIf="getControl('Email')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('Email')?.hasError('required') && getControl('Email')?.dirty">
+            {{data!['EmailValidation']|translate}}
+          </div>
+          <div class="alert alert-danger"
+            *ngIf="getControl('Email')?.hasError('pattern') && getControl('Email')?.dirty">
+            {{"employees.invalidEmail"|translate}}
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+      <ng-container *ngIf="!editUser">
+        <div class="section-field mb-3 c-f">
+          <label class="mb-2 d-block f-s-16 label-form" [innerHTML]="data!['titlePassword']|translate"></label>
+          <div class="content-input position-relative">
+            <span class="p-input-icon-right w-100 field-password">
+              <i class="pi pi-lock"></i>
+              <input [type]="togglePassword ? 'password' : 'text'" formControlName="Password" class="w-100" pInputText
+                [placeholder]="'login.password' | translate" />
+              <span (click)="togglePassword = !togglePassword">
+                <i class=" pi pi-eye" *ngIf="togglePassword"></i>
+                <i class=" pi pi-eye-slash" *ngIf="!togglePassword"></i>
+              </span>
+            </span>
+            <div class="container-alerts mt-2" *ngIf="getControl('Password')?.errors">
+              <div class="alert alert-danger"
+                *ngIf="getControl('Password')?.hasError('required') && getControl('Password')?.dirty">
+                {{'login.PasswordRequired' | translate}}
+              </div>
+              <div class="alert alert-danger"
+                *ngIf="getControl('Password')?.hasError('minlength') && !getControl('Password')?.hasError('required')">
+                {{'login.TheMinimumNumberOfCharactersIsFive' | translate}}
+              </div>
+            </div>
+          </div>
+          <!-- <div class="container-alerts mb-2" *ngIf="getControl('bankAccount.bankName')?.errors">
+                                                      <div class="alert alert-danger"
+                                                        *ngIf="getControl('bankAccount.bankName')?.hasError('required') && getControl('bankAccount.bankName')?.dirty">
+                                                        Bank Name is required
+                                                      </div>
+                                                    </div> -->
+        </div>
+        <div class="section-field c-f mb-3">
+          <label class="mb-2 d-block f-s-16 label-form">{{'signup.confirmPassword' | translate}} <span class="color-red ml-2">*</span></label>
+          <div class="content-input position-relative">
+            <span class="p-input-icon-right w-100 field-password">
+              <i class="pi pi-lock"></i>
+              <input [type]="toggleConfirmPassword ? 'password' : 'text'" formControlName="ConfirmPassword" class="w-100"
+                pInputText [placeholder]="'signup.confirmPassword' | translate" />
+              <span (click)="toggleConfirmPassword = !toggleConfirmPassword">
+                <i class=" pi pi-eye" *ngIf="toggleConfirmPassword"></i>
+                <i class=" pi pi-eye-slash" *ngIf="!toggleConfirmPassword"></i>
+              </span>
+            </span>
+            <div class="container-alerts mt-2" *ngIf="getControl('ConfirmPassword')?.errors">
+              <div class="alert alert-danger"
+                *ngIf="getControl('ConfirmPassword')?.hasError('required') && getControl('ConfirmPassword')?.dirty">
+                {{'signup.confirmPasswordIsRequired' | translate}}
+              </div>
+              <div class="alert alert-danger"
+                *ngIf="getControl('ConfirmPassword')?.hasError('passwordMismatch') && !getControl('ConfirmPassword')?.hasError('required')">
+                {{'users.passwordMisMatch' | translate}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+     
+      <div class="sectionTwo mb-3">
+        <label class="title" [innerHTML]="data!['Roles']|translate"></label>
+        <div class="content-password">
+          <p-multiSelect [options]="listRoles" appendTo="body" [filter]="false" formControlName="Roles"
+            [placeholder]="data!['placeholdeRoles']|translate" optionLabel="name">
+            <ng-template pTemplate="header">
+              <span class="p-input-icon-left input-search-dropdown">
+
+                <i class="pi pi-search" (click)="searchDropdown(searchRoles.value, 'Roles')"></i>
+                <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchRoles />
+              </span>
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+              {{ option.name }}
+            </ng-template>
+          </p-multiSelect>
+
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts mt-2" *ngIf="getControl('Roles')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('Roles')?.hasError('required') && getControl('Roles')?.dirty">
+            {{data!['ValidationRoles']|translate}}
+
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+      <div class="section-workingDays mb-3">
+        <label class="mb-2 d-block f-s-16">{{data!['uploadFile']|translate}}</label>
+        <div class="item uploadFiles">
+          <!-- accept="image/*" -->
+          <p-fileUpload name="uploadedCommercialRegFiles[]" chooseIcon="pi pi-cloud-upload" [customUpload]="true"
+            [chooseLabel]="data!['chooseLabel']|translate" accept="image/png, image/gif, image/jpeg, application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel,.docx, application/vnd.openxmlformats-officedocument.wordprocessingml.document" (onSelect)="onFileChange($event, 2)" [showUploadButton]="false"
+            [showCancelButton]="false">
+            <ng-template pTemplate="content">
+
+              <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length">
+                <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
+                  <div>
+                    <img [src]="viewImagesIdCopy[i]" width="50" height="100" alt="">
+
+                  </div>
+                  <div class="p-fileupload-filename" [title]="file.fileUpload.name">
+                    <span class="d-block">{{"employees.name"|translate}}:</span>
+                    {{
+                    file.fileUpload.name.length > 69 ? (file.fileUpload.name | slice:0:70) + '......' : file.fileUpload.name
+                    }}
+                  </div>
+                  <div>
+                    <span class="d-block">{{"employees.size"|translate}}:</span>
+                    {{
+                    file.fileUpload.size }}
+                  </div>
+                  <div>
+                    <button class="p-element p-button p-component p-button-icon-only"
+                      (click)="onRemoveCommercialReg(file.fileUpload)">
+                      <span class="p-button-icon pi pi-times" aria-hidden="true">
+
+                      </span>
+                    </button>
+
+                  </div>
+                </li>
+              </ul>
+            </ng-template>
+          </p-fileUpload>
+          <span class="maximum-size">{{'vacations.maximumFileSize' | translate}}</span>
+         <!--Start Custom Validators-->
+         <div class="container-alerts mt-s-16">
+          <div class="alert alert-danger mb-3" *ngIf="errorUploadFileIdCopy">
+              {{errorUploadFileIdCopy}}
+          </div>
+          <div class="alert alert-danger mb-3"
+              *ngIf="errorUploadFileIdCopyIsRequired && getControl('idCopyFile')?.dirty">
+              {{errorUploadFileIdCopyIsRequired}}
+          </div>
+      
+      </div>
+      <!--End Custom Validators-->
+        </div>
+        <!--
+        <div class="container-alerts mb-2" *ngIf="uploadedCommercialRegFiles.length<= 0 && requiredCommercialRegFiles">
+          <div class="alert alert-danger">
+            مطلوب تحميل الملف
+          </div>
+
+        </div> -->
+
+      </div>
+      <div class="field-checkbox mb-1">
+        <p-checkbox name="category" formControlName="IsAdmin" [value]="true" [binary]="true"
+          inputId="IsAdmin"></p-checkbox>
+        <label for="IsAdmin" class="mb-0">{{'users.responsible' | translate}}</label>
+      </div>
+    </form>
+  </div>
+  <footer class="footer-dialog p-15 d-flex justify-content-end">
+
+    <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+      (click)="request()">{{submitted ?
+      (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+  </footer>
+</div>
+<div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>

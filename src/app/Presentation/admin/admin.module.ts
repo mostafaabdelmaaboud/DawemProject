@@ -9,12 +9,26 @@ const routes: Routes = [
   {
     path: '', component: SideNavBarAdminComponent,
     children: [
+      // {
+      //   path: 'dashboard',
+      //   loadChildren: () => import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
+      //   canActivate: [PermissionAminGuard]
+      // },
       {
-        path: 'dashboard',
-        // loadChildren: () => import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
+        path: "responsibility",
+        loadChildren: () => import('./responsibility/responsibility.module').then((m) => m.ResponsibilityModule),
         canActivate: [PermissionAminGuard]
       },
-
+      {
+        path: "userPermissions",
+        loadChildren: () => import('./user-permissions/user-permissions.module').then((m) => m.UserPermissionsModule),
+        canActivate: [PermissionAminGuard]
+      },
+      {
+        path: "users",
+        loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
+        canActivate: [PermissionAminGuard]
+      }
     ]
   }
 ];

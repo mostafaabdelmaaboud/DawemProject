@@ -28,7 +28,7 @@ export class DashboardService {
     return this.http.get<any>(`${environment.baseUrl}Dashboard/GetEmployeesStatus`).pipe(map(data => data.data))
   }
   getInformationProfile() {
-    return this.http.get<any>(`${environment.baseUrl}EmployeeDashboard/GetHeaderInformations`).pipe(map(data => data.data))
+    return this.http.get<any>(`${environment.baseUrl}Dashboard/GetHeaderInformations`).pipe(map(data => data.data))
 
   }
   getEmployeesAttendancesStatus(filter: any) {

@@ -65,6 +65,18 @@ export class SideNavBarComponent {
   notificationList: any[] = [];
   selectedTabIndex = 1;
 
+  isSidebarExpanded: boolean = false;
+  step:any = null;
+  setStep(index: number) {
+    this.step = index;
+  }
+  onSidebarMouseEnter() {
+    this.isSidebarExpanded = true;
+  }
+
+  onSidebarMouseLeave() {
+    this.isSidebarExpanded = false;
+  }
   constructor(private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     public translate: TranslateService,
     public authService: AuthService,

@@ -18,6 +18,45 @@ mat-sidenav {
   width: 88%;
   white-space: break-spaces;
 }
+:host ::ng-deep .mdc-list-item.mdc-list-item--with-one-line {
+  height: 45px !important;
+}
+
+:host ::ng-deep .mat-expansion-panel-header {
+  .mat-content {
+    span {
+      font-size: 17px;
+    color: #6b6969;
+    }
+  }
+} 
+:host ::ng-deep .mat-expansion-indicator::after {
+  color: black !important;
+}
+.sub-menu-item {
+  padding: 3px 30px;
+}
+:host ::ng-deep .mat-expansion-panel-body {
+  padding: 0 0px 0px;
+}
+:host ::ng-deep .mat-expansion-panel-header.mat-expanded {
+  height: 45px;
+}
+:host ::ng-deep .ant-menu-root.ant-menu-inline {
+  padding-bottom: 0px;
+}
+:host ::ng-deep .mdc-list {
+  padding: 0 0 !important;
+}
+.list-content {
+  margin-top: 15px;
+}
+:host ::ng-deep .sub-menu-item .mdc-list-item__content .mat-mdc-list-item-unscoped-content {
+  white-space: break-spaces;
+}
+.label {
+  width: 150px;
+}
 /*---start notification---*/
 .header-notifications {
   display: flex;

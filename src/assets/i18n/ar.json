@@ -57,6 +57,11 @@
     "employees": "الموظفين",
     "attendanceAndDeparture": "الحضور والانصراف",
     "attendanceSummaryReport": "تقرير ملخص الحضور",
+    "companies":"الشركات",
+    "permissionsRecords":"سجلات الصلاحيات",
+    "plans":"الخطط",
+    "subscriptions":"الإشتراكات",
+    "subscriptionPayments":"مدفوعات الإشتراكات",
 
     "requestsForJustifications": "طلبات التبريرات",
     "zones": "المناطق",

@@ -29,6 +29,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { SideNavBarAdminComponent } from '../layout/side-nav-bar-admin/side-nav-bar-admin.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 @NgModule({
@@ -63,6 +64,7 @@ import { SideNavBarAdminComponent } from '../layout/side-nav-bar-admin/side-nav-
     NzSelectModule,
     InputTextModule,
     InfiniteScrollModule,
+    MatExpansionModule
 
 
   ],

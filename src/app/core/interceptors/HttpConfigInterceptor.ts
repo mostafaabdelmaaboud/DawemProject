@@ -137,7 +137,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         if (error.error instanceof ErrorEvent) {
           errorMsg = `Error: ${error.error.message}`;
         } else {
-          if (error?.status == 401) {
+          if (error?.status == 401 || error?.status == 403) {
             localStorage.removeItem("token");
             localStorage.removeItem("fingerPrint");
             localStorage.removeItem("isLogin");
@@ -148,7 +148,15 @@ export class HttpConfigInterceptor implements HttpInterceptor {
 
             localStorage.clear();
             sessionStorage.clear();
-            this.router.navigate(["/login"]);
+            debugger;
+            if(this.router.url.includes("user/")) {
+              this.router.navigate(["/login"]);
+
+            }
+            if(this.router.url.includes("admin/")) {
+              this.router.navigate(["adminPanel/login"]);
+
+            }
           } else if(error?.status == 400) {
             let valuesError = Object.values(error?.error);
 
@@ -172,7 +180,14 @@ export class HttpConfigInterceptor implements HttpInterceptor {
                 localStorage.clear();
                 sessionStorage.clear();
 
-                this.router.navigate(["/login"]);
+                if(this.router.url.includes("user/")) {
+                  this.router.navigate(["/login"]);
+    
+                }
+                if(this.router.url.includes("admin/")) {
+                  this.router.navigate(["adminPanel/login"]);
+    
+                }
               }
               if(!request.urlWithParams.toLowerCase().includes("permission/checkandgetpermission")) {
                 this.toastservice.show({

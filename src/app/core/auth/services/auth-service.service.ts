@@ -58,8 +58,14 @@ export class AuthService {
     localStorage.removeItem("token");
     localStorage.removeItem("usersMe");
     localStorage.removeItem("permissions");
+    if(this.router.url.includes("user/")) {
+      this.router.navigate(["./login"]);
 
-    this.router.navigate(["./login"]);
+    }
+    if(this.router.url.includes("admin/")) {
+      this.router.navigate(["adminPanel/login"]);
+
+    }
 
   }
   // POSTLogin(url: any, data: any) {

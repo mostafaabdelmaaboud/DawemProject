@@ -203,7 +203,7 @@ export class LoginComponent {
                 this.isLoading = false;
                 this.loading = true;
                 this.toast.success(res.message,"", {timeOut: 2000});
-                this.router.navigate(["/user/dashboard"]);
+                this.router.navigate(["/admin/responsibility"]);
               }, 1000);
             } else {
               this.toast.error("you don't have permissions");

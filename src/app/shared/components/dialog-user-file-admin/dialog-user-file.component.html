@@ -1,0 +1,119 @@
+<div class="container-Dialog">
+  <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+    <h3 class="title-Dialog m-0">
+      {{data!['title']|translate}}
+    </h3>
+    <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+      <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+      <i class="pi pi-times-circle"></i>
+    </button>
+  </header>
+  <div class="body-dialog p-15 f-s-16">
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">{{"users.setAsActive"|translate}}</label>
+      <div class="content-password">
+        <ng-container *ngIf="info?.isActive">
+          {{"employees.active"|translate}}
+        </ng-container>
+        <ng-container *ngIf="!info?.isActive">
+          {{"employees.Inactive"|translate}}
+        </ng-container>
+      </div>
+
+    </div>
+
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">{{"users.theName"|translate}}</label>
+      <div class="content-password">
+        <ng-container *ngIf="info?.name">
+          {{info?.name}}
+        </ng-container>
+        <ng-container *ngIf="!info?.name">
+          {{"department.nothing"|translate}}
+        </ng-container>
+      </div>
+
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">{{"users.email"|translate}}</label>
+      <div class="content-password">
+        <ng-container *ngIf="info?.email">
+          {{info?.email}}
+        </ng-container>
+        <ng-container *ngIf="!info?.email">
+          {{"department.nothing"|translate}}
+        </ng-container>
+      </div>
+
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">{{"users.phoneNumber"|translate}}</label>
+      <div class="content-password d-flex align-items-center">
+        <ng-container *ngIf="info?.mobileNumber">
+          <span class="image-country-mobilePhone select-country-image">
+            <img [src]="info.mobileCountryFlagPath" width="40" height="30" [alt]="info.mobileCountryCode">
+          </span>
+          <span class="info-mobileCountryCode">{{ info.mobileCountryCode }}</span>
+          <span class="info-text-mobile">{{info?.mobileNumber ? info?.mobileNumber : "لا يوجد"}}</span>
+        </ng-container>
+        <ng-container *ngIf="!info?.mobileNumber">
+          {{"department.nothing"|translate}}
+        </ng-container>
+      </div>
+
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">{{"users.theBoss"|translate}}</label>
+      <div class="content-password">
+        <ng-container *ngIf="info?.isAdmin">
+          {{"users.yes"|translate}}
+        </ng-container>
+        <ng-container *ngIf="!info?.isAdmin">
+          {{"users.no"|translate}}
+        </ng-container>
+      </div>
+
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">{{"users.permissions"|translate}}</label>
+      <div class="content-password mb-3" *ngFor="let role of info?.responsibilities">
+        {{role}}
+      </div>
+
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">{{"vacations.files"|translate}}</label>
+      <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length > 0">
+        <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
+          <div class="content-image">
+            <img [src]="file.imageSrc" width="200" height="200" alt="">
+
+          </div>
+          <div class="p-fileupload-filename" [title]="file.fileUpload.name">
+            <span class="d-block">{{"employees.name"|translate}}:</span>
+            {{ file.fileUpload.name.length > 70 ? (file.fileUpload.name | slice:0:70) + '......' :file.fileUpload.name
+            }} 
+          </div>
+          <div>
+            <span class="d-block">{{"employees.size"|translate}}:</span>
+            {{
+            file.fileUpload.size }}
+          </div>
+          <div>
+            <a class="btn btn-success" [href]="file.download">Download</a>
+          </div>
+
+        </li>
+      </ul>
+      <ng-container *ngIf="!loading && AttachmentsFiles.length == 0">
+        {{"department.nothing"|translate}}
+      </ng-container>
+
+    </div>
+
+
+  </div>
+
+  <div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+  </div>
