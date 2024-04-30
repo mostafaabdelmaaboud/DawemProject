@@ -324,13 +324,13 @@ export class TaskTypeComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestTaskTypeComponent, {
       width: "50vw",
       data: {
-        title: "طلب مهمة",
+        title: "نوع المهمة",
         setAsNecessary: "تعيين كضرورية",
         titleVacationTypeId: "نوع المهمة <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend: "إرسال الطلب"
+        buttonSend: "موافق"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
@@ -396,7 +396,7 @@ export class TaskTypeComponent {
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend: "إرسال الطلب"
+        buttonSend: "موافق"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;

@@ -328,13 +328,13 @@ export class PermissionTypeComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestPermissionTypeComponent, {
       width: "50vw",
       data: {
-        title: "طلب استئذان",
+        title: "نوع استئذان",
         setAsNecessary: "تعيين كضرورية",
         titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend: "إرسال الطلب"
+        buttonSend:"موافق"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
@@ -401,7 +401,7 @@ export class PermissionTypeComponent {
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend: "إرسال الطلب"
+        buttonSend: "موافق"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;

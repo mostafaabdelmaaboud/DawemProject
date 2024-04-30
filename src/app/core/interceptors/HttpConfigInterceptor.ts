@@ -148,7 +148,6 @@ export class HttpConfigInterceptor implements HttpInterceptor {
 
             localStorage.clear();
             sessionStorage.clear();
-            debugger;
             if(this.router.url.includes("user/")) {
               this.router.navigate(["/login"]);
 

@@ -48,7 +48,9 @@ body,
 .p-datatable .p-datatable-tbody>tr>td,
 .p-datatable .p-datatable-thead>tr>th,
 .mdc-form-field>label,
-.container-filteration .dropdown-item
+.container-filteration .dropdown-item,
+.mat-expansion-panel-header .mat-content span,
+.text-sidebar
  {
   font-family: 'Cairo', sans-serif !important;
 }
@@ -78,7 +80,9 @@ body,
 .p-datatable .p-datatable-tbody>tr>td,
 .p-datatable .p-datatable-thead>tr>th,
 .mdc-form-field>label,
-.container-filteration .dropdown-item
+.container-filteration .dropdown-item,
+.mat-expansion-panel-header .mat-content span,
+.text-sidebar
  {
   font-family: 'Noto Naskh Arabic', serif !important;
 }
@@ -1257,7 +1261,9 @@ img.flag {
     margin-right: 10px !important;
   }
 }
-
+.mat-drawer.mat-drawer-end {
+  z-index: 9999 !important;
+}
 [lang="en"] {
   .mat-drawer.mat-drawer-end {
     left: 0px;
@@ -1909,12 +1915,20 @@ html[lang="ar"] {
   padding: 7px 13px;
   margin-left: 10px;
 
-  i {
+  i,svg {
     margin-right: 8px;
   }
+  svg *{
+    stroke:#0d6efd;
+  }
 }
-
-html[lang="ar"] {.action-button-t {
+.action-button-t:hover {
+  svg *{
+    stroke:white;
+  }
+}
+html[lang="ar"] {
+  .action-button-t {
   margin-left: 0;
   margin-right: 10px;
   padding-top: 5px;
@@ -1922,7 +1936,7 @@ html[lang="ar"] {.action-button-t {
   font-size: 14px;
   font-weight: 500;
 
-  i {
+  i, svg {
     margin-right: 0;
     margin-left: 8px;
     font-size: 15px;

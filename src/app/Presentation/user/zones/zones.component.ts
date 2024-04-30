@@ -52,7 +52,7 @@ export class ZonesComponent {
       field: "zoneNumber",
     },
     {
-      name: "اسم الزون",
+      name: "اسم المنطقة",
       field: "zoneName",
     },
     {

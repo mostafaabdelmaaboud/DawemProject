@@ -180,7 +180,6 @@ export class SectionsComponent {
     })
   }
   showActions(data: any) {
-    // debugger;
 
     return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 2, actionCode: data.actionCode })
   }

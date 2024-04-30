@@ -251,7 +251,7 @@
                 {{column.name}}
               </span>
               <div class="action-body-td">
-                <button type="button" *ngIf="showActions({actionCode:1})"
+                <button type="button" *ngIf="showActions({actionCode:1}) && rowData.summonStatus == 0"
                   class="btn btn-outline-secondary action-accept color-green" (click)="editSummon(rowData)"><i
                     class="bi bi-pencil-square"></i></button>
   
@@ -263,12 +263,12 @@
                   class="btn btn-outline-secondary action-close color-blue" (click)="dialogGroupFile(rowData)"><i
                     class="bi bi-person-vcard"></i></button>
                 <ng-container *ngIf="rowData.isActive">
-                  <button type="button" *ngIf="showActions({actionCode:7})" class="btn btn-outline-secondary action-close color-red"
+                  <button type="button" *ngIf="showActions({actionCode:7}) && rowData.summonStatus == 0" class="btn btn-outline-secondary action-close color-red"
                     (click)="deleteRow(rowData)"><i class="bi bi-x-circle"></i></button>
                 </ng-container>
                 <ng-container *ngIf="!rowData.isActive">
   
-                  <button type="button" *ngIf="showActions({actionCode:6})" (click)="enabledRow(rowData)"
+                  <button type="button" *ngIf="showActions({actionCode:6}) && rowData.summonStatus == 0" (click)="enabledRow(rowData)"
                     class="btn btn-outline-secondary action-accept color-green"><i
                       class="bi bi-check-circle"></i></button>
                 </ng-container>

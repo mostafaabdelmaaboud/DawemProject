@@ -330,13 +330,13 @@ export class VacationTypeComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestVacationTypeComponent, {
       width: "50vw",
       data: {
-        title: "طلب اجازة",
+        title: "نوع اجازة",
         setAsNecessary: "تعيين كضرورية",
         titleVacationTypeId: "نوع الاجازة <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend: "إرسال الطلب"
+        buttonSend: "موافق"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
@@ -403,7 +403,7 @@ export class VacationTypeComponent {
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend: "إرسال الطلب"
+        buttonSend:"موافق"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;

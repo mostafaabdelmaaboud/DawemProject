@@ -326,13 +326,13 @@ export class AssignmentTypeComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestAssignmentTypeComponent, {
       width: "50vw",
       data: {
-        title: "طلب تكليف",
+        title: "نوع تكليف",
         setAsNecessary: "تعيين كضرورية",
         titleVacationTypeId: "نوع التكليف <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend: "إرسال الطلب"
+        buttonSend: "موافق"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
@@ -399,7 +399,7 @@ export class AssignmentTypeComponent {
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend: "إرسال الطلب"
+        buttonSend: "موافق"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;

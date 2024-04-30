@@ -170,6 +170,8 @@ export class SummonsComponent {
           code: summon.code,
           forTypeName: summon.forTypeName,
           summonStatusName: summon.summonStatusName,
+          summonStatus: summon.summonStatus,
+
           numberOfTargetedEmployees: summon.numberOfTargetedEmployees,
           LocalDateAndTime: moment(new Date(summon.localDateAndTime)).format("MMMM Do YYYY, h:mm:ss a") ,
           isActive: summon.isActive

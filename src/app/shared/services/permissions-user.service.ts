@@ -21,7 +21,6 @@ export class PermissionsUserService {
 
   checkPermission(data: any): boolean {
     let check = false
-    // debugger;
     if (this.getPermissions()?.isAdmin) {
       check = true
     } else {

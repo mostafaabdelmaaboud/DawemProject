@@ -21,7 +21,17 @@ mat-sidenav {
 :host ::ng-deep .mdc-list-item.mdc-list-item--with-one-line {
   height: 45px !important;
 }
-
+:host ::ng-deep .mat-expansion-panel-body {
+  .text-sidebar {
+    font-size: 14px;
+  }
+  .ant-menu-item {
+    svg {
+      width: 16px !important;
+    height: 20px !important;
+    }
+  }
+}
 :host ::ng-deep .mat-expansion-panel-header {
   .mat-content {
     span {
@@ -53,6 +63,12 @@ mat-sidenav {
 }
 :host ::ng-deep .sub-menu-item .mdc-list-item__content .mat-mdc-list-item-unscoped-content {
   white-space: break-spaces;
+}
+:host ::ng-deep .mat-mdc-list-item {
+  .ant-menu-item {
+    padding: 0 5px;
+  }
+  padding: 0;
 }
 .label {
   width: 150px;

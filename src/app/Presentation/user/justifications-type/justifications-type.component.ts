@@ -328,13 +328,13 @@ export class JustificationsTypeComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestJustificationTypeComponent, {
       width: "50vw",
       data: {
-        title: "طلب التبرير",
+        title: "نوع التبرير",
         setAsNecessary: "تعيين كضرورية",
         titleVacationTypeId: "نوع التبرير <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend: "إرسال الطلب"
+        buttonSend: "موافق"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
@@ -401,7 +401,7 @@ export class JustificationsTypeComponent {
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend: "إرسال الطلب"
+        buttonSend: "موافق"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;

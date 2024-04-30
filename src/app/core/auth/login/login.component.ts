@@ -9,6 +9,7 @@ import { PushNotificationService } from 'src/app/service/push-notification.servi
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { environment } from 'src/environments/environment';
 import { initializeApp } from "firebase/app";
+import { UserPermissionsService } from 'src/app/Presentation/user/user-permissions/services/user-permissions.service';
 
 @Component({
   selector: 'app-login',
@@ -29,6 +30,13 @@ export class LoginComponent {
   private router = inject(Router)
   selectedCountry: any;
   FCMToken:string = "";
+  filteration: any = {
+    PageSize: 40,
+    PageNumber: 0,
+    PagingEnabled: true
+  };
+  private userPermissionsService = inject(UserPermissionsService);
+
   constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService, private cd:ChangeDetectorRef, private notificacion: PushNotificationService) {
    
   }
@@ -194,23 +202,55 @@ export class LoginComponent {
       }).subscribe(
         {
           next: (res: any) => {
-            let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: res.data.availablePermissions })
-            localStorage.setItem("permissions", formatObjectPermissions);
-            let parseJson = JSON.parse(formatObjectPermissions);
-            if (parseJson.isAdmin || parseJson.availablePermissions.length > 0) {
+            if(res.data.isAdmin) {
               this.authService.setToken(res.data.token);
-              setTimeout(() => {
-                this.isLoading = false;
-                this.loading = true;
-                this.toast.success(res.message,"", {timeOut: 2000});
-                this.router.navigate(["/user/dashboard"]);
-              }, 1000);
+              this.userPermissionsService.availableActions(this.filteration).subscribe({
+                next: data => {
+          
+                  let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: data.data.screens })
+                  localStorage.setItem("permissions", formatObjectPermissions);
+                  let parseJson = JSON.parse(formatObjectPermissions);
+                  if (parseJson.availablePermissions.length > 0) {
+                    setTimeout(() => {
+                      this.isLoading = false;
+                      this.loading = true;
+                      this.toast.success(res.message,"", {timeOut: 2000});
+                      this.router.navigate(["/user/dashboard"]);
+                    }, 1000);
+                  } else {
+                    this.toast.error("you don't have permissions");
+                  this.isLoading = false;
+                  this.loading = true;
+                  }
+          
+                },
+                error: err => {
+                  this.toast.error(err.error.message);
+                  this.isLoading = false;
+                  this.loading = true;
+                }
+              }
+              )
             } else {
-              this.toast.error("you don't have permissions");
-            this.isLoading = false;
-            this.loading = true;
+              let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: res.data.availablePermissions })
+              localStorage.setItem("permissions", formatObjectPermissions);
+              let parseJson = JSON.parse(formatObjectPermissions);
+              if (parseJson.isAdmin || parseJson.availablePermissions.length > 0) {
+                this.authService.setToken(res.data.token);
+                setTimeout(() => {
+                  this.isLoading = false;
+                  this.loading = true;
+                  this.toast.success(res.message,"", {timeOut: 2000});
+                  this.router.navigate(["/user/dashboard"]);
+                }, 1000);
+              } else {
+                this.toast.error("you don't have permissions");
+              this.isLoading = false;
+              this.loading = true;
+              }
+              // this.isLoading = false;
             }
-            // this.isLoading = false;
+ 
           },
           error: err => {
             this.toast.error(err.error.message);

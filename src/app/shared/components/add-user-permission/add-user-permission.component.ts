@@ -388,6 +388,7 @@ export class AddUserPermissionComponent {
 
     this.userPermissionsService.checkAndGetPermission({ UserId: userId.value.key }).subscribe({
       next: role => {
+        
         this.translate.get("userPermissions").subscribe(translate => {
           this.data!['titleClose'] = translate.toRetreat;
           this.data!['title'] = translate.modifyPermission;
@@ -427,6 +428,7 @@ export class AddUserPermissionComponent {
 
           });
         }
+        
         this.permissionScreens = role?.permissionScreens;
         this.getPermissions(this.filteration, this.permissionScreens);
         this.translate.get("userPermissions").subscribe(translate => {
@@ -439,7 +441,9 @@ export class AddUserPermissionComponent {
           this.data!['buttonSend'] = translate.addPermission;
           this.data!['title'] = translate.addPermission;
         });
-     
+        
+        this.toast.error(err.error.message);
+
         this.editPermission = false;
         this.permissionScreens = [];
         this.getPermissions(this.filteration, this.permissionScreens);
@@ -449,7 +453,7 @@ export class AddUserPermissionComponent {
   }
   dropdownChangedRoleId(RoleId: any) {
 
-    this.userPermissionsService.checkAndGetPermission({ RoleId: RoleId.value.key }).subscribe({
+    this.userPermissionsService.checkAndGetPermission({ ResponsibilityId: RoleId.value.key }).subscribe({
       next: role => {
         this.translate.get("userPermissions").subscribe(translate => {
           this.data!['titleClose'] = translate.toRetreat;
@@ -461,13 +465,8 @@ export class AddUserPermissionComponent {
         this.editPermission = true;
         this.id = role.id
         this.getControl("isActive")?.setValue(role.isActive);
-
-
         this.getControl("ForType")?.setValue(role.forType.toString());
         this.getControl("fieldDisabled")?.setValue(role.code);
-
-
-
         if (role.responsibilityId != null) {
           this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: role.responsibilityId }).subscribe(dataDropdown => {
             this.listRoleId = [];
@@ -509,7 +508,10 @@ export class AddUserPermissionComponent {
           this.data!['buttonSend'] = translate.addPermission;
           this.data!['title'] = translate.addPermission;
         });
-   
+        
+
+        this.toast.error(err.error.message);
+
         this.editPermission = false;
         this.permissionScreens = [];
         this.getPermissions(this.filteration, this.permissionScreens);

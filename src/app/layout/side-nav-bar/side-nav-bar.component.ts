@@ -436,6 +436,62 @@ export class SideNavBarComponent {
   ngOnInit(): void {
     let permission = JSON.parse(localStorage.getItem('permissions') as string)
     this.isAdmin = permission?.isAdmin;
+
+    let definitions = [
+      "/user/jobTitles", 
+      "/user/sections",
+      "/user/groups",
+      "/user/zones",
+      "/user/schedualPlan",
+      "/user/tables",
+      "/user/shifts",
+      "/user/assignmentType",
+      "/user/justificationsType",
+      "/user/vacationType",
+      "/user/permissionType",
+      "/user/taskType",
+      "/user/holidays"
+    ];
+    let employees = [
+      "/user/employees", 
+      "/user/users",
+      "/user/employment",
+      "/user/scheduleLogs",
+      "/user/vacationBalance",
+      "/user/sanctions"
+    ];
+    let requests = [
+      "/user/requests", 
+      "/user/vacations",
+      "/user/justifications",
+      "/user/permissions",
+      "/user/tasks",
+      "/user/assignments",
+    ];
+    let summons = [
+      "/user/summons", 
+      "/user/summonMissingLogs"
+    ];
+    let settings = [
+      "/user/responsibility", 
+      "/user/userPermissions"
+    ];
+    if(definitions.includes(this.router.url)) {
+      this.step = 0;
+    }
+    if(employees.includes(this.router.url)) {
+      this.step = 1;
+    }
+    if(requests.includes(this.router.url)) {
+      this.step = 2;
+    }
+    if(summons.includes(this.router.url)) {
+      this.step = 3;
+    }
+    if(settings.includes(this.router.url)) {
+      this.step = 4;
+    }
+    console.log(this.router.url);
     this.notificationService.getNotification().subscribe(data => {
       this.numNotification = data?.NotificationData?.UnViewdNotificationCount;
     });
@@ -443,7 +499,7 @@ export class SideNavBarComponent {
       this.numNotification = data?.toString() === "0" ? "": data?.toString();
     });
 
-
+    
 
     this.getUnViewedNotificationCount();
     this.formGroupUnRead.get("unRead")?.valueChanges.subscribe(data => {

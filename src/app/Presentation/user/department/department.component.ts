@@ -121,6 +121,8 @@ export class DepartmentComponent {
   opened = false;
   cards!: any;
   spinnerCards = false;
+  isAdmin = true;
+
   private _mobileQueryListener: () => void;
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
@@ -155,6 +157,8 @@ export class DepartmentComponent {
       this.opened = false;
 
     }
+    let permission = JSON.parse(localStorage.getItem('permissions') as string)
+    this.isAdmin = permission?.isAdmin;
     this.filterForm = this.fb.group({
       FreeText: [""],
       code: [""],
@@ -247,6 +251,25 @@ export class DepartmentComponent {
     this.getDepartment(this.filteration)
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+
+  }
+  showComponent(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "component", screenCode: data.screenCode })
+  }
+  getPermissions(): any {
+    const permissionsString = localStorage.getItem('permissions') as string;
+
+    try {
+      // حاول تحويل القيمة إلى كائن JSON
+      return JSON.parse(permissionsString);
+    } catch (error) {
+      // إذا كان هناك أي خطأ، فقط أرجع القيمة النصية
+      return permissionsString;
+    }
+  }
+  componentName(data: any): string {
+    let findIndexPermission = (this.getPermissions()?.availablePermissions as any[]).findIndex(permission => permission.screenCode === data.screenCode);
+    return this.getPermissions()?.availablePermissions[findIndexPermission]?.screenName
 
   }
   exportTableToExcel() {
