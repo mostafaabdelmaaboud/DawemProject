@@ -16,6 +16,7 @@ import { DialogAddAnEmployeeComponent } from 'src/app/shared/components/dialog-a
 import { EmployeesService } from '../employees/services/employees.service';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { TranslateService } from '@ngx-translate/core';
+import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -87,6 +88,7 @@ export class DashboardComponent {
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(media: MediaMatcher, private changeDetectorRef: ChangeDetectorRef,
+    private permissionsUserService: PermissionsUserService,
     public translate: TranslateService) {
     this.mobileQuery = media.matchMedia('(max-width: 992px)');
 
@@ -414,7 +416,9 @@ export class DashboardComponent {
     this.getDepartmentsInformations(this.filterationDepartments);
     this.getBestEmployees(this.filterationBestEmloyees);
   }
-
+  showActions(data: any) {
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 4, actionCode: data.actionCode })
+  }
   onChangeStatusOfOrders(data:any) {
     switch (data.value.code) {
       case 'today':

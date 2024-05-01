@@ -151,7 +151,7 @@ export class AddUserComponent {
 
    
     let rolesDropDown = this.usersService.getRolesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-    let employeeForDropDown = this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+    let employeeForDropDown = this.usersService.GetForDropDownEmployeeNotHaveUser({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let countries = this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
 
     combineLatest({
@@ -216,7 +216,7 @@ export class AddUserComponent {
               }
               this.addBranchGroupForm.get("IsAdmin")?.setValue(data.isAdmin);
 
-              this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.employeeId }).subscribe(dataDropdown => {
+              this.usersService.GetForDropDownEmployeeNotHaveUser({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.employeeId }).subscribe(dataDropdown => {
                 this.listEmployees = []
                 dataDropdown.data?.forEach((insideData: any) => {
                   this.listEmployees.push({ name: insideData.name, key: insideData.id })
@@ -305,17 +305,17 @@ export class AddUserComponent {
   searchDropdown(data: any, type: string) {
 
     switch (type) {
-      case 'AssignmentTypeId':
+      case 'EmployeeId':
         if (data || data === "") {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
-            this.assignmentsService.assignmentTypeDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+            this.usersService.GetForDropDownEmployeeNotHaveUser({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.list = [];
+                this.listEmployees = [];
                 this.lastSearchQuery = "";
                 res?.data?.forEach((item: any) => {
-                  this.list.push({ name: item.name, key: item.id })
+                  this.listEmployees.push({ name: item.name, key: item.id })
                 });
               });
           }

@@ -445,7 +445,7 @@
                       </div>
                     </div>
                     <div class="left-StaffAttendanceStatus">
-                      <button type="button" class="btn btn-primary"  (click)="addAnEmployee(department)">{{'dashboard.addAnEmployee' | translate}}</button>
+                      <button type="button" class="btn btn-primary" *ngIf="showActions({actionCode:0})"   (click)="addAnEmployee(department)">{{'dashboard.addAnEmployee' | translate}}</button>
                       <!-- routerLink="/user/employees" -->
                     </div>
                   </div>

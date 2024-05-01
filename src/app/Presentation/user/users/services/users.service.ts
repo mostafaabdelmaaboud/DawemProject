@@ -17,7 +17,26 @@ export class UsersService {
     }
     return this.http.get<any>(`${environment.baseUrl}User/Get`, { params: queryParams })
   }
+  GetForDropDownEmployeeNotHaveUser(params: any) {
+    let queryParams = new HttpParams();
 
+    if (params) {
+
+      Object.entries(params).forEach(([key, value]: any) => {
+        if (key === "ids") {
+          value.forEach((id: any) => {
+            queryParams = queryParams.append(key, id)
+
+          });
+        } else {
+          queryParams = queryParams.set(key, value);
+
+        }
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}Employee/GetForDropDownEmployeeNotHaveUse`, { params: queryParams })
+
+  }
   getInformation(): Observable<any> {
 
     return this.http.get<any>(`${environment.baseUrl}User/GetUsersInformations`).pipe(map(data => data.data));
