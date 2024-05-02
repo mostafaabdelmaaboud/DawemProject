@@ -34,7 +34,7 @@ export class UsersService {
         }
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}Employee/GetForDropDownEmployeeNotHaveUse`, { params: queryParams })
+    return this.http.get<any>(`${environment.baseUrl}Employee/GetForDropDownEmployeeNotHaveUser`, { params: queryParams })
 
   }
   getInformation(): Observable<any> {
