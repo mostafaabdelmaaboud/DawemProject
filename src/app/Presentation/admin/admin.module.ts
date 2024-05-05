@@ -28,7 +28,12 @@ const routes: Routes = [
         path: "users",
         loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
         canActivate: [PermissionAminGuard]
-      }
+      },
+      {
+        path: "plans",
+        loadChildren: () => import('./permission-log/permission-log.module').then((m) => m.PermissionLogModule),
+        canActivate: [PermissionAminGuard]
+      },
     ]
   }
 ];

@@ -194,8 +194,8 @@ export class SideNavBarComponent {
     }
   }
   componentName(data: any): string {
-    let findIndexPermission = (this.getPermissions()?.availablePermissions as any[]).findIndex(permission => permission.screenCode === data.screenCode);
-    return this.getPermissions()?.availablePermissions[findIndexPermission]?.screenName
+    let findIndexPermission = (this.getPermissions()?.availablePermissions as any[])?.findIndex(permission => permission.screenCode === data.screenCode);
+    return findIndexPermission >=0 ? this.getPermissions()?.availablePermissions[findIndexPermission]?.screenName : ''
 
   }
   numberNotification(showFirstOnly:boolean, unread:boolean) {

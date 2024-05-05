@@ -16,7 +16,8 @@ export class PermissionAminGuard implements CanActivate {
       return this.permissionsUserService.checkPermission({ type: "component", screenCode: 0 });
     }  else if (state.url.includes("userPermissions")) {
       return this.permissionsUserService.checkPermission({ type: "component", screenCode: 1 });
-    } else if (state.url.includes("permissionsRecords")) {
+    } 
+    else if (state.url.includes("permissionsRecords")) {
       return this.permissionsUserService.checkPermission({ type: "component", screenCode: 2 });
     } else if (state.url.includes("responsibility")) {
       return this.permissionsUserService.checkPermission({ type: "component", screenCode: 3 });

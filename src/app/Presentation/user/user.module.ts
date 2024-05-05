@@ -111,6 +111,12 @@ const routes: Routes = [
         canActivate: [PermissionGuard]
       },
       {
+        path: "PermissionLog",
+        loadChildren: () => import('./permission-log/permission-log.module').then((m) => m.PermissionLogModule),
+        canActivate: [PermissionGuard]
+      },
+      
+      {
         path: "users",
         loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
         canActivate: [PermissionGuard]
