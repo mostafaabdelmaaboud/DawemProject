@@ -18,19 +18,31 @@ export class PermissionsUserService {
       return permissionsString;
     }
   }
+  getPermissionsAdmin(): any {
+    const permissionsString = localStorage.getItem('adminPermissions') as string;
 
+    try {
+      // حاول تحويل القيمة إلى كائن JSON
+      return JSON.parse(permissionsString);
+    } catch (error) {
+      // إذا كان هناك أي خطأ، فقط أرجع القيمة النصية
+      return permissionsString;
+    }
+  }
   checkPermission(data: any): boolean {
     let check = false
     if (this.getPermissions()?.isAdmin) {
       check = true
     } else {
 
-
+      
       if (data?.type === "component") {
         if ((this.getPermissions()?.availablePermissions as any[])?.length > 0) {
           let findIndexPermission = (this.getPermissions().availablePermissions as any[]).findIndex(permission => permission.screenCode === data.screenCode);
           findIndexPermission >= 0 ? check = true : check = false
         } else {
+          
+
           this.authService.logout();
 
         }
@@ -44,7 +56,43 @@ export class PermissionsUserService {
           let checkActionCode = (this.getPermissions().availablePermissions[findIndexPermission].permissionScreenActions as any[]).findIndex(permission => permission.actionCode === data.actionCode)
           checkActionCode >= 0 ? check = true : check = false
         } else {
+          
+
           this.authService.logout();
+
+        }
+
+      }
+
+    }
+    return check
+  }
+  checkPermissionAdmin(data: any): boolean {
+    let check = false
+    if (this.getPermissionsAdmin()?.isAdmin) {
+      check = true
+    } else {
+
+
+      if (data?.type === "component") {
+        if ((this.getPermissionsAdmin()?.availablePermissions as any[])?.length > 0) {
+          let findIndexPermission = (this.getPermissionsAdmin().availablePermissions as any[]).findIndex(permission => permission.screenCode === data.screenCode);
+          findIndexPermission >= 0 ? check = true : check = false
+        } else {
+          this.authService.logoutAdmin();
+
+        }
+
+      } else {
+
+
+        if ((this.getPermissionsAdmin()?.availablePermissions as any[])?.length > 0) {
+          let findIndexPermission = (this.getPermissionsAdmin().availablePermissions as any[]).findIndex(permission => permission.screenCode === data.screenCode);
+
+          let checkActionCode = (this.getPermissionsAdmin().availablePermissions[findIndexPermission].permissionScreenActions as any[]).findIndex(permission => permission.actionCode === data.actionCode)
+          checkActionCode >= 0 ? check = true : check = false
+        } else {
+          this.authService.logoutAdmin();
 
         }
 

@@ -146,7 +146,7 @@ export class PermissionLogComponent {
   }
 
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 30, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: 30, actionCode: data.actionCode })
   }
   getPermissionLog(filteration: any) {
     this.permissionLog = [];

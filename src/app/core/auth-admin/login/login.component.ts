@@ -188,23 +188,20 @@ export class LoginComponent {
       this.authService.login({
         Email: this.FormGroup.value.Email,
         Password: this.FormGroup.value.password,
-        FCMToken: this.FCMToken,
         RememberMe: true,
-        ApplicationType: 1
+        ApplicationType: 0
       }).subscribe(
         {
           next: (res: any) => {
             let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: res.data.availablePermissions })
-            localStorage.setItem("permissions", formatObjectPermissions);
+            localStorage.setItem("adminPermissions", formatObjectPermissions);
             let parseJson = JSON.parse(formatObjectPermissions);
             if (parseJson.isAdmin || parseJson.availablePermissions.length > 0) {
-              this.authService.setToken(res.data.token);
-              setTimeout(() => {
+              this.authService.setTokenAdmin(res.data.token);
                 this.isLoading = false;
                 this.loading = true;
                 this.toast.success(res.message,"", {timeOut: 2000});
                 this.router.navigate(["/admin/responsibility"]);
-              }, 1000);
             } else {
               this.toast.error("you don't have permissions");
             this.isLoading = false;

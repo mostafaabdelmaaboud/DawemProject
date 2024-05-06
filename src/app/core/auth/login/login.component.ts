@@ -10,6 +10,7 @@ import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { environment } from 'src/environments/environment';
 import { initializeApp } from "firebase/app";
 import { UserPermissionsService } from 'src/app/Presentation/user/user-permissions/services/user-permissions.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -37,7 +38,7 @@ export class LoginComponent {
   };
   private userPermissionsService = inject(UserPermissionsService);
 
-  constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService, private cd:ChangeDetectorRef, private notificacion: PushNotificationService) {
+  constructor(private fb: FormBuilder, public translate: TranslateService,private http: HttpClient, private toast: ToastrService, private cd:ChangeDetectorRef, private notificacion: PushNotificationService) {
    
   }
   ngOnInit(): void {
@@ -198,12 +199,19 @@ export class LoginComponent {
         Password: this.FormGroup.value.password,
         FCMToken: this.FCMToken,
         RememberMe: true,
-        ApplicationType: 1
+        ApplicationType: 0
       }).subscribe(
         {
           next: (res: any) => {
             if(res.data.isAdmin) {
               this.authService.setToken(res.data.token);
+              let queryParams = new HttpParams();
+              if (this.filteration) {
+                Object.entries(this.filteration).forEach(([key, value]: any) => {
+                  queryParams = queryParams.set(key, value);
+                })
+              }
+         
               this.userPermissionsService.availableActions(this.filteration).subscribe({
                 next: data => {
           
@@ -211,12 +219,10 @@ export class LoginComponent {
                   localStorage.setItem("permissions", formatObjectPermissions);
                   let parseJson = JSON.parse(formatObjectPermissions);
                   if (parseJson.availablePermissions.length > 0) {
-                    setTimeout(() => {
                       this.isLoading = false;
                       this.loading = true;
                       this.toast.success(res.message,"", {timeOut: 2000});
                       this.router.navigate(["/user/dashboard"]);
-                    }, 1000);
                   } else {
                     this.toast.error("you don't have permissions");
                   this.isLoading = false;
@@ -237,12 +243,10 @@ export class LoginComponent {
               let parseJson = JSON.parse(formatObjectPermissions);
               if (parseJson.isAdmin || parseJson.availablePermissions.length > 0) {
                 this.authService.setToken(res.data.token);
-                setTimeout(() => {
                   this.isLoading = false;
                   this.loading = true;
                   this.toast.success(res.message,"", {timeOut: 2000});
                   this.router.navigate(["/user/dashboard"]);
-                }, 1000);
               } else {
                 this.toast.error("you don't have permissions");
               this.isLoading = false;

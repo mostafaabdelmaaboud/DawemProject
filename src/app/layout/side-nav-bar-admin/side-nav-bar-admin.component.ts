@@ -91,7 +91,7 @@ export class SideNavBarAdminComponent {
 
   }
   getPermissions(): any {
-    const permissionsString = localStorage.getItem('permissions') as string;
+    const permissionsString = localStorage.getItem('adminPermissions') as string;
 
     try {
       // حاول تحويل القيمة إلى كائن JSON
@@ -102,7 +102,7 @@ export class SideNavBarAdminComponent {
     }
   }
   showComponent(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "component", screenCode: data.screenCode })
+    return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: data.screenCode })
   }
   onLinkClick(event: Event) {
     event.preventDefault();
@@ -390,7 +390,7 @@ export class SideNavBarAdminComponent {
 
   }
   ngOnInit(): void {
-    let permission = JSON.parse(localStorage.getItem('permissions') as string)
+    let permission = JSON.parse(localStorage.getItem('adminPermissions') as string)
     this.isAdmin = permission?.isAdmin;
     // this.notificationService.getNotification().subscribe(data => {
     //   this.numNotification = data?.NotificationData?.UnViewdNotificationCount;
@@ -469,8 +469,16 @@ export class SideNavBarAdminComponent {
       // }
 
     }
+    
     if (!this.getPermissions()) {
-      this.authService.logout();
+      
+    localStorage.removeItem("user");
+    localStorage.removeItem("Admintoken");
+    localStorage.removeItem("usersMe");
+    localStorage.removeItem("adminPermissions");
+  
+      this.router.navigate(["adminPanel/login"]);
+
     }
     if (this.mobileQuery.matches) {
       this.opened = false;
@@ -916,6 +924,7 @@ export class SideNavBarAdminComponent {
   }
 
   logout() {
+    
 
     const logoutDialog = this.dialog.open(LogoutComponent, {
       width: "30vw",
@@ -927,7 +936,15 @@ export class SideNavBarAdminComponent {
     });
     logoutDialog.componentInstance.submitted = true;
     logoutDialog.componentInstance.submitClicked.subscribe(result => {
-      this.authService.logout();
+      
+      localStorage.removeItem("user");
+      localStorage.removeItem("Admintoken");
+      localStorage.removeItem("usersMe");
+      localStorage.removeItem("adminPermissions");
+
+        this.router.navigate(["./adminPanel/login"]);
+        
+  
       logoutDialog.close();
 
     })

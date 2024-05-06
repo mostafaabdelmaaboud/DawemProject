@@ -214,7 +214,7 @@ export class UserPermissionsComponent {
 
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 19, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: 19, actionCode: data.actionCode })
   }
   getInformation() {
     this.spinnerCards = true;

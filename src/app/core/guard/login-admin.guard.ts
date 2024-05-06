@@ -11,7 +11,7 @@ export class LoginAdminGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (localStorage.getItem("token")) {
+    if (localStorage.getItem("Admintoken")) {
       this.router.navigateByUrl('/admin/responsibility');
 
       return false;

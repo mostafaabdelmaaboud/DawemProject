@@ -28,6 +28,10 @@ export class AuthService {
   setToken(Token: string) {
     localStorage.setItem('token', JSON.stringify(Token))
   }
+  setTokenAdmin(Token: string) {
+    localStorage.setItem('Admintoken', JSON.stringify(Token))
+    
+  }
   setusersMe(usersMe: string) {
     localStorage.setItem('usersMe ', JSON.stringify(usersMe))
   }

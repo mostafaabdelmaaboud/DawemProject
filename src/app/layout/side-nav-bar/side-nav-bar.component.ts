@@ -571,7 +571,14 @@ export class SideNavBarComponent {
 
     }
     if (!this.getPermissions()) {
-      this.authService.logout();
+      
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("usersMe");
+    localStorage.removeItem("permissions");
+      this.router.navigate(["./login"]);
+
+
     }
     if (this.mobileQuery.matches) {
       this.opened = false;
@@ -1016,7 +1023,7 @@ export class SideNavBarComponent {
   }
 
   logout() {
-
+    
     const logoutDialog = this.dialog.open(LogoutComponent, {
       width: "30vw",
       data: {
@@ -1027,7 +1034,11 @@ export class SideNavBarComponent {
     });
     logoutDialog.componentInstance.submitted = true;
     logoutDialog.componentInstance.submitClicked.subscribe(result => {
-      this.authService.logout();
+      
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("permissions");
+      this.router.navigate(["./login"]);
       logoutDialog.close();
 
     })

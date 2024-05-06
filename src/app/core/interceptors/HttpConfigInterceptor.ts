@@ -33,18 +33,31 @@ export class HttpConfigInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     if (request.method == "GET" || request.method == "PATCH") {
+      
       let token: any;
       if (
         !request.url.includes("/api/Browse/Browse") 
       ) {
-        if (typeof localStorage.getItem("token") === 'string') {
-          token = `Bearer ${JSON?.parse(localStorage.getItem("token") as string)}`
-  
-        } else {
-          if (JSON.stringify(localStorage.getItem("token"))) {
-            token = `Bearer ${JSON?.parse(JSON.stringify(localStorage.getItem("token")))}`
+         if(this.router.url.includes("admin/") || this.router.url.includes("adminPanel/login")) {
+          if (typeof localStorage.getItem("Admintoken") === 'string') {
+            token = `Bearer ${JSON?.parse(localStorage.getItem("Admintoken") as string)}`
+    
+          } else {
+            if (JSON.stringify(localStorage.getItem("Admintoken"))) {
+              token = `Bearer ${JSON?.parse(JSON.stringify(localStorage.getItem("Admintoken")))}`
+            }
+          }
+        } else if(this.router.url.includes("user/")|| this.router.url.includes("/login")) {
+          if (typeof localStorage.getItem("token") === 'string') {
+            token = `Bearer ${JSON?.parse(localStorage.getItem("token") as string)}`
+    
+          } else {
+            if (JSON.stringify(localStorage.getItem("token"))) {
+              token = `Bearer ${JSON?.parse(JSON.stringify(localStorage.getItem("token")))}`
+            }
           }
         }
+   
         // request.headers.set("token", this.authService.getToken());
         // request.headers.set("Content-Type", "application/json");
         if (!request.url.includes("assets/i18n")) {
@@ -93,15 +106,31 @@ export class HttpConfigInterceptor implements HttpInterceptor {
       } else {
         let token: any;
 
-        if (typeof localStorage.getItem("token") === 'string') {
-          token = `Bearer ${JSON?.parse(localStorage.getItem("token") as string)}`
-
-        } else {
-          if (JSON.stringify(localStorage.getItem("token"))) {
-            token = `Bearer ${JSON?.parse(JSON.stringify(localStorage.getItem("token")))}`
-
+       
+        if(this.router.url.includes("admin/")) {
+    
+          if (typeof localStorage.getItem("Admintoken") === 'string') {
+            token = `Bearer ${JSON?.parse(localStorage.getItem("Admintoken") as string)}`
+  
+          } else {
+            if (JSON.stringify(localStorage.getItem("Admintoken"))) {
+              token = `Bearer ${JSON?.parse(JSON.stringify(localStorage.getItem("Admintoken")))}`
+  
+            }
           }
-        }
+        } else if(this.router.url.includes("user/")) {
+          if (typeof localStorage.getItem("token") === 'string') {
+            token = `Bearer ${JSON?.parse(localStorage.getItem("token") as string)}`
+  
+          } else {
+            if (JSON.stringify(localStorage.getItem("token"))) {
+              token = `Bearer ${JSON?.parse(JSON.stringify(localStorage.getItem("token")))}`
+  
+            }
+          }
+        } 
+
+
         let translate = this.injector.get(TranslateService);
           if (translate.currentLang == "ar") {
             request = request.clone({
@@ -145,7 +174,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
             localStorage.removeItem("me");
             localStorage.removeItem("rules");
             localStorage.removeItem("permissions");
-
+            
             localStorage.clear();
             sessionStorage.clear();
             if(this.router.url.includes("user/")) {

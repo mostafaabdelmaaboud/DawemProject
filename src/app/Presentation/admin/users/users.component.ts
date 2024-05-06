@@ -543,7 +543,7 @@ export class UsersComponent {
     });
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 34, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: 34, actionCode: data.actionCode })
   }
   editUser(data: any) {
     let dialogRefAddCurrency!:MatDialogRef<AddUserComponent, any>;

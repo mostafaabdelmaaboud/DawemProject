@@ -54,6 +54,8 @@ export class AuthService {
     return this.http.get<any>(`${environment.baseUrl}Lookups/GetLanguages`, { params: queryParams }).pipe(map(data => data.data))
   }
   logout() {
+    
+
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     localStorage.removeItem("usersMe");
@@ -66,6 +68,18 @@ export class AuthService {
       this.router.navigate(["adminPanel/login"]);
 
     }
+
+  }
+  logoutAdmin() {
+    
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("Admintoken");
+    localStorage.removeItem("usersMe");
+    localStorage.removeItem("adminPermissions");
+
+      this.router.navigate(["adminPanel/login"]);
+
 
   }
   // POSTLogin(url: any, data: any) {
