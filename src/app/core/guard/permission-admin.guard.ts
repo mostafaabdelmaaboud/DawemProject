@@ -12,12 +12,11 @@ export class PermissionAminGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (state.url.includes("companies")) {
+    if (state.url.includes("Companies")) {
       return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 0 });
-    }  else if (state.url.includes("userPermissions")) {
+    } else if (state.url.includes("userPermissions")) {
       return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 1 });
-    } 
-    else if (state.url.includes("PermissionLog")) {
+    } else if (state.url.includes("PermissionLog")) {
       return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 2 });
     } else if (state.url.includes("responsibility")) {
       return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 3 });

@@ -10,7 +10,7 @@
         <nz-sider>
           <ul nz-menu nzMode="inline">
             <ng-container *ngIf="!isAdmin">
-              <li *ngIf="showComponent({screenCode:0})" nz-menu-item routerLink="/admin/dashboard"
+              <li *ngIf="showComponent({screenCode:0})" nz-menu-item routerLink="/admin/Companies"
                 routerLinkActive="ant-menu-item-selected">
                 <!-- الشركات -->
                 <span nz-icon></span>
@@ -133,7 +133,7 @@
             </ng-container>
             <ng-container *ngIf="isAdmin">
        
-              <li nz-menu-item routerLink="/admin/dashboard" routerLinkActive="ant-menu-item-selected">
+              <li nz-menu-item routerLink="/admin/Companies" routerLinkActive="ant-menu-item-selected">
                 <span nz-icon></span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
                   <g id="Linear / Essentional, UI / Home Smile">

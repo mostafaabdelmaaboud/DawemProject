@@ -186,14 +186,14 @@ export class PermissionLogComponent {
 
   getScreenCode() {
     this.permissionLogService.screenCodeForDropdown({PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe(data => {
-      data?.data?.forEach((user: any) => {
+      data?.data?.screens?.forEach((user: any) => {
         this.listScreenCode.push({ name: user.name, key: user.id })
       });
     })
   }
   getActionCode() {
     this.permissionLogService.actionCodeForDropdown({PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe(data => {
-      data?.data?.forEach((user: any) => {
+      data?.data?.actions?.forEach((user: any) => {
         this.listActionCode.push({ name: user.name, key: user.id })
       });
     })
@@ -229,7 +229,7 @@ export class PermissionLogComponent {
                 this.listScreenCode = [];
                 this.lastSearchQuery = "";
 
-                res?.data?.forEach((screen: any) => {
+                res?.data?.screens?.forEach((screen: any) => {
                   this.listScreenCode.push({ name: screen.name, key: screen.id })
                 });
 
@@ -247,7 +247,7 @@ export class PermissionLogComponent {
                 this.listActionCode = [];
                 this.lastSearchQuery = "";
 
-                res?.data?.forEach((actionCode: any) => {
+                res?.data?.actions?.forEach((actionCode: any) => {
                   this.listActionCode.push({ name: actionCode.name, key: actionCode.id })
                 });
               });

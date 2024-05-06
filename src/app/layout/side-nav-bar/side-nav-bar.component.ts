@@ -225,7 +225,7 @@ export class SideNavBarComponent {
                       };
                       this.notificationList = [];
                     }
-                    data?.data?.notificationStores.forEach(item => {
+                    data?.data?.Notifications.forEach(item => {
                       this.notificationList.push({
                         shortMessege:item.shortMessege,
                         fullMessege:item.fullMessege,
@@ -265,7 +265,7 @@ export class SideNavBarComponent {
                     };
                     this.notificationList = [];
                   }
-                  data?.data?.notificationStores.forEach(item => {
+                  data?.data?.Notifications.forEach(item => {
                     this.notificationList.push({
                       shortMessege:item.shortMessege,
                       fullMessege:item.fullMessege,
@@ -309,7 +309,7 @@ export class SideNavBarComponent {
                       };
                       this.notificationList = [];
                     }
-                    data?.data?.notificationStores.forEach(item => {
+                    data?.data?.Notifications.forEach(item => {
                       this.notificationList.push({
                         shortMessege:item.shortMessege,
                         fullMessege:item.fullMessege,
@@ -334,7 +334,7 @@ export class SideNavBarComponent {
                       };
                       this.notificationList = [];
                     }
-                    data?.data?.notificationStores.forEach(item => {
+                    data?.data?.Notifications.forEach(item => {
                       this.notificationList.push({
                         shortMessege:item.shortMessege,
                         fullMessege:item.fullMessege,
@@ -365,7 +365,7 @@ export class SideNavBarComponent {
           this.notificationService.getUnreadNotifications(this.notificationFilter).subscribe({
             next:data => {
               // this.notificationList = [];
-              data?.data?.notificationStores.forEach(item => {
+              data?.data?.Notifications.forEach(item => {
                 this.notificationList.push({
                   shortMessege:item.shortMessege,
                   fullMessege:item.fullMessege,

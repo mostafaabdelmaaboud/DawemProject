@@ -23,7 +23,7 @@ export class NotificationService {
     return this.notification$.asObservable();
   }
   dataUnViewedNotificationCount(): Observable<any> {
-    return this.http.get<any>(`${environment.baseUrl}NotificationStore/GetUnViewedNotificationCount`)
+    return this.http.get<any>(`${environment.baseUrl}Notification/GetUnViewedNotificationCount`)
   }
   getUnViewedNotificationCount() {
     return this.unViewednotification$.asObservable();
@@ -38,7 +38,7 @@ export class NotificationService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}NotificationStore/GetNotifications`, { params: queryParams })
+    return this.http.get<any>(`${environment.baseUrl}Notification/GetNotifications`, { params: queryParams })
   }
   getUnreadNotifications(filter: any): Observable<any> {
     let queryParams = new HttpParams();
@@ -47,7 +47,7 @@ export class NotificationService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}NotificationStore/GetUnreadNotifications`, { params: queryParams })
+    return this.http.get<any>(`${environment.baseUrl}Notification/Get`, { params: queryParams })
   }
   markAsRead(params:any): Observable<any>  {
     let queryParams = new HttpParams();
@@ -56,11 +56,11 @@ export class NotificationService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.put<any>(`${environment.baseUrl}NotificationStore/MarkAsRead`,{}, { params: queryParams })
+    return this.http.put<any>(`${environment.baseUrl}Notification/MarkAsRead`,{}, { params: queryParams })
 
   }
   markAsViewed(): Observable<any> {
-    return this.http.put<any>(`${environment.baseUrl}NotificationStore/MarkAsViewed`,{})
+    return this.http.put<any>(`${environment.baseUrl}Notification/MarkAsViewed`,{})
   }
 
 }
