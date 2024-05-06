@@ -11,9 +11,11 @@ export class AuthAdminGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+      
 
     if (!localStorage.getItem("Admintoken")) {
-      this.router.navigateByUrl('/admin/login');
+      
+      this.router.navigateByUrl('/adminPanel/login');
       return false;
     }
     return true;
