@@ -30,7 +30,7 @@ const routes: Routes = [
         canActivate: [PermissionAminGuard]
       },
       {
-        path: "plans",
+        path: "PermissionLog",
         loadChildren: () => import('./permission-log/permission-log.module').then((m) => m.PermissionLogModule),
         canActivate: [PermissionAminGuard]
       },

@@ -474,7 +474,8 @@ export class SideNavBarComponent {
     ];
     let settings = [
       "/user/responsibility", 
-      "/user/userPermissions"
+      "/user/userPermissions",
+      "/user/PermissionLog"
     ];
     if(definitions.includes(this.router.url)) {
       this.step = 0;
