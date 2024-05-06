@@ -350,7 +350,7 @@ export class SideNavBarAdminComponent {
   markAsRead(id:any) {
     this.loadingNotification = true;
 
-    let params = {notificationStoreId:id};
+    let params = {notificationId:id};
     this.notificationService.markAsRead(params).subscribe({
       next:data => {
         let findIndexIsRead = this.notificationList.findIndex(item => item.id === id);
