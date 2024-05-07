@@ -1,0 +1,110 @@
+<div class="container-Dialog">
+    <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+      <h3 class="title-Dialog m-0">
+        معلومات الفرع
+      </h3>
+      <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+        <i class="pi pi-times-circle"></i>
+      </button>
+    </header>
+    <div class="body-dialog p-15 f-s-16">
+      <!-- <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">{{"userPermissions.theCondition"|translate}}</label>
+        <div class="content-password">
+          <ng-container *ngIf="info?.isActive">
+            {{"employees.active"|translate}}
+          </ng-container>
+          <ng-container *ngIf="!info?.isActive">
+            {{"employees.Inactive"|translate}}
+          </ng-container>
+        </div>
+  
+      </div> -->
+      <div class="col-12">
+        <div class="row">
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">اسم الفرع</label>
+                    <div class="content-password">
+                      <ng-container *ngIf="dataRow?.name">
+                        {{dataRow?.name}}
+                      </ng-container>
+                      <ng-container *ngIf="!dataRow?.name">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                  </div>
+            </div>
+
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">رمز البريدي للفرع</label>
+                    <div class="content-password">
+                      <ng-container *ngIf="dataRow?.postalCode">
+                        {{dataRow?.postalCode}}
+                      </ng-container>
+                      <ng-container *ngIf="!dataRow?.postalCode">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">عنوان الفرع الرئيسي</label>
+                    <div class="content-password">
+                      <ng-container *ngIf="dataRow?.address">
+                        {{dataRow?.address}}
+                      </ng-container>
+                      <ng-container *ngIf="!dataRow?.address">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                    <div class="body-map mt-2"  *ngIf="this.latitude!= null && this.longitude != null">
+                        <agm-map [latitude]="latitude" [scrollwheel]="false" [longitude]="longitude" [zoom]="zoomLevel"
+                          [disableDefaultUI]="false" [zoomControl]="true" >
+                          <agm-marker *ngFor="let mapMarker of markers; let i = index" [latitude]="mapMarker.latitude"
+                            [longitude]="mapMarker.longitude" [label]="mapMarker.label ? mapMarker.label : ''"
+                            [markerDraggable]="mapMarker.draggable">
+                          </agm-marker>
+                          <agm-circle [latitude]="latitude" [longitude]="longitude" [radius]="radius" [fillColor]="'red'"
+                            [circleDraggable]="false" [editable]="false">
+                          </agm-circle>
+                        </agm-map>
+                 
+                      </div>
+                  </div>
+            </div>
+
+        </div>
+      </div>
+      <!-- <div class="sectionTwo mb-3 line-bellow" *ngIf="info?.userName != null">
+        <label class="title">{{"users.userName"|translate}}</label>
+        <div class="content-password">
+          <ng-container *ngIf="info?.userName">
+            {{info?.userName}}
+          </ng-container>
+          <ng-container *ngIf="!info?.userName">
+            {{"department.nothing"|translate}}
+          </ng-container>
+        </div>
+  
+      </div> -->
+      <!-- <div class="sectionTwo mb-3 line-bellow" *ngIf="info?.roleName != null">
+        <label class="title">{{"userPermissions.permissionName"|translate}}</label>
+        <div class="content-password">
+          <ng-container *ngIf="info?.roleName">
+            {{info?.roleName}}
+          </ng-container>
+          <ng-container *ngIf="!info?.roleName">
+            {{"department.nothing"|translate}}
+          </ng-container>
+        </div>
+      </div> -->
+  
+    </div>
+
+  </div>
+  <div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+  </div>

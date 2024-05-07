@@ -21,6 +21,16 @@ export class CompaniesService {
 
     return this.http.get<any>(`${environment.baseUrl}adminpanel/Company/GetCompaniesInformations`).pipe(map(data => data.data));
   }
+  createCompany(formData: FormData) {
+
+    return this.http.post<any>(`${environment.baseUrl}adminpanel/Company/Create`, formData)
+
+  }
+  updateCompany(formData: FormData) {
+
+    return this.http.put<any>(`${environment.baseUrl}adminpanel/Company/Update`, formData)
+
+  }
   GetCountries(filter: any) {
     let queryParams = new HttpParams();
     if (filter) {
@@ -30,7 +40,7 @@ export class CompaniesService {
     }
     return this.http.get<any>(`${environment.baseUrl}Lookups/GetCountries`, { params: queryParams })
   }
-  disableResponsibility(params: any) {
+  companyDisable(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -38,7 +48,7 @@ export class CompaniesService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.put<any>(`${environment.baseUrl}adminpanel/Responsibility/disable`, {}, { params: queryParams })
+    return this.http.put<any>(`${environment.baseUrl}adminpanel/Company/Disable`, {}, { params: queryParams })
   }
   accept(params: any) {
     let queryParams = new HttpParams();
@@ -48,10 +58,10 @@ export class CompaniesService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.put<any>(`${environment.baseUrl}adminpanel/Responsibility/enable`, {}, { params: queryParams })
+    return this.http.put<any>(`${environment.baseUrl}adminpanel/Company/Enable?`, {}, { params: queryParams })
 
   }
-  responsibilityInfo(params: any) {
+  getCompanyById(params:any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -59,7 +69,17 @@ export class CompaniesService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}adminpanel/Responsibility/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
+    return this.http.get<any>(`${environment.baseUrl}adminpanel/Company/GetById`, { params: queryParams }).pipe(map(data => data.data));
+  }
+  CompanyInfo(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}adminpanel/Company/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
   }
 
 

@@ -180,6 +180,7 @@ export class UpdateCompanyComponent {
   onMarkerClickEvent(mapLabel: any, mapIndx: number) {
     
   }
+
   getInformation() {
     let countries = this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let getLanguages = this.authService.getLanguages({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
@@ -616,7 +617,7 @@ export class UpdateCompanyComponent {
       });
       
       if(
-        (this.FormGroup?.value?.preferredLanguageId?.id && this.editBefore.preferredLanguageId?.id != this.FormGroup?.value?.preferredLanguageId?.id) ||
+        (this.showPreferredLanguage && this.FormGroup?.value?.preferredLanguageId?.id && this.editBefore?.preferredLanguageId != this.FormGroup?.value?.preferredLanguageId?.id) ||
         (this.FormGroup?.value?.website && this.FormGroup?.value?.website != this.editBefore.webSite) ||
         (this.FormGroup?.value?.headquarterAddress && this.FormGroup?.value?.headquarterAddress != this.editBefore.headquarterAddress) ||
         (this.FormGroup?.value?.headquarterPostalCode && this.FormGroup?.value?.headquarterPostalCode != this.editBefore.headquarterPostalCode) ||

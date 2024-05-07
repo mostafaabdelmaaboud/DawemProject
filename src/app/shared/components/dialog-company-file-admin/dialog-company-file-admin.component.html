@@ -1,0 +1,339 @@
+<div class="container-Dialog">
+    <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+      <h3 class="title-Dialog m-0">
+        معلومات الشركة
+      </h3>
+      <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+        <i class="pi pi-times-circle"></i>
+      </button>
+    </header>
+    <div class="body-dialog p-15 f-s-16">
+      <!-- <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">{{"userPermissions.theCondition"|translate}}</label>
+        <div class="content-password">
+          <ng-container *ngIf="info?.isActive">
+            {{"employees.active"|translate}}
+          </ng-container>
+          <ng-container *ngIf="!info?.isActive">
+            {{"employees.Inactive"|translate}}
+          </ng-container>
+        </div>
+  
+      </div> -->
+      <div class="col-12">
+        <div class="row">
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">كود الشركة</label>
+                    <div class="content-password">
+                        <ng-container *ngIf="info?.code">
+                            {{info?.code}}
+                          </ng-container>
+                          <ng-container *ngIf="!info?.code">
+                            {{"department.nothing"|translate}}
+                          </ng-container>
+                    </div>
+              
+                  </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">اسم الدولة</label>
+                    <div class="content-password">
+                      <ng-container *ngIf="info?.countryName">
+                        {{info?.countryName}}
+                      </ng-container>
+                      <ng-container *ngIf="!info?.countryName">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">اسم اللغة المفضلة</label>
+                    <div class="content-password">
+                      <ng-container *ngIf="info?.preferredLanguageName">
+                        {{info?.preferredLanguageName}}
+                      </ng-container>
+                      <ng-container *ngIf="!info?.preferredLanguageName">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">كود التحقق لي لشركة</label>
+                    <div class="content-password">
+                      <ng-container *ngIf="info?.identityCode">
+                        {{info?.identityCode}}
+                      </ng-container>
+                      <ng-container *ngIf="!info?.identityCode">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">اسم الشركة</label>
+                    <div class="content-password">
+                      <ng-container *ngIf="info?.name">
+                        {{info?.name}}
+                      </ng-container>
+                      <ng-container *ngIf="!info?.name">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">لوجو الشركة</label>
+                    <div class="content-password">
+                      <ng-container *ngIf="info?.logoImageName && info?.logoImagePath">
+                        {{info?.logoImageName}} <img [src]="info?.logoImagePath" [alt]="info?.logoImageName">
+                      </ng-container>
+                      <ng-container *ngIf="!info?.logoImageName && !info?.logoImagePath">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title"> موقع الالكتروني لي لشركة</label>
+                    <div class="content-password">
+                      <ng-container *ngIf="info?.webSite">
+                        {{info?.webSite}}
+                      </ng-container>
+                      <ng-container *ngIf="!info?.webSite">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">نوع الاشتراك</label>
+                    <div class="content-password">
+                      <ng-container *ngIf="info?.subscriptionTypeName">
+                        {{info?.subscriptionTypeName}}
+                      </ng-container>
+                      <ng-container *ngIf="!info?.subscriptionTypeName">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">عنوان الفرع الرئيسي</label>
+                    <div class="content-password">
+                      <ng-container *ngIf="info?.headquarterAddress">
+                        {{info?.headquarterAddress}}
+                      </ng-container>
+                      <ng-container *ngIf="!info?.headquarterAddress">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                    <div class="body-map mt-2"  *ngIf="info?.headquarterLocationLatitude != null && info?.headquarterLocationLongtude != null">
+                        <agm-map [latitude]="latitude" [scrollwheel]="false" [longitude]="longitude" [zoom]="zoomLevel"
+                          [disableDefaultUI]="false" [zoomControl]="true" >
+                          <agm-marker *ngFor="let mapMarker of markers; let i = index" [latitude]="mapMarker.latitude"
+                            [longitude]="mapMarker.longitude" [label]="mapMarker.label ? mapMarker.label : ''"
+                            [markerDraggable]="mapMarker.draggable">
+                          </agm-marker>
+                          <agm-circle [latitude]="latitude" [longitude]="longitude" [radius]="radius" [fillColor]="'red'"
+                            [circleDraggable]="false" [editable]="false">
+                          </agm-circle>
+                        </agm-map>
+                 
+                      </div>
+                  </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">رقم البريدي للفرع الرئيسي</label>
+                    <div class="content-password">
+                      <ng-container *ngIf="info?.headquarterPostalCode">
+                        {{info?.headquarterPostalCode}}
+                      </ng-container>
+                      <ng-container *ngIf="!info?.headquarterPostalCode">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">بريد الالكتروني للشركة </label>
+                    <div class="content-password">
+                      <ng-container *ngIf="info?.email">
+                        {{info?.email}}
+                      </ng-container>
+                      <ng-container *ngIf="!info?.email">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">عدد الموظفين</label>
+                    <div class="content-password">
+                      <ng-container *ngIf="info?.numberOfEmployees">
+                        {{info?.numberOfEmployees}}
+                      </ng-container>
+                      <ng-container *ngIf="!info?.numberOfEmployees">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">عدد الموظفين الكلي</label>
+                    <div class="content-password">
+                      <ng-container *ngIf="info?.totalNumberOfEmployees">
+                        {{info?.totalNumberOfEmployees}}
+                      </ng-container>
+                      <ng-container *ngIf="!info?.totalNumberOfEmployees">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="sectionTwo mb-3 line-bellow">
+                    <label class="title">مجالات عمل الشركة</label>
+                    <div class="content-password">
+                        <div class="chips-industries">
+                            <ng-container *ngFor="let industry of info?.industries; let i =index">
+                              <span class="chips"><i class="pi pi-times-circle ml-2"></i> {{industry}}</span>
+                            </ng-container>
+                          </div>
+                      <ng-container *ngIf="info?.industries.length === 0">
+                        {{"department.nothing"|translate}}
+                      </ng-container>
+                    </div>
+                  </div>
+            </div>
+        </div>
+      </div>
+      <!-- <div class="sectionTwo mb-3 line-bellow" *ngIf="info?.userName != null">
+        <label class="title">{{"users.userName"|translate}}</label>
+        <div class="content-password">
+          <ng-container *ngIf="info?.userName">
+            {{info?.userName}}
+          </ng-container>
+          <ng-container *ngIf="!info?.userName">
+            {{"department.nothing"|translate}}
+          </ng-container>
+        </div>
+  
+      </div> -->
+      <!-- <div class="sectionTwo mb-3 line-bellow" *ngIf="info?.roleName != null">
+        <label class="title">{{"userPermissions.permissionName"|translate}}</label>
+        <div class="content-password">
+          <ng-container *ngIf="info?.roleName">
+            {{info?.roleName}}
+          </ng-container>
+          <ng-container *ngIf="!info?.roleName">
+            {{"department.nothing"|translate}}
+          </ng-container>
+        </div>
+      </div> -->
+  
+    </div>
+    <div class="table-basic">
+      <p-table #dt1 [value]="branches" id="tableBranches" [responsiveLayout]="opened ? 'stack' : 'scroll'"
+        [responsive]="true" [paginator]="false" [rows]="itemsPerPage" [first]="page" [rows]="10"
+        [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
+        currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
+                'orderNumber',
+                'employeeName.name',
+                'typeOfRequest',
+                'date',
+                'time' ]">
+        <ng-template pTemplate="header">
+          <tr>
+            <th *ngFor="let column of columns">
+              {{ column.name }}
+            </th>
+            
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData>
+          <tr *ngIf="!isLoading">
+            <ng-container *ngFor="let column of columns">
+
+
+              <ng-container *ngIf="column.field != 'actions'">
+                <td>
+                  <span class="p-column-title">
+                    {{column.name}}
+                  </span>
+                  {{rowData[column.field]}}
+
+                  <!-- <p-cellEditor>
+                      <ng-template pTemplate="input">
+                          <input pInputText type="text" [(ngModel)]="rowData[column.field]">
+                      </ng-template>
+                      <ng-template pTemplate="output">
+                          {{rowData[column.field]}}
+                      </ng-template>
+                  </p-cellEditor> -->
+                </td>
+              </ng-container>
+              <td *ngIf="column.field === 'actions'">
+                <span class="p-column-title">
+                  {{column.name}}
+                </span>
+                <div class="action-body-td">
+                  <button  type="button"
+                  class="btn btn-outline-secondary action-accept color-green"(click)="viewDetailsRow(rowData)"> <i class="bi bi-eye"></i>
+                </button>
+                  <!-- <button type="button" (click)="reasonOfRefuse(rowData)"
+                    class="btn btn-outline-secondary action-close color-red"><i class="bi bi-x-circle"></i></button> -->
+                </div>
+              </td>
+            </ng-container>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr *ngIf="isLoading ===false">
+            <td colspan="6">
+              <div class="container-empty-data p-4 w-100 d-flex justify-content-center align-items-center">
+                <svg width="65" height="40" viewBox="0 0 65 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_1920_5847)">
+                    <rect width="64" height="40" transform="translate(0.5)" fill="white" fill-opacity="0.01" />
+                    <path
+                      d="M32.5 39.7047C50.1731 39.7047 64.5 36.5939 64.5 32.7566C64.5 28.9193 50.1731 25.8086 32.5 25.8086C14.8269 25.8086 0.5 28.9193 0.5 32.7566C0.5 36.5939 14.8269 39.7047 32.5 39.7047Z"
+                      fill="#F5F5F5" />
+                    <path
+                      d="M55.5 13.6653L45.354 2.24866C44.867 1.47048 44.156 1 43.407 1H21.593C20.844 1 20.133 1.47048 19.646 2.24767L9.5 13.6663V22.8367H55.5V13.6653Z"
+                      stroke="#CED4DA" />
+                    <path
+                      d="M42.113 16.8116C42.113 15.2185 43.107 13.9033 44.34 13.9023H55.5V31.9047C55.5 34.0119 54.18 35.739 52.55 35.739H12.45C10.82 35.739 9.5 34.011 9.5 31.9047V13.9023H20.66C21.893 13.9023 22.887 15.2155 22.887 16.8086V16.8304C22.887 18.4235 23.892 19.7099 25.124 19.7099H39.876C41.108 19.7099 42.113 18.4116 42.113 16.8185V16.8116Z"
+                      fill="#FAFAFA" stroke="#CED4DA" />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_1920_5847">
+                      <rect width="64" height="40" fill="white" transform="translate(0.5)" />
+                    </clipPath>
+                  </defs>
+                </svg>
+                <span class="empty-table f-s-16">{{"requests.noData"|translate}}</span>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+  
+      </p-table>
+    </div>
+  </div>
+  <div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+  </div>

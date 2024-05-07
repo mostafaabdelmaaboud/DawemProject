@@ -20,6 +20,8 @@ import { DialogResponsibilityFileAdminComponent } from 'src/app/shared/component
 import { RequestResponsibilityAdminComponent } from 'src/app/shared/components/request-responsibility-admin/request-responsibility-admin.component';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
 import { CompaniesService } from './services/companies.service';
+import { AddCompanyAdminComponent } from 'src/app/shared/components/add-company-admin/add-company-admin.component';
+import { DialogCompanyFileAdminComponent } from 'src/app/shared/components/dialog-company-file-admin/dialog-company-file-admin.component';
 
 @Component({
   selector: 'app-companies',
@@ -387,7 +389,7 @@ export class CompaniesComponent {
   }
   sendRequest(data: any) {
 
-    this.companiesService.accept({ responsibilityId: data.id }).subscribe(
+    this.companiesService.accept({ companyId: data.id }).subscribe(
       {
         next: res => {
           this.getCompanies(this.filteration);
@@ -421,12 +423,12 @@ export class CompaniesComponent {
     let reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
       width: "30vw",
       data: {
-        title: "هل متأكد من رفض المسؤولية؟",
+        title: "هل متأكد من رفض الشركة؟",
         message: "برجاء توضيح السبب إن أمكن",
         titleReasonOfRefuse:"سبب الرفض",
         placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض",
         titleClose:"تراجع",
-        buttonSend: "رفض المسؤولية"
+        buttonSend: "رفض الشركة"
       },
     });
 
@@ -436,7 +438,7 @@ export class CompaniesComponent {
       reasonOfRefuseDialog.componentInstance.submitted = false;
 
 
-      this.companiesService.disableResponsibility({ id: data.id, rejectReason: result.notes }).subscribe(
+      this.companiesService.companyDisable({ id: data.id, disableReason: result.notes }).subscribe(
         {
           next: res => {
 
@@ -455,65 +457,67 @@ export class CompaniesComponent {
   }
 
   requestCompanies() {
-    const dialogRefAddCurrency = this.dialog.open(RequestResponsibilityAdminComponent, {
-      width: "50vw",
+    const dialogRefAddCurrency = this.dialog.open(AddCompanyAdminComponent, {
+      width: "95vw",
+      maxWidth:"95vw",
       data: {
-        title: "إضافة مسؤولية",
+        title: "إضافة شركة",
         setAsNecessary: "تعيين كضرورية",
         titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend: "موافق"
+        buttonSend: "ارسال",
+        titleClose:"تراجع"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editJobTitle = false;
+    dialogRefAddCurrency.componentInstance.editCompany = false;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
 
-      let formData: any = {};
-      formData.name = result.name;
-      formData.isActive = result.IsNecessary;
+      // let formData: any = {};
+      // formData.name = result.name;
+      // formData.isActive = result.IsNecessary;
 
-      dialogRefAddCurrency.componentInstance.submitted = false;
+      // dialogRefAddCurrency.componentInstance.submitted = false;
 
-      this.companiesService.createResponsibility(formData).subscribe(
-        {
-          next: (data: any) => {
+      // this.companiesService.createResponsibility(formData).subscribe(
+      //   {
+      //     next: (data: any) => {
 
 
-            dialogRefAddCurrency.componentInstance.submitted = true;
+      //       dialogRefAddCurrency.componentInstance.submitted = true;
 
-            dialogRefAddCurrency.close();
+      //       dialogRefAddCurrency.close();
 
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات المسؤوليات"
+      //       const succressDialog = this.dialog.open(ToastSuccessComponent, {
+      //         width: "30vw",
+      //         data: {
+      //           title: "تم ارسال طلبك",
+      //           message: data.message,
+      //           buttonSend: "طلبات المسؤوليات"
 
-              },
-            });
-            this.getCompanies(this.filteration);
+      //         },
+      //       });
+      //       this.getCompanies(this.filteration);
 
-            setTimeout(() => {
-              succressDialog.close();
+      //       setTimeout(() => {
+      //         succressDialog.close();
 
-            }, 2000);
-            succressDialog.componentInstance.submitted = true;
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-              succressDialog.close();
-            })
+      //       }, 2000);
+      //       succressDialog.componentInstance.submitted = true;
+      //       succressDialog.componentInstance.submitClicked.subscribe(result => {
+      //         succressDialog.close();
+      //       })
 
-          },
-          error: (err: any) => {
+      //     },
+      //     error: (err: any) => {
 
-            dialogRefAddCurrency.componentInstance.submitted = true;
+      //       dialogRefAddCurrency.componentInstance.submitted = true;
 
-          }
-        }
-      )
+      //     }
+      //   }
+      // )
     });
     dialogRefAddCurrency.afterClosed().subscribe(result => {
       if (result) {
@@ -522,20 +526,22 @@ export class CompaniesComponent {
     });
   }
   editCompanies(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(RequestResponsibilityAdminComponent, {
-      width: "50vw",
+    const dialogRefAddCurrency = this.dialog.open(AddCompanyAdminComponent, {
+      width: "95vw",
+      maxWidth:"95vw",
       data: {
-        title: "تعديل المسؤولية",
+        title: "تعديل الشركة",
         setAsNecessary: "تعيين كضرورية",
         titleVacationTypeId: "نوع الاستئذانات <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend: "موافق"
+        buttonSend: "ارسال",
+        titleClose:"تراجع"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editJobTitle = true;
+    dialogRefAddCurrency.componentInstance.editCompany = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
@@ -593,10 +599,11 @@ export class CompaniesComponent {
 
 
   dialogCompanyFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogResponsibilityFileAdminComponent, {
-      width: "40vw",
+    const dialogRefAddCurrency = this.dialog.open(DialogCompanyFileAdminComponent, {
+      width: "80vw",
+      maxWidth:"80vw",
       data: {
-        title: "ملف المسؤولية"
+        title: "ملف الشركة"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id

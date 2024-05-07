@@ -205,18 +205,24 @@ export class SideNavBarComponent {
       this.notificationService.markAsViewed().subscribe(data => {
       });
     }
+    
+
     if(!this.loadingNotification) {
+      
       this.loadingNotification = true;
       if(!unread) {
         if(showFirstOnly) {
+          delete this.notificationFilter.isRead;
             this.notificationService.listNotification(this.notificationFilter).subscribe({
               next:data => {
                 // this.notificationList = [];
+                
+
                 this.notificationCount = data.data.totalCount;
                 let totalCountPages = Math.ceil(this.notificationCount / 5);
                 
 
-                  if(totalCountPages > (this.notificationFilter.PageNumber + 1)) {
+                  if(totalCountPages >= (this.notificationFilter.PageNumber + 1)) {
                     if(this.notificationFilter.PageNumber == 0) {
                       this.notificationFilter = {
                         PageNumber: 0,
@@ -225,7 +231,8 @@ export class SideNavBarComponent {
                       };
                       this.notificationList = [];
                     }
-                    data?.data?.Notifications.forEach(item => {
+                    
+                    data?.data?.notifications.forEach(item => {
                       this.notificationList.push({
                         shortMessege:item.shortMessege,
                         fullMessege:item.fullMessege,
@@ -248,9 +255,12 @@ export class SideNavBarComponent {
               }
             })
         } else {
-          
+          this.notificationFilter.isRead = true;
+
           this.notificationService.listNotification(this.notificationFilter).subscribe({
             next:data => {
+              
+
               // this.notificationList = [];
               this.notificationCount = data.data.totalCount;
               let totalCountPages = Math.ceil(this.notificationCount / 5);
@@ -265,7 +275,8 @@ export class SideNavBarComponent {
                     };
                     this.notificationList = [];
                   }
-                  data?.data?.Notifications.forEach(item => {
+                  
+                  data?.data?.notifications.forEach(item => {
                     this.notificationList.push({
                       shortMessege:item.shortMessege,
                       fullMessege:item.fullMessege,
@@ -289,10 +300,15 @@ export class SideNavBarComponent {
           })
         }
       } else {
+        
+
         if(showFirstOnly) {
-            this.notificationService.getUnreadNotifications(this.notificationFilter).subscribe({
+          
+          this.notificationFilter.isRead = false;
+            this.notificationService.listNotification(this.notificationFilter).subscribe({
               next:data => {
                 
+
       
                 // this.notificationList = [];
                 this.notificationCount = data.data.totalCount;
@@ -300,7 +316,7 @@ export class SideNavBarComponent {
   
                 if(showFirstOnly) {
   
-                  if(totalCountPages > (this.notificationFilter.PageNumber + 1)) {
+                  if(totalCountPages >= (this.notificationFilter.PageNumber + 1)) {
                     if(this.notificationFilter.PageNumber == 0) {
                       this.notificationFilter = {
                         PageNumber: 0,
@@ -309,7 +325,7 @@ export class SideNavBarComponent {
                       };
                       this.notificationList = [];
                     }
-                    data?.data?.Notifications.forEach(item => {
+                    data?.data?.notifications.forEach(item => {
                       this.notificationList.push({
                         shortMessege:item.shortMessege,
                         fullMessege:item.fullMessege,
@@ -334,7 +350,7 @@ export class SideNavBarComponent {
                       };
                       this.notificationList = [];
                     }
-                    data?.data?.Notifications.forEach(item => {
+                    data?.data?.notifications.forEach(item => {
                       this.notificationList.push({
                         shortMessege:item.shortMessege,
                         fullMessege:item.fullMessege,
@@ -362,10 +378,14 @@ export class SideNavBarComponent {
   
         } else {
           
-          this.notificationService.getUnreadNotifications(this.notificationFilter).subscribe({
+          this.notificationFilter.isRead = false;
+
+          this.notificationService.listNotification(this.notificationFilter).subscribe({
             next:data => {
               // this.notificationList = [];
-              data?.data?.Notifications.forEach(item => {
+              
+
+              data?.data?.notifications.forEach(item => {
                 this.notificationList.push({
                   shortMessege:item.shortMessege,
                   fullMessege:item.fullMessege,
@@ -492,7 +512,6 @@ export class SideNavBarComponent {
     if(settings.includes(this.router.url)) {
       this.step = 4;
     }
-    console.log(this.router.url);
     this.notificationService.getNotification().subscribe(data => {
       this.numNotification = data?.NotificationData?.UnViewdNotificationCount;
     });

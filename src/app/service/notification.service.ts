@@ -38,17 +38,17 @@ export class NotificationService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}Notification/GetNotifications`, { params: queryParams })
-  }
-  getUnreadNotifications(filter: any): Observable<any> {
-    let queryParams = new HttpParams();
-    if (filter) {
-      Object.entries(filter).forEach(([key, value]: any) => {
-        queryParams = queryParams.set(key, value);
-      })
-    }
     return this.http.get<any>(`${environment.baseUrl}Notification/Get`, { params: queryParams })
   }
+  // getUnreadNotifications(filter: any): Observable<any> {
+  //   let queryParams = new HttpParams();
+  //   if (filter) {
+  //     Object.entries(filter).forEach(([key, value]: any) => {
+  //       queryParams = queryParams.set(key, value);
+  //     })
+  //   }
+  //   return this.http.get<any>(`${environment.baseUrl}NotificationStore/Get`, { params: queryParams })
+  // }
   markAsRead(params:any): Observable<any>  {
     let queryParams = new HttpParams();
     if (params) {
