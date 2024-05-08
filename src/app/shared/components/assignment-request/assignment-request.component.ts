@@ -95,7 +95,9 @@ export class AssignmentRequestComponent {
     ForEmployee: [false],
     AssignmentTypeId: ['', Validators.required],
     dateTask: [null, Validators.required],
-    time:[null, Validators.required],
+    timeStart:[null, Validators.required],
+    timeEnd:[null, Validators.required],
+
     Notes: [null, Validators.required],
     idCopyFile:[""]
   });
@@ -239,7 +241,9 @@ export class AssignmentRequestComponent {
                 }
               });
               this.addBranchGroupForm.get("dateTask")?.setValue([new Date(data.dateFrom), new Date(data.dateTo)]);
-              this.addBranchGroupForm.get("time")?.setValue(new Date(data.dateFrom));
+              this.addBranchGroupForm.get("timeStart")?.setValue(new Date(data.dateFrom));
+              this.addBranchGroupForm.get("timeEnd")?.setValue(new Date(data.dateTo));
+
               this.addBranchGroupForm.get("Notes")?.setValue(data?.notes);
 
               this.loading = false;
@@ -433,7 +437,9 @@ export class AssignmentRequestComponent {
     } else {
       this.getControl("PermissionTypeId")?.markAsDirty();
       this.getControl("dateTask")?.markAsDirty();
-      this.getControl("time")?.markAsDirty();
+      this.getControl("timeStart")?.markAsDirty();
+      this.getControl("timeEnd")?.markAsDirty();
+
       this.getControl("Notes")?.markAsDirty();
       this.getControl("AssignmentTypeId")?.markAsDirty();
       this.getControl("EmployeeId")?.markAsDirty();

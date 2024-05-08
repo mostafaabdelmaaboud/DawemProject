@@ -495,7 +495,38 @@ export class DialogAddAnEmployeeComponent {
   
           }
           break;
+          case 'companyCountryId':
+            if (data || data === "") {
+              if (data !== this.lastSearchQuery || data === "") {
+                this.lastSearchQuery = data;
+
+                // this.countriesPhone = [];
+                // data.forEach((country: any) => {
+                  
+                //   this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath  });
+                //   if(country.isCurrentCountry) {
+                //     this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath  };
+                //     this.selectCountry();
+                //   }
+                // });
+                this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+                  debounceTime(300),
+                  distinctUntilChanged()).subscribe((res: any) => {
+                    this.countriesPhone = [];
+                    this.lastSearchQuery = "";
+                    res?.forEach((country: any) => {
+                      this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath  });
+
+                    });
+    
+    
+                  });
+              }
+    
+            }
+            break;
       default:
+        
         break;
     }
   }
