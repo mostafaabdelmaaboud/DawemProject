@@ -103,7 +103,7 @@ export class AddCompanyAdminComponent {
     companyCountryId: ["", Validators.required],
     headquarterAddress: [""],
     headquarterPostalCode:[""],
-    numberOfEmployees: [""],
+    numberOfEmployees: ["", Validators.required],
     totalNumberOfEmployees: [""],
     industries: [""],
     email: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
@@ -831,10 +831,7 @@ export class AddCompanyAdminComponent {
   }
 
   submit() {
-    
     if (this.FormGroup.valid && !this.loadingData) {
-      
-
       let formData = new FormData();
       let filterEditBranch = this.branches.filter((branch:any) => {
         return branch.editBranch === true
@@ -842,8 +839,6 @@ export class AddCompanyAdminComponent {
       let filterEditIndustries = this.branches.filter((Industry:any) => {
         return Industry.editIndustries === true
       });
-      
-
       if(
         (this.showPreferredLanguage && this.FormGroup?.value?.preferredLanguageId?.id && this.editBefore?.preferredLanguageId != this.FormGroup?.value?.preferredLanguageId?.id) ||
         (this.FormGroup?.value?.website && this.FormGroup?.value?.website != this.editBefore.webSite) ||
@@ -860,19 +855,12 @@ export class AddCompanyAdminComponent {
         this.companyLogo ||
         filterEditBranch.length > 0
       ) {
-        
-
         let formatKeyFormData = "";
         if(this.editCompany) {
           formatKeyFormData = "UpdateCompanyModelString";
-
         } else {
           formatKeyFormData = "CreateCompanyModelString";
-
-          
         }
-        
-
         formData.append(formatKeyFormData, JSON.stringify({
           CountryId:this.FormGroup?.value?.companyCountryId?.id ? this.FormGroup?.value?.companyCountryId?.id : null,
           PreferredLanguageId: this.FormGroup?.value?.preferredLanguageId?.id ? this.FormGroup?.value?.preferredLanguageId?.id : null,
@@ -899,15 +887,11 @@ export class AddCompanyAdminComponent {
             }
           }) : null,
         }));
-        
         if(this.companyLogo) {
-          
-
-            formData.append("LogoImageFile", this.companyLogo, this.companyLogo.name);
+          formData.append("LogoImageFile", this.companyLogo, this.companyLogo.name);
         } else {
           formData.append("LogoImageFile", JSON.stringify(null));
         }
-        
         if(this.AttachmentsFiles.length > 0) {
           this.AttachmentsFiles.forEach((file: any) => {
               formData.append("Attachments", file.fileUpload, file.fileUpload.name);
@@ -917,17 +901,14 @@ export class AddCompanyAdminComponent {
         }
         this.loading = false;
         this.loadingData = true;
-        
         let companyRequest:any;
         if(this.editCompany) {
           companyRequest = this.companiesService.updateCompany(formData)
         } else {
           companyRequest = this.companiesService.createCompany(formData)
-
         }
         companyRequest.subscribe({
           next:data => {
-            
             const succressDialog = this.dialog.open(ToastSuccessComponent, {
               width: "30vw",
               data: {
@@ -947,15 +928,11 @@ export class AddCompanyAdminComponent {
             })
           },
           error:err => {
-            
-
             this.loadingData = false;
-
           }
         })
       } else {
         this.loadingData = false;
-
         this.toast.error("لم يتم تغير حقل");
       }
     } else {
@@ -963,9 +940,7 @@ export class AddCompanyAdminComponent {
       this.getControl("email")?.markAsDirty();
       this.getControl("name")?.markAsDirty();
       this.getControl("companyCountryId")?.markAsDirty();
-
-      
-    
+      this.getControl("numberOfEmployees")?.markAsDirty();
     }
   }
 
