@@ -9,6 +9,8 @@ import { PushNotificationService } from 'src/app/service/push-notification.servi
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { environment } from 'src/environments/environment';
 import { initializeApp } from "firebase/app";
+import { HttpParams } from '@angular/common/http';
+import { UserPermissionsService } from 'src/app/Presentation/admin/user-permissions/services/user-permissions.service';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +31,12 @@ export class LoginComponent {
   private router = inject(Router)
   selectedCountry: any;
   FCMToken:string = "";
-  constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService, private cd:ChangeDetectorRef, private notificacion: PushNotificationService) {
+  filteration: any = {
+    PageSize: 40,
+    PageNumber: 0,
+    PagingEnabled: true
+  };
+  constructor(private fb: FormBuilder, public translate: TranslateService,private userPermissionsService:UserPermissionsService, private toast: ToastrService, private cd:ChangeDetectorRef, private notificacion: PushNotificationService) {
    
   }
   ngOnInit(): void {
@@ -193,20 +200,56 @@ export class LoginComponent {
       }).subscribe(
         {
           next: (res: any) => {
-            let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: res.data.availablePermissions })
-            localStorage.setItem("adminPermissions", formatObjectPermissions);
-            let parseJson = JSON.parse(formatObjectPermissions);
-            if (parseJson.isAdmin || parseJson.availablePermissions.length > 0) {
+            if(res.data.isAdmin) {
               this.authService.setTokenAdmin(res.data.token);
-                this.isLoading = false;
-                this.loading = true;
-                this.toast.success(res.message,"", {timeOut: 2000});
-                this.router.navigate(["/admin/responsibility"]);
-            } else {
-              this.toast.error("you don't have permissions");
-            this.isLoading = false;
-            this.loading = true;
+              let queryParams = new HttpParams();
+              if (this.filteration) {
+                Object.entries(this.filteration).forEach(([key, value]: any) => {
+                  queryParams = queryParams.set(key, value);
+                })
+              }
+              this.userPermissionsService.availableActions(this.filteration).subscribe({
+                next: data => {
+          
+                  let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: data.data.screens })
+                  localStorage.setItem("adminPermissions", formatObjectPermissions);
+                  let parseJson = JSON.parse(formatObjectPermissions);
+                  if (parseJson.availablePermissions.length > 0) {
+                      this.isLoading = false;
+                      this.loading = true;
+                      this.toast.success(res.message,"", {timeOut: 2000});
+                      this.router.navigate(["/admin/responsibility"]);
+                    } else {
+                    this.toast.error("you don't have permissions");
+                  this.isLoading = false;
+                  this.loading = true;
+                  }
+          
+                },
+                error: err => {
+                  this.toast.error(err.error.message);
+                  this.isLoading = false;
+                  this.loading = true;
+                }
+              }
+              )
+            }else {
+              let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: res.data.availablePermissions })
+              localStorage.setItem("adminPermissions", formatObjectPermissions);
+              let parseJson = JSON.parse(formatObjectPermissions);
+              if (parseJson.isAdmin || parseJson.availablePermissions.length > 0) {
+                this.authService.setTokenAdmin(res.data.token);
+                  this.isLoading = false;
+                  this.loading = true;
+                  this.toast.success(res.message,"", {timeOut: 2000});
+                  this.router.navigate(["/admin/responsibility"]);
+              } else {
+                this.toast.error("you don't have permissions");
+              this.isLoading = false;
+              this.loading = true;
+              }
             }
+        
             // this.isLoading = false;
           },
           error: err => {

@@ -219,7 +219,6 @@ export class UpdateCompanyComponent {
         if(findIndexPreferredLanguages >=0) {
           this.FormGroup.get("ImportDefaultData")?.setValue(true);
           this.FormGroup.get("preferredLanguageId")?.setValue(this.preferredLanguages[findIndexPreferredLanguages]);
-          this.editBefore.preferredLanguageId = this.preferredLanguages[findIndexPreferredLanguages];
         }
         
         if(this.editBefore?.headquarterLocationLatitude != null &&this.editBefore?.headquarterLocationLongtude  != null) {

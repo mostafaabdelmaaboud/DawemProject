@@ -109,8 +109,8 @@ export class AddCompanyAdminComponent {
     email: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
     // code:[''],
     ImportDefaultData:[false],
-    HeadquarterLocationLatitude: [''],
-    HeadquarterLocationLongitude: [''],
+    HeadquarterLocationLatitude: [null],
+    HeadquarterLocationLongitude: [null],
     // identityCode:[''],
   });
   branches:any[]= []
@@ -251,8 +251,8 @@ export class AddCompanyAdminComponent {
     
   }
   getInformation() {
-    let countries = this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-    let getLanguages = this.authService.getLanguages({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+    let countries = this.companiesService.GetCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+    let getLanguages = this.companiesService.getLanguages({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     this.loadingData = true;
 
     combineLatest({
@@ -292,7 +292,6 @@ export class AddCompanyAdminComponent {
               if(findIndexPreferredLanguages >=0) {
                 this.FormGroup.get("ImportDefaultData")?.setValue(true);
                 this.FormGroup.get("preferredLanguageId")?.setValue(this.preferredLanguages[findIndexPreferredLanguages]);
-                this.editBefore.preferredLanguageId = this.preferredLanguages[findIndexPreferredLanguages];
               }
               
               if(this.editBefore?.headquarterLocationLatitude != null &&this.editBefore?.headquarterLocationLongtude  != null) {
@@ -842,6 +841,7 @@ export class AddCompanyAdminComponent {
       if(
         (this.showPreferredLanguage && this.FormGroup?.value?.preferredLanguageId?.id && this.editBefore?.preferredLanguageId != this.FormGroup?.value?.preferredLanguageId?.id) ||
         (this.FormGroup?.value?.website && this.FormGroup?.value?.website != this.editBefore.webSite) ||
+        (this.FormGroup?.value?.name && this.FormGroup?.value?.name != this.editBefore.name) ||
         (this.FormGroup?.value?.companyCountryId?.id && this.editBefore?.countryId != this.FormGroup?.value?.companyCountryId?.id) ||
         (this.FormGroup?.value?.headquarterAddress && this.FormGroup?.value?.headquarterAddress != this.editBefore.headquarterAddress) ||
         (this.FormGroup?.value?.headquarterPostalCode && this.FormGroup?.value?.headquarterPostalCode != this.editBefore.headquarterPostalCode) ||
@@ -861,18 +861,18 @@ export class AddCompanyAdminComponent {
         } else {
           formatKeyFormData = "CreateCompanyModelString";
         }
-        formData.append(formatKeyFormData, JSON.stringify({
+        let formatObject = {
           CountryId:this.FormGroup?.value?.companyCountryId?.id ? this.FormGroup?.value?.companyCountryId?.id : null,
+          Name:this.FormGroup?.value?.name ?  this.FormGroup?.value?.name: null,
           PreferredLanguageId: this.FormGroup?.value?.preferredLanguageId?.id ? this.FormGroup?.value?.preferredLanguageId?.id : null,
           WebSite: this.FormGroup?.value?.website ? this.FormGroup?.value?.website : null,
           HeadquarterAddress: this.FormGroup?.value?.headquarterAddress ? this.FormGroup?.value?.headquarterAddress : null,
           HeadquarterPostalCode:this.FormGroup?.value?.headquarterPostalCode? this.FormGroup?.value?.headquarterPostalCode : null,
           Email: this.FormGroup?.value?.email,
           TotalNumberOfEmployees: this.FormGroup?.value?.totalNumberOfEmployees ?  this.FormGroup?.value?.totalNumberOfEmployees: null,
-          LogoImageName:this.userPicture ? this.userPicture.name : null,
           HeadquarterLocationLatitude:this.FormGroup?.value?.HeadquarterLocationLatitude ? this.FormGroup?.value?.HeadquarterLocationLatitude  : null,
           HeadquarterLocationLongitude:this.FormGroup?.value?.HeadquarterLocationLongitude ? this.FormGroup?.value?.HeadquarterLocationLongitude : null,
-          AttachmentsNames:this.AttachmentsNames.length >0 ? this.AttachmentsNames : null,
+         
           ImportDefaultData: this.FormGroup?.value?.ImportDefaultData,
           NumberOfEmployees:this.FormGroup?.value?.numberOfEmployees,
           Industries:this.industries.length > 0 ? this.industries : null,
@@ -886,7 +886,14 @@ export class AddCompanyAdminComponent {
               PostalCode:branch.postalCode
             }
           }) : null,
-        }));
+        }
+        let submitObject = this.editCompany ? {
+          id:this.id,
+          ...formatObject, 
+          AttachmentsNames:this.AttachmentsNames.length >0 ? this.AttachmentsNames : null,
+          LogoImageName:this.userPicture ? this.userPicture.name : null
+        }: formatObject
+        formData.append(formatKeyFormData, JSON.stringify(submitObject));
         if(this.companyLogo) {
           formData.append("LogoImageFile", this.companyLogo, this.companyLogo.name);
         } else {
@@ -917,7 +924,8 @@ export class AddCompanyAdminComponent {
                 buttonSend: "ملف الشركة"
               },
             });
-            this.dialogRef.close(false);
+            this.dialogRef.close(true);
+
             this.loadingData = false;
             setTimeout(() => {
               succressDialog.close();

@@ -216,12 +216,8 @@ export class SideNavBarComponent {
             this.notificationService.listNotification(this.notificationFilter).subscribe({
               next:data => {
                 // this.notificationList = [];
-                
-
                 this.notificationCount = data.data.totalCount;
                 let totalCountPages = Math.ceil(this.notificationCount / 5);
-                
-
                   if(totalCountPages >= (this.notificationFilter.PageNumber + 1)) {
                     if(this.notificationFilter.PageNumber == 0) {
                       this.notificationFilter = {
@@ -234,8 +230,8 @@ export class SideNavBarComponent {
                     
                     data?.data?.notifications.forEach(item => {
                       this.notificationList.push({
-                        shortMessege:item.shortMessege,
-                        fullMessege:item.fullMessege,
+                        shortMessege:item.title,
+                        fullMessege:item.body,
                         iconUrl:item.iconUrl,
                         id:item.id,
                         isRead:item.isRead,
@@ -278,8 +274,8 @@ export class SideNavBarComponent {
                   
                   data?.data?.notifications.forEach(item => {
                     this.notificationList.push({
-                      shortMessege:item.shortMessege,
-                      fullMessege:item.fullMessege,
+                      shortMessege:item.title,
+                      fullMessege:item.body,
                       iconUrl:item.iconUrl,
                       id:item.id,
                       isRead:item.isRead,
@@ -327,8 +323,8 @@ export class SideNavBarComponent {
                     }
                     data?.data?.notifications.forEach(item => {
                       this.notificationList.push({
-                        shortMessege:item.shortMessege,
-                        fullMessege:item.fullMessege,
+                        shortMessege:item.title,
+                        fullMessege:item.body,
                         iconUrl:item.iconUrl,
                         id:item.id,
                         isRead:item.isRead,
@@ -352,8 +348,8 @@ export class SideNavBarComponent {
                     }
                     data?.data?.notifications.forEach(item => {
                       this.notificationList.push({
-                        shortMessege:item.shortMessege,
-                        fullMessege:item.fullMessege,
+                        shortMessege:item.title,
+                        fullMessege:item.body,
                         iconUrl:item.iconUrl,
                         id:item.id,
                         isRead:item.isRead,
@@ -387,8 +383,8 @@ export class SideNavBarComponent {
 
               data?.data?.notifications.forEach(item => {
                 this.notificationList.push({
-                  shortMessege:item.shortMessege,
-                  fullMessege:item.fullMessege,
+                  shortMessege:item.title,
+                  fullMessege:item.body,
                   iconUrl:item.iconUrl,
                   id:item.id,
                   isRead:item.isRead,

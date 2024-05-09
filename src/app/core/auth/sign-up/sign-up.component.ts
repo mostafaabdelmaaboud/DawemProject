@@ -131,6 +131,7 @@ export class SignUpComponent {
   getCountries() {
     this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
       next: data => {
+        
         this.general = [];
         data.forEach((country: any) => {
           this.general.push({ name: country.name, id: country.id })

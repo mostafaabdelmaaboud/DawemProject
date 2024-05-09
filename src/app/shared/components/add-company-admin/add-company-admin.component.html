@@ -74,7 +74,7 @@
                 <div class="sectionFive mb-3">
                   <label for="" class="label-input mb-2"> موقع الالكتروني لي لشركة</label>
                   <!--Start Custom Validators-->
-                  <div class="content-input position-relative disabled-field">
+                  <div class="content-input position-relative">
                     <div class="content-password">
                       <input type="text" pInputText formControlName="website" [placeholder]="'signup.enterTheName' | translate" class="w-100" />
                     </div>
@@ -529,7 +529,42 @@
             (click)="close()">{{data!['titleClose']|translate}}</button>
     </footer>
   </div>
+  <div class="alert-action " *ngIf="selectImage">
+  <div class="card popupCrope alert-card">
+      <div class="card-body">
+          <div class="row" style="margin-top: 5%; width: 100%; margin: auto;">
+              <div class="text-center col-md-7">
+                  <h5 class="name">Crop Image</h5>
+                  <image-cropper class="cropImage" [imageChangedEvent]="imageChangedEvent"
+                      [maintainAspectRatio]="true" [aspectRatio]="4 / 4" [resizeToWidth]="256" format="png"
+                      (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+                      (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
+                  </image-cropper>
+              </div>
+              <div class="text-center col-md-5">
+                  <h5 class="name">Preview</h5>
+                  <img [src]="croppedImage" class="preview" />
+              </div>
+          </div>
+      </div>
+      <div class="card-footer">
+          <div class="row justify-content-between">
+              <div class="col-6">
+              </div>
+              <div class="col-6">
+                  <div class="d-flex flex-row-reverse">
+                      <button type="button" class="btn btn-primary saveCrop" (click)="selectImage = false;">
+                          <span class="bottun-span">
+                              save
+                          </span>
+                      </button>
+                  </div>
+              </div>
 
+          </div>
+      </div>
+  </div>
+</div>
   <div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loadingData">
     <mat-spinner></mat-spinner>
   </div>

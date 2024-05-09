@@ -36,7 +36,8 @@ export class HttpConfigInterceptor implements HttpInterceptor {
       
       let token: any;
       if (
-        !request.url.includes("/api/Browse/Browse") 
+        !request.url.includes("/api/Browse/Browse") &&
+        !this.router.url.includes("/signUp")
       ) {
          if(this.router.url.includes("admin/") || this.router.url.includes("adminPanel/login")) {
           if (typeof localStorage.getItem("Admintoken") === 'string') {

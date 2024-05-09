@@ -14,6 +14,7 @@ import { CheckEmailComponent } from './check-email/check-email.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { MatRadioModule } from '@angular/material/radio';
   ],
   imports: [
     CommonModule,
+    HttpClientModule,
     AuthRoutingModule,
     TranslateModule,
     MatRadioModule,

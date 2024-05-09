@@ -246,7 +246,109 @@ export class LoginComponent {
                   this.isLoading = false;
                   this.loading = true;
                   this.toast.success(res.message,"", {timeOut: 2000});
-                  this.router.navigate(["/user/dashboard"]);
+                  switch (res.data.availablePermissions?.[0]?.screenCode) {
+                    case 0:
+                      this.router.navigate(["/user/assignmentType"]);
+                      break;
+                      case 1:
+                      this.router.navigate(["/user/dashboard"]);
+                      break;
+                      case 2:
+                        this.router.navigate(["/user/sections"]);
+                        break;
+                        case 3:
+                          this.router.navigate(["/user/employees"]);
+                        break;
+                        case 4:
+                          this.router.navigate(["/user/employment"]);
+                          break;
+                          case 34:
+                            this.router.navigate(["/user/users"]);
+                            break;
+                        case 31:
+                          this.router.navigate(["/user/scheduleLogs"]);
+                          break;
+                          case 35:
+                          this.router.navigate(["/user/vacationBalance"]);
+                          break;
+                          case 38:
+                            this.router.navigate(["/user/sanctions"]);
+                            break;
+                            case 22:
+                              this.router.navigate(["/user/requests"]);
+                              break;  
+                              case 27:
+                              this.router.navigate(["/user/vacations"]);
+                              break;
+                              case 24:
+                                this.router.navigate(["/user/justifications"]);
+                                break;
+                                case 25:
+                                  this.router.navigate(["/user/permissions"]);
+                                  break;
+                                  case 26:
+                                    this.router.navigate(["/user/tasks"]);
+                                    break;
+                                    case 23:
+                                      this.router.navigate(["/user/assignments"]);
+                                      break;
+                                      case 39:
+                                        this.router.navigate(["/user/summons"]);
+                                        break;
+                                        case 40:
+                                          this.router.navigate(["/user/summonMissingLogs"]);
+                                          break;
+                                          case 13:
+                                            this.router.navigate(["/user/fingerPrintDevice"]);
+                                            break;
+                                            case 17:
+                                              this.router.navigate(["/user/jobTitles"]);
+                                              break;
+                                              case 14:
+                                                this.router.navigate(["/user/groups"]);
+                                                break;
+                                                case 37:
+                                                  this.router.navigate(["/user/zones"]);
+                                                  break;
+                                                  case 30:
+                                                    this.router.navigate(["/user/schedualPlan"]);
+                                                    break;
+                                                    case 29:
+                                                      this.router.navigate(["/user/tables"]);
+                                                      break;
+                                                      case 32:
+                                                        this.router.navigate(["/user/shifts"]);
+                                                        break;
+                                                        case 18:
+                                                          this.router.navigate(["/user/justificationsType"]);
+                                                          break;
+                                                          case 36:
+                                                            this.router.navigate(["/user/vacationType"]);
+                                                            break;
+                                                            case 21:
+                                                              this.router.navigate(["/user/permissionType"]);
+                                                              break;
+                                                              case 33:
+                                                                this.router.navigate(["/user/taskType"]);
+                                                                break;
+                                                                case 15:
+                                                                  this.router.navigate(["/user/holidays"]);
+                                                                  break;
+                                                                  case 28:
+                                                                    this.router.navigate(["/user/responsibility"]);
+                                                                    break;
+                                                                    case 19:
+                                                                      this.router.navigate(["/user/userPermissions"]);
+                                                                      break;
+                                                                      case 20:
+                                                                        this.router.navigate(["/user/PermissionLog"]);
+                                                                        break;
+                                                                                            
+
+
+                    default:
+                      break;
+                  }
               } else {
                 this.toast.error("you don't have permissions");
               this.isLoading = false;

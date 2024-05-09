@@ -9,7 +9,6 @@
       <nz-layout>
         <nz-sider>
           <ul nz-menu nzMode="inline">
-            <ng-container *ngIf="!isAdmin">
               <li *ngIf="showComponent({screenCode:0})" nz-menu-item routerLink="/admin/Companies"
                 routerLinkActive="ant-menu-item-selected">
                 <!-- الشركات -->
@@ -37,7 +36,7 @@
               </svg>
               <span class="text-sidebar">{{componentName({screenCode:1})}}</span>
             </li>
-              <li *ngIf="showComponent({screenCode:2})" nz-menu-item routerLink="/admin/requests"
+              <li *ngIf="showComponent({screenCode:2})" nz-menu-item routerLink="/admin/PermissionLog"
                 routerLinkActive="ant-menu-item-selected">
                 <!-- سجلات الصلاحيات -->
                 <span nz-icon></span>
@@ -130,8 +129,7 @@
               <span class="text-sidebar">{{componentName({screenCode:7})}}</span>
             </li>
       
-            </ng-container>
-            <ng-container *ngIf="isAdmin">
+            <!-- <ng-container *ngIf="isAdmin">
        
               <li nz-menu-item routerLink="/admin/Companies" routerLinkActive="ant-menu-item-selected">
                 <span nz-icon></span>
@@ -246,7 +244,7 @@
                 <span class="text-sidebar">{{'sideNav.subscriptionPayments' | translate}}</span>
               </li>
 
-            </ng-container>
+            </ng-container> -->
 
             <!-- <li nz-menu-item routerLink="/user/officials" routerLinkActive="ant-menu-item-selected">
                           <span nz-icon></span>

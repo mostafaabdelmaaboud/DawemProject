@@ -2,10 +2,10 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ToastrService } from 'ngx-toastr';
@@ -19,16 +19,14 @@ import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { DialogResponsibilityFileAdminComponent } from 'src/app/shared/components/dialog-responsibility-file-admin/dialog-responsibility-file-admin.component';
 import { RequestResponsibilityAdminComponent } from 'src/app/shared/components/request-responsibility-admin/request-responsibility-admin.component';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
-import { CompaniesService } from './services/companies.service';
-import { AddCompanyAdminComponent } from 'src/app/shared/components/add-company-admin/add-company-admin.component';
-import { DialogCompanyFileAdminComponent } from 'src/app/shared/components/dialog-company-file-admin/dialog-company-file-admin.component';
+import { PlansService } from './services/plans.service';
 
 @Component({
-  selector: 'app-companies',
-  templateUrl: './companies.component.html',
-  styleUrls: ['./companies.component.scss']
+  selector: 'app-plans',
+  templateUrl: './plans.component.html',
+  styleUrls: ['./plans.component.scss']
 })
-export class CompaniesComponent {
+export class PlansComponent {
   date!: Date;
   arabic: any;
   subscription!: Subscription;
@@ -38,24 +36,20 @@ export class CompaniesComponent {
 
   columns: any[] = [
     {
-      name: "كود الشركة",
+      name: "كود الخطه",
       field: "code",
     },
     {
-      name: "اسم الشركة",
+      name: "اسم الخطه",
       field: "name",
     },
     {
-      name: "اسم الدولة",
-      field: "countryNameWidthLogo"
+      name: "تكلفه الموظف الواحد",
+      field: "employeeCost",
     },
     {
-      name: "نوع الاستيراد",
-      field: "subscriptionTypeName"
-    },
-    {
-      name: "عدد الموظفين",
-      field: "numberOfEmployees"
+      name:"فتره تجريبية",
+      field: "isTrial",
     },
     {
       name: "الحالة",
@@ -67,8 +61,8 @@ export class CompaniesComponent {
     }
 
   ];
-  companies: any = [];
-  companiesIsExport: any = [];
+  plans: any = [];
+  plansIsExport: any = [];
   isLoading = true;
 
   filteration: any = {
@@ -97,9 +91,8 @@ export class CompaniesComponent {
   opened = false;
   cards!: any;
   spinnerCards = false;
-  listCountires:any[]= [];
   private _mobileQueryListener: () => void;
-  private companiesService = inject(CompaniesService);
+  private plansService = inject(PlansService);
   list: any[] = [
     { name: "نسيان تسجيل حضور", key: "1" },
     { name: "نسيان تسجيل انصراف", key: "2" },
@@ -115,11 +108,11 @@ export class CompaniesComponent {
     this._mobileQueryListener = () => {
       if (this.mobileQuery.matches) {
         this.opened = true;
-        this.companies = this.companies;
+        this.plans = this.plans;
         changeDetectorRef.detectChanges();
       } else {
         this.opened = false;
-        this.companies = this.companies;
+        this.plans = this.plans;
         changeDetectorRef.detectChanges();
       }
     };
@@ -142,10 +135,7 @@ export class CompaniesComponent {
     }
     this.filterForm = this.fb.group({
       FreeText: [""],
-      CountryId: [""],
-      SubscriptionType: ["0"],
-      NumberOfEmployeesFrom: [""],
-      NumberOfEmployeesTo: [""],
+      code: [""],
 
     });
     this.categories.push({ name: "adasd", key: "adsas" });
@@ -156,29 +146,24 @@ export class CompaniesComponent {
     ];
     this.getInformation();
 
-    this.getCompanies(this.filteration);
-    this. getCountries();
+    this.getPlans(this.filteration);
   }
   filter() {
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
-      if (key === "CountryId") {
-         if (value != "") {
-           this.filteration[key] =value.key
-         }
-       } else {
-         if (typeof value  === 'string') {
-           if(value != "") {
-             this.filteration[key] = value.trim();
-           }
-         } else {
-           if(value >=0) {
-             this.filteration[key] = value;
-           }
-         }
-       }
-     });
-     this.filteration.PageNumber = 0;
-     this.getCompanies(this.filteration);
+      if (typeof value  === 'string') {
+        if(value != "") {
+          this.filteration[key] = value.trim();
+        }
+      } else {
+        if(value >=0) {
+          this.filteration[key] = value;
+
+        }
+
+      }
+    });
+    this.filteration.PageNumber = 0;
+    this.getPlans(this.filteration);
   }
   exportTableToExcel() {
     let columns = [...this.columns];
@@ -196,39 +181,32 @@ export class CompaniesComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.companiesIsExport = [];
+      this.plansIsExport = [];
       let filteration = {...this.filteration, isExport:true};
    
-      this.companiesService.getCompanies(filteration).subscribe(
+      this.plansService.getPlans(filteration).subscribe(
         {
           next: data => {
-    
-            data.data.forEach((company: any) => {
-              this.companiesIsExport.push({
-                id: company.id,
-              code: company.code,
-              name: company.name,
-              countryNameWidthLogo: {
-                name: company?.name ? company?.name : "لا يوجد",
-                alt: company?.name ? company?.name : "لا يوجد",
-                img: company?.logoImagePath ? company?.logoImagePath : "../../../../assets/img/5034901-200.png"
-              },
-              subscriptionTypeName: company.subscriptionTypeName,
-              numberOfEmployees: company.numberOfEmployees,
-              isActive: company.isActive ? 'نشط' : 'غير نشط'
+ 
+            data.data.forEach((plan: any) => {
+              this.plansIsExport.push({
+                id: plan.id,
+                code: plan.code,
+                name: plan.name,
+                employeeCost: plan.employeeCost,
+                isTrial: plan.isTrial,
+                isActive: plan.isActive
   
               })
             });
-            let formatTable = this.companiesIsExport.map(company => {
+            let formatTable = this.plansIsExport.map(plan => {
       
               return {
-                id: company.id,
-                code: company.code,
-                name: company.name,
-                countryNameWidthLogo: company.countryNameWidthLogo,
-                subscriptionTypeName: company.subscriptionTypeName,
-                numberOfEmployees: company.numberOfEmployees,
-                isActive: company.isActive
+                code: plan.code,
+                name: plan.name,
+                employeeCost: plan.employeeCost,
+                isTrial: plan.isTrial,
+                isActive: plan.isActive ? 'نشط' : 'غير نشط'
               }
             })
             this.isLoading = false;
@@ -265,20 +243,19 @@ export class CompaniesComponent {
     }
   }
   resetFilteration() {
-    this.filterForm.reset();
-  this.filterForm.get("SubscriptionType")?.setValue("0");
+    this.filterForm.get("FreeText")?.setValue("");
+    this.filterForm.get("code")?.setValue("");
 
-    
     this.filteration = {
       PageSize: 5,
       PageNumber: 0,
       PagingEnabled: true
     };
-    this.getCompanies(this.filteration);
+    this.getPlans(this.filteration);
   }
   getInformation() {
     this.spinnerCards = true;
-    this.companiesService.getInformation().subscribe({
+    this.plansService.getInformation().subscribe({
       next: data => {
         
         this.cards = {
@@ -293,77 +270,21 @@ export class CompaniesComponent {
       }
     })
   }
-  getCountries() {
-    this.companiesService.GetCountries({PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe(data => {
-      data?.data?.forEach((country: any) => {
-        this.listCountires.push({ name: country.name, key: country.id })
-      });
-    })
-  }
-  lastSearchQuery = "";
-  searchDropdown(data: any, type: string) {
-    switch (type) {
-      case 'CountryId':
-        if (data || data === "") {
-          if (data !== this.lastSearchQuery || data === "") {
-            this.lastSearchQuery = data;
-            this.companiesService.GetCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
-              distinctUntilChanged()).subscribe((res: any) => {
-                this.listCountires = [];
-                this.lastSearchQuery = "";
-
-                res?.data?.forEach((country: any) => {
-                  this.listCountires.push({ name: country.name, key: country.id })
-                });
-              });
-          }
-        }
-        break;
- 
-      // case 'ScheduleId':
-      //   if (data || data === "") {
-      //     if (data !== this.lastSearchQuery || data === "") {
-      //       this.lastSearchQuery = data;
-      //       this.employeesService.getScheduleForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-      //         debounceTime(300),
-      //         distinctUntilChanged()).subscribe(res => {
-      //           this.listSchedules = [];
-      //           this.lastSearchQuery = "";
-
-      //           res?.data?.forEach((jobTitle: any) => {
-      //             this.listSchedules.push({ name: jobTitle.name, key: jobTitle.id })
-      //           });
-      //         });
-      //     }
-      //   }
-      //   break;
-      default:
-        break;
-    }
-  }
-  getCompanies(filteration: any) {
-    this.companies = [];
+  getPlans(filteration: any) {
+    this.plans = [];
     this.isLoading = true;
-    this.companiesService.getCompanies(filteration).subscribe(
+    this.plansService.getPlans(filteration).subscribe(
       {
         next: data => {
-
- 
-          data.data.forEach((company: any) => {
+          data.data.forEach((plan: any) => {
             
-            this.companies.push({
-              id: company.id,
-              code: company.code,
-              name: company.name,
-              countryNameWidthLogo: {
-                name: company?.name ? company?.name : "لا يوجد",
-                alt: company?.name ? company?.name : "لا يوجد",
-                img: company?.logoImagePath ? company?.logoImagePath : "../../../../assets/img/5034901-200.png"
-              },
-              subscriptionTypeName: company.subscriptionTypeName,
-              numberOfEmployees: company.numberOfEmployees,
-              isActive: company.isActive ? 'نشط' : 'غير نشط'
+            this.plans.push({
+              id: plan.id,
+              code: plan.code,
+              name: plan.name,
+              employeeCost: plan.employeeCost,
+              isTrial: plan.isTrial,
+              isActive: plan.isActive
 
             })
           });
@@ -385,14 +306,14 @@ export class CompaniesComponent {
   }
   numberOfRowsPerPage(data: any) {
     this.filteration = { ...this.filteration, PageSize: data.value.code };
-    this.getCompanies(this.filteration)
+    this.getPlans(this.filteration)
   }
   sendRequest(data: any) {
 
-    this.companiesService.accept({ companyId: data.id }).subscribe(
+    this.plansService.accept({ responsibilityId: data.id }).subscribe(
       {
         next: res => {
-          this.getCompanies(this.filteration);
+          this.getPlans(this.filteration);
           const succressDialog = this.dialog.open(ToastSuccessComponent, {
             width: "30vw",
             data: {
@@ -418,142 +339,65 @@ export class CompaniesComponent {
     )
 
   }
-  reasonOfRefuse(data: any) {
 
-    let reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
-      width: "30vw",
-      data: {
-        title: "هل متأكد من رفض الشركة؟",
-        message: "برجاء توضيح السبب إن أمكن",
-        titleReasonOfRefuse:"سبب الرفض",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض",
-        titleClose:"تراجع",
-        buttonSend: "رفض الشركة"
-      },
-    });
+  reasonOfRefuse(data: any) {
+    let reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
+        width: "30vw",
+        data: {
+          title: "هل متأكد من حذف الخطه؟",
+          message: "برجاء توضيح السبب إن أمكن",
+          titleClose: "تراجع",
+          buttonSend: "حذف"
+        },
+      });
+
 
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
-      reasonOfRefuseDialog.componentInstance.submitted = false;
+      this.plansService.deletePlan({ planid: data.id }).subscribe({
+        next: res => {
+          this.toast.success(res.message);
+          reasonOfRefuseDialog.componentInstance.submitted = true;
+          reasonOfRefuseDialog.close();
+          this.getPlans(this.filteration);
+        },
+        error: err => {
+          reasonOfRefuseDialog.componentInstance.submitted = true;
 
-
-      this.companiesService.companyDisable({ id: data.id, disableReason: result.notes }).subscribe(
-        {
-          next: res => {
-
-            this.toast.success(res.message);
-            reasonOfRefuseDialog.componentInstance.submitted = true;
-            this.getCompanies(this.filteration);
-            reasonOfRefuseDialog.close();
-          },
-          error: err => {
-            reasonOfRefuseDialog.componentInstance.submitted = true;
-
-          }
         }
-      )
+      })
+
+
+
     })
   }
 
-  requestCompanies() {
-    const dialogRefAddCurrency = this.dialog.open(AddCompanyAdminComponent, {
-      width: "95vw",
-      maxWidth:"95vw",
+
+  requestPlan() {
+    const dialogRefAddCurrency = this.dialog.open(RequestResponsibilityAdminComponent, {
+      width: "50vw",
       data: {
-        title: "إضافة شركة",
+        title: "إضافة مسؤولية",
         setAsNecessary: "تعيين كضرورية",
         titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend: "ارسال",
-        titleClose:"تراجع"
+        buttonSend: "موافق"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editCompany = false;
+    dialogRefAddCurrency.componentInstance.editJobTitle = false;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
 
-      // let formData: any = {};
-      // formData.name = result.name;
-      // formData.isActive = result.IsNecessary;
-
-      // dialogRefAddCurrency.componentInstance.submitted = false;
-
-      // this.companiesService.createResponsibility(formData).subscribe(
-      //   {
-      //     next: (data: any) => {
-
-
-      //       dialogRefAddCurrency.componentInstance.submitted = true;
-
-      //       dialogRefAddCurrency.close();
-
-      //       const succressDialog = this.dialog.open(ToastSuccessComponent, {
-      //         width: "30vw",
-      //         data: {
-      //           title: "تم ارسال طلبك",
-      //           message: data.message,
-      //           buttonSend: "طلبات المسؤوليات"
-
-      //         },
-      //       });
-      //       this.getCompanies(this.filteration);
-
-      //       setTimeout(() => {
-      //         succressDialog.close();
-
-      //       }, 2000);
-      //       succressDialog.componentInstance.submitted = true;
-      //       succressDialog.componentInstance.submitClicked.subscribe(result => {
-      //         succressDialog.close();
-      //       })
-
-      //     },
-      //     error: (err: any) => {
-
-      //       dialogRefAddCurrency.componentInstance.submitted = true;
-
-      //     }
-      //   }
-      // )
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
-        this.getCompanies(this.filteration);
-
-      }
-    });
-  }
-  editCompanies(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddCompanyAdminComponent, {
-      width: "95vw",
-      maxWidth:"95vw",
-      data: {
-        title: "تعديل الشركة",
-        setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاستئذانات <span class='color-red'>*</span>",
-        titleName: "الأسم<span class='color-red'>*</span>",
-        placeholdeName: "برجاء ادخال الأسم",
-        validationtitleName: "الأسم مطلوب",
-        buttonSend: "ارسال",
-        titleClose:"تراجع"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editCompany = true;
-    dialogRefAddCurrency.componentInstance.id = data.id;
-
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
-      formData.id = data.id;
       formData.name = result.name;
       formData.isActive = result.IsNecessary;
 
       dialogRefAddCurrency.componentInstance.submitted = false;
 
-      this.companiesService.updateResponsibility(formData).subscribe(
+      this.plansService.createResponsibility(formData).subscribe(
         {
           next: (data: any) => {
 
@@ -571,7 +415,7 @@ export class CompaniesComponent {
 
               },
             });
-            this.getCompanies(this.filteration);
+            this.getPlans(this.filteration);
 
             setTimeout(() => {
               succressDialog.close();
@@ -593,19 +437,86 @@ export class CompaniesComponent {
     });
     dialogRefAddCurrency.afterClosed().subscribe(result => {
       if (result) {
-        this.getCompanies(this.filteration);
+
+      }
+    });
+  }
+  editPlan(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(RequestResponsibilityAdminComponent, {
+      width: "50vw",
+      data: {
+        title: "تعديل المسؤولية",
+        setAsNecessary: "تعيين كضرورية",
+        titleVacationTypeId: "نوع الاستئذانات <span class='color-red'>*</span>",
+        titleName: "الأسم<span class='color-red'>*</span>",
+        placeholdeName: "برجاء ادخال الأسم",
+        validationtitleName: "الأسم مطلوب",
+        buttonSend: "موافق"
+      },
+    });
+    dialogRefAddCurrency.componentInstance.submitted = true;
+    dialogRefAddCurrency.componentInstance.editJobTitle = true;
+    dialogRefAddCurrency.componentInstance.id = data.id;
+
+    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+      let formData: any = {};
+      formData.id = data.id;
+      formData.name = result.name;
+      formData.isActive = result.IsNecessary;
+
+      dialogRefAddCurrency.componentInstance.submitted = false;
+
+      this.plansService.updateResponsibility(formData).subscribe(
+        {
+          next: (data: any) => {
+
+
+            dialogRefAddCurrency.componentInstance.submitted = true;
+
+            dialogRefAddCurrency.close();
+
+            const succressDialog = this.dialog.open(ToastSuccessComponent, {
+              width: "30vw",
+              data: {
+                title: "تم ارسال طلبك",
+                message: data.message,
+                buttonSend: "طلبات المسؤوليات"
+
+              },
+            });
+            this.getPlans(this.filteration);
+
+            setTimeout(() => {
+              succressDialog.close();
+
+            }, 2000);
+            succressDialog.componentInstance.submitted = true;
+            succressDialog.componentInstance.submitClicked.subscribe(result => {
+              succressDialog.close();
+            })
+
+          },
+          error: (err: any) => {
+
+            dialogRefAddCurrency.componentInstance.submitted = true;
+
+          }
+        }
+      )
+    });
+    dialogRefAddCurrency.afterClosed().subscribe(result => {
+      if (result) {
 
       }
     });
   }
 
 
-  dialogCompanyFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogCompanyFileAdminComponent, {
-      width: "80vw",
-      maxWidth:"80vw",
+  dialogPlanFile(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(DialogResponsibilityFileAdminComponent, {
+      width: "40vw",
       data: {
-        title: "ملف الشركة"
+        title: "ملف المسؤولية"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id
@@ -613,7 +524,7 @@ export class CompaniesComponent {
   }
   onPageChange(event: any) {
     this.filteration = { ...this.filteration, PageNumber: event.page };
-    this.getCompanies(this.filteration)
+    this.getPlans(this.filteration)
   }
   minimumValidator(conInput: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
@@ -653,7 +564,7 @@ export class CompaniesComponent {
 
     this.filteration.page = even;
     let filteration = { ...this.filteration, page: even - 1 };
-    this.getCompanies(filteration)
+    this.getPlans(filteration)
 
   }
   changeLang(lang: string) {

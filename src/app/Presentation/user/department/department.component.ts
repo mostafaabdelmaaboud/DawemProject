@@ -299,8 +299,8 @@ export class DepartmentComponent {
             orderNumber: attendacne.id,
             name: attendacne.employeeName,
             date: moment(new Date(attendacne.date)).format("MM/DD/YYYY"),
-            audience: attendacne.checkInTime.replaceAll(' ', '') ? attendacne.checkInTime : "لا يوجد",
-            dismissing: attendacne.checkOutTime.replaceAll(' ', '') ? attendacne.checkOutTime : "لا يوجد",
+            audience: attendacne.checkInDateTime.replaceAll(' ', '') ? attendacne.checkInDateTime : "لا يوجد",
+            dismissing: attendacne.checkOutDateTime.replaceAll(' ', '') ? attendacne.checkOutDateTime : "لا يوجد",
             status: attendacne.status,
             timeGap: attendacne.workingHours
           })
@@ -422,8 +422,8 @@ export class DepartmentComponent {
           orderNumber: attendacne.id,
           name: attendacne.employeeName,
           date: moment(new Date(attendacne.date)).format("MM/DD/YYYY"),
-          audience: attendacne.checkInTime.replaceAll(' ', '') ? attendacne.checkInTime : "لا يوجد",
-          dismissing: attendacne.checkOutTime.replaceAll(' ', '') ? attendacne.checkOutTime : "لا يوجد",
+          audience: attendacne.checkInDateTime.replaceAll(' ', '') ? attendacne.checkInDateTime : "لا يوجد",
+          dismissing: attendacne.checkOutDateTime.replaceAll(' ', '') ? attendacne.checkOutDateTime : "لا يوجد",
           status: attendacne.status,
           timeGap: attendacne.workingHours
         })

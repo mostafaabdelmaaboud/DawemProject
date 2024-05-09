@@ -56,6 +56,7 @@ export class LogoutComponent {
 
 
   request() {
+
     this.submitClicked.emit(true);
 
 
