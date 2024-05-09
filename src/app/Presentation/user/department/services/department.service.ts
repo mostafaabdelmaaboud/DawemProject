@@ -16,11 +16,11 @@ export class DepartmentService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}EmployeeAttendance/GetAttendances`, { params: queryParams })
+    return this.http.get<any>(`${environment.baseUrl}Attendance/Get`, { params: queryParams })
   }
   getInformation(): Observable<any> {
 
-    return this.http.get<any>(`${environment.baseUrl}EmployeeAttendance/GetEmployeesAttendancesInformations`).pipe(map(data => data.data));
+    return this.http.get<any>(`${environment.baseUrl}Attendance/GetEmployeesAttendancesInformations`).pipe(map(data => data.data));
   }
   deleteAttendance(params: any) {
     let queryParams = new HttpParams();
@@ -30,7 +30,7 @@ export class DepartmentService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.delete<any>(`${environment.baseUrl}EmployeeAttendance/delete`, { params: queryParams })
+    return this.http.delete<any>(`${environment.baseUrl}Attendance/delete`, { params: queryParams })
   }
   departmentGetInfo(params: any) {
     let queryParams = new HttpParams();
@@ -40,13 +40,13 @@ export class DepartmentService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}EmployeeAttendance/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
+    return this.http.get<any>(`${environment.baseUrl}Attendance/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
   }
   exportDraft(): any {
-    return this.http.get<any>(`${environment.baseUrl}EmployeeAttendance/CreateExportDraft`, {observe:'response', responseType:'blob' as 'json'})
+    return this.http.get<any>(`${environment.baseUrl}Attendance/CreateExportDraft`, {observe:'response', responseType:'blob' as 'json'})
   }
   importDataFromExcel(formData:FormData): any {
-    return this.http.post<any>(`${environment.baseUrl}EmployeeAttendance/CreateImportDataFromExcel`,formData,  {
+    return this.http.post<any>(`${environment.baseUrl}Attendance/CreateImportDataFromExcel`,formData,  {
       reportProgress: true,
       observe: "events",
     });
