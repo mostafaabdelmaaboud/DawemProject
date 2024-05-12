@@ -20,6 +20,8 @@ import { DialogResponsibilityFileAdminComponent } from 'src/app/shared/component
 import { RequestResponsibilityAdminComponent } from 'src/app/shared/components/request-responsibility-admin/request-responsibility-admin.component';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
 import { PlansService } from './services/plans.service';
+import { AddPlanComponent } from './dialogs/add-plan/add-plan.component';
+import { DialogPlanInfoComponent } from './dialogs/dialog-plan-info/dialog-plan-info.component';
 
 @Component({
   selector: 'app-plans',
@@ -375,33 +377,47 @@ export class PlansComponent {
 
 
   requestPlan() {
-    const dialogRefAddCurrency = this.dialog.open(RequestResponsibilityAdminComponent, {
+    const dialogRefAddCurrency = this.dialog.open(AddPlanComponent, {
       width: "50vw",
       data: {
-        title: "إضافة مسؤولية",
-        setAsNecessary: "تعيين كضرورية",
+        title: "إضافة خطه",
+        setAsNecessary: "تعيين كنشط",
         titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend: "موافق"
+        buttonSend:"إضافة خطه",
+        titleClose: "تراجع"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editJobTitle = false;
+    dialogRefAddCurrency.componentInstance.editPlane = false;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
 
       let formData: any = {};
-      formData.name = result.name;
-      formData.isActive = result.IsNecessary;
+      
+      formData.NameTranslations = result.NameTranslations.map(translate => {
+        return {
+          LanguageId: translate.LanguageId.id, 
+          Name: translate.name
+        }
+      })
+      formData.MinNumberOfEmployees = result.MinNumberOfEmployees;
+
+      formData.MaxNumberOfEmployees = result.MaxNumberOfEmployees;
+
+      formData.IsActive = result.IsActive;
+      formData.IsTrial = result.IsTrial;
+      formData.EmployeeCost = result.EmployeeCost;
+      formData.Notes = result.Notes;
 
       dialogRefAddCurrency.componentInstance.submitted = false;
 
-      this.plansService.createResponsibility(formData).subscribe(
+      this.plansService.createPlane(formData).subscribe(
         {
           next: (data: any) => {
 
-
+            
             dialogRefAddCurrency.componentInstance.submitted = true;
 
             dialogRefAddCurrency.close();
@@ -411,7 +427,7 @@ export class PlansComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات المسؤوليات"
+                buttonSend: "طلبات الخطط"
 
               },
             });
@@ -428,6 +444,7 @@ export class PlansComponent {
 
           },
           error: (err: any) => {
+            
 
             dialogRefAddCurrency.componentInstance.submitted = true;
 
@@ -442,31 +459,50 @@ export class PlansComponent {
     });
   }
   editPlan(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(RequestResponsibilityAdminComponent, {
+    const dialogRefAddCurrency = this.dialog.open(AddPlanComponent, {
       width: "50vw",
+
       data: {
-        title: "تعديل المسؤولية",
-        setAsNecessary: "تعيين كضرورية",
+        title: "تعديل الخطة",
+        setAsNecessary: "تعيين كنشط",
         titleVacationTypeId: "نوع الاستئذانات <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend: "موافق"
+        buttonSend:"تعديل خطه",
+      titleClose: "تراجع"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editJobTitle = true;
+    dialogRefAddCurrency.componentInstance.editPlane = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
-      formData.id = data.id;
-      formData.name = result.name;
-      formData.isActive = result.IsNecessary;
+      
+      formData.Id = data.id;
+      formData.NameTranslations = result.NameTranslations.map(translate => {
+        return {
+          Id:translate.id,
+          LanguageId: translate.LanguageId.id, 
+          Name: translate.name
+        }
+      })
+      formData.MinNumberOfEmployees = result.MinNumberOfEmployees;
+
+      formData.MaxNumberOfEmployees = result.MaxNumberOfEmployees;
+
+      formData.IsActive = result.IsActive;
+      formData.IsTrial = result.IsTrial;
+      formData.EmployeeCost = result.EmployeeCost;
+      formData.Notes = result.Notes;
+
+
+
 
       dialogRefAddCurrency.componentInstance.submitted = false;
 
-      this.plansService.updateResponsibility(formData).subscribe(
+      this.plansService.updatePlane(formData).subscribe(
         {
           next: (data: any) => {
 
@@ -513,10 +549,10 @@ export class PlansComponent {
 
 
   dialogPlanFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogResponsibilityFileAdminComponent, {
+    const dialogRefAddCurrency = this.dialog.open(DialogPlanInfoComponent, {
       width: "40vw",
       data: {
-        title: "ملف المسؤولية"
+        title: "ملف الخطة"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id

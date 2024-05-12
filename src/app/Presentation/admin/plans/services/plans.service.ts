@@ -22,6 +22,15 @@ export class PlansService {
 
     return this.http.get<any>(`${environment.baseUrl}adminpanel/Plan/GetPlansInformations`).pipe(map(data => data.data));
   }
+  getLanguages(filter: any) {
+    let queryParams = new HttpParams();
+    if (filter) {
+      Object.entries(filter).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}adminpanel/Lookups/GetLanguages`, { params: queryParams }).pipe(map(data => data.data))
+  }
   deletePlan(params: any) {
     let queryParams = new HttpParams();
 
@@ -43,7 +52,7 @@ export class PlansService {
     return this.http.put<any>(`${environment.baseUrl}adminpanel/Responsibility/enable`, {}, { params: queryParams })
 
   }
-  responsibilityInfo(params: any) {
+  planeInfo(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -51,22 +60,22 @@ export class PlansService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}adminpanel/Responsibility/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
+    return this.http.get<any>(`${environment.baseUrl}adminpanel/Plan/GetInfo`, { params: queryParams }).pipe(map(data => data.data))
   }
 
 
-  createResponsibility(formData: any) {
+  createPlane(formData: any) {
 
-    return this.http.post<any>(`${environment.baseUrl}adminpanel/Responsibility/Create`, formData)
-
-  }
-  updateResponsibility(formData: FormData) {
-
-    return this.http.put<any>(`${environment.baseUrl}adminpanel/Responsibility/Update`, formData)
+    return this.http.post<any>(`${environment.baseUrl}adminpanel/Plan/Create`, formData)
 
   }
+  updatePlane(formData: FormData) {
 
-  responsibilityGetById(params: any) {
+    return this.http.put<any>(`${environment.baseUrl}adminpanel/Plan/Update`, formData)
+
+  }
+
+  planGetById(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -74,7 +83,7 @@ export class PlansService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}adminpanel/Responsibility/GetById`, { params: queryParams }).pipe(map(data => data.data))
+    return this.http.get<any>(`${environment.baseUrl}adminpanel/Plan/GetById`, { params: queryParams }).pipe(map(data => data.data))
   }
   jobTitleTypeDropdown(filter: any) {
     let queryParams = new HttpParams();
