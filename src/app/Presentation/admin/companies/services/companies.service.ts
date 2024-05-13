@@ -32,7 +32,7 @@ export class CompaniesService {
 
   }
   signup(data: any) {
-    return this.http.post(environment.baseUrl + "adminpanel/Company/CompanySignUp", data)
+    return this.http.post(environment.baseUrl + "adminpanel/Company/CreateSignUp", data)
   }
   GetCountries(filter: any) {
     let queryParams = new HttpParams();
