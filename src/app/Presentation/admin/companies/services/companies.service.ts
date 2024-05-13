@@ -31,6 +31,9 @@ export class CompaniesService {
     return this.http.put<any>(`${environment.baseUrl}adminpanel/Company/Update`, formData)
 
   }
+  signup(data: any) {
+    return this.http.post(environment.baseUrl + "adminpanel/Company/CompanySignUp", data)
+  }
   GetCountries(filter: any) {
     let queryParams = new HttpParams();
     if (filter) {
@@ -112,6 +115,16 @@ export class CompaniesService {
       })
     }
     return this.http.get<any>(`${environment.baseUrl}adminpanel/Responsibility/GetById`, { params: queryParams }).pipe(map(data => data.data))
+  }
+   
+  getCountries(filter: any) {
+    let queryParams = new HttpParams();
+    if (filter) {
+      Object.entries(filter).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}adminpanel/Lookups/GetCountries`, { params: queryParams }).pipe(map(data => data.data))
   }
   jobTitleTypeDropdown(filter: any) {
     let queryParams = new HttpParams();

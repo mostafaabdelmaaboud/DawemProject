@@ -241,6 +241,35 @@ export class LoginComponent {
                 this.authService.setTokenAdmin(res.data.token);
                   this.isLoading = false;
                   this.loading = true;
+                  switch (res.data.availablePermissions?.[0]?.screenCode) {
+                    case 0:
+                      this.router.navigate(["/admin/Companies"]);
+                      break;
+                      case 1:
+                        this.router.navigate(["/admin/userPermissions"]);
+                        break;
+                        case 2:
+                        this.router.navigate(["/admin/PermissionLog"]);
+                        break;
+                        case 3:
+                        this.router.navigate(["/admin/responsibility"]);
+                        break;
+                        case 4:
+                        this.router.navigate(["/admin/plans"]);
+                        break;
+                        case 5:
+                        this.router.navigate(["/admin/subscriptions"]);
+                        break;
+                        case 6:
+                        this.router.navigate(["/admin/users"]);
+                        break;
+                        case 7:
+                        this.router.navigate(["/admin/subscriptionPayments"]);
+                        break;
+                        
+                    default:
+                      break;
+                  }
                   this.toast.success(res.message,"", {timeOut: 2000});
                   this.router.navigate(["/admin/responsibility"]);
               } else {

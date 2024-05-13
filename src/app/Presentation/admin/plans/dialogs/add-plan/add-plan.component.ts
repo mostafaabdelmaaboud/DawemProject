@@ -122,18 +122,24 @@ export class AddPlanComponent {
               this.getControlArray("NameTranslations").at(i).get("name")?.setValue(translate.name);
 
             } else {
-              
-              let findIndexLanguagesRemove = this.copyLanguages.findIndex(language => language.id === planGetById.nameTranslations[i -1].languageId);
-              this.copyLanguages.splice(findIndexLanguagesRemove, 1)
-              let findIndexLanguages = this.copyLanguages.findIndex(language => language.id === translate.languageId);
+              let findIndexLanguagesRemove = this.copyLanguages.findIndex(language => language.id === planGetById.nameTranslations[i-1].languageId);
+              let findIndexLanguages = this.languages.findIndex(language => language.id === translate.languageId);
               if(findIndexLanguages >=0) {
-                this.getControlArray("NameTranslations").push(this.createNewTranslate(translate.id,this.copyLanguages, false));
-                this.getControlArray("NameTranslations").at(i).get("LanguageId")?.setValue(this.copyLanguages[findIndexLanguages]);
+                let languages = this.copyLanguages.filter(language => language.id != planGetById.nameTranslations[i-1].languageId);
+                this.getControlArray("NameTranslations").push(this.createNewTranslate(translate.id,languages, false));
+                this.getControlArray("NameTranslations").at(i).get("LanguageId")?.setValue(this.languages[findIndexLanguages]);
+                this.copyLanguages.splice(findIndexLanguagesRemove, 1)
                 this.getControlArray("NameTranslations").at(i - 1).get("readOnly")?.setValue(true);
                 this.getControlArray("NameTranslations").at(i).get("name")?.setValue(translate.name);
               }
             }
           });
+          // let nameTranslations =  planGetById.nameTranslations.map(translate => translate.languageId);
+          // let languages = this.copyLanguages.filter(language => !nameTranslations.includes(language.id));
+          // let selectLanguage = languages.findIndex(lang => lang.id === planGetById.nameTranslations[planGetById.nameTranslations.length -1].languageId);
+          // console.log(languages);
+          // this.getControlArray("NameTranslations").at(this.getControlArray("NameTranslations").controls.length - 1).get("languages")?.setValue(languages);
+          // this.getControlArray("NameTranslations").at(this.getControlArray("NameTranslations").controls.length - 1).get("LanguageId")?.setValue(languages[selectLanguage]);
 
           this.getControl("IsActive")?.setValue(planGetById.isActive);
           this.getControl("IsTrial")?.setValue(planGetById.isTrial);
@@ -240,13 +246,11 @@ export class AddPlanComponent {
     
     this.copyLanguages.push(this.getControlArray("NameTranslations").at(index).get("LanguageId")?.value);
     this.getControlArray("NameTranslations").removeAt(index);
-
   }
   request() {
     
 
     if (this.addBranchGroupForm.valid && this.submitted && this.getControlArray("NameTranslations").at(this.getControlArray("NameTranslations").controls.length - 1).valid) {
-      
       this.submitted = false;
       this.submitClicked.emit(this.addBranchGroupForm.value);
       // this.dialogRef.close(true);

@@ -22,6 +22,7 @@ import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dia
 import { CompaniesService } from './services/companies.service';
 import { AddCompanyAdminComponent } from 'src/app/shared/components/add-company-admin/add-company-admin.component';
 import { DialogCompanyFileAdminComponent } from 'src/app/shared/components/dialog-company-file-admin/dialog-company-file-admin.component';
+import { SignupComponent } from './dialogs/signup/signup.component';
 
 @Component({
   selector: 'app-companies',
@@ -522,6 +523,130 @@ export class CompaniesComponent {
     dialogRefAddCurrency.afterClosed().subscribe(result => {
       if (result) {
         this.getCompanies(this.filteration);
+
+      }
+    });
+  }
+  createCompany() {
+    const dialogRefAddCurrency = this.dialog.open(SignupComponent, {
+      width: "80vw",
+      maxWidth: "80vw",
+
+      data: {
+        title: "تسجيل  شركة",
+        setAsNecessary: "تعيين كنشط",
+        titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
+        titleName: "الأسم<span class='color-red'>*</span>",
+        placeholdeName: "برجاء ادخال الأسم",
+        validationtitleName: "الأسم مطلوب",
+        buttonSend:"تسجيل  شركة",
+        titleClose: "تراجع"
+      },
+    });
+    dialogRefAddCurrency.componentInstance.submitted = true;
+    dialogRefAddCurrency.componentInstance.editPlane = false;
+    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+      dialogRefAddCurrency.componentInstance.loading = true;
+      
+      this.companiesService.signup(result).subscribe(
+        {
+          next: (data: any) => {
+
+            
+            dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
+
+            dialogRefAddCurrency.close();
+
+            const succressDialog = this.dialog.open(ToastSuccessComponent, {
+              width: "30vw",
+              data: {
+                title: "تم ارسال طلبك",
+                message: data.message,
+                buttonSend: "طلبات الشركات"
+
+              },
+            });
+            // this.getPlans(this.filteration);
+
+            setTimeout(() => {
+              succressDialog.close();
+
+            }, 2000);
+            succressDialog.componentInstance.submitted = true;
+            succressDialog.componentInstance.submitClicked.subscribe(result => {
+              succressDialog.close();
+            })
+
+          },
+          error: (err: any) => {
+            
+            
+            dialogRefAddCurrency.componentInstance.submitted = true;
+            dialogRefAddCurrency.componentInstance.loading = false;
+
+          }
+        }
+      )
+      // let formData: any = {};
+      // formData.NameTranslations = result.NameTranslations.map(translate => {
+      //   return {
+      //     LanguageId: translate.LanguageId.id, 
+      //     Name: translate.name
+      //   }
+      // })
+      // formData.MinNumberOfEmployees = result.MinNumberOfEmployees;
+
+      // formData.MaxNumberOfEmployees = result.MaxNumberOfEmployees;
+
+      // formData.IsActive = result.IsActive;
+      // formData.IsTrial = result.IsTrial;
+      // formData.EmployeeCost = result.EmployeeCost;
+      // formData.Notes = result.Notes;
+
+      // dialogRefAddCurrency.componentInstance.submitted = false;
+
+      // this.plansService.createPlane(formData).subscribe(
+      //   {
+      //     next: (data: any) => {
+
+            
+      //       dialogRefAddCurrency.componentInstance.submitted = true;
+
+      //       dialogRefAddCurrency.close();
+
+      //       const succressDialog = this.dialog.open(ToastSuccessComponent, {
+      //         width: "30vw",
+      //         data: {
+      //           title: "تم ارسال طلبك",
+      //           message: data.message,
+      //           buttonSend: "طلبات الخطط"
+
+      //         },
+      //       });
+      //       this.getPlans(this.filteration);
+
+      //       setTimeout(() => {
+      //         succressDialog.close();
+
+      //       }, 2000);
+      //       succressDialog.componentInstance.submitted = true;
+      //       succressDialog.componentInstance.submitClicked.subscribe(result => {
+      //         succressDialog.close();
+      //       })
+
+      //     },
+      //     error: (err: any) => {
+            
+
+      //       dialogRefAddCurrency.componentInstance.submitted = true;
+
+      //     }
+      //   }
+      // )
+    });
+    dialogRefAddCurrency.afterClosed().subscribe(result => {
+      if (result) {
 
       }
     });

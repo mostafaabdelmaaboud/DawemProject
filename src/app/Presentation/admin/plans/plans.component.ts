@@ -395,7 +395,6 @@ export class PlansComponent {
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
 
       let formData: any = {};
-      
       formData.NameTranslations = result.NameTranslations.map(translate => {
         return {
           LanguageId: translate.LanguageId.id, 

@@ -1,0 +1,462 @@
+.footer-dialog {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+  
+  .title-Dialog {
+    color: #0D3671;
+    font-size: 20px;
+  }
+  
+  :host ::ng-deep .p-inputswitch {
+    width: 2.8rem;
+    height: 1.46rem;
+  }
+  .code {
+    height: 97%;
+  }
+  :host ::ng-deep .p-dropdown,
+  :host ::ng-deep .p-multiselect {
+    width: 100% !important;
+  }
+  
+  :host ::ng-deep .p-calendar {
+    width: 100%;
+  }
+  
+  
+  
+  .title {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .body-dialog {
+    height: 70vh;
+    overflow-y: auto;
+  }
+  
+  :host ::ng-deep .content-pCalendar-default {
+    .p-inputtext {
+      border-width: 1px 0px 1px 1px;
+      padding-right: 0;
+    }
+  
+    .p-button {
+      background-color: transparent;
+      color: rgba(48, 133, 254, 1) !important;
+      border-color: #ced4da !important;
+      border-width: 1px 1px 1px 0px !important;
+      padding-left: 0 !important;
+    }
+  }
+  
+  
+  
+  .icon-close i {
+    font-size: 20px;
+    color: gray;
+  }
+  
+  .iconCloseDialog {
+    background-color: transparent;
+    border: 0;
+    align-items: center;
+    display: flex;
+  }
+  
+  .pi-search {
+    cursor: pointer;
+  }
+  
+  .p-fileupload-row {
+    display: flex;
+    align-items: center;
+  }
+  
+  :host ::ng-deep .p-fileupload-files {
+    display: none !important;
+  }
+  
+  :host ::ng-deep .p-fileupload-row {
+    justify-content: space-between;
+  }
+  
+  :host ::ng-deep .p-fileupload-buttonbar,
+  :host ::ng-deep .p-fileupload-content {
+    border: 0;
+    padding: 0;
+    background-color: white;
+  }
+  
+  
+  :host ::ng-deep .p-fileupload-row>div {
+    text-align: center;
+  }
+  
+  :host ::ng-deep .p-fileupload-row .p-button {
+    background: #3085FE !important;
+    border: 1px solid #3085FE !important;
+  }
+  
+  .maximum-size {
+    font-size: 14px;
+    color: rgba(108, 117, 125, 1);
+    margin-top: 7px !important;
+    display: block;
+  }
+  
+  :host ::ng-deep .p-fileupload-content .p-progressbar {
+    display: none !important;
+  }
+  
+  :host ::ng-deep .p-fileupload-row {
+    margin-bottom: 10px;
+    margin-top: 10px;
+  
+  }
+  
+  :host ::ng-deep .p-button .p-button-label {
+    flex: initial;
+    font-weight: 600;
+  }
+  
+  :host ::ng-deep .p-button .p-button-icon-left {
+    color: rgba(48, 133, 254, 1);
+  }
+  
+  :host ::ng-deep .p-fileupload-choose,
+  :host ::ng-deep .p-fileupload-choose:hover {
+    background: white !important;
+    height: initial;
+    font-size: 16px;
+    box-shadow: none !important;
+    width: 100%;
+    color: #7D8B9E;
+    text-align: center;
+    border: 1px solid #CBD5E1;
+    margin: 0 !important;
+    padding: 25px 15px !important;
+    height: initial;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    display: flex !important;
+    justify-content: center;
+  }
+  .TermsAndConditions {
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+  }
+  :host ::ng-deep .p-fileupload-row .p-fileupload-filename {
+    width: 36% !important;
+    padding: 0 10px !important;
+  }
+  
+  :host ::ng-deep .p-fileupload-row>div:last-of-type {
+    width: 10% !important;
+    max-width: 36% !important;
+  }
+  
+  :host ::ng-deep .p-fileupload-row>div:last-of-type button {
+    width: 100% !important;
+  }
+  
+  :host ::ng-deep .p-fileupload-row>div {
+    text-align: center;
+  }
+  
+  :host ::ng-deep .p-fileupload-content .p-progressbar {
+    display: none !important;
+  }
+  
+  :host ::ng-deep .p-fileupload-row {
+    margin-bottom: 10px;
+    margin-top: 10px;
+  
+  }
+  
+  :host ::ng-deep .p-fileupload-row img {
+    width: 100%;
+    object-fit: contain;
+  
+  }
+  
+  :host .container-radio-button {
+    .mat-mdc-radio-group {
+      margin: 0 -25px
+    }
+  }
+  
+  :host ::ng-deep .p-fileupload .p-fileupload-row>div {
+    padding: 0px;
+  }
+  
+  :host ::ng-deep p-calendar.ng-dirty.ng-invalid {
+    .p-button {
+      border-color: #e24c4c !important;
+    }
+  }
+  
+  :host ::ng-deep p-calendar.ng-dirty.ng-invalid>.p-calendar>.p-inputtext {
+    border-color: #e24c4c !important;
+  }
+  
+  .button-action {
+    padding: 10px 15px;
+    border: 0;
+    font-size: 16px;
+    margin-left: 10px;
+  }
+  
+  .button-action-two {
+    margin-right: 7px;
+    background-color: transparent;
+    border: 1px solid rgba(48, 133, 254, 1);
+    color: #3085FE;
+    border-radius: 10px !important;
+    -webkit-border-radius: 10px !important;
+    -moz-border-radius: 10px !important;
+    -ms-border-radius: 10px !important;
+    -o-border-radius: 10px !important;
+  }
+  :host ::ng-deep.content-choose-country {
+    .dropdown-code {
+    border: 1px solid #ced4da;
+    border-radius: 0 7px 7px 0;
+    padding: 0 15px;
+    -webkit-border-radius: 0 7px 7px 0;
+    -moz-border-radius: 0 7px 7px 0;
+    -ms-border-radius: 0 7px 7px 0;
+    -o-border-radius: 0 7px 7px 0;
+    position: initial !important;
+height: 51px !important;
+border-left: 0;
+}
+    > .p-inputtext {
+        border-radius: 7px 0 0 7px;
+    }
+  }
+  .content-choose-language {
+    .square  {
+        height: 51px;
+    }
+  }
+  .color-green {
+    color: green;
+  }
+
+  .color-red {
+    color: red;
+  }
+  .content-phone-number {
+    > input {
+      padding-right: 110px;
+  }
+  }
+  :host ::ng-deep .dropdown-code.dropdownReadOnly {
+    background-color: rgba(0, 0, 0, 0.1);
+    .p-dropdown  {
+        background-color: transparent;
+    }
+  }
+  .inputReadOnly {
+    background-color: rgba(0, 0, 0, 0.1);
+
+  }
+  
+.container-alerts {
+    top: 0;
+    position: absolute;
+    left: 0;
+    font-size: 13px;
+    margin: 0;
+    margin-top: -10px;
+    transform: translateY(-100%);
+    -webkit-transform: translateY(-100%);
+    -moz-transform: translateY(-100%);
+    -ms-transform: translateY(-100%);
+    -o-transform: translateY(-100%);
+  
+    .alert {
+      padding: 2px 5px;
+      margin: 0;
+      border: 0 !important;
+      border-radius: 5px;
+    }
+  
+    .alert::before {
+      content: "";
+      border-width: 10px 10px 10px 10px;
+      border-color: #f8d7da transparent transparent transparent;
+      border-style: solid;
+      position: absolute;
+      bottom: -18px;
+      right: 6px;
+    }
+  }
+  
+
+  
+  .button-submit {
+    font-size: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  
+  
+  .header {
+    margin-bottom: 24px;
+    margin-top: 30px;
+  
+    .title {
+      font-size: 23px;
+      line-height: 38px;
+      font-weight: 900;
+      margin-bottom: 13px;
+    }
+  
+    .sub-text {
+      font-size: 12px;
+      color: var(--grey-500);
+      font-weight: 600;
+    }
+  }
+  
+  .field-password {
+    >span {
+      position: absolute;
+      top: 0;
+      left: 0px;
+      color: var(--color-blue);
+      cursor: pointer;
+      width: 42px;
+      display: flex;
+      justify-content: center;
+      height: 100%;
+      align-items: center;
+    }
+  
+    >input {
+      padding-left: 40px;
+    }
+  
+    >input::placeholder {
+      font-size: 15px;
+      color: #a0a7ab;
+    }
+  }
+  
+  .footer-login {
+    width: 100%;
+    height: 45px;
+  
+    .row {
+      >div {
+        font-size: 12px !important;
+        padding: 0 30px;
+        color: #6c757d;
+      }
+    }
+  }
+  
+  :host ::ng-deep .p-dropdown-filter {
+    margin: 0 !important;
+  }
+  
+  .change-language {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+  }
+  
+  .footer-info {
+    justify-content: flex-end;
+  
+    i {
+      font-size: 23px;
+    }
+  }
+  
+  .background-dawem {
+    background-image: url("../../../../../../assets/img/right-section.png");
+    background-size: cover;
+  }
+  
+  /*-------------- Start Responsive ---------------*/
+  /* Large devices (large desktops, 1200px and up) */
+  @media (min-width:1200px) {}
+  
+  /* Medium devices (desktops, 992px and up) */
+  @media (min-width:992px) {}
+  
+  @media (max-width:991px) {
+    .header {
+      margin-top: 102px;
+    }
+  }
+  
+  /* Small devices (tablets, 768px and up) */
+  @media (min-width:768px) {
+    .header {
+      .title {
+        font-size: 20px;
+      }
+    }
+  }
+  
+  @media (max-width:576px) {
+    .body-login {
+      min-height: 99% !important;
+    }
+  
+    .content-login {
+      height: 90%;
+    }
+  
+    .header {
+      .title {
+        font-size: 18px;
+      }
+    }
+  
+    .footer-login {
+      .row {
+        >div {
+          padding: 0 15px !important;
+        }
+      }
+  
+    }
+  
+  }
+  
+  @media (max-width:420px) {
+    .footer-login {
+      >.row {
+        flex-direction: column;
+        align-items: flex-start !important;
+  
+        >div {
+          width: 100% !important;
+          text-align: right !important;
+        }
+  
+        >div:first-of-type {
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+  
+  /*------------- End Responsive ------------------*/
+  :host ::ng-deep .p-dropdown {
+    width: 100%;
+  }
+  
+
+  

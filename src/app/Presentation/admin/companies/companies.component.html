@@ -235,11 +235,16 @@
                 </form>
         
               </p-overlayPanel>
-              <button class="btn btn-primary action-button-t d-flex align-items-center"
+              <!-- <button class="btn btn-primary action-button-t d-flex align-items-center"
                 *ngIf="showActions({actionCode:0})" (click)="requestCompanies()">
                 <i class="pi bi-plus-circle-fill"></i>
                 <span>إضافة شركة</span>
-              </button>
+              </button> -->
+              <button class="btn btn-primary action-button-t d-flex align-items-center"
+              *ngIf="showActions({actionCode:0})" (click)="createCompany()">
+              <i class="pi bi-plus-circle-fill"></i>
+              <span>تسجيل شركة</span>
+            </button>
               <!--
               <button (click)="op.toggle($event)" class="btn button-filter-table">
   

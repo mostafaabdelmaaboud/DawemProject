@@ -1,20 +1,70 @@
-import { FormBuilder, FormGroup, Validators, FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
-import { Component, inject } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { Router } from '@angular/router';
-import { ToastService } from 'src/app/shared/services/toast.service';
+import { Component, EventEmitter, Inject, Input, Output, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { AuthService } from 'src/app/core/auth/services/auth-service.service';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { FileUploadModule } from 'primeng/fileupload';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { CalendarModule } from "primeng/calendar";
+import { MultiSelectModule } from 'primeng/multiselect';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { AuthService } from '../services/auth-service.service';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { CompaniesService } from '../../services/companies.service';
+import { Router } from '@angular/router';
 import { TermsAndConditionsComponent } from 'src/app/shared/components/terms-and-conditions/terms-and-conditions.component';
-import { MatDialog } from '@angular/material/dialog';
+interface addBranchesInputsProps {
+  LabelMessage: string;
+  inputType: string;
+  name: string;
+  message: string;
+}
 
+interface DataDialog {
+  setAsNecessary: string;
+
+  titleName: string;
+  placeholdeName: string;
+  validationtitleName: string;
+
+  title: string;
+  buttonSend: string,
+  buttonClose: string,
+}
+
+interface UploadEvent {
+  originalEvent: Event;
+  files: File[];
+}
 @Component({
-  selector: 'app-sign-up',
-  templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.scss']
+  selector: 'app-signup',
+  standalone: true,
+  imports: [CommonModule, FormsModule, MatRadioModule, MatProgressSpinnerModule,MultiSelectModule, ReactiveFormsModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
+  templateUrl: './signup.component.html',
+  styleUrls: ['./signup.component.scss']
 })
-export class SignUpComponent {
+export class SignupComponent {
+
+  @Output() submitClicked = new EventEmitter<any>();
+  @Input() submitted!: boolean;
+  @Input() list: any[] = [
+  ];
+  @Input() workTeamList: any[] = [
+  ];
+  @Input() id!: string;
+
+  dateTaskMultiple = false;
+  listEmployees: any[] = [
+  ];
+  loading = false;
+
+  @Input() editPlane!: boolean;
+
+ 
   togglePassword = true;
   toggleConfirmPassword = true;
   private dialog = inject(MatDialog);
@@ -37,17 +87,24 @@ export class SignUpComponent {
   });
   subscription = true;
   code="+20";
-  private authService = inject(AuthService);
   currentLang = localStorage.getItem("lang");
   countries!: any[];
-  loading: boolean = true;
   isLoading = false;
   general: any[] = [];
   countriesPhone: any[] = [];
   isCurrentCountry;
   private router = inject(Router)
   selectedCountry: any = { name: 'عربي', code: 'AR' };
-  constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService) {
+
+  constructor(
+    public dialogRef: MatDialogRef<SignupComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
+    private companiesService: CompaniesService,
+    private toast: ToastrService,
+    private fb: FormBuilder,
+    public translate: TranslateService
+  ) {
+    this.dialogRef.disableClose = true;
   }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -129,7 +186,7 @@ export class SignUpComponent {
     })
   }
   getCountries() {
-    this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
+    this.companiesService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
       next: data => {
         
         this.general = [];
@@ -147,7 +204,7 @@ export class SignUpComponent {
     this.code= "+"+this.isCurrentCountry.phoneLength;
   }
   getCountriesbyPhone() {
-    this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
+    this.companiesService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
       next: data => {
         this.countriesPhone = [];
         data.forEach((country: any) => {
@@ -233,7 +290,7 @@ export class SignUpComponent {
         if (data || data === "") {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
-            this.authService.getCountries({PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+            this.companiesService.getCountries({PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 this.general = [];
@@ -252,11 +309,11 @@ export class SignUpComponent {
     }
   }
   submit() {
-
-    if (this.FormGroup.valid && this.loading && this.FormGroup.value.agreed) {
+    
+    if (this.FormGroup.valid &&  this.submitted && this.FormGroup.value.agreed) {
       this.loading = false;
       // this.isLoading = true;
-
+      
       let formatObject:any = {
         name: this.FormGroup.value.name,
         companyName: this.FormGroup.value.companyName,
@@ -271,35 +328,16 @@ export class SignUpComponent {
         numberOfEmployees:this.FormGroup.value.numberOfEmployees,
         agreed: this.FormGroup.value.agreed ? this.FormGroup.value.agreed : false,
         IsTrial:this.FormGroup.value.IsTrial
-
       };
       if(this.subscription) {
         formatObject.subscriptionDurationInMonths = this.FormGroup.value.subscriptionDurationInMonths;
       } else {
         formatObject.subscriptionDurationInMonths = null;
       }
-      
-      this.authService.signup(formatObject).subscribe(
-        {
-          next: (res: any) => {
-            this.toast.success(res.message);
+          //   this.submitted = false;
+          
+      this.submitClicked.emit(formatObject);
 
-            // this.authService.setToken(res.data.token);
-            // this.isLoading = false;
-
-            this.router.navigate(["/login"]);
-
-            // this.loading = true;
-
-          },
-          error: err => {
-            this.toast.error(err.error.message);
-            // this.isLoading = false;
-
-            this.loading = true;
-          }
-        }
-      )
     } else {
       this.FormGroup.get("name")?.markAsDirty();
       this.FormGroup.get("companyName")?.markAsDirty();
@@ -391,5 +429,21 @@ export class SignUpComponent {
   }
   getControl(FormControl: string) {
     return this.FormGroup.get(FormControl);
+  }
+  request() {
+    
+
+    // if (this.addBranchGroupForm.valid && this.submitted && this.getControlArray("NameTranslations").at(this.getControlArray("NameTranslations").controls.length - 1).valid) {
+    //   
+    //   this.submitted = false;
+    //   this.submitClicked.emit(this.addBranchGroupForm.value);
+    // } else {
+    // }
+
+  }
+
+  
+  close(): void {
+    this.dialogRef.close(false);
   }
 }
