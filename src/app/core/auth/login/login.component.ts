@@ -11,6 +11,8 @@ import { environment } from 'src/environments/environment';
 import { initializeApp } from "firebase/app";
 import { UserPermissionsService } from 'src/app/Presentation/user/user-permissions/services/user-permissions.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { NotificationService } from 'src/app/service/notification.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
@@ -38,7 +40,7 @@ export class LoginComponent {
   };
   private userPermissionsService = inject(UserPermissionsService);
 
-  constructor(private fb: FormBuilder, public translate: TranslateService,private http: HttpClient, private toast: ToastrService, private cd:ChangeDetectorRef, private notificacion: PushNotificationService) {
+  constructor(private fb: FormBuilder, public translate: TranslateService, private messageService: MessageService, private notificationService:NotificationService,private http: HttpClient, private toast: ToastrService, private cd:ChangeDetectorRef, private notificacion: PushNotificationService) {
    
   }
   ngOnInit(): void {
@@ -92,14 +94,23 @@ export class LoginComponent {
       //   this.selectedCountry = { name: 'India', code: 'IN' };
       // }
     }
+
     this.isLoading = false;
+    
     if ('Notification' in window && navigator.permissions) {
       navigator.permissions.query({ name: 'notifications' })
       .then(permissionStatus => {
         if(permissionStatus.state === "granted") {
           this.requestPermission();
-        } else {
-          // this.toast.error("Error querying Notification permission: " + permissionStatus.state, '', {
+        } else if(permissionStatus.state === "prompt") {
+          
+          this.requestPermission();
+          this.listen();
+          this.isLoading = false;
+
+     
+      } else {
+     // this.toast.error("Error querying Notification permission: " + permissionStatus.state, '', {
           //   timeOut: 10000,
           //   onActivateTick: true
           // });  
@@ -130,12 +141,20 @@ export class LoginComponent {
       console.error('Notifications not supported in this browser.');
     }
   }
+  listen() {
+    const messaging = getMessaging();
+    onMessage(messaging, (payload) => {
+      this.notificationService.setNotification({UnViewdNotificationCount:JSON.parse(payload?.data?.['UnViewdNotificationCount'] as string),...payload});
+      this.messageService.add({ key: 'notification',severity: 'info', summary: 'Info', data:{title:payload.notification?.title, body:payload.notification?.body}, detail: 'Message Content',life:10000 });
+    });
+  }
   requestPermission() {
     this.isLoading = true;
     const messaging = getMessaging();
     getToken(messaging, 
      { vapidKey: environment.firebase.vapidKey}).then(
        (currentToken) => {
+        
          if (currentToken) {
            this.isLoading = false;
            this.FCMToken = currentToken;
@@ -144,7 +163,12 @@ export class LoginComponent {
            console.log('No registration token available. Request permission to generate one.');
          }
      }).catch((err) => {
+      
+      this.isLoading = false;
+
       this.requestPermission();
+      
+
         console.log('An error occurred while retrieving token. ', err);
     });
 
