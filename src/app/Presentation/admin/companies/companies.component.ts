@@ -43,15 +43,15 @@ export class CompaniesComponent {
       field: "code",
     },
     {
-      name: "اسم الشركة",
-      field: "name",
+      name: "اسم الدولة",
+      field: "countryName",
     },
     {
-      name: "اسم الدولة",
+      name:  "اسم الشركة",
       field: "countryNameWidthLogo"
     },
     {
-      name: "نوع الاستيراد",
+      name: "نوع الاشتراك",
       field: "subscriptionTypeName"
     },
     {
@@ -208,7 +208,7 @@ export class CompaniesComponent {
               this.companiesIsExport.push({
                 id: company.id,
               code: company.code,
-              name: company.name,
+              countryName: company.countryName,
               countryNameWidthLogo: {
                 name: company?.name ? company?.name : "لا يوجد",
                 alt: company?.name ? company?.name : "لا يوجد",
@@ -225,7 +225,7 @@ export class CompaniesComponent {
               return {
                 id: company.id,
                 code: company.code,
-                name: company.name,
+                countryName: company.countryName,
                 countryNameWidthLogo: company.countryNameWidthLogo,
                 subscriptionTypeName: company.subscriptionTypeName,
                 numberOfEmployees: company.numberOfEmployees,
@@ -356,7 +356,7 @@ export class CompaniesComponent {
             this.companies.push({
               id: company.id,
               code: company.code,
-              name: company.name,
+              countryName: company.countryName,
               countryNameWidthLogo: {
                 name: company?.name ? company?.name : "لا يوجد",
                 alt: company?.name ? company?.name : "لا يوجد",

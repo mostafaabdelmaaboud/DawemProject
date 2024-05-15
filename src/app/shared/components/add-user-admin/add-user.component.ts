@@ -18,6 +18,7 @@ import { AssignmentsService } from 'src/app/Presentation/user/assignments/servic
 import { CheckboxModule } from 'primeng/checkbox';
 import { UsersService } from 'src/app/Presentation/admin/users/services/users.service';
 import { ToastrService } from 'ngx-toastr';
+import { CompaniesService } from 'src/app/Presentation/admin/companies/services/companies.service';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -113,9 +114,10 @@ export class AddUserComponent {
   errorUploadFileIdCopy!: string;
   public viewImage: any[] = [];
 
-  listEmployees: any[] = [
-  ];
+
   loading = false;
+  private companiesService = inject(CompaniesService);
+
   private employeesService = inject(EmployeesService);
   listRoles: any[] = [];
   @Input() editUser!: boolean;
@@ -139,7 +141,6 @@ export class AddUserComponent {
   constructor(
     public dialogRef: MatDialogRef<AddUserComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
-    private authService: AuthService,
     private toastr: ToastrService,
     private fb: FormBuilder,
     public translate: TranslateService,
@@ -153,25 +154,20 @@ export class AddUserComponent {
 
    
     let rolesDropDown = this.usersService.getRolesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-    let employeeForDropDown = this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-    let countries = this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+    let countries = this.companiesService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
 
     combineLatest({
       rolesDropDown,
-      employeeForDropDown,
       countries
     }).subscribe(data => {
       this.listRoles = [];
-      this.listEmployees = [];
+      this.countriesPhone = [];
 
       data.rolesDropDown?.data?.forEach((jobTitle: any) => {
         this.listRoles.push({ name: jobTitle.name, key: jobTitle.id })
       });
 
-      data.employeeForDropDown?.data?.forEach((jobTitle: any) => {
-        this.listEmployees.push({ name: jobTitle.name, key: jobTitle.id })
-      });
-      this.countriesPhone = [];
+    
       data.countries?.forEach((country: any) => {
         
         this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath });
