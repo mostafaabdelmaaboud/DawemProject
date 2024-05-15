@@ -104,6 +104,7 @@ export class LoginComponent {
           this.requestPermission();
         } else if(permissionStatus.state === "prompt") {
           
+
           this.requestPermission();
           this.listen();
           this.isLoading = false;
@@ -149,12 +150,13 @@ export class LoginComponent {
     });
   }
   requestPermission() {
+    
     this.isLoading = true;
     const messaging = getMessaging();
     getToken(messaging, 
      { vapidKey: environment.firebase.vapidKey}).then(
        (currentToken) => {
-        
+          
          if (currentToken) {
            this.isLoading = false;
            this.FCMToken = currentToken;
@@ -164,9 +166,21 @@ export class LoginComponent {
          }
      }).catch((err) => {
       
+      getToken(messaging, 
+        { vapidKey: environment.firebase.vapidKey}).then(
+          (currentToken) => {
+             
+            // if (currentToken) {
+            //   this.isLoading = false;
+            //   this.FCMToken = currentToken;
+            // } else {
+            //  this.isLoading = false;
+            //   console.log('No registration token available. Request permission to generate one.');
+            // }
+        })
       this.isLoading = false;
-
-      this.requestPermission();
+ 
+      // this.requestPermission();
       
 
         console.log('An error occurred while retrieving token. ', err);

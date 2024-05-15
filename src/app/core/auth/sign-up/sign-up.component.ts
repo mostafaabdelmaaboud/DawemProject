@@ -273,7 +273,7 @@ export class SignUpComponent {
 
     if (this.FormGroup.valid && this.loading && this.FormGroup.value.agreed) {
       this.loading = false;
-      // this.isLoading = true;
+      this.isLoading = true;
 
       let formatObject:any = {
         name: this.FormGroup.value.name,
@@ -296,14 +296,15 @@ export class SignUpComponent {
       } else {
         formatObject.subscriptionDurationInMonths = null;
       }
-      
+
       this.authService.signup(formatObject).subscribe(
         {
           next: (res: any) => {
             this.toast.success(res.message);
 
             // this.authService.setToken(res.data.token);
-            // this.isLoading = false;
+            this.isLoading = false;
+            this.loading = true;
 
             this.router.navigate(["/login"]);
 
@@ -311,14 +312,21 @@ export class SignUpComponent {
 
           },
           error: err => {
+            this.isLoading = false;
+
+            this.loading = true;
+
             this.toast.error(err.error.message);
             // this.isLoading = false;
 
-            this.loading = true;
           }
         }
       )
     } else {
+      this.isLoading = false;
+
+      this.loading = true;
+
       this.FormGroup.get("name")?.markAsDirty();
       this.FormGroup.get("companyName")?.markAsDirty();
       this.FormGroup.get("companyCountryId")?.markAsDirty();
