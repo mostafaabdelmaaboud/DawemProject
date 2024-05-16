@@ -651,7 +651,6 @@ export class UsersComponent {
 
 
   dialogUserFile(data: any) {
-    debugger;
     let dialogRefAddCurrency!:MatDialogRef<DialogUserFileComponent, any>;
     this.translate.get("users").subscribe(translate => {
       dialogRefAddCurrency = this.dialog.open(DialogUserFileComponent, {

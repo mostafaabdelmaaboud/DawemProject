@@ -45,7 +45,6 @@ export class AppComponent {
   listen() {
     const messaging = getMessaging();
     onMessage(messaging, (payload) => {
-      debugger;
       let formatObject = {NotificationData:JSON.parse(payload?.data?.['NotificationData'] as string),...payload};
       this.notificationService.setNotification(formatObject);
 

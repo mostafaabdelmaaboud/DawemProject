@@ -1,0 +1,231 @@
+<div class="container-Dialog">
+    <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+      <h3 class="title-Dialog m-0">
+        {{data!['title']|translate}}
+  
+      </h3>
+      <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+        <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+        <i class="pi pi-times-circle"></i>
+      </button>
+    </header>
+    <div class="body-dialog p-15 f-s-16">
+      <form [formGroup]="addBranchGroupForm">
+        <div class="section1 mb-3">
+          <label class="title">{{data!['setAsActive']|translate}}</label>
+          <p-inputSwitch formControlName="isActive"></p-inputSwitch>
+        </div>
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12">
+        
+  
+              <div class="sectionFive mb-3">
+                <label class="title">حالة الإشتراك</label>
+  
+                <div class="container-radio-button">
+                  <mat-radio-group aria-label="Select an option" color="primary" formControlName="Status">
+                    <mat-radio-button value="0">تم الانشاء
+                    </mat-radio-button>
+                    <mat-radio-button value="1">تم التأكيد</mat-radio-button>
+                    <mat-radio-button value="2">نشط</mat-radio-button>
+                    <mat-radio-button value="3">غير نشط</mat-radio-button>
+
+                  </mat-radio-group>
+                </div>
+  
+              </div>
+  
+  
+              <div class="sectionTwo mb-3" *ngIf="employeeIdToggle">
+                <label class="title">اختر الخطة <span class="color-red">*</span></label>
+                <div class="content-password">
+                  <p-dropdown appendTo="body" formControlName="PlanId" appendTo="body" [options]="listPlanId"
+                    placeholder="اختر الخطة" optionLabel="name">
+                    <ng-template pTemplate="header">
+                      <span class="p-input-icon-left input-search-dropdown">
+  
+                        <i class="pi pi-search" (click)="searchDropdown(searchPlanId, 'PlanId')"></i>
+                        <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchPlanId />
+                      </span>
+                    </ng-template>
+                    <ng-template let-option pTemplate="item">
+                      {{ option.name }}
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+                <!--Start Custom Validators-->
+                <div class="container-alerts mt-2" *ngIf="getControl('PlanId')?.errors">
+                  <div class="alert alert-danger"
+                    *ngIf="getControl('PlanId')?.hasError('required') && getControl('PlanId')?.dirty">
+                    الخطة مطلوبة
+                  </div>
+                </div>
+                <!--End Custom Validators-->
+              </div>
+  
+              <div class="sectionTwo mb-3">
+                <label class="title">إختر الشركة <span class="color-red">*</span></label>
+                <div class="content-password">
+                  <p-dropdown appendTo="body" formControlName="CompanyId" appendTo="body" [options]="listCompanies"
+                    placeholder="إختر الشركة" optionLabel="name">
+                    <ng-template pTemplate="header">
+                      <span class="p-input-icon-left input-search-dropdown">
+  
+                        <i class="pi pi-search" (click)="searchDropdown(searchCompanyId, 'CompanyId')"></i>
+                        <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchCompanyId />
+                      </span>
+                    </ng-template>
+                    <ng-template let-option pTemplate="item">
+                      {{ option.name }}
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+                <!--Start Custom Validators-->
+                <div class="container-alerts mt-2" *ngIf="getControl('CompanyId')?.errors">
+                  <div class="alert alert-danger"
+                    *ngIf="getControl('CompanyId')?.hasError('required') && getControl('CompanyId')?.dirty">
+                   الشركة مطلوبة
+  
+                  </div>
+                </div>
+                <!--End Custom Validators-->
+              </div>
+              <!-- <div class="sectionFive  mb-3">
+                <div class="sectionThree">
+                  <label class="title" [innerHTML]="data!['titleCalendar']|translate"></label>
+                  <div class="content-password">
+                    <div class="content-pCalendar-default" dir="ltr">
+                      <p-calendar formControlName="Year" view="year" dateFormat="yy" appendTo="body"
+                        [placeholder]="data!['placeholderCalendar']|translate" [showIcon]="true"></p-calendar>
+                    </div>
+                  </div>
+                  <div class="container-alerts mt-2" *ngIf="getControl('Year')?.errors">
+                    <div class="alert alert-danger"
+                      *ngIf="getControl('Year')?.hasError('required') && getControl('Year')?.dirty">
+                      {{data!['validationCalendar']|translate}}
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+              <div class="sectionFive mb-3">
+                <label for="" class="label-input mb-2">مده الإشتراك بالأيام <span class="color-red">*</span></label>
+                <div class="content-password">
+                  <input type="number" pInputText formControlName="DurationInDays"
+                    placeholder="مده الإشتراك بالأيام" class="w-100" />
+                </div>
+                <!--Start Custom Validators-->
+                <div class="container-alerts mt-2" *ngIf="getControl('DurationInDays')?.errors">
+                  <div class="alert alert-danger"
+                    *ngIf="getControl('DurationInDays')?.hasError('required') && getControl('DurationInDays')?.dirty">
+                    مده الإشتراك بالأيام مطلوبة
+                  </div>
+                </div>
+                <!--End Custom Validators-->
+              </div>
+            <div class="sectionFive  mb-3">
+                <div class="sectionThree">
+                  <label class="title">تاريخ البداية <span class="color-red">*</span></label>
+                  <div class="content-password">
+                    <div class="content-pCalendar-default" dir="ltr">
+                      <p-calendar formControlName="StartDate"  appendTo="body"
+                        placeholder="اختر تاريخ البداية" [showIcon]="true"></p-calendar>
+                    </div>
+                  </div>
+                  <div class="container-alerts mt-2" *ngIf="getControl('StartDate')?.errors">
+                    <div class="alert alert-danger"
+                      *ngIf="getControl('StartDate')?.hasError('required') && getControl('StartDate')?.dirty">
+                      تاريخ البداية مطلوبة
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="sectionFive  mb-3">
+                <div class="sectionThree">
+                  <label class="title">تاريخ النهاية <span class="color-red">*</span></label>
+                  <div class="content-password">
+                    <div class="content-pCalendar-default" dir="ltr">
+                      <p-calendar formControlName="EndDate" appendTo="body"
+                        placeholder="اختر تاريخ النهاية" [showIcon]="true"></p-calendar>
+                    </div>
+                  </div>
+                  <div class="container-alerts mt-2" *ngIf="getControl('EndDate')?.errors">
+                    <div class="alert alert-danger"
+                      *ngIf="getControl('EndDate')?.hasError('required') && getControl('EndDate')?.dirty">
+                      تاريخ النهاية مطلوبة
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="sectionFive mb-3">
+                <label for="" class="label-input mb-2">عدد مرات التجديد <span class="color-red">*</span></label>
+                <div class="content-password">
+                  <input type="number" pInputText formControlName="RenewalCount"
+                    placeholder="مده الاشتراك بالأيام" class="w-100" />
+                </div>
+                <!--Start Custom Validators-->
+                <div class="container-alerts mt-2" *ngIf="getControl('RenewalCount')?.errors">
+                  <div class="alert alert-danger"
+                    *ngIf="getControl('RenewalCount')?.hasError('required') && getControl('RenewalCount')?.dirty">
+                    عدد مرات التجديد مطلوبة
+                  </div>
+                </div>
+                <!--End Custom Validators-->
+              </div>
+              <div class="sectionField mb-3">
+                <label for="" class="label-input mb-2">البريد الإلكتروني للتأكيد</label>
+                <div class="content-password">
+                  <input type="text" pInputText formControlName="FollowUpEmail" placeholder="البريد الإلكتروني للتأكيد"
+                    class="w-100" />
+                </div>
+                <!--Start Custom Validators-->
+                <div class="container-alerts mt-2" *ngIf="getControl('FollowUpEmail')?.errors">
+                  <div class="alert alert-danger"
+                    *ngIf="getControl('FollowUpEmail')?.hasError('required') && getControl('FollowUpEmail')?.dirty">
+                    البريد الالكتروني مطلوب
+                  </div>
+                  <div class="alert alert-danger"
+                    *ngIf="getControl('FollowUpEmail')?.hasError('pattern') && !getControl('FollowUpEmail')?.hasError('required')y">
+                    البريد الالكتروني غير صحيح
+                  </div>
+                </div>
+                <!--End Custom Validators-->
+              </div>
+              
+              <div class="sectionFive mb-3">
+                <label for="" class="label-input mb-2" [innerHTML]="data!['titleNotes']|translate"></label>
+                <div class="content-password">
+                  <input type="text" pInputText formControlName="notes" [placeholder]="data!['placeholdeNotes']|translate"
+                    class="w-100" />
+                </div>
+                <!--Start Custom Validators-->
+                <div class="container-alerts mt-2" *ngIf="getControl('notes')?.errors">
+                  <div class="alert alert-danger"
+                    *ngIf="getControl('notes')?.hasError('required') && getControl('notes')?.dirty">
+                    {{data!['ValidationNotes']|translate}}
+                  </div>
+                </div>
+                <!--End Custom Validators-->
+              </div>
+  
+  
+            </div>
+  
+          </div>
+        </div>
+  
+      </form>
+    </div>
+    <footer class="footer-dialog p-15 d-flex justify-content-end">
+      <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+        (click)="request()">{{submitted
+        ?
+        (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+      <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
+        (click)="close()">{{data!['titleClose']|translate}}</button>
+    </footer>
+  </div>
+  <div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+  </div>
+  

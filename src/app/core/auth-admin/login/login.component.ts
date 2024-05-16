@@ -94,7 +94,6 @@ export class LoginComponent {
     if ('Notification' in window && navigator.permissions) {
       navigator.permissions.query({ name: 'notifications' })
       .then(permissionStatus => {
-        debugger;
         if(permissionStatus.state === "granted") {
           this.requestPermission();
         } else {
@@ -123,7 +122,7 @@ export class LoginComponent {
           //     alert("You have blocked the notifications from browser preferences.");
           //   }
           // }
-          
+
       }
       }).catch(error => {
         console.error('Error querying Notification permission:', error);

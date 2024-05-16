@@ -1,0 +1,89 @@
+<div class="container-Dialog">
+    <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+      <h3 class="title-Dialog m-0">
+        {{data!['title']|translate}}
+      </h3>
+      <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+        <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+        <i class="pi pi-times-circle"></i>
+      </button>
+    </header>
+    <div class="body-dialog p-15 f-s-16">
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">كود الاشتراك</label>
+        <div class="content-password">
+          {{info?.code ? info?.code : "لا يوجد"}}
+        </div>
+  
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title"> الحالة </label>
+        <div class="content-password">
+          {{info?.isActive ? "نشط" : "غير نشط"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title"> إسم الخطة </label>
+        <div class="content-password">
+          {{info?.planName ? info?.planName : "لا يوجد"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title"> إسم الشركة </label>
+        <div class="content-password">
+          {{info?.companyName ? info?.companyName : "لا يوجد"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">مدة الإشتراك بالأيام</label>
+        <div class="content-password">
+          {{info?.durationInDays ? info?.durationInDays : "لا يوجد"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title"> تاريخ بداية الإشتراك </label>
+        <div class="content-password">
+          {{info?.startDate ? info?.startDate : "لا يوجد"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title"> تاريخ نهاية الإشتراك </label>
+        <div class="content-password">
+          {{info?.endDate ? info?.endDate : "لا يوجد"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title"> حالة الإشتراك </label>
+        <div class="content-password">
+          {{info?.statusName ? info?.statusName : "لا يوجد"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title"> عدد مرات التجديد </label>
+        <div class="content-password">
+          {{info?.renewalCount ? info?.renewalCount : "لا يوجد"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title"> البريد الإلكتروني للمتابعة </label>
+        <div class="content-password">
+          {{info?.followUpEmail ? info?.followUpEmail : "لا يوجد"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title"> في إنتظار التـاكيد </label>
+        <div class="content-password">
+          {{info?.isWaitingForApproval ?'نعم' : "لا"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title"> ملاحظات </label>
+        <div class="content-password">
+          {{info?.notes ? info?.notes : "لا يوجد"}}
+        </div>
+      </div>
+    </div>
+  
+    <div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+      <mat-spinner></mat-spinner>
+    </div>

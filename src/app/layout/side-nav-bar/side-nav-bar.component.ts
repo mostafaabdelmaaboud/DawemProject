@@ -515,7 +515,6 @@ export class SideNavBarComponent {
       this.numNotification = data === 0 ? "": data;
     });
     this.notificationService.getNotification().subscribe(data => {
-      debugger;
       if(data != null) {
         if(this.numNotification ===0 || !this.numNotification) {
           this.numNotification = 1;

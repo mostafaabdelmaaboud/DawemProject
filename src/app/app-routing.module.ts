@@ -8,6 +8,7 @@ import { AuthAdminGuard } from './core/guard/auth-admin.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'adminPanel', redirectTo: 'adminPanel/login', pathMatch: 'full' },
   { path: '', loadChildren: () => import('./core/auth/auth.module').then((m) => m.AuthModule), canActivate: [LoginGuard] },
   { path: 'adminPanel', loadChildren: () => import('./core/auth-admin/auth.module').then((m) => m.AuthModule), canActivate: [LoginAdminGuard] },
   { path: 'admin', loadChildren: () => import('./Presentation/admin/admin.module').then((m) => m.AdminModule), canActivate: [AuthAdminGuard] },

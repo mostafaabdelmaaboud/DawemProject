@@ -28,10 +28,11 @@ export class PermissionAminGuard implements CanActivate {
       return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 6 });
     }else if (state.url.includes("subscriptionPayments")) {
       return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 7 });
-    }  else {
+    }else {
       return false;
       this.router.navigate(["/notPermission"])
     }
+    
   }
 
 }

@@ -70,7 +70,6 @@ export class DialogUserFileComponent {
     this.loading = true;
 
     if (this.id) {
-      debugger;
       this.usersService.userGetInfo({ userId: this.id }).subscribe(
         {
 

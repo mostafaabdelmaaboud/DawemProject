@@ -20,6 +20,11 @@ const routes: Routes = [
         canActivate: [PermissionAminGuard]
       },
       {
+        path: "subscriptions",
+        loadChildren: () => import('./subscriptions/subscriptions.module').then((m) => m.SubscriptionsModule),
+        canActivate: [PermissionAminGuard]
+      },
+      {
         path: "userPermissions",
         loadChildren: () => import('./user-permissions/user-permissions.module').then((m) => m.UserPermissionsModule),
         canActivate: [PermissionAminGuard]

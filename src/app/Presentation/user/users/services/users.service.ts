@@ -43,7 +43,6 @@ export class UsersService {
   }
   userGetInfo(params: any) {
     let queryParams = new HttpParams();
-    debugger;
 
     if (params) {
       Object.entries(params).forEach(([key, value]: any) => {
