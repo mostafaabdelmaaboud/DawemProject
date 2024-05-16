@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { getMessaging, onMessage } from 'firebase/messaging';
 
 @Component({
   selector: 'app-side-nav-bar',
@@ -32,7 +33,7 @@ export class SideNavBarComponent {
   mobileQuery: MediaQueryList;
   localization: boolean = true;
   today: number = Date.now();
-  numNotification: null | string = "";
+  numNotification:any;
   usersMe!: any;
   isAdmin = true;
   private dialog = inject(MatDialog);
@@ -200,9 +201,10 @@ export class SideNavBarComponent {
   }
   numberNotification(showFirstOnly:boolean, unread:boolean) {
     // .pipe(takeUntil(this.destroy$));
-    this.numNotification = "";
     if(showFirstOnly) {
       this.notificationService.markAsViewed().subscribe(data => {
+        this.numNotification = "";
+
       });
     }
     
@@ -508,14 +510,22 @@ export class SideNavBarComponent {
     if(settings.includes(this.router.url)) {
       this.step = 4;
     }
-    this.notificationService.getNotification().subscribe(data => {
-      this.numNotification = data?.NotificationData?.UnViewdNotificationCount;
-    });
-    this.notificationService.getUnViewedNotificationCount().subscribe(data => {
-      this.numNotification = data?.toString() === "0" ? "": data?.toString();
-    });
 
+    this.notificationService.getUnViewedNotificationCount().subscribe(data => {
+      this.numNotification = data === 0 ? "": data;
+    });
+    this.notificationService.getNotification().subscribe(data => {
+      debugger;
+      if(data != null) {
+        if(this.numNotification ===0 || !this.numNotification) {
+          this.numNotification = 1;
+        } else {
+          this.numNotification++;
+  
+        }
+      }
     
+    });
 
     this.getUnViewedNotificationCount();
     this.formGroupUnRead.get("unRead")?.valueChanges.subscribe(data => {
@@ -935,6 +945,7 @@ export class SideNavBarComponent {
       this.profile = data;
     })
   }
+
   getUnViewedNotificationCount() {
     this.notificationService.dataUnViewedNotificationCount().subscribe(data => {
       this.notificationService.setUnViewedNotificationCount(data.data);

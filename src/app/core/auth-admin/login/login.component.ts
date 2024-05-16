@@ -94,32 +94,36 @@ export class LoginComponent {
     if ('Notification' in window && navigator.permissions) {
       navigator.permissions.query({ name: 'notifications' })
       .then(permissionStatus => {
+        debugger;
         if(permissionStatus.state === "granted") {
           this.requestPermission();
         } else {
           // this.toast.error("Error querying Notification permission: " + permissionStatus.state, '', {
           //   timeOut: 10000,
           //   onActivateTick: true
-          // });  
+          // });
+
           // window.open('https://example.com/notification-settings', '_blank');
-        //   new Notification('New Message From Romzik', {
-        //     body: 'How are you today? Is it really is a lovely day.',
-        //     icon: 'img/msg-icon.png',
-        //     tag: 'unique-identifier=123' // msg-id
-        // });
-        // Notification.requestPermission().then(function(permission) { console.log('permiss', permission)});
-        // if ('Notification' in window && Notification.permission === 'granted') {
-        //   const notification = new Notification('Hello', { body: 'This is a notification from your Angular app!' });
-        // }
-        // const notification = new Notification('Hello', { body: 'This is a notification from your Angular app!' });
-        
-        // pushpad('subscribe', function (isSubscribed) {
-        //   if (isSubscribed) {
-        //     alert("Thanks! You have successfully subscribed to notifications.");
-        //   } else {
-        //     alert("You have blocked the notifications from browser preferences.");
-        //   }
-        // }
+
+          //   new Notification('New Message From Romzik', {
+          //     body: 'How are you today? Is it really is a lovely day.',
+          //     icon: 'img/msg-icon.png',
+          //     tag: 'unique-identifier=123' // msg-id
+          // });
+          // Notification.requestPermission().then(function(permission) { console.log('permiss', permission)});
+          // if ('Notification' in window && Notification.permission === 'granted') {
+          //   const notification = new Notification('Hello', { body: 'This is a notification from your Angular app!' });
+          // }
+          // const notification = new Notification('Hello', { body: 'This is a notification from your Angular app!' });
+          
+          // pushpad('subscribe', function (isSubscribed) {
+          //   if (isSubscribed) {
+          //     alert("Thanks! You have successfully subscribed to notifications.");
+          //   } else {
+          //     alert("You have blocked the notifications from browser preferences.");
+          //   }
+          // }
+          
       }
       }).catch(error => {
         console.error('Error querying Notification permission:', error);

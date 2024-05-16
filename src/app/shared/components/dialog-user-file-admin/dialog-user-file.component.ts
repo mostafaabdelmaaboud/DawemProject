@@ -13,10 +13,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EmployeesService } from 'src/app/Presentation/user/employees/services/employees.service';
 import * as moment from 'moment';
-import { VacationsService } from 'src/app/Presentation/user/vacations/services/vacations.service';
-import { PermissionsService } from 'src/app/Presentation/user/permissions/services/permissions.service';
-import { AssignmentsService } from 'src/app/Presentation/user/assignments/services/assignments.service';
-import { UsersService } from 'src/app/Presentation/user/users/services/users.service';
+
+import { UsersService } from 'src/app/Presentation/admin/users/services/users.service';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -55,7 +53,6 @@ export class DialogUserFileComponent {
   @Input() id!: any;
   AttachmentsFiles: any[] = [];
 
-  private employeesService = inject(EmployeesService);
 
   constructor(
     public dialogRef: MatDialogRef<DialogUserFileComponent>,
@@ -73,7 +70,7 @@ export class DialogUserFileComponent {
     this.loading = true;
 
     if (this.id) {
-
+      debugger;
       this.usersService.userGetInfo({ userId: this.id }).subscribe(
         {
 

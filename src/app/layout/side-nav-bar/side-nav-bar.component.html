@@ -2658,7 +2658,6 @@
                 </div>
               </button>
               <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                <button ngbDropdownItem (click)="logout()">تسجيل الخروج</button>
                 <ng-container *ngIf="isAdmin">
                   <button ngbDropdownItem routerLink="/user/updateCompany">{{'sideNav.companyProfile' | translate}}</button>
 
@@ -2667,6 +2666,8 @@
                   <button *ngIf="showComponent({screenCode:43})"  ngbDropdownItem routerLink="/user/updateCompany">{{componentName({screenCode:43})}}</button>
 
                 </ng-container>
+                <button ngbDropdownItem (click)="logout()">تسجيل الخروج</button>
+               
 
               </div>
             </div>

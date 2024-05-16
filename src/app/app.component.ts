@@ -45,7 +45,11 @@ export class AppComponent {
   listen() {
     const messaging = getMessaging();
     onMessage(messaging, (payload) => {
-      this.notificationService.setNotification({UnViewdNotificationCount:JSON.parse(payload?.data?.['UnViewdNotificationCount'] as string),...payload});
+      debugger;
+      let formatObject = {NotificationData:JSON.parse(payload?.data?.['NotificationData'] as string),...payload};
+      this.notificationService.setNotification(formatObject);
+
+      // this.notificationService.setNotification({UnViewdNotificationCount:JSON.parse(payload?.data?.['UnViewdNotificationCount'] as string),...payload});
       this.messageService.add({ key: 'notification',severity: 'info', summary: 'Info', data:{title:payload.notification?.title, body:payload.notification?.body}, detail: 'Message Content',life:10000 });
     });
   }

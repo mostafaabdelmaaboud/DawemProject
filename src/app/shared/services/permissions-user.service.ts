@@ -87,10 +87,21 @@ export class PermissionsUserService {
 
 
         if ((this.getPermissionsAdmin()?.availablePermissions as any[])?.length > 0) {
-          let findIndexPermission = (this.getPermissionsAdmin().availablePermissions as any[]).findIndex(permission => permission.screenCode === data.screenCode);
+          debugger;
 
-          let checkActionCode = (this.getPermissionsAdmin().availablePermissions[findIndexPermission].permissionScreenActions as any[]).findIndex(permission => permission.actionCode === data.actionCode)
-          checkActionCode >= 0 ? check = true : check = false
+          let findIndexPermission = (this.getPermissionsAdmin().availablePermissions as any[]).findIndex(permission => permission.screenCode === data.screenCode);
+          debugger;
+          if(findIndexPermission >=0) {
+            debugger;
+
+            let checkActionCode = (this.getPermissionsAdmin().availablePermissions[findIndexPermission].permissionScreenActions as any[]).findIndex(permission => permission.actionCode === data.actionCode)
+            checkActionCode >= 0 ? check = true : check = false
+          } else {
+            debugger;
+
+            check = false
+          }
+         
         } else {
           this.authService.logoutAdmin();
 
