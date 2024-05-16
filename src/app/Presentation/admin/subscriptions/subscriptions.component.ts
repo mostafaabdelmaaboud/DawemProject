@@ -53,10 +53,6 @@ export class SubscriptionsComponent {
       field: "isWaitingForApproval"
     },
     {
-      name: "الحالة",
-      field: "isActive"
-    },
-    {
       name: "الاجراءات",
       field: "actions"
     }
@@ -286,7 +282,7 @@ export class SubscriptionsComponent {
               companyName: subscription.companyName ? subscription.companyName : "لا يوجد",
               statusName: subscription.statusName ? subscription.statusName : "لا يوجد",
               isWaitingForApproval: subscription.isWaitingForApproval ? "نعم" : "لا",
-              isActive: subscription.isActive ? "نشط":"غير نشط"
+              isActive: subscription.isActive
             });
           });
           this.totalItems = data.totalCount
