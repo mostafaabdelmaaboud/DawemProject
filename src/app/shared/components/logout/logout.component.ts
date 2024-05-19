@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/core/auth/services/auth-service.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { InputTextModule } from 'primeng/inputtext';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 interface addBranchesInputsProps {
@@ -35,11 +36,12 @@ interface UploadEvent {
 @Component({
   selector: 'app-logout',
   standalone: true,
-  imports: [CommonModule, TranslateModule, InputTextModule],
+  imports: [CommonModule, TranslateModule, InputTextModule, MatProgressSpinnerModule],
   templateUrl: './logout.component.html',
   styleUrls: ['./logout.component.scss']
 })
 export class LogoutComponent {
+  loading = false;
 
   @Output() submitClicked = new EventEmitter<any>();
   @Input() submitted!: boolean;

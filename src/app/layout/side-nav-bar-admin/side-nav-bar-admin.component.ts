@@ -469,16 +469,13 @@ export class SideNavBarAdminComponent {
       // }
 
     }
-    
-    if (!this.getPermissions()) {
-      
-    localStorage.removeItem("user");
-    localStorage.removeItem("Admintoken");
-    localStorage.removeItem("usersMe");
-    localStorage.removeItem("adminPermissions");
-  
-      this.router.navigate(["adminPanel/login"]);
 
+    if (!this.getPermissions()) {
+      localStorage.removeItem("user");
+      localStorage.removeItem("Admintoken");
+      localStorage.removeItem("usersMe");
+      localStorage.removeItem("adminPermissions");
+      this.router.navigate(["./adminPanel/login"]);
     }
     if (this.mobileQuery.matches) {
       this.opened = false;
@@ -923,9 +920,10 @@ export class SideNavBarAdminComponent {
     // });
   }
 
-  logout() {
+  logoutAdmin() {
     
     
+    debugger;
 
     const logoutDialog = this.dialog.open(LogoutComponent, {
       width: "30vw",
@@ -937,16 +935,20 @@ export class SideNavBarAdminComponent {
     });
     logoutDialog.componentInstance.submitted = true;
     logoutDialog.componentInstance.submitClicked.subscribe(result => {
-      
+      debugger;
       localStorage.removeItem("user");
       localStorage.removeItem("Admintoken");
       localStorage.removeItem("usersMe");
       localStorage.removeItem("adminPermissions");
+      // logoutDialog.componentInstance.loading = true;
+      //   logoutDialog.componentInstance.loading = false;
+
+        logoutDialog.close();
 
         this.router.navigate(["./adminPanel/login"]);
+
         
   
-      logoutDialog.close();
 
     })
   }

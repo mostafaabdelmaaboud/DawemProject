@@ -15,6 +15,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { getMessaging, onMessage } from 'firebase/messaging';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-side-nav-bar',
@@ -79,6 +80,7 @@ export class SideNavBarComponent {
     this.isSidebarExpanded = false;
   }
   constructor(private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
+    private toast: ToastrService,
     public translate: TranslateService,
     public authService: AuthService,
     private notificationService: NotificationService,
@@ -1048,7 +1050,8 @@ export class SideNavBarComponent {
   }
 
   logout() {
-    
+    debugger;
+
     const logoutDialog = this.dialog.open(LogoutComponent, {
       width: "30vw",
       data: {
@@ -1059,12 +1062,26 @@ export class SideNavBarComponent {
     });
     logoutDialog.componentInstance.submitted = true;
     logoutDialog.componentInstance.submitClicked.subscribe(result => {
-      
+      logoutDialog.componentInstance.loading = true;
+      this.dashboardService.signOut().subscribe(
+        {
+          next:data => {
+            logoutDialog.componentInstance.loading = false;
 
-      localStorage.removeItem("token");
-      localStorage.removeItem("permissions");
-      this.router.navigate(["./login"]);
-      logoutDialog.close();
+            localStorage.removeItem("token");
+            localStorage.removeItem("permissions");
+            this.router.navigate(["./login"]);
+            logoutDialog.close();
+
+          },
+          error:err => {
+            logoutDialog.componentInstance.loading = false;
+            this.toast.error(err.error.message);
+
+          }
+        })
+
+     
 
     })
   }

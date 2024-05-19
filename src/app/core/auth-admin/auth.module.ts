@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AuthRoutingModule } from './auth-routing.module';
-import { LoginComponent } from './login/login.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 import { TranslateModule } from '@ngx-translate/core';
@@ -13,6 +12,7 @@ import { CheckEmailComponent } from './check-email/check-email.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -33,4 +33,4 @@ import { MatRadioModule } from '@angular/material/radio';
 
   ]
 })
-export class AuthModule { }
+export class AuthAdminModule { }

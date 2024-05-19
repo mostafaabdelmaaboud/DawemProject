@@ -10,7 +10,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'adminPanel', redirectTo: 'adminPanel/login', pathMatch: 'full' },
   { path: '', loadChildren: () => import('./core/auth/auth.module').then((m) => m.AuthModule), canActivate: [LoginGuard] },
-  { path: 'adminPanel', loadChildren: () => import('./core/auth-admin/auth.module').then((m) => m.AuthModule), canActivate: [LoginAdminGuard] },
+  { path: 'adminPanel', loadChildren: () => import('./core/auth-admin/auth.module').then((m) => m.AuthAdminModule), canActivate: [LoginAdminGuard] },
   { path: 'admin', loadChildren: () => import('./Presentation/admin/admin.module').then((m) => m.AdminModule), canActivate: [AuthAdminGuard] },
   { path: 'user', loadChildren: () => import('./Presentation/user/user.module').then(m => m.UserModule), canActivate: [AuthGuard] },
   { path: "notPermission", component: NotPermissionComponent }

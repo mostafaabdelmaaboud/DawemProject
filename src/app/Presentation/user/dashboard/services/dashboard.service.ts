@@ -31,6 +31,10 @@ export class DashboardService {
     return this.http.get<any>(`${environment.baseUrl}Dashboard/GetHeaderInformations`).pipe(map(data => data.data))
 
   }
+  signOut() {
+    return this.http.post<any>(`${environment.baseUrl}Authentication/SignOut`, {})
+
+  }
   getEmployeesAttendancesStatus(filter: any) {
     let queryParams = new HttpParams();
     if (filter) {

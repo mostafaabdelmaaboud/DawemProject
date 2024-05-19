@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable, Injector, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
@@ -9,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class HandleErrorService {
 
-  constructor(private store: Store, private router: Router, private toastr: ToastrService) { }
+  constructor(private router: Router, private toastr: ToastrService) { }
 
   public handleError(err: HttpErrorResponse) {
     let errorMessage: string;
