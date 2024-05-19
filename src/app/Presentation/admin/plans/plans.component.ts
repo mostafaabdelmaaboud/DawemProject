@@ -225,7 +225,7 @@ export class PlansComponent {
   exportTableToPDF() {
     if(!this.isLoading) {
       this.isLoading = true;
-      let table: any = document.getElementById("tableJobTitlesHidden");
+      let table: any = document.getElementById("plansHidden");
       html2canvas(table,{
         scale: 5,
         width: table.offsetWidth,

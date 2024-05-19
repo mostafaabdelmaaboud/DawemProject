@@ -364,7 +364,7 @@
     </ng-template>
   </p-table>
   <div class="hideTable">
-    <p-table #dt1 [value]="permissions" id="tablePermissionsHidden" [responsiveLayout]="opened ? 'stack' : 'scroll'"
+    <p-table #dt1 [value]="permissions" id="tableUserPermissionsHidden" [responsiveLayout]="opened ? 'stack' : 'scroll'"
     [responsive]="true" [paginator]="false" [rows]="filteration.PageSize" [first]="filteration.PageNumber"
     [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
     currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[

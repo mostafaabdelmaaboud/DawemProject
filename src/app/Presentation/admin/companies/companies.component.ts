@@ -246,7 +246,7 @@ export class CompaniesComponent {
   exportTableToPDF() {
     if(!this.isLoading) {
       this.isLoading = true;
-      let table: any = document.getElementById("tableJobTitlesHidden");
+      let table: any = document.getElementById("companiesHidden");
       html2canvas(table,{
         scale: 5,
         width: table.offsetWidth,

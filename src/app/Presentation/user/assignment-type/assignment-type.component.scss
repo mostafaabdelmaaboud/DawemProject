@@ -16,7 +16,7 @@
 :host ::ng-deep .p-datatable .p-datatable-thead>tr>th:last-of-type {
   width: 15% !important;
 }
-#tablePermissionTypeHidden,
+#tableAssignmentTypeHidden,
 .title-table {
   letter-spacing: normal !important;
 
@@ -31,11 +31,11 @@
 .hideTable {
   overflow: hidden;
   height: 0;
-  #tablePermissionTypeHidden {
+  #tableAssignmentTypeHidden {
     position: relative;
     left: -100%;
   }
 }
-:host ::ng-deep  #tablePermissionTypeHidden .p-datatable .p-datatable-header {
+:host ::ng-deep  #tableAssignmentTypeHidden .p-datatable .p-datatable-header {
   background-color: white !important;
 }

@@ -361,7 +361,7 @@ export class PermissionLogComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      let table: any = document.getElementById("tableSummonsMissingLogsHidden");
+      let table: any = document.getElementById("tablePermissionLogHidden");
       html2canvas(table,{
         scale: 5,
         width: table.offsetWidth,

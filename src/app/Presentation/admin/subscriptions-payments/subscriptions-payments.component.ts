@@ -13,17 +13,19 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
-import { SubscriptionsService } from './service/subscriptions.service';
 import moment from 'moment';
-import { AddSubscriptionComponent } from './dialogs/add-subscription/add-subscription.component';
-import { SubscriptionInfoComponent } from './dialogs/subscription-info/subscription-info.component';
+import { SubscriptionsPaymentsService } from './services/subscriptions-payments.service';
+import { SubscriptionInfoComponent } from '../subscriptions/dialogs/subscription-info/subscription-info.component';
+import { AddSubscriptionPaymentsComponent } from './dialogs/add-subscription-payments/add-subscription-payments.component';
+import { SubscriptionPaymentsInfoComponent } from './dialogs/subscription-payments-info/subscription-payments-info.component';
+
 
 @Component({
-  selector: 'app-subscriptions',
-  templateUrl: './subscriptions.component.html',
-  styleUrls: ['./subscriptions.component.scss']
+  selector: 'app-subscriptions-payments',
+  templateUrl: './subscriptions-payments.component.html',
+  styleUrls: ['./subscriptions-payments.component.scss']
 })
-export class SubscriptionsComponent {
+export class SubscriptionsPaymentsComponent {
   date!: Date;
   arabic: any;
   subscription!: Subscription;
@@ -33,24 +35,20 @@ export class SubscriptionsComponent {
 
   columns: any[] = [
     {
-      name: "كود الاشتراك",
+      name: "كود عملية الدفع",
       field: "code",
     },
     {
-      name: "اسم الخطة",
-      field: "planeName",
+      name: "معلومات الإشتراك",
+      field: "subscriptionInfo",
     },
     {
-      name: "اسم الشركة",
-      field: "companyName"
+      name: "المبلغ المدفوع",
+      field: "amount"
     },
     {
-      name: "حالة الاشتراك",
-      field: "statusName"
-    },
-    {
-      name: "في انتظار التاكيد ",
-      field: "isWaitingForApproval"
+      name: "الحالة",
+      field: "isActive"
     },
     {
       name: "الاجراءات",
@@ -88,7 +86,7 @@ export class SubscriptionsComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
-  private subscriptionsService = inject(SubscriptionsService);
+  private subscriptionsPaymentsService = inject(SubscriptionsPaymentsService);
   list: any[] = [
     { name: "نسيان تسجيل حضور", key: "1" },
     { name: "نسيان تسجيل انصراف", key: "2" },
@@ -170,7 +168,7 @@ export class SubscriptionsComponent {
       decimalseparator: '.',
       showLabels: true, 
       showTitle: true,
-      title: 'الاشتراكات',
+      title: 'مدفوعات الإشتراكات',
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
@@ -180,18 +178,15 @@ export class SubscriptionsComponent {
       this.subscriptionsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
    
-      this.subscriptionsService.getSubscriptions(filteration).subscribe(
+      this.subscriptionsPaymentsService.getSubscriptions(filteration).subscribe(
         {
           next: data => {
-     
             data.data.forEach((subscription: any) => {
               this.subscriptionsIsExport.push({
                 id: subscription.id,
                 code: subscription.code,
-                planeName: subscription.planName ? subscription.planName : "لا يوجد",
-                companyName: subscription.companyName ? subscription.companyName : "لا يوجد",
-                statusName: subscription.statusName ? subscription.statusName : "لا يوجد",
-                isWaitingForApproval: subscription.isWaitingForApproval ? "نعم" : "لا",
+                subscriptionInfo: subscription.subscriptionInfo ? subscription.subscriptionInfo : "لا يوجد",
+                amount: subscription.amount ? subscription.amount : "0",
                 isActive: subscription.isActive ? "نشط":"غير نشط"
   
               })
@@ -200,10 +195,8 @@ export class SubscriptionsComponent {
       
               return {
                 code: subscription.code,
-                planeName: subscription.planeName,
-                companyName: subscription.companyName,
-                statusName: subscription.statusName,
-                isWaitingForApproval: subscription.isWaitingForApproval,
+                subscriptionInfo: subscription.subscriptionInfo,
+                amount: subscription.amount,
                 isActive: subscription.isActive
               }
             })
@@ -221,7 +214,7 @@ export class SubscriptionsComponent {
   exportTableToPDF() {
     if(!this.isLoading) {
       this.isLoading = true;
-      let table: any = document.getElementById("SubscriptionsHidden");
+      let table: any = document.getElementById("subscriptionsPayments");
       html2canvas(table,{
         scale: 5,
         width: table.offsetWidth,
@@ -253,7 +246,7 @@ export class SubscriptionsComponent {
   }
   getInformation() {
     this.spinnerCards = true;
-    this.subscriptionsService.getInformation().subscribe({
+    this.subscriptionsPaymentsService.getInformation().subscribe({
       next: data => {
         
         this.cards = {
@@ -271,18 +264,17 @@ export class SubscriptionsComponent {
   getSubscriptions(filteration: any) {
     this.subscriptions = [];
     this.isLoading = true;
-    this.subscriptionsService.getSubscriptions(filteration).subscribe(
+    this.subscriptionsPaymentsService.getSubscriptions(filteration).subscribe(
       {
         next: data => {
+
           data.data.forEach((subscription: any) => {
             this.subscriptions.push({
               id: subscription.id,
               code: subscription.code,
-              planeName: subscription.planName ? subscription.planName : "لا يوجد",
-              companyName: subscription.companyName ? subscription.companyName : "لا يوجد",
-              statusName: subscription.statusName ? subscription.statusName : "لا يوجد",
-              isWaitingForApproval: subscription.isWaitingForApproval ? "نعم" : "لا",
-              isActive: subscription.isActive
+              subscriptionInfo: subscription.subscriptionInfo ? subscription.subscriptionInfo : "لا يوجد",
+              amount: subscription.amount ? subscription.amount : "0",
+              isActive: subscription.isActive ?'نشط' :'غير نشط'
             });
           });
           this.totalItems = data.totalCount
@@ -307,7 +299,7 @@ export class SubscriptionsComponent {
   }
   sendRequest(data: any) {
 
-    this.subscriptionsService.accept({ subscriptionId: data.id }).subscribe(
+    this.subscriptionsPaymentsService.accept({ subscriptionPaymentId: data.id }).subscribe(
       {
         next: res => {
           this.getSubscriptions(this.filteration);
@@ -341,7 +333,7 @@ export class SubscriptionsComponent {
     let reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
       width: "30vw",
       data: {
-        title: "هل متأكد من رفض الإشتراك؟",
+        title: "هل متأكد من رفض مدفوعات الإشتراكات؟",
         message: "برجاء توضيح السبب إن أمكن",
         titleReasonOfRefuse:"سبب الرفض",
         placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض",
@@ -356,7 +348,7 @@ export class SubscriptionsComponent {
       reasonOfRefuseDialog.componentInstance.submitted = false;
 
 
-      this.subscriptionsService.disableSubscription({ id: data.id, disableReason: result.notes }).subscribe(
+      this.subscriptionsPaymentsService.disableSubscription({ id: data.id, disableReason: result.notes }).subscribe(
         {
           next: res => {
 
@@ -375,7 +367,7 @@ export class SubscriptionsComponent {
   }
 
   requestSubscriptions() {
-    let dialogRefAddCurrency = this.dialog.open(AddSubscriptionComponent, {
+    let dialogRefAddCurrency = this.dialog.open(AddSubscriptionPaymentsComponent, {
       width: "50vw",
       data: {
         title: "اضافة إشتراك",
@@ -391,20 +383,16 @@ export class SubscriptionsComponent {
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editSubscription = false;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+
       let formData: any = {};
       formData.IsActive = result.IsActive;
-      formData.Status = Number(result.Status);
-      formData.PlanId = result.PlanId ? result.PlanId.key : null;
-      formData.CompanyId = result.CompanyId ? result.CompanyId.key : null;
-      formData.DurationInDays = result.DurationInDays;
-      formData.StartDate = moment(new Date(result.StartDate)).format("YYYY-MM-DD");
-      formData.EndDate = moment(new Date(result.EndDate)).format("YYYY-MM-DD");
-      formData.RenewalCount = result.RenewalCount;
-      formData.FollowUpEmail = result.FollowUpEmail;
+      formData.SubscriptionId = result.SubscriptionId ? result.SubscriptionId.key : null;
+      formData.Date = moment(new Date(result.Date)).format("YYYY-MM-DD");
       formData.Notes = result.notes;
+      formData.Amount = result.Amount;
 
       dialogRefAddCurrency.componentInstance.loading = true;
-      this.subscriptionsService.createSubscription(formData).subscribe(
+      this.subscriptionsPaymentsService.createSubscription(formData).subscribe(
         {
           next: data => {
 
@@ -416,7 +404,7 @@ export class SubscriptionsComponent {
               data: {
                     title: "تم ارسال طلبك",
                     message: data.message,
-                    buttonSend: "طلبات الاشتراكات"
+                    buttonSend: "طلبات مدفوعات الإشتراكات"
               },
             });
        
@@ -448,7 +436,7 @@ export class SubscriptionsComponent {
   }
   editSubscription(data: any) {
     
-    let dialogRefAddCurrency = this.dialog.open(AddSubscriptionComponent, {
+    let dialogRefAddCurrency = this.dialog.open(AddSubscriptionPaymentsComponent, {
       width: "50vw",
       data: {
         title: "تعديل الإشتراك",
@@ -468,18 +456,13 @@ export class SubscriptionsComponent {
       let formData: any = {};
       formData.id = data.id;
       formData.IsActive = result.IsActive;
-      formData.Status = Number(result.Status);
-      formData.PlanId = result.PlanId ? result.PlanId.key : null;
-      formData.CompanyId = result.CompanyId ? result.CompanyId.key : null;
-      formData.DurationInDays = result.DurationInDays;
-      formData.StartDate = moment(new Date(result.StartDate)).format("YYYY-MM-DD");
-      formData.EndDate = moment(new Date(result.EndDate)).format("YYYY-MM-DD");
-      formData.RenewalCount = result.RenewalCount;
-      formData.FollowUpEmail = result.FollowUpEmail;
+      formData.SubscriptionId = result.SubscriptionId ? result.SubscriptionId.key : null;
+      formData.Date = moment(new Date(result.Date)).format("YYYY-MM-DD");
       formData.Notes = result.notes;
+      formData.Amount = result.Amount;
+
       dialogRefAddCurrency.componentInstance.loading = true;
-      dialogRefAddCurrency.componentInstance.loading = true;
-      this.subscriptionsService.updateSubscription(formData).subscribe(
+      this.subscriptionsPaymentsService.updateSubscription(formData).subscribe(
         {
           next: data => {
 
@@ -491,7 +474,7 @@ export class SubscriptionsComponent {
               data: {
                     title: "تم ارسال طلبك",
                     message: data.message,
-                    buttonSend: "طلبات الاشتراكات"
+                    buttonSend: "طلبات مدفوعات الإشتراكات"
               },
             });
        
@@ -524,10 +507,10 @@ export class SubscriptionsComponent {
 
 
   dialogSubscriptionFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(SubscriptionInfoComponent, {
+    const dialogRefAddCurrency = this.dialog.open(SubscriptionPaymentsInfoComponent, {
       width: "40vw",
       data: {
-        title: "ملف الإشتراك"
+        title: "ملف مدفوعات الإشتراكات"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id

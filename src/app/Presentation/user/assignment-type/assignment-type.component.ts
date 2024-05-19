@@ -210,7 +210,7 @@ export class AssignmentTypeComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      let table: any = document.getElementById("tablePermissionTypeHidden");
+      let table: any = document.getElementById("tableAssignmentTypeHidden");
       html2canvas(table,{
         scale: 5,
         width: table.offsetWidth,

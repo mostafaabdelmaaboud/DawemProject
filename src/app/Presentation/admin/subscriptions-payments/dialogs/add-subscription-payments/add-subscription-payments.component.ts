@@ -12,8 +12,10 @@ import { CalendarModule } from "primeng/calendar";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { MultiSelectModule } from 'primeng/multiselect';
+
 import { MatRadioModule } from '@angular/material/radio';
-import { SubscriptionsService } from '../../service/subscriptions.service';
+
+import { SubscriptionsPaymentsService } from '../../services/subscriptions-payments.service';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -75,13 +77,13 @@ interface UploadEvent {
   files: File[];
 }
 @Component({
-  selector: 'app-add-subscription',
+  selector: 'app-add-subscription-payments',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, MatRadioModule, MultiSelectModule, MatProgressSpinnerModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
-  templateUrl: './add-subscription.component.html',
-  styleUrls: ['./add-subscription.component.scss']
+  templateUrl: './add-subscription-payments.component.html',
+  styleUrls: ['./add-subscription-payments.component.scss']
 })
-export class AddSubscriptionComponent {
+export class AddSubscriptionPaymentsComponent {
   loading = false;
 
 
@@ -92,12 +94,10 @@ export class AddSubscriptionComponent {
   @Input() editSubscription!: boolean;
   @Input() id!: string;
 
-  listPlanId: any[] = [
-  ];
 
-  listCompanies: any[] = [];
+  listSubscriptions: any[] = [];
 
-  private subscriptionsService = inject(SubscriptionsService);
+  private subscriptionsPaymentsService = inject(SubscriptionsPaymentsService);
 
 
   employeeIdToggle = true;
@@ -107,21 +107,16 @@ export class AddSubscriptionComponent {
   weekDays: any[] = [];
   addBranchGroupForm: FormGroup = this.fb.group({
     isActive: [false],
-    Status: ['0', Validators.required],
-    PlanId: ['', Validators.required],
-    CompanyId: ["", Validators.required],
-    DurationInDays: ['', Validators.required],
-    RenewalCount: ['', Validators.required],
-    FollowUpEmail: ['', [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
-    StartDate:["", Validators.required],
-    EndDate:["", Validators.required],
+    SubscriptionId: ["", Validators.required],
+    Amount: ['', Validators.required],
+    Date: ['', Validators.required],
     notes: ["", Validators.required],
 
   });
   uploadedCommercialRegFiles: any[] = [];
   requiredCommercialRegFiles = false;
   constructor(
-    public dialogRef: MatDialogRef<AddSubscriptionComponent>,
+    public dialogRef: MatDialogRef<AddSubscriptionPaymentsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     public translate: TranslateService,
     private authService: AuthService,
@@ -135,82 +130,47 @@ export class AddSubscriptionComponent {
     this.loading = true;
 
 
-    let planGetForDropDown = this.subscriptionsService.planGetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
 
-    let companyDropdown = this.subscriptionsService.companyDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+    let subscription = this.subscriptionsPaymentsService.subscriptionGetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
 
 
 
 
     combineLatest({
-      planGetForDropDown,
-      companyDropdown
+      subscription
     }).subscribe(
       {
         next: data => {
 
          
 
-          this.listPlanId = [];
-          this.listCompanies = [];
+          this.listSubscriptions = [];
 
-          data.planGetForDropDown?.data?.forEach((day: any) => {
-            this.listPlanId.push({ name: day.name, key: day.id });
-
-          });
-          data.companyDropdown?.data?.forEach((day: any) => {
-            this.listCompanies.push({ name: day.name, key: day.id });
+     
+          data.subscription?.data?.forEach((day: any) => {
+            this.listSubscriptions.push({ name: day.name, key: day.id });
 
           });
  
 
           if (this.editSubscription) {
-            this.subscriptionsService.SubscriptionGetById({ subscriptionId: this.id }).subscribe(
+            this.subscriptionsPaymentsService.SubscriptionGetById({ subscriptionPaymentId: this.id }).subscribe(
               {
                 next: data => {
 
-
                   this.getControl("isActive")?.setValue(data.isActive);
-                  // addBranchGroupForm: FormGroup = this.fb.group({
-                  //   isActive: [false],
-                  //   Status: ['0', Validators.required],
-                  //   PlanId: ['', Validators.required],
-                  //   CompanyId: ["", Validators.required],
-                  //   DurationInDays: ['', Validators.required],
-                  //   RenewalCount: ['', Validators.required],
-                  //   FollowUpEmail: ['', [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
-                  //   StartDate:["", Validators.required],
-                  //   EndDate:["", Validators.required],
-                  //   notes: ["", Validators.required],
-                
-                  // });
                   this.getControl("notes")?.setValue(data.notes);
-                  this.getControl("Status")?.setValue(data.status.toString());
-                  this.getControl("DurationInDays")?.setValue(data.durationInDays);
-                  this.getControl("RenewalCount")?.setValue(data.renewalCount);
-                  this.getControl("FollowUpEmail")?.setValue(data.followUpEmail);
-                  this.getControl("StartDate")?.setValue(new Date(data.startDate));
-                  this.getControl("EndDate")?.setValue(new Date(data.endDate));
-                    this.subscriptionsService.planGetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.planId }).subscribe(dataDropdown => {
-                      this.listPlanId = [];
-                      dataDropdown.data?.forEach((list: any) => {
-                        this.listPlanId.push({ name: list.name, key: list.id });
-                      });
-                      let indexplanId = this.listPlanId.findIndex(list => list.key === data.planId);
-                      if (indexplanId >= 0) {
-                        this.getControl("PlanId")?.setValue(this.listPlanId[indexplanId]);
+                  this.getControl("Amount")?.setValue(data.amount);
+                  this.getControl("Date")?.setValue(new Date(data.date));
 
-                      }
-
-                    });
-                    this.subscriptionsService.companyDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.companyId }).subscribe(dataDropdown => {
-                      this.listCompanies = [];
+                    this.subscriptionsPaymentsService.subscriptionGetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data.subscriptionId }).subscribe(dataDropdown => {
+                      this.listSubscriptions = [];
                       dataDropdown.data?.forEach((list: any) => {
-                        this.listCompanies.push({ name: list.name, key: list.id });
+                        this.listSubscriptions.push({ name: list.name, key: list.id });
                       });
-                      let indexcompanyId = this.listCompanies.findIndex(list => list.key === data.companyId);
-                      if (indexcompanyId >= 0) {
-                        this.getControl("CompanyId")?.setValue(this.listCompanies[indexcompanyId]);
+                      let indexsubscriptionId = this.listSubscriptions.findIndex(list => list.key === data.subscriptionId);
+                      if (indexsubscriptionId >= 0) {
+                        this.getControl("SubscriptionId")?.setValue(this.listSubscriptions[indexsubscriptionId]);
 
                       }
 
@@ -246,35 +206,17 @@ export class AddSubscriptionComponent {
   searchDropdown(data: any, type: string) {
 
     switch (type) {
-      case 'PlanId':
+      case 'SubscriptionId':
         if (data || data === "") {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
-            this.subscriptionsService.planGetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+            this.subscriptionsPaymentsService.subscriptionGetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listPlanId = [];
+                this.listSubscriptions = [];
                 this.lastSearchQuery = "";
                 res.data?.forEach((day: any) => {
-                  this.listPlanId.push({ name: day.name, key: day.id });
-                });
-              });
-          }
-
-        }
-        break;
-
-      case 'CompanyId':
-        if (data || data === "") {
-          if (data !== this.lastSearchQuery || data === "") {
-            this.lastSearchQuery = data;
-            this.subscriptionsService.companyDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
-              distinctUntilChanged()).subscribe((res: any) => {
-                this.listCompanies = [];
-                this.lastSearchQuery = "";
-                res.data?.forEach((day: any) => {
-                  this.listCompanies.push({ name: day.name, key: day.id });
+                  this.listSubscriptions.push({ name: day.name, key: day.id });
                 });
               });
           }
@@ -330,15 +272,10 @@ export class AddSubscriptionComponent {
       this.submitClicked.emit(this.addBranchGroupForm.value);
       // this.dialogRef.close(true);
     } else {
-      this.getControl("PlanId")?.markAsDirty();
-      this.getControl("CompanyId")?.markAsDirty();
-      this.getControl("Status")?.markAsDirty();
-      this.getControl("DurationInDays")?.markAsDirty();
-      this.getControl("RenewalCount")?.markAsDirty();
+      this.getControl("SubscriptionId")?.markAsDirty();
+      this.getControl("Amount")?.markAsDirty();
+      this.getControl("Date")?.markAsDirty();
       this.getControl("notes")?.markAsDirty();
-      this.getControl("FollowUpEmail")?.markAsDirty();
-      this.getControl("StartDate")?.markAsDirty();
-      this.getControl("EndDate")?.markAsDirty();
     }
 
   }
