@@ -55,6 +55,12 @@ const routes: Routes = [
         loadChildren: () => import('./companies/companies.module').then((m) => m.CompaniesModule),
         canActivate: [PermissionAminGuard]
       },
+      {
+        path: "settings",
+        loadChildren: () => import('./settings/settings.module').then((m) => m.SettingsModule),
+        canActivate: [PermissionAminGuard]
+      },
+      
       
     ]
   }

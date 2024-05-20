@@ -12,7 +12,6 @@ export class PermissionAminGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      debugger;
     if (state.url.includes("Companies")) {
       return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 0 });
     } else if (state.url.includes("userPermissions")) {
@@ -29,7 +28,9 @@ export class PermissionAminGuard implements CanActivate {
       return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 6 });
     }else if (state.url.includes("subscriptionsPayments")) {
       return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 7 });
-    }else {
+    }else if (state.url.includes("settings")) {
+      return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 8 });
+    } else {
       return false;
       this.router.navigate(["/notPermission"])
     }

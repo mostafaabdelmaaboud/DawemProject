@@ -1050,7 +1050,6 @@ export class SideNavBarComponent {
   }
 
   logout() {
-    debugger;
 
     const logoutDialog = this.dialog.open(LogoutComponent, {
       width: "30vw",

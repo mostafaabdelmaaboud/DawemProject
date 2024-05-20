@@ -923,7 +923,6 @@ export class SideNavBarAdminComponent {
   logoutAdmin() {
     
     
-    debugger;
 
     const logoutDialog = this.dialog.open(LogoutComponent, {
       width: "30vw",
@@ -935,7 +934,6 @@ export class SideNavBarAdminComponent {
     });
     logoutDialog.componentInstance.submitted = true;
     logoutDialog.componentInstance.submitClicked.subscribe(result => {
-      debugger;
       localStorage.removeItem("user");
       localStorage.removeItem("Admintoken");
       localStorage.removeItem("usersMe");
