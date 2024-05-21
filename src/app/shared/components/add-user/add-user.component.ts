@@ -13,7 +13,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { EmployeesService } from 'src/app/Presentation/user/employees/services/employees.service';
-import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Observable, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { AssignmentsService } from 'src/app/Presentation/user/assignments/services/assignments.service';
 import { CheckboxModule } from 'primeng/checkbox';
 import { UsersService } from 'src/app/Presentation/user/users/services/users.service';
@@ -116,7 +116,7 @@ export class AddUserComponent {
 
   listEmployees: any[] = [
   ];
-  loading = false;
+  loading = true;
   private employeesService = inject(EmployeesService);
   listRoles: any[] = [];
   @Input() editUser!: boolean;
@@ -151,7 +151,15 @@ export class AddUserComponent {
 
    
     let rolesDropDown = this.usersService.getRolesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-    let employeeForDropDown = this.usersService.GetForDropDownEmployeeNotHaveUser({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+    let employeeForDropDown:Observable<any>;
+    if (this.editUser) {
+      employeeForDropDown = this.usersService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+
+    } else {
+      employeeForDropDown = this.usersService.GetForDropDownEmployeeNotHaveUser({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+
+    }
+
     let countries = this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
 
     combineLatest({
@@ -166,8 +174,8 @@ export class AddUserComponent {
         this.listRoles.push({ name: jobTitle.name, key: jobTitle.id })
       });
 
-      data.employeeForDropDown?.data?.forEach((jobTitle: any) => {
-        this.listEmployees.push({ name: jobTitle.name, key: jobTitle.id })
+      data.employeeForDropDown?.data?.forEach((employee: any) => {
+        this.listEmployees.push({ name: employee.name, key: employee.id })
       });
       this.countriesPhone = [];
       data.countries?.forEach((country: any) => {
@@ -215,15 +223,26 @@ export class AddUserComponent {
                 this.isCurrentCountry = this.countriesPhone[findIndexCountryCode];
               }
               this.addBranchGroupForm.get("IsAdmin")?.setValue(data.isAdmin);
+              
+              this.usersService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.employeeId }).subscribe(dataDropdown => {
+                
 
-              this.usersService.GetForDropDownEmployeeNotHaveUser({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.employeeId }).subscribe(dataDropdown => {
                 this.listEmployees = []
+                
+
                 dataDropdown.data?.forEach((insideData: any) => {
+                  
+
                   this.listEmployees.push({ name: insideData.name, key: insideData.id })
                 });
+                
 
                 let indexEmployeeId = this.listEmployees.findIndex(job => job.key === data.employeeId);
+                
+
                 if (indexEmployeeId >= 0) {
+                  
+
                   this.addBranchGroupForm.get("EmployeeId")?.setValue(this.listEmployees[indexEmployeeId]);
                 }
               });
@@ -261,13 +280,7 @@ export class AddUserComponent {
       }
 
     })
-    if (!this.editUser) {
-      this.addBranchGroupForm.addControl("Password", this.fb.control("", [Validators.required, Validators.minLength(5)]));
-      this.addBranchGroupForm.addControl("ConfirmPassword", this.fb.control("",  [Validators.required, Validators.minLength(5),this.passwordMatchValidator()]))
 
-      this.loading = false;
-      
-    }
   }
 
   getCountriesbyPhone() {
