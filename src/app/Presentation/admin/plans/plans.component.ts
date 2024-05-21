@@ -301,7 +301,13 @@ export class PlansComponent {
     )
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: 17, actionCode: data.actionCode })
+    if(localStorage.getItem('adminPermissions')) {
+      return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: 4, actionCode: data.actionCode })
+
+    } else {
+      return ""
+    }
+
   }
   mathRound(data: any) {
     return Math.ceil(data)

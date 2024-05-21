@@ -214,7 +214,12 @@ export class UserPermissionsComponent {
 
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: 19, actionCode: data.actionCode })
+    if(localStorage.getItem('adminPermissions')) {
+      return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: 1, actionCode: data.actionCode });
+
+    } else {
+      return ""
+    }
   }
   getInformation() {
     this.spinnerCards = true;

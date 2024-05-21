@@ -146,8 +146,14 @@ export class PermissionLogComponent {
   }
 
   showActions(data: any) {
-    return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: 30, actionCode: data.actionCode })
+    if(localStorage.getItem('adminPermissions')) {
+      return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: 2, actionCode: data.actionCode });
+
+    } else {
+      return ""
+    }
   }
+
   getPermissionLog(filteration: any) {
     this.permissionLog = [];
     this.isLoading = true;
