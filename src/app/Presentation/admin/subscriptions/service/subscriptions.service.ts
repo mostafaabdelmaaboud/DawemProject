@@ -42,6 +42,17 @@ export class SubscriptionsService {
     return this.http.put<any>(`${environment.baseUrl}adminpanel/Subscription/Enable`, {}, { params: queryParams })
 
   }
+  approve(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.put<any>(`${environment.baseUrl}adminpanel/Subscription/Approve`, {}, { params: queryParams })
+
+  }
   subscriptionsInfo(params: any) {
     let queryParams = new HttpParams();
 

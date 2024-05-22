@@ -1,0 +1,62 @@
+<div class="container-Dialog">
+    <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+        <h3 class="title-Dialog m-0">
+          {{data!['title']|translate}}
+    
+        </h3>
+        <button class="icon-close iconCloseFilteration iconCloseDialog" type="button" (click)="close()">
+          <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+          <i class="pi pi-times-circle"></i>
+        </button>
+      </header>
+    <div class="body-dialog p-15 f-s-16">
+    <div class="design-body-text mb-1">
+        <span>اسم الشركة : </span><span>{{companyName}}</span>
+
+
+    </div>
+<div class="design-body-text mb-3">
+    <span>اسم الخطة : </span><span>{{planName}}</span>
+
+</div>
+<form  [formGroup]="activationStartDate">
+    <div class="sectionThree mb-3">
+        <label class="title label-input mb-2"> تاريخ بداية التفعيل <span class="color-red">*</span></label>
+        <div class="content-password">
+          <div class="content-pCalendar-default" dir="ltr">
+            <p-calendar formControlName="activationStart" appendTo="body" 
+              placeholder="تاريخ بداية التفعيل" [showIcon]="true"></p-calendar>
+          </div>
+        </div>
+        <!--Start Custom Validators-->
+        <div class="container-alerts mt-2" *ngIf="getControl('activationStart')?.errors">
+          <div class="alert alert-danger"
+            *ngIf="getControl('activationStart')?.hasError('required') && getControl('activationStart')?.dirty">
+            تاريخ مطلوب
+          </div>
+        </div>
+        <!--End Custom Validators-->
+      </div>
+</form>
+   
+      <!-- <div class="container-desc">
+        <label class="title">
+          {{data!['title'] | translate}}
+        </label>
+        <p class="pt-2 m-0">
+          {{data!['message'] | translate}}
+        </p>
+      </div> -->
+  
+    </div>
+    <footer class="footer-dialog p-15 d-flex justify-content-end">
+    
+        <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+        (click)="request()">{{submitted ?
+        (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+      <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
+        (click)="close()">{{data!['titleClose']|translate}}</button>
+  
+    </footer>
+    
+  </div>

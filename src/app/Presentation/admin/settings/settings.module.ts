@@ -6,6 +6,7 @@ import { SettingsComponent } from './settings.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FieldsetModule } from 'primeng/fieldset';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { FieldsetModule } from 'primeng/fieldset';
     SettingsRoutingModule,
     MatDialogModule,
     FieldsetModule,
+    InputSwitchModule,
     SharedModule
   ]
 })

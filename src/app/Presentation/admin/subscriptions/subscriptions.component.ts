@@ -17,6 +17,8 @@ import { SubscriptionsService } from './service/subscriptions.service';
 import moment from 'moment';
 import { AddSubscriptionComponent } from './dialogs/add-subscription/add-subscription.component';
 import { SubscriptionInfoComponent } from './dialogs/subscription-info/subscription-info.component';
+import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
+import { DialogApproveWithDateComponent } from 'src/app/shared/components/dialog-approve-with-date/dialog-approve-with-date.component';
 
 @Component({
   selector: 'app-subscriptions',
@@ -303,12 +305,52 @@ export class SubscriptionsComponent {
       return ""
     }
   }
+  
   mathRound(data: any) {
     return Math.ceil(data)
   }
   numberOfRowsPerPage(data: any) {
     this.filteration = { ...this.filteration, PageSize: data.value.code };
     this.getSubscriptions(this.filteration)
+  }
+  approve(data:any) {
+    let reasonOfRefuseDialog = this.dialog.open(DialogApproveWithDateComponent, {
+      width: "30vw",
+      data: {
+        title: "هل متأكد من قبول الاشتراك",
+        message: "برجاء توضيح السبب إن أمكن",
+        titleClose: "تراجع",
+        buttonSend: "قبول"
+      },
+    });
+
+    reasonOfRefuseDialog.componentInstance.companyName = data.companyName;
+    reasonOfRefuseDialog.componentInstance.planName = data.planeName;
+
+  reasonOfRefuseDialog.componentInstance.submitted = true;
+  reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
+    reasonOfRefuseDialog.componentInstance.submitted = false;
+    
+
+    let date = moment(result.activationStart).format("YYYY-MM-DD") ;
+    
+console.log(result.dateFrom)
+    this.subscriptionsService.approve({ subscriptionId: data.id, activationStartDate:date}).subscribe({
+      next: res => {
+        this.toast.success(res.message);
+        reasonOfRefuseDialog.componentInstance.submitted = true;
+        reasonOfRefuseDialog.close();
+        this.getSubscriptions(this.filteration);
+      },
+      error: err => {
+        reasonOfRefuseDialog.componentInstance.submitted = true;
+
+      }
+    })
+
+
+
+  })
   }
   sendRequest(data: any) {
 

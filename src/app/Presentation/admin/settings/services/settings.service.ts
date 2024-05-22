@@ -13,4 +13,9 @@ export class SettingsService {
 
     return this.http.get<any>(`${environment.baseUrl}adminpanel/Setting/Get`).pipe(map(data => data.data));
   }
+  updateSetting(setting: any) {
+
+    return this.http.put<any>(`${environment.baseUrl}adminpanel/Setting/Update`, setting)
+
+  }
 }
