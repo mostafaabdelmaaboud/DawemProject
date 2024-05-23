@@ -23,24 +23,6 @@
                     <div class="row">
                       <div class="col-md-6 col-12">
                         <div class="sectionFive mb-3">
-                          <label for="" class="label-input mb-2">{{'signup.name' | translate}} <span class="color-red">*</span></label>
-                          <!--Start Custom Validators-->
-                          <div class="content-input position-relative">
-                            <div class="content-password">
-                              <input type="text" pInputText formControlName="name" [placeholder]="'signup.enterTheName' | translate" class="w-100" />
-                            </div>
-                            <div class="container-alerts" *ngIf="getControl('name')?.errors">
-                              <div class="alert alert-danger"
-                                *ngIf="getControl('name')?.hasError('required') && getControl('name')?.dirty">
-                                {{'signup.nameIsRequired' | translate}} 
-                              </div>
-                            </div>
-                          </div>
-                          <!--End Custom Validators-->
-                        </div>
-                      </div>
-                      <div class="col-md-6 col-12">
-                        <div class="sectionFive mb-3">
                           <label for="" class="label-input mb-2">{{'signup.companyName' | translate}} <span class="color-red">*</span></label>
                           <div class="content-input position-relative">
                             <div class="content-password">
@@ -81,25 +63,6 @@
                               <div class="alert alert-danger"
                                 *ngIf="getControl('companyCountryId')?.hasError('required') && getControl('companyCountryId')?.dirty">
                                 {{'signup.pleaseCountryIsRequired' | translate}}
-                              </div>
-                            </div>
-                            <!--End Custom Validators-->
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-6 col-12">
-                        <div class="sectionFive mb-3">
-                          <label for="" class="label-input mb-2">{{'signup.companyAddress' | translate}} <span class="color-red">*</span></label>
-                          <div class="content-input position-relative">
-                            <div class="content-password">
-                              <input type="text" pInputText formControlName="companyAddress" [placeholder]="'signup.enterCompanyAddress' | translate"
-                                class="w-100" />
-                            </div>
-                            <!--Start Custom Validators-->
-                            <div class="container-alerts" *ngIf="getControl('companyAddress')?.errors">
-                              <div class="alert alert-danger"
-                                *ngIf="getControl('companyAddress')?.hasError('required') && getControl('companyAddress')?.dirty">
-                                {{'signup.companyAddressIsRequired' | translate}}
                               </div>
                             </div>
                             <!--End Custom Validators-->
@@ -159,6 +122,7 @@
                           </div> -->
                         </div>
                       </div>
+                      
                       <div class="col-md-6 col-12">
                         <div class="section-field c-f">
                           <label class="mb-2 d-block f-s-16 label-form">{{'signup.confirmPassword' | translate}} <span
@@ -201,27 +165,20 @@
                       </div>
                       <div class="col-md-6 col-12">
                         <div class="sectionFive mb-3">
-                          <label for="" class="label-input mb-2">{{'signup.userEmail' | translate}} <span
-                              class="color-red">*</span></label>
+                          <label for="" class="label-input mb-2">{{'signup.name' | translate}} <span class="color-red">*</span></label>
+                          <!--Start Custom Validators-->
                           <div class="content-input position-relative">
                             <div class="content-password">
-                              <input type="text" pInputText formControlName="userEmail"
-                                [placeholder]="'signup.userEmail' | translate" class="w-100" />
+                              <input type="text" pInputText formControlName="name" [placeholder]="'signup.enterTheName' | translate" class="w-100" />
                             </div>
-                            <!--Start Custom Validators-->
-                            <div class="container-alerts" *ngIf="getControl('userEmail')?.errors">
+                            <div class="container-alerts" *ngIf="getControl('name')?.errors">
                               <div class="alert alert-danger"
-                                *ngIf="getControl('userEmail')?.hasError('required') && getControl('userEmail')?.dirty">
-                                {{'signup.userEmailIsRequired' | translate}} 
+                                *ngIf="getControl('name')?.hasError('required') && getControl('name')?.dirty">
+                                {{'signup.nameIsRequired' | translate}} 
                               </div>
-                              <div class="alert alert-danger"
-                              *ngIf="getControl('userEmail')?.hasError('pattern') && !getControl('userEmail')?.hasError('required')">
-                              البريد الألكتروني غير صحيح
                             </div>
-                            </div>
-                            <!--End Custom Validators-->
                           </div>
-      
+                          <!--End Custom Validators-->
                         </div>
                       </div>
                       <div class="col-md-6 col-12">
@@ -271,21 +228,26 @@
                           </div>
                         </div>
                       </div>
+                    
                       <div class="col-md-6 col-12">
                         <div class="sectionFive mb-3">
-                          <label for="" class="label-input mb-2">عدد الموظفين <span
+                          <label for="" class="label-input mb-2">{{'signup.userEmail' | translate}} <span
                               class="color-red">*</span></label>
                           <div class="content-input position-relative">
                             <div class="content-password">
-                              <input type="number" pInputText formControlName="numberOfEmployees"
-                                placeholder="عدد الموظفين" class="w-100" />
+                              <input type="text" pInputText formControlName="userEmail"
+                                [placeholder]="'signup.userEmail' | translate" class="w-100" />
                             </div>
                             <!--Start Custom Validators-->
-                            <div class="container-alerts" *ngIf="getControl('numberOfEmployees')?.errors">
+                            <div class="container-alerts" *ngIf="getControl('userEmail')?.errors">
                               <div class="alert alert-danger"
-                                *ngIf="getControl('numberOfEmployees')?.hasError('required') && getControl('numberOfEmployees')?.dirty">
-                                عدد الموظفين مطلوب 
+                                *ngIf="getControl('userEmail')?.hasError('required') && getControl('userEmail')?.dirty">
+                                {{'signup.userEmailIsRequired' | translate}} 
                               </div>
+                              <div class="alert alert-danger"
+                              *ngIf="getControl('userEmail')?.hasError('pattern') && !getControl('userEmail')?.hasError('required')">
+                              البريد الألكتروني غير صحيح
+                            </div>
                             </div>
                             <!--End Custom Validators-->
                           </div>
@@ -329,8 +291,46 @@
                           </div>
                         </div>
                       </ng-container>
-                
-                
+                      <div class="col-md-6 col-12">
+                        <div class="sectionFive mb-3">
+                          <label for="" class="label-input mb-2">{{'signup.companyAddress' | translate}} <span class="color-red">*</span></label>
+                          <div class="content-input position-relative">
+                            <div class="content-password">
+                              <input type="text" pInputText formControlName="companyAddress" [placeholder]="'signup.enterCompanyAddress' | translate"
+                                class="w-100" />
+                            </div>
+                            <!--Start Custom Validators-->
+                            <div class="container-alerts" *ngIf="getControl('companyAddress')?.errors">
+                              <div class="alert alert-danger"
+                                *ngIf="getControl('companyAddress')?.hasError('required') && getControl('companyAddress')?.dirty">
+                                {{'signup.companyAddressIsRequired' | translate}}
+                              </div>
+                            </div>
+                            <!--End Custom Validators-->
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6 col-12">
+                        <div class="sectionFive mb-3">
+                          <label for="" class="label-input mb-2">عدد المستخدمين <span
+                              class="color-red">*</span></label>
+                          <div class="content-input position-relative">
+                            <div class="content-password">
+                              <input type="number" pInputText formControlName="numberOfEmployees"
+                                placeholder="عدد المستخدمين" class="w-100" />
+                            </div>
+                            <!--Start Custom Validators-->
+                            <div class="container-alerts" *ngIf="getControl('numberOfEmployees')?.errors">
+                              <div class="alert alert-danger"
+                                *ngIf="getControl('numberOfEmployees')?.hasError('required') && getControl('numberOfEmployees')?.dirty">
+                                عدد المستخدمين مطلوب 
+                              </div>
+                            </div>
+                            <!--End Custom Validators-->
+                          </div>
+      
+                        </div>
+                      </div>
                       <div class="col-md-12 col-12">
                         <div class="sectionFive mb-3">
       

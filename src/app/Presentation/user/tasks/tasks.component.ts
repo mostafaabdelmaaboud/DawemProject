@@ -442,8 +442,8 @@ export class TasksComponent {
           ForEmployee: result.ForEmployee,
           EmployeeId: result.EmployeeId.key,
           TaskTypeId: result.TaskTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss") ,
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.timeStart)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.timeEnd)).format("HH:mm:ss"),
           TaskEmployeeIds: result.TaskEmployeeIds.map((id: any) => id.key),
           Notes: result.Notes
         }));
@@ -453,8 +453,8 @@ export class TasksComponent {
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           TaskTypeId: result.TaskTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.timeStart)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.timeEnd)).format("HH:mm:ss"),
           TaskEmployeeIds: result.TaskEmployeeIds.map((id: any) => id.key),
           Notes: result.Notes
         }));
@@ -558,8 +558,8 @@ export class TasksComponent {
           EmployeeId: result.EmployeeId.key,
 
           TaskTypeId: result.TaskTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.timeStart)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.timeEnd)).format("HH:mm:ss"),
           TaskEmployeeIds: result.TaskEmployeeIds.map((id: any) => id.key),
           Notes: result.Notes
         }));
@@ -569,8 +569,8 @@ export class TasksComponent {
           IsNecessary: result.IsNecessary,
           ForEmployee: result.ForEmployee,
           TaskTypeId: result.TaskTypeId.key,
-          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
-          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.time)).format("HH:mm:ss"),
+          DateFrom: moment(new Date(result.dateTask[0])).format("MM-DD-YYYY") + " " + moment(new Date(result.timeStart)).format("HH:mm:ss"),
+          DateTo: moment(new Date(result.dateTask[1])).format("MM-DD-YYYY") + " " + moment(new Date(result.timeEnd)).format("HH:mm:ss"),
           TaskEmployeeIds: result.TaskEmployeeIds.map((id: any) => id.key),
           Notes: result.Notes
         }));

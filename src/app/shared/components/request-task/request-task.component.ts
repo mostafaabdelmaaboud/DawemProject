@@ -96,7 +96,8 @@ export class RequestTaskComponent {
     TaskTypeId: ['', Validators.required],
     dateTask: [null, Validators.required],
     TaskEmployeeIds: ["", Validators.required],
-    time:[null, Validators.required],
+    timeStart:[null, Validators.required],
+    timeEnd:[null, Validators.required],
     Notes: [''],
     idCopyFile: [''],
   });
@@ -238,7 +239,8 @@ export class RequestTaskComponent {
                 });
               });
               this.addBranchGroupForm.get("dateTask")?.setValue([new Date(data.dateFrom), new Date(data.dateTo)]);
-              this.addBranchGroupForm.get("time")?.setValue(new Date(data.dateFrom));
+              this.addBranchGroupForm.get("timeStart")?.setValue(new Date(data.dateFrom));
+              this.addBranchGroupForm.get("timeEnd")?.setValue(new Date(data.dateTo));
               this.addBranchGroupForm.get("Notes")?.setValue(data.notes);
               this.loading = false;
             },
@@ -449,7 +451,8 @@ export class RequestTaskComponent {
     } else {
       this.getControl("TaskTypeId")?.markAsDirty();
       this.getControl("dateTask")?.markAsDirty();
-      this.getControl("time")?.markAsDirty();
+      this.getControl("timeStart")?.markAsDirty();
+      this.getControl("timeEnd")?.markAsDirty();
       this.getControl("TaskEmployeeIds")?.markAsDirty();
       this.getControl("idCopyFile")?.markAsDirty();
     }
