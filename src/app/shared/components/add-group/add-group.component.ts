@@ -255,24 +255,22 @@ export class AddGroupComponent {
                     });
 
                   });
-
-
-                  data?.zoneIds?.forEach((zone: any) => {
-
-                    let indexZones = this.listZones.findIndex(list => list.key === zone);
-
-
-                    if (indexZones >= 0) {
-                      if (Array.isArray(this.getControl("zoneIds")?.value)) {
-                        this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }, ...this.getControl("zoneIds")?.value]));
-                      } else {
-                        this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }]));
+                  this.sectionsService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids: data?.zoneIds  }).subscribe(dataDropdown => {
+                    this.listZones = [];
+                    dataDropdown.data?.forEach((day: any) => {
+                      this.listZones.push({ name: day.name, key: day.id });
+                    });
+                    data?.zoneIds?.forEach(zone => {
+                      let indexZones = this.listZones.findIndex(list => list.key === zone);
+                      if (indexZones >= 0) {
+                        if (Array.isArray(this.getControl("zoneIds")?.value)) {
+                          this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }, ...this.getControl("zoneIds")?.value]));
+                        } else {
+                          this.getControl("zoneIds")?.patchValue(([{ name: this.listZones[indexZones].name, key: this.listZones[indexZones].key }]));
+                        }
                       }
-                    }
-
+                    })
                   });
-
-
                   this.loading = false;
                 },
                 error: err => {

@@ -281,8 +281,6 @@
                 <button type="button" *ngIf="showActions({actionCode:1})"
                   class="btn btn-outline-secondary action-accept color-green" (click)="editResponsibility(rowData)"><i
                     class="bi bi-pencil-square"></i></button>
-  
-  
                 <button type="button" *ngIf="showActions({actionCode:3})"
                   class="btn btn-outline-secondary action-close color-blue" (click)="dialogPermissionFile(rowData)"><i
                     class="bi bi-person-vcard"></i></button>
@@ -293,24 +291,17 @@
                       </ng-container>
                 <button type="button" *ngIf="showActions({actionCode:2}) && rowData.isActive" (click)="reasonOfRefuse(rowData)"
                   class="btn btn-outline-secondary action-close color-red"><i class="bi bi-x-circle"></i></button>
-  
-  
-  
               </div>
             </td>
-  
             <!-- <td *ngIf="column.field != 'FLSname'&&column.field != 'Branchname' ">
-                                    <span class="first-number number-currency"
-                                        [class.invalidNumber]="rowData[column.field].first > (rowData[column.field].second * 90) / 100">{{rowData[column.field].first
-                                        | number:'1.0-0'}}</span>/
-                                    <span class="second-number number-currency">{{rowData[column.field].second |
-                                        number:'1.0-0'}}</span>
-                                    <i class="bi bi-info-circle-fill color-red-icon ml-2"
-                                        *ngIf="rowData[column.field].first > (rowData[column.field].second * 90) / 100"></i>
-  
-  
-                                </td> -->
-  
+                    <span class="first-number number-currency"
+                        [class.invalidNumber]="rowData[column.field].first > (rowData[column.field].second * 90) / 100">{{rowData[column.field].first
+                        | number:'1.0-0'}}</span>/
+                    <span class="second-number number-currency">{{rowData[column.field].second |
+                        number:'1.0-0'}}</span>
+                    <i class="bi bi-info-circle-fill color-red-icon ml-2"
+                        *ngIf="rowData[column.field].first > (rowData[column.field].second * 90) / 100"></i>
+                </td> -->
           </ng-container>
         </tr>
       </ng-template>

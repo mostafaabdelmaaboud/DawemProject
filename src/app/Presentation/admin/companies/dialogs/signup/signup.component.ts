@@ -303,11 +303,35 @@ export class SignupComponent {
 
         }
         break;
+        case 'CountryPhoneId':
+          if (data || data === "") {
+            if (data !== this.lastSearchQuery || data === "") {
+              this.lastSearchQuery = data;
+              this.companiesService.getCountries({PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+                debounceTime(300),
+                distinctUntilChanged()).subscribe((res: any) => {
+                  this.countriesPhone = [];
+                  this.lastSearchQuery = "";
+                  res.forEach((country: any, i:number) => {
+                    this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath });
+                    if(i === 0) {
+                      this.isCurrentCountry ={ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath  }
+                    }
+                  });
+                  if(res?.length > 0) {
+                    this.selectCountry();
 
+                    }
+                });
+            }
+  
+          }
+          break;
       default:
         break;
     }
   }
+  
   submit() {
     
     if (this.FormGroup.valid &&  this.submitted && this.FormGroup.value.agreed) {

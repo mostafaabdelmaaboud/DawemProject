@@ -514,10 +514,16 @@ export class DialogAddAnEmployeeComponent {
                   distinctUntilChanged()).subscribe((res: any) => {
                     this.countriesPhone = [];
                     this.lastSearchQuery = "";
-                    res?.forEach((country: any) => {
+                    res?.forEach((country: any, i:number) => {
                       this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath  });
-
+                      if(i === 0) {
+                        this.isCurrentCountry ={ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath  }
+                      }
                     });
+                    if(res?.length > 0) {
+                    this.selectCountry();
+
+                    }
     
     
                   });

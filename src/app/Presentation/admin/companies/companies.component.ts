@@ -183,14 +183,14 @@ export class CompaniesComponent {
   }
   exportTableToExcel() {
     let columns = [...this.columns];
-    delete columns[3]
+    delete columns[6]
     var options = { 
       fieldSeparator: ',',
       quoteStrings: '"',
       decimalseparator: '.',
       showLabels: true, 
       showTitle: true,
-      title: 'المسميات الوظيفية',
+      title: 'الشركات',
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
@@ -203,27 +203,34 @@ export class CompaniesComponent {
       this.companiesService.getCompanies(filteration).subscribe(
         {
           next: data => {
-    
+            // this.companies.push({
+            //   id: company.id,
+            //   code: company.code,
+            //   countryName: company.countryName,
+            //   countryNameWidthLogo: {
+            //     name: company?.name ? company?.name : "لا يوجد",
+            //     alt: company?.name ? company?.name : "لا يوجد",
+            //     img: company?.logoImagePath ? company?.logoImagePath : "../../../../assets/img/5034901-200.png"
+            //   },
+            //   subscriptionTypeName: company.subscriptionTypeName,
+            //   numberOfEmployees: company.numberOfEmployees,
+            //   isActive: company.isActive ? 'نشط' : 'غير نشط'
+
+            // })
             data.data.forEach((company: any) => {
               this.companiesIsExport.push({
-                id: company.id,
               code: company.code,
               countryName: company.countryName,
-              countryNameWidthLogo: {
-                name: company?.name ? company?.name : "لا يوجد",
-                alt: company?.name ? company?.name : "لا يوجد",
-                img: company?.logoImagePath ? company?.logoImagePath : "../../../../assets/img/5034901-200.png"
-              },
+              countryNameWidthLogo: company?.name ? company?.name : "لا يوجد",
               subscriptionTypeName: company.subscriptionTypeName,
               numberOfEmployees: company.numberOfEmployees,
               isActive: company.isActive ? 'نشط' : 'غير نشط'
-  
+
               })
             });
             let formatTable = this.companiesIsExport.map(company => {
       
               return {
-                id: company.id,
                 code: company.code,
                 countryName: company.countryName,
                 countryNameWidthLogo: company.countryNameWidthLogo,
@@ -295,8 +302,11 @@ export class CompaniesComponent {
     })
   }
   getCountries() {
+    
     this.companiesService.GetCountries({PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe(data => {
-      data?.data?.forEach((country: any) => {
+      
+      data?.forEach((country: any) => {
+        
         this.listCountires.push({ name: country.name, key: country.id })
       });
     })
@@ -314,7 +324,7 @@ export class CompaniesComponent {
                 this.listCountires = [];
                 this.lastSearchQuery = "";
 
-                res?.data?.forEach((country: any) => {
+                res?.forEach((country: any) => {
                   this.listCountires.push({ name: country.name, key: country.id })
                 });
               });
@@ -429,12 +439,12 @@ export class CompaniesComponent {
     let reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
       width: "30vw",
       data: {
-        title: "هل متأكد من رفض الشركة؟",
+        title: "هل متأكد من تعطيل الشركة؟",
         message: "برجاء توضيح السبب إن أمكن",
-        titleReasonOfRefuse:"سبب الرفض",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض",
+        titleReasonOfRefuse:"سبب التعطيل",
+        placeholdeReasonOfRefuse: "برجاء كتابة سبب التعطيل",
         titleClose:"تراجع",
-        buttonSend: "رفض الشركة"
+        buttonSend: "تعطيل الشركة"
       },
     });
 

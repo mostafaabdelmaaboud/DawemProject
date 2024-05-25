@@ -448,8 +448,7 @@
         <tr *ngIf="!isLoading">
    
           <ng-container *ngFor="let column of columns">
-  
-            <ng-container *ngIf="column.field != 'actions' && column.field != 'isActive'">
+            <ng-container *ngIf="column.field != 'countryNameWidthLogo' && column.field != 'actions'">
               <td>
                 <span class="p-column-title">
                   {{column.name}}
@@ -457,17 +456,17 @@
                 {{ rowData[column.field] }}
               </td>
             </ng-container>
+            <td *ngIf="column.field === 'countryNameWidthLogo'">
+              <span class="p-column-title">
+                {{column.name}}
+              </span>
+              <span class="d-flex align-items-center">
+                <img [src]="rowData[column.field]['img']" class="ml-2" width="32" height="32"
+                  [alt]="rowData[column.field]['alt']">
+                <span class="d-inline-block break-text">{{ rowData[column.field]['name'] }}</span>
   
-            <ng-container *ngIf="column.field === 'isActive'">
-              <td>
-                <span class="p-column-title">
-                  {{column.name}}
-                </span>
-                <span>{{rowData[column.field] ? 'نشط' : 'غير نشط'}}
-                </span>
-  
-              </td>
-            </ng-container>
+              </span>
+            </td>
           </ng-container>
         </tr>
       </ng-template>

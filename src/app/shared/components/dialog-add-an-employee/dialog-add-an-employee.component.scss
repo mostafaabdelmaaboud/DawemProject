@@ -24,7 +24,9 @@
   width: 100%;
 }
 
-
+:host ::ng-deep .dropdown-code .p-dropdown {
+  margin: 0 !important;
+}
 
 .title {
   display: block;
