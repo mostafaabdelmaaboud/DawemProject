@@ -783,7 +783,7 @@ export class EmployeesComponent {
   }
   getListDepartment() {
 
-    this.employeesService.getDepartmentForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe(data => {
+    this.employeesService.getDepartmentForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe(data => {
 
 
       data?.data?.forEach((jobTitle: any) => {

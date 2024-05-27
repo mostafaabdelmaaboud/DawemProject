@@ -31,7 +31,7 @@ export class SubscriptionsService {
     }
     return this.http.put<any>(`${environment.baseUrl}adminpanel/Subscription/Disable`, {}, { params: queryParams })
   }
-  accept(params: any) {
+  enable(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -42,7 +42,7 @@ export class SubscriptionsService {
     return this.http.put<any>(`${environment.baseUrl}adminpanel/Subscription/Enable`, {}, { params: queryParams })
 
   }
-  approve(params: any) {
+  accept(params: any) {
     let queryParams = new HttpParams();
 
     if (params) {
@@ -50,7 +50,7 @@ export class SubscriptionsService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.put<any>(`${environment.baseUrl}adminpanel/Subscription/Approve`, {}, { params: queryParams })
+    return this.http.put<any>(`${environment.baseUrl}adminpanel/Subscription/Accept`, {}, { params: queryParams })
 
   }
   subscriptionsInfo(params: any) {

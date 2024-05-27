@@ -313,7 +313,7 @@ export class SubscriptionsComponent {
     this.filteration = { ...this.filteration, PageSize: data.value.code };
     this.getSubscriptions(this.filteration)
   }
-  approve(data:any) {
+  accept(data:any) {
     let reasonOfRefuseDialog = this.dialog.open(DialogApproveWithDateComponent, {
       width: "30vw",
       data: {
@@ -334,8 +334,7 @@ export class SubscriptionsComponent {
 
     let date = moment(result.activationStart).format("YYYY-MM-DD") ;
     
-console.log(result.dateFrom)
-    this.subscriptionsService.approve({ subscriptionId: data.id, activationStartDate:date}).subscribe({
+    this.subscriptionsService.accept({ subscriptionId: data.id, activationStartDate:date}).subscribe({
       next: res => {
         this.toast.success(res.message);
         reasonOfRefuseDialog.componentInstance.submitted = true;
@@ -354,7 +353,7 @@ console.log(result.dateFrom)
   }
   sendRequest(data: any) {
 
-    this.subscriptionsService.accept({ subscriptionId: data.id }).subscribe(
+    this.subscriptionsService.enable({ subscriptionId: data.id }).subscribe(
       {
         next: res => {
           this.getSubscriptions(this.filteration);
