@@ -10,6 +10,13 @@
   </header>
   <div class="body-dialog p-15 f-s-16">
     <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">السماح بتعديل كود موبايل البصمة</label>
+      <div class="content-password">
+        {{info?.allowChangeFingerprintMobileCode ? "نعم" : "لا"}}
+      </div>
+
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
       <label class="title">{{"employees.jobNumber"|translate}} </label>
       <div class="content-password">
         {{info?.employeeNumber ? info?.employeeNumber : "لا يوجد"}}

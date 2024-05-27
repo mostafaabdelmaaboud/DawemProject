@@ -562,6 +562,7 @@ export class EmployeesComponent {
       }
       formData.append("CreateEmployeeModelString", JSON.stringify({
         IsActive: result.isActive,
+        AllowChangeFingerprintMobileCode: result.AllowChangeFingerprintMobileCode,
         AttendanceType: Number(result.AttendanceType),
         name: result.name,
         DirectManagerId: result.directManager.key,
@@ -709,6 +710,7 @@ export class EmployeesComponent {
       formData.append("UpdateEmployeeModelString", JSON.stringify({
         id: data.id,
         IsActive: result.isActive,
+        AllowChangeFingerprintMobileCode: result.AllowChangeFingerprintMobileCode,
         AttendanceType: Number(result.AttendanceType),
         name: result.name,
         DirectManagerId: result.directManager.key,
@@ -968,7 +970,7 @@ export class EmployeesComponent {
         if (data || data === "") {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
-            this.employeesService.getDepartmentForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+            this.employeesService.getDepartmentForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe(res => {
                 this.listDepratment = [];

@@ -136,6 +136,7 @@ export class DialogAddAnEmployeeComponent {
     employeeType: ['0'],
     ScheduleId: [''],
     isActive: [false],
+    AllowChangeFingerprintMobileCode:[false],
     name: ['', Validators.required],
     employeeNumber: ['', [Validators.required, Validators.min(0)]],
     JobTitleId: ['', Validators.required],
@@ -293,7 +294,9 @@ export class DialogAddAnEmployeeComponent {
               }
 
               this.addBranchGroupForm.get("isActive")?.setValue(data.isActive);
+              this.addBranchGroupForm.get("AllowChangeFingerprintMobileCode")?.setValue(data.allowChangeFingerprintMobileCode);
 
+              
 
               this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.directManagerId }).subscribe(dataDropdown => {
 

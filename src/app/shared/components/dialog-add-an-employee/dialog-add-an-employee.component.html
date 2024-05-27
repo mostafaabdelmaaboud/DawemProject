@@ -27,6 +27,10 @@
           </mat-radio-group>
         </div>
       </div>
+      <div class="section1 mb-3">
+        <label class="title">السماح بتعديل كود موبايل البصمة</label>
+        <p-inputSwitch formControlName="AllowChangeFingerprintMobileCode"></p-inputSwitch>
+      </div>
       <ng-container *ngIf="editEmployee">
         <div class="field-disabled mb-3 readOnly">
           <label for="" class="label-input mb-2" [innerHTML]="data!['titleFieldDisabled']|translate"></label>
