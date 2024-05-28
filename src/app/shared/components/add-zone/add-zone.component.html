@@ -15,7 +15,26 @@
         <label class="title">{{data!['setAsNecessary']|translate}}</label>
         <p-inputSwitch formControlName="isActive"></p-inputSwitch>
       </div>
+      <div class="sectionTwo mb-3">
+        <label class="title">فروع الشركة</label>
+        <div class="content-password">
+          <p-dropdown appendTo="body" formControlName="companyBranches" [options]="companyBranchesList"
+            placeholder="فروع الشركة" optionLabel="name">
 
+            <ng-template pTemplate="header">
+              <span class="p-input-icon-left input-search-dropdown">
+
+                <i class="pi pi-search" (click)="searchDropdown(searchCompanyBranches.value, 'companyBranches')"></i>
+                <input type="text" placeholder="بحث" pInputText #searchCompanyBranches />
+              </span>
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+              {{ option.name }}
+            </ng-template>
+          </p-dropdown>
+        </div>
+
+      </div>
       <ng-container *ngIf="editEmployee">
         <div class="field-disabled mb-3 readOnly">
           <label for="" class="label-input mb-2" [innerHTML]="data!['titleFieldDisabled']|translate"></label>
@@ -42,7 +61,7 @@
         <div class="search-map mb-3">
           <label for="" class="label-input mb-2">{{"zones.searchOnMap"|translate}} </label>
           <div class="content-password">
-            <input type="text" pInputText #searchMapRef [placeholder]="'zones.searchOnMap'|translate" class="w-100" />
+            <input type="text" pInputText #searchMapRef formControlName="searchOnMap" [placeholder]="'zones.searchOnMap'|translate" class="w-100" />
           </div>
         </div>
         <div class="body-map">

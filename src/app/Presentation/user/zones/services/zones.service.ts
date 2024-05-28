@@ -119,6 +119,28 @@ export class ZonesService {
     }
     return this.http.get<any>(`${environment.baseUrl}Zone/GetById`, { params: queryParams }).pipe(map(data => data.data))
   }
+  CompanyBranch(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}CompanyBranch/GetForDropDown`, { params: queryParams })
+
+  }
+  CompanyBranchGetById(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}CompanyBranch/GetById`, { params: queryParams })
+
+  }
   ZoneGetInfo(params: any) {
     let queryParams = new HttpParams();
 

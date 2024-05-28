@@ -97,7 +97,7 @@ export interface MapMarker {
   styleUrls: ['./add-zone.component.scss']
 })
 export class AddZoneComponent {
-  loading = false;
+  loading = true;
   private zonesService = inject(ZonesService);
   options: any = {
     types: [],
@@ -109,9 +109,9 @@ export class AddZoneComponent {
   @Output() submitClicked = new EventEmitter<any>();
   @Input() submitted!: boolean;
   @Input() jobTitleFirst: any[] = [];
-
+  companyBranchesList:any[] = [];
   // zoom level of our Google maps
-  zoomLevel: number = 10;
+  zoomLevel: number = 15;
 
   // initial center position for the map of Nairobi city, kenya
   latitude: number = -1.2921;
@@ -189,6 +189,8 @@ export class AddZoneComponent {
     name: ['', Validators.required],
     radius: ['', [Validators.required, Validators.min(0)]],
     latitude: ['', Validators.required],
+    companyBranches:[],
+    searchOnMap:[],
     longitude: ['', Validators.required]
   });
   constructor(
@@ -206,53 +208,85 @@ export class AddZoneComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+    this.checkLocationPermission();
     if (this.data?.code) {
       this.addBranchGroupForm.get("fieldDisabled")?.setValue(this.data?.code);
     }
-    this.loading = true;
-
-
-
     if (this.editEmployee) {
-
-
-      this.zonesService.ZoneGetById({ zoneId: this.id }).subscribe(
-        {
-          next: data => {
-
-
-
-
-            this.addBranchGroupForm.get("isActive")?.setValue(data.isActive);
-
-            this.addBranchGroupForm.get("name")?.setValue(data.name);
-            this.addBranchGroupForm.get("radius")?.setValue(data.radius);
-            this.radius = data.radius;
-            this.latitude = data.latitude;
-            this.longitude = data.longitude;
-
+      let zoneGetById = this.zonesService.ZoneGetById({ zoneId: this.id });
+      let companyBranch =  this.zonesService.CompanyBranch({  PagingEnabled: true, PageSize: 5, PageNumber: 0}); 
+      combineLatest({
+        zoneGetById,
+        companyBranch
+      }).subscribe({
+          next:data => {
+            this.addBranchGroupForm.get("isActive")?.setValue(data?.zoneGetById?.isActive);
+            this.addBranchGroupForm.get("name")?.setValue(data?.zoneGetById?.name);
+            this.addBranchGroupForm.get("radius")?.setValue(data?.zoneGetById?.radius);
+            this.radius = data?.zoneGetById?.radius;
+            this.latitude = data?.zoneGetById?.latitude;
+            this.longitude = data?.zoneGetById?.longitude;
             this.getControl("latitude")?.setValue(this.latitude);
             this.getControl("longitude")?.setValue(this.longitude);
-
             this.markers = [{
               latitude: this.latitude,
               longitude: this.longitude,
               label: 'Point A',
               draggable: true
             }]
+            data.companyBranch.data?.forEach((branch: any) => {
+              this.companyBranchesList.push({ name: branch.name, key: branch.id })
+            });
             this.loading = false;
           },
-          error: err => {
+          error:err => {
             this.loading = false;
-          }
-        }
-      )
-
+      }})
     }
     if (!this.editEmployee) {
-      this.loading = false;
+      this.zonesService.CompanyBranch({  PagingEnabled: true, PageSize: 5, PageNumber: 0}).subscribe({
+        next:res => {
+          res.data?.forEach((branch: any) => {
+            this.companyBranchesList.push({ name: branch.name, key: branch.id })
+          });
+          this.loading = false;
+
+        },
+        error:err => {
+          this.loading = false;
+
+        }
+      })
 
     }
+    this.addBranchGroupForm.get("companyBranches")?.valueChanges.subscribe(data => {
+      
+      this.loading = true;
+
+      this.zonesService.CompanyBranchGetById({branchId:data.key}).subscribe({
+        next:res => {
+          
+          this.addBranchGroupForm.get("name")?.setValue(res.data.name);
+
+          this.latitude = res.data?.latitude;
+          this.longitude = res.data?.longitude;
+          this.getControl("latitude")?.setValue(this.latitude);
+          this.getControl("longitude")?.setValue(this.longitude);
+          this.markers = [{
+            latitude: this.latitude,
+            longitude: this.longitude,
+            label: 'Point A',
+            draggable: true
+          }]
+          this.loading = false;
+
+        },
+        error:err => {
+          this.loading = false;
+
+        }
+      })
+    })
     this.addBranchGroupForm.get("radius")?.valueChanges.subscribe(data => {
       if (this.markers.length > 0) {
         this.radius = data;
@@ -261,9 +295,126 @@ export class AddZoneComponent {
     })
 
   }
+  
+  private checkLocationPermission() {
+    
+    if (navigator.permissions) {
+      
+
+      navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+        
+
+        if (result.state === 'granted') {
+          
+
+          this.getCurrentLocation();
+        } else if (result.state === 'prompt') {
+          
+
+          this.requestLocation();
+        } else {
+          console.log('Geolocation permission denied.');
+        }
+
+        result.onchange = () => {
+          if (result.state === 'granted') {
+            this.getCurrentLocation();
+          }
+        };
+      });
+    } else {
+      this.requestLocation();
+    }
+  }
+
+  private requestLocation() {
+    
+    this.loading = true;
+
+    if ('geolocation' in navigator) {
+      
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          
+
+          this.latitude = position.coords.latitude;
+          this.longitude = position.coords.longitude;
+          this.getControl("latitude")?.setValue(this.latitude);
+          this.getControl("longitude")?.setValue(this.longitude);
+          this.markers = [{
+            latitude: this.latitude,
+            longitude: this.longitude,
+            label: 'Point A',
+            draggable: true
+          }];
+          this.loading = false;
+
+        },
+        (error) => {
+          this.loading = false;
+
+          console.error('Error getting location', error);
+        }
+      );
+    } else {
+      console.error('Geolocation is not available in this browser.');
+    }
+  }
+  private getCurrentLocation() {
+    this.loading = true;
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        
+
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        
+
+        this.getControl("latitude")?.setValue(this.latitude);
+        this.getControl("longitude")?.setValue(this.longitude);
+        this.markers = [{
+          latitude: this.latitude,
+          longitude: this.longitude,
+          label: 'Point A',
+          draggable: true
+        }];
+        this.loading = false;
+
+      },
+      (error) => {
+            this.loading = false;
+
+        console.error('Error getting location', error);
+      }
+    );
+  }
   lastSearchQuery = "";
+  searchDropdown(data: any, type: string) {
 
+    switch (type) {
+      case 'companyBranches':
+        if (data || data === "") {
+          if (data !== this.lastSearchQuery || data === "") {
+            this.lastSearchQuery = data;
+            this.zonesService.CompanyBranch({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+              debounceTime(300),
+              distinctUntilChanged()).subscribe((res: any) => {
+                this.companyBranchesList = [];
+                this.lastSearchQuery = "";
 
+                res?.data?.forEach((jobTitle: any) => {
+                  this.companyBranchesList.push({ name: jobTitle.name, key: jobTitle.id })
+                });
+              });
+          }
+
+        }
+        break;
+      default:
+        break;
+    }
+  }
 
   handleAddressChange(address: Address) {
 

@@ -68,7 +68,7 @@ export class UpdateCompanyComponent {
   companyLogo:any;
   croppedImage: any;
   industries:any[] = [];
-  zoomLevel: number = 10;
+  zoomLevel: number = 15;
   defaultImage = 'assets/img/old_logo.png';
   @ViewChild("searchMapRef") searchMapRef!: ElementRef;
   autoComplete!: google.maps.places.Autocomplete | undefined;
@@ -116,6 +116,7 @@ export class UpdateCompanyComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+    this.checkLocationPermission();
     this.countries = [
       { name: 'عربي', code: 'AR' },
       { name: 'انجليزي', code: 'US' }
@@ -176,6 +177,97 @@ export class UpdateCompanyComponent {
 
       }
     })
+  }
+
+  private requestLocation() {
+    
+    this.loadingData = true;
+    if ('geolocation' in navigator) {
+      
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          
+   
+          this.latitude = position.coords.latitude;
+          this.longitude = position.coords.longitude;
+          this.getControl("HeadquarterLocationLatitude")?.setValue(this.latitude);
+          this.getControl("HeadquarterLocationLongitude")?.setValue(this.longitude);
+          this.markers = [{
+            latitude: this.latitude,
+            longitude: this.longitude,
+            label: 'Point A',
+            draggable: true
+          }];
+          this.loadingData = false;
+
+        },
+        (error) => {
+          this.loadingData = false;
+
+          console.error('Error getting location', error);
+        }
+      );
+    } else {
+      console.error('Geolocation is not available in this browser.');
+    }
+  }
+  private checkLocationPermission() {
+    
+    if (navigator.permissions) {
+      
+
+      navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+        
+
+        if (result.state === 'granted') {
+          
+
+          this.getCurrentLocation();
+        } else if (result.state === 'prompt') {
+          
+
+          this.requestLocation();
+        } else {
+          console.log('Geolocation permission denied.');
+        }
+
+        result.onchange = () => {
+          if (result.state === 'granted') {
+            this.getCurrentLocation();
+          }
+        };
+      });
+    } else {
+      this.requestLocation();
+    }
+  }
+  private getCurrentLocation() {
+    this.loadingData = true;
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        
+    this.loadingData = false;
+
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+        
+   
+        this.getControl("HeadquarterLocationLatitude")?.setValue(this.latitude);
+        this.getControl("HeadquarterLocationLongitude")?.setValue(this.longitude);
+        this.markers = [{
+          latitude: this.latitude,
+          longitude: this.longitude,
+          label: 'Point A',
+          draggable: true
+        }]
+      },
+      (error) => {
+            this.loadingData = false;
+
+        console.error('Error getting location', error);
+      }
+    );
   }
   onMarkerClickEvent(mapLabel: any, mapIndx: number) {
     

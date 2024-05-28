@@ -180,13 +180,7 @@ export class DialogAddAnEmployeeComponent {
     let GetForDropDownZones = this.sectionsService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let countries = this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
 
-    this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
-      next: data => {
-   
-      },
-      error: err => {
-      }
-    });
+  
     combineLatest({
       employeeForDropDown,
       employeesService,
