@@ -35,7 +35,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 @NgModule({
   declarations: [
     SideNavBarComponent,
-    SideNavBarAdminComponent,
     NotPermissionComponent
   ],
   imports: [

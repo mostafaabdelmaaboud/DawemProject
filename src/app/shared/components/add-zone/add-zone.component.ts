@@ -365,12 +365,8 @@ export class AddZoneComponent {
     this.loading = true;
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        
-
         this.latitude = position.coords.latitude;
         this.longitude = position.coords.longitude;
-        
-
         this.getControl("latitude")?.setValue(this.latitude);
         this.getControl("longitude")?.setValue(this.longitude);
         this.markers = [{

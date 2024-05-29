@@ -39,6 +39,7 @@ export class SideNavBarAdminComponent {
   private _mobileQueryListener: () => void;
   listComponents:any[] = [];
   router = inject(Router);
+
   // private dialog = inject(MatDialog);
   public permissionsService = inject(PermissionsService);
   public dashboardService = inject(DashboardService);
@@ -64,14 +65,25 @@ export class SideNavBarAdminComponent {
   loadingNotification = false;
   notificationList: any[] = [];
   selectedTabIndex = 1;
+  showLinks:any[] = [
+    {screenCode:0, checkScreen:false},
+    {screenCode:1, checkScreen:false},
+    {screenCode:2, checkScreen:false},
+    {screenCode:3, checkScreen:false},
+    {screenCode:4, checkScreen:false},
+    {screenCode:5, checkScreen:false},
+    {screenCode:6, checkScreen:false},
+    {screenCode:7, checkScreen:false},
+    {screenCode:8, checkScreen:false},
 
+  ]
   constructor(private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     public translate: TranslateService,
     public authService: AuthService,
     private notificationService: NotificationService,
     private fb:FormBuilder,
     private formatDateService: FormatDateService,
-    private permissionsUserService: PermissionsUserService) {
+    public permissionsUserService: PermissionsUserService) {
     this.mobileQuery = media.matchMedia('(max-width: 1050px)');
 
     this._mobileQueryListener = () => {
@@ -101,10 +113,159 @@ export class SideNavBarAdminComponent {
       return permissionsString;
     }
   }
+  ngOnInit(): void {
+    let permission = JSON.parse(localStorage.getItem('adminPermissions') as string)
+    this.isAdmin = permission?.isAdmin;
+    // this.notificationService.getNotification().subscribe(data => {
+    //   this.numNotification = data?.NotificationData?.UnViewdNotificationCount;
+    // });
+    // this.notificationService.getUnViewedNotificationCount().subscribe(data => {
+    //   this.numNotification = data?.toString() === "0" ? "": data?.toString();
+    // });
+
+
+
+    // this.getUnViewedNotificationCount();
+    // this.formGroupUnRead.get("unRead")?.valueChanges.subscribe(data => {
+      
+    //   this.unReadView = data;
+    //   this.notificationFilter = {
+    //     PageNumber: 0,
+    //     PageSize: 5,
+    //     PagingEnabled:true
+    //   };
+    //   this.notificationList = [];
+    //   this.numberNotification(false,this.unReadView)
+    // })
+    if (this.currentLang === undefined || this.currentLang === null) {
+      this.countries = [
+        { name: 'عربي', code: 'AR' },
+        { name: 'انجليزي', code: 'US' }
+        // { name: 'الهند', code: 'IN' }
+      ];
+      this.selectedCountry = { name: 'عربي', code: 'AR' };
+      document.documentElement.setAttribute('lang', 'ar');
+      this.translate.use("ar");
+      this.sideNavPosition="end";
+
+    } else {
+
+   
+      this.selectedCountry = { name: 'arabic', code: 'AR' };
+
+      if (this.currentLang == "ar") {
+        document.documentElement.setAttribute('lang', 'ar');
+        this.translate.use("ar");
+        this.countries = [
+          { name: 'عربي', code: 'AR' },
+          { name: 'انجليزي', code: 'US' }
+          // { name: 'الهند', code: 'IN' }
+        ];
+        this.selectedCountry = { name: 'عربي', code: 'AR' };
+        this.sideNavPosition="end";
+
+      }
+      else if (this.currentLang == "en") {
+        this.selectedCountry = { name: 'english', code: 'US' };
+        document.documentElement.setAttribute('lang', 'en');
+        this.translate.use("en");
+        this.countries = [
+          { name: 'english', code: 'US' },
+          { name: 'arabic', code: 'AR' }
+          // { name: 'India', code: 'IN' }
+        ];
+        this.selectedCountry = { name: 'english', code: 'US' };
+        this.sideNavPosition="start";
+
+      } 
+      // else if (this.currentLang == "ind") {
+      //   this.selectedCountry = { name: 'India', code: 'IN' };
+      //   document.documentElement.setAttribute('lang', 'en');
+      //   this.translate.use("ind");
+      //   this.countries = [
+      //     { name: 'India', code: 'IN' },
+
+      //     { name: 'arabic', code: 'AR' },
+      //     { name: 'english', code: 'US' }
+      //   ];
+      //   this.selectedCountry = { name: 'India', code: 'IN' };
+
+      // }
+
+    }
+
+    if (!this.getPermissions()) {
+      localStorage.removeItem("user");
+      localStorage.removeItem("Admintoken");
+      localStorage.removeItem("usersMe");
+      localStorage.removeItem("adminPermissions");
+      this.router.navigate(["./adminPanel/login"]);
+    }
+    if (this.mobileQuery.matches) {
+      this.opened = false;
+    } else {
+      this.opened = true;
+
+    }
+    let usersMe: any = JSON.parse(localStorage.getItem("usersMe") as string);
+    if (usersMe) {
+      this.usersMe = usersMe;
+    }
+    if (this.currentLang === undefined || this.currentLang === null) {
+      document.documentElement.setAttribute('lang', 'ar');
+
+    } else {
+      if (this.currentLang == "ar") {
+        document.documentElement.setAttribute('lang', 'ar');
+        this.localization = false;
+      }
+      else {
+        document.documentElement.setAttribute('lang', 'en');
+        this.localization = true;
+      }
+    }
+    this.showLinks =  [
+      {screenCode:0, checkScreen:false},
+      {screenCode:1, checkScreen:false},
+      {screenCode:2, checkScreen:false},
+      {screenCode:3, checkScreen:false},
+      {screenCode:4, checkScreen:false},
+      {screenCode:5, checkScreen:false},
+      {screenCode:6, checkScreen:false},
+      {screenCode:7, checkScreen:false},
+      {screenCode:8, checkScreen:false},
+  
+    ];
+    this.checkLink(0);
+    this.checkLink(1);
+    this.checkLink(2);
+    this.checkLink(3);
+    this.checkLink(4);
+    this.checkLink(5);
+    this.checkLink(6);
+    this.checkLink(7);
+    this.checkLink(8);
+
+    // admin names
+    // this.dashboardService.getInformationProfile().subscribe(data => {
+    //   this.profile = data;
+    // })
+  }
+
+
+  checkLink(number) {
+    if(this.showComponent({screenCode:number})) {
+      let findIndexShowLink = this.showLinks.findIndex(link => link.screenCode === number);
+      if(findIndexShowLink >=0) {
+        this.showLinks[findIndexShowLink].checkScreen = true;
+
+      }
+    }
+  }
+
   showComponent(data: any) {
     if(localStorage.getItem('adminPermissions')) {
       return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: data.screenCode })
-
     } else {
       return ""
     }
@@ -399,123 +560,7 @@ export class SideNavBarAdminComponent {
     
 
   }
-  ngOnInit(): void {
-    let permission = JSON.parse(localStorage.getItem('adminPermissions') as string)
-    this.isAdmin = permission?.isAdmin;
-    // this.notificationService.getNotification().subscribe(data => {
-    //   this.numNotification = data?.NotificationData?.UnViewdNotificationCount;
-    // });
-    // this.notificationService.getUnViewedNotificationCount().subscribe(data => {
-    //   this.numNotification = data?.toString() === "0" ? "": data?.toString();
-    // });
-
-
-
-    // this.getUnViewedNotificationCount();
-    // this.formGroupUnRead.get("unRead")?.valueChanges.subscribe(data => {
-      
-    //   this.unReadView = data;
-    //   this.notificationFilter = {
-    //     PageNumber: 0,
-    //     PageSize: 5,
-    //     PagingEnabled:true
-    //   };
-    //   this.notificationList = [];
-    //   this.numberNotification(false,this.unReadView)
-    // })
-    if (this.currentLang === undefined || this.currentLang === null) {
-      this.countries = [
-        { name: 'عربي', code: 'AR' },
-        { name: 'انجليزي', code: 'US' }
-        // { name: 'الهند', code: 'IN' }
-      ];
-      this.selectedCountry = { name: 'عربي', code: 'AR' };
-      document.documentElement.setAttribute('lang', 'ar');
-      this.translate.use("ar");
-      this.sideNavPosition="end";
-
-    } else {
-
-   
-      this.selectedCountry = { name: 'arabic', code: 'AR' };
-
-      if (this.currentLang == "ar") {
-        document.documentElement.setAttribute('lang', 'ar');
-        this.translate.use("ar");
-        this.countries = [
-          { name: 'عربي', code: 'AR' },
-          { name: 'انجليزي', code: 'US' }
-          // { name: 'الهند', code: 'IN' }
-        ];
-        this.selectedCountry = { name: 'عربي', code: 'AR' };
-        this.sideNavPosition="end";
-
-      }
-      else if (this.currentLang == "en") {
-        this.selectedCountry = { name: 'english', code: 'US' };
-        document.documentElement.setAttribute('lang', 'en');
-        this.translate.use("en");
-        this.countries = [
-          { name: 'english', code: 'US' },
-          { name: 'arabic', code: 'AR' }
-          // { name: 'India', code: 'IN' }
-        ];
-        this.selectedCountry = { name: 'english', code: 'US' };
-        this.sideNavPosition="start";
-
-      } 
-      // else if (this.currentLang == "ind") {
-      //   this.selectedCountry = { name: 'India', code: 'IN' };
-      //   document.documentElement.setAttribute('lang', 'en');
-      //   this.translate.use("ind");
-      //   this.countries = [
-      //     { name: 'India', code: 'IN' },
-
-      //     { name: 'arabic', code: 'AR' },
-      //     { name: 'english', code: 'US' }
-      //   ];
-      //   this.selectedCountry = { name: 'India', code: 'IN' };
-
-      // }
-
-    }
-
-    if (!this.getPermissions()) {
-      localStorage.removeItem("user");
-      localStorage.removeItem("Admintoken");
-      localStorage.removeItem("usersMe");
-      localStorage.removeItem("adminPermissions");
-      this.router.navigate(["./adminPanel/login"]);
-    }
-    if (this.mobileQuery.matches) {
-      this.opened = false;
-    } else {
-      this.opened = true;
-
-    }
-    let usersMe: any = JSON.parse(localStorage.getItem("usersMe") as string);
-    if (usersMe) {
-      this.usersMe = usersMe;
-    }
-    if (this.currentLang === undefined || this.currentLang === null) {
-      document.documentElement.setAttribute('lang', 'ar');
-
-    } else {
-      if (this.currentLang == "ar") {
-        document.documentElement.setAttribute('lang', 'ar');
-        this.localization = false;
-      }
-      else {
-        document.documentElement.setAttribute('lang', 'en');
-        this.localization = true;
-      }
-    }
-
-    // admin names
-    // this.dashboardService.getInformationProfile().subscribe(data => {
-    //   this.profile = data;
-    // })
-  }
+ 
   getUnViewedNotificationCount() {
     this.notificationService.dataUnViewedNotificationCount().subscribe(data => {
       this.notificationService.setUnViewedNotificationCount(data.data);

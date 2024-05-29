@@ -5,11 +5,14 @@
   <mat-sidenav style="background-color: white;" [(opened)]="opened" [mode]="mobileQuery.matches ? 'over' : 'side'"
     [position]="sideNavPosition">
     <span class="logo"><img src="assets/img/Link.png" alt="logo"></span>
-    <mat-list-item>
       <nz-layout>
         <nz-sider>
-          <ul nz-menu nzMode="inline">
-              <li *ngIf="showComponent({screenCode:0})" nz-menu-item routerLink="/admin/Companies"
+
+            <ul nz-menu nzMode="inline">
+ 
+              <ng-container *ngFor="let link of showLinks">
+                
+                <li *ngIf="link.screenCode === 0 && link.checkScreen" nz-menu-item routerLink="/admin/Companies"
                 routerLinkActive="ant-menu-item-selected">
                 <!-- الشركات -->
                 <span nz-icon></span>
@@ -25,7 +28,7 @@
                 </svg>
                 <span class="text-sidebar">{{componentName({screenCode:0})}}</span>
               </li>
-              <li *ngIf="showComponent({screenCode:1})" nz-menu-item routerLink="/admin/userPermissions"
+              <li *ngIf="link.screenCode === 1 && link.checkScreen" nz-menu-item routerLink="/admin/userPermissions"
               routerLinkActive="ant-menu-item-selected">
               <!-- الصلاحيات -->
               <span nz-icon></span>
@@ -36,7 +39,7 @@
               </svg>
               <span class="text-sidebar">{{componentName({screenCode:1})}}</span>
             </li>
-              <li *ngIf="showComponent({screenCode:2})" nz-menu-item routerLink="/admin/PermissionLog"
+              <li *ngIf="link.screenCode === 2 && link.checkScreen" nz-menu-item routerLink="/admin/PermissionLog"
                 routerLinkActive="ant-menu-item-selected">
                 <!-- سجلات الصلاحيات -->
                 <span nz-icon></span>
@@ -58,7 +61,7 @@
                 </svg>
                 <span class="text-sidebar">{{componentName({screenCode:2})}}</span>
               </li>
-              <li *ngIf="showComponent({screenCode:3})" nz-menu-item routerLink="/admin/responsibility"
+              <li *ngIf="link.screenCode === 3 && link.checkScreen" nz-menu-item routerLink="/admin/responsibility"
               routerLinkActive="ant-menu-item-selected">
                               <!-- المسؤوليات -->
               <span nz-icon></span>
@@ -69,7 +72,7 @@
               </svg>
               <span class="text-sidebar">{{componentName({screenCode:3})}}</span>
             </li>
-              <li *ngIf="showComponent({screenCode:4})" nz-menu-item routerLink="/admin/plans"
+              <li *ngIf="link.screenCode === 4 && link.checkScreen" nz-menu-item routerLink="/admin/plans"
               routerLinkActive="ant-menu-item-selected">
                                 <!-- الخطط -->
               <span nz-icon></span>
@@ -88,7 +91,7 @@
               </svg>
               <span class="text-sidebar">{{componentName({screenCode:4})}}</span>
             </li>
-              <li *ngIf="showComponent({screenCode:5})" nz-menu-item routerLink="/admin/subscriptions"
+              <li *ngIf="link.screenCode === 5 && link.checkScreen" nz-menu-item routerLink="/admin/subscriptions"
                 routerLinkActive="ant-menu-item-selected">
                   <!-- الإشتراكات -->
                 <span nz-icon></span>
@@ -99,7 +102,7 @@
                 </svg>
                 <span class="text-sidebar">{{componentName({screenCode:5})}}</span>
               </li>
-              <li *ngIf="showComponent({screenCode:6})" nz-menu-item routerLink="/admin/users"
+              <li *ngIf="link.screenCode === 6 && link.checkScreen" nz-menu-item routerLink="/admin/users"
               routerLinkActive="ant-menu-item-selected">
                                 <!-- المستخدمين -->
               <span nz-icon></span>
@@ -117,7 +120,7 @@
               </svg>
               <span class="text-sidebar">{{componentName({screenCode:6})}}</span>
             </li>
-              <li *ngIf="showComponent({screenCode:7})" nz-menu-item routerLink="/admin/subscriptionsPayments"
+              <li *ngIf="link.screenCode === 7 && link.checkScreen" nz-menu-item routerLink="/admin/subscriptionsPayments"
               routerLinkActive="ant-menu-item-selected">
                   <!-- مدفوعات الإشتراكات -->
               <span nz-icon></span>
@@ -128,7 +131,7 @@
               </svg>
               <span class="text-sidebar">{{componentName({screenCode:7})}}</span>
             </li>
-            <li *ngIf="showComponent({screenCode:8})" nz-menu-item routerLink="/admin/settings"
+            <li *ngIf="link.screenCode === 8 && link.checkScreen" nz-menu-item routerLink="/admin/settings"
             routerLinkActive="ant-menu-item-selected">
                 <!-- مدفوعات الإشتراكات -->
             <span nz-icon></span>
@@ -139,194 +142,41 @@
             </svg>
             <span class="text-sidebar">{{componentName({screenCode:8})}}</span>
           </li>
-            <!-- <ng-container *ngIf="isAdmin">
-       
-              <li nz-menu-item routerLink="/admin/Companies" routerLinkActive="ant-menu-item-selected">
-                <span nz-icon></span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                  <g id="Linear / Essentional, UI / Home Smile">
-                    <path id="Vector"
-                      d="M1.5 9.79796C1.5 8.08164 1.5 7.22348 1.8894 6.51208C2.2788 5.80068 2.99021 5.35915 4.41303 4.47611L5.91302 3.54517C7.41704 2.61174 8.16905 2.14502 9 2.14502C9.83095 2.14502 10.583 2.61174 12.087 3.54517L13.587 4.47611C15.0098 5.35915 15.7212 5.80068 16.1106 6.51208C16.5 7.22348 16.5 8.08164 16.5 9.79796V10.9387C16.5 13.8644 16.5 15.3272 15.6213 16.2361C14.7426 17.145 13.3284 17.145 10.5 17.145H7.5C4.67157 17.145 3.25736 17.145 2.37868 16.2361C1.5 15.3272 1.5 13.8644 1.5 10.9387V9.79796Z"
-                      stroke="#3085FE" stroke-width="1.2" />
-                    <path id="Vector_2"
-                      d="M6.75 12.645C7.38778 13.1178 8.16342 13.395 9 13.395C9.83658 13.395 10.6122 13.1178 11.25 12.645"
-                      stroke="#3085FE" stroke-width="1.2" stroke-linecap="round" />
-                  </g>
-                </svg>
-                <span class="text-sidebar">{{'sideNav.companies' | translate}}</span>
+              </ng-container>
+              <li nz-menu-item class="users-sidebar">
+  
+                <div class="users d-flex align-items-center">
+                  <ul class="list-unstyled ul-users p-0 m-0 d-flex">
+  
+                    <li class="user">
+                      <img src="assets/img/noti1.png" alt="noti1">
+                    </li>
+                    <li class="user">
+                      <img src="assets/img/noti2.png" alt="noti2">
+                    </li>
+                    <li class="user">
+                      <img src="assets/img/noti3.png" alt="noti3">
+                    </li>
+                    <li class="user">
+                      <img src="assets/img/noti4.png" alt="noti4">
+                    </li>
+                    <li class="user">
+                      <img src="assets/img/noti5.png" alt="noti5">
+                    </li>
+                    <li class="user">
+                      <img src="assets/img/noti6.png" alt="noti6">
+                    </li>
+                    <li class="add">
+                      +
+                    </li>
+                  </ul>
+                </div>
               </li>
-              <li nz-menu-item routerLink="/admin/userPermissions" routerLinkActive="ant-menu-item-selected">
-                <span nz-icon></span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                  <path fill-rule="evenodd" clip-rule="evenodd"
-                    d="M2.25 5.20752C2.25 4.89686 2.50184 4.64502 2.8125 4.64502H15.5625C15.8732 4.64502 16.125 4.89686 16.125 5.20752C16.125 5.51818 15.8732 5.77002 15.5625 5.77002H2.8125C2.50184 5.77002 2.25 5.51818 2.25 5.20752ZM15.9085 8.51399C16.1534 8.70505 16.1971 9.05852 16.006 9.30347L13.081 13.0535C12.9766 13.1873 12.8174 13.2669 12.6477 13.2699C12.478 13.273 12.316 13.1993 12.2068 13.0693L10.6318 11.1943C10.432 10.9564 10.4628 10.6016 10.7007 10.4018C10.9386 10.202 11.2934 10.2329 11.4932 10.4707L12.6213 11.8137L15.119 8.61156C15.31 8.36661 15.6635 8.32292 15.9085 8.51399ZM2.25 8.95752C2.25 8.64686 2.50184 8.39502 2.8125 8.39502H8.0625C8.37316 8.39502 8.625 8.64686 8.625 8.95752C8.625 9.26818 8.37316 9.52002 8.0625 9.52002H2.8125C2.50184 9.52002 2.25 9.26818 2.25 8.95752ZM2.25 12.7075C2.25 12.3969 2.50184 12.145 2.8125 12.145H8.0625C8.37316 12.145 8.625 12.3969 8.625 12.7075C8.625 13.0182 8.37316 13.27 8.0625 13.27H2.8125C2.50184 13.27 2.25 13.0182 2.25 12.7075Z"
-                    fill="#334155" stroke="#334155" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                <span class="text-sidebar">{{'sideNav.permissions' | translate}}</span>
-              </li>
-              <li nz-menu-item routerLink="/admin/PermissionLog" routerLinkActive="ant-menu-item-selected">
-                <span nz-icon></span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                  <g id="Linear / Electronic, Devices / Server">
-                    <path id="Vector"
-                      d="M1.5 12.895C1.5 11.4808 1.5 10.7737 1.93934 10.3344C2.37868 9.89502 3.08579 9.89502 4.5 9.89502H13.5C14.9142 9.89502 15.6213 9.89502 16.0607 10.3344C16.5 10.7737 16.5 11.4808 16.5 12.895C16.5 14.3092 16.5 15.0163 16.0607 15.4557C15.6213 15.895 14.9142 15.895 13.5 15.895H4.5C3.08579 15.895 2.37868 15.895 1.93934 15.4557C1.5 15.0163 1.5 14.3092 1.5 12.895Z"
-                      stroke="#334155" stroke-width="1.2" />
-                    <path id="Vector_2"
-                      d="M1.5 4.64502C1.5 3.23081 1.5 2.5237 1.93934 2.08436C2.37868 1.64502 3.08579 1.64502 4.5 1.64502H13.5C14.9142 1.64502 15.6213 1.64502 16.0607 2.08436C16.5 2.5237 16.5 3.23081 16.5 4.64502C16.5 6.05923 16.5 6.76634 16.0607 7.20568C15.6213 7.64502 14.9142 7.64502 13.5 7.64502H4.5C3.08579 7.64502 2.37868 7.64502 1.93934 7.20568C1.5 6.76634 1.5 6.05923 1.5 4.64502Z"
-                      stroke="#334155" stroke-width="1.2" />
-                    <path id="Vector_3" d="M8.25 4.64502H13.5" stroke="#334155" stroke-width="1.2"
-                      stroke-linecap="round" />
-                    <path id="Vector_4" d="M4.5 4.64502H6" stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                    <path id="Vector_5" d="M8.25 12.895H13.5" stroke="#334155" stroke-width="1.2"
-                      stroke-linecap="round" />
-                    <path id="Vector_6" d="M4.5 12.895H6" stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                  </g>
-                </svg>
-                <span class="text-sidebar">{{'sideNav.permissionsRecords' | translate}}</span>
-              </li>
-              <li nz-menu-item routerLink="/admin/responsibility" routerLinkActive="ant-menu-item-selected">
-                <span nz-icon></span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                  <path fill-rule="evenodd" clip-rule="evenodd"
-                    d="M2.25 5.20752C2.25 4.89686 2.50184 4.64502 2.8125 4.64502H15.5625C15.8732 4.64502 16.125 4.89686 16.125 5.20752C16.125 5.51818 15.8732 5.77002 15.5625 5.77002H2.8125C2.50184 5.77002 2.25 5.51818 2.25 5.20752ZM15.9085 8.51399C16.1534 8.70505 16.1971 9.05852 16.006 9.30347L13.081 13.0535C12.9766 13.1873 12.8174 13.2669 12.6477 13.2699C12.478 13.273 12.316 13.1993 12.2068 13.0693L10.6318 11.1943C10.432 10.9564 10.4628 10.6016 10.7007 10.4018C10.9386 10.202 11.2934 10.2329 11.4932 10.4707L12.6213 11.8137L15.119 8.61156C15.31 8.36661 15.6635 8.32292 15.9085 8.51399ZM2.25 8.95752C2.25 8.64686 2.50184 8.39502 2.8125 8.39502H8.0625C8.37316 8.39502 8.625 8.64686 8.625 8.95752C8.625 9.26818 8.37316 9.52002 8.0625 9.52002H2.8125C2.50184 9.52002 2.25 9.26818 2.25 8.95752ZM2.25 12.7075C2.25 12.3969 2.50184 12.145 2.8125 12.145H8.0625C8.37316 12.145 8.625 12.3969 8.625 12.7075C8.625 13.0182 8.37316 13.27 8.0625 13.27H2.8125C2.50184 13.27 2.25 13.0182 2.25 12.7075Z"
-                    fill="#334155" stroke="#334155" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                <span class="text-sidebar">{{'sideNav.responsibility' | translate}}</span>
-              </li>
-              <li nz-menu-item routerLink="/admin/plans" routerLinkActive="ant-menu-item-selected">
-                <span nz-icon></span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                  <path
-                    d="M10.5 4.64502H7.5C6.4831 4.64502 5.64899 4.64502 4.95686 4.68585C3.72389 4.7586 2.94145 4.96093 2.37868 5.5237C1.5 6.40238 1.5 7.81659 1.5 10.645C1.5 13.4734 1.5 14.8877 2.37868 15.7663C3.25736 16.645 4.67157 16.645 7.5 16.645H10.5C13.3284 16.645 14.7426 16.645 15.6213 15.7663C16.5 14.8877 16.5 13.4734 16.5 10.645C16.5 7.81659 16.5 6.40238 15.6213 5.5237C15.0586 4.96093 14.2761 4.7586 13.0431 4.68585C12.351 4.64502 11.5169 4.64502 10.5 4.64502Z"
-                    stroke="#334155" stroke-width="1.2" />
-                  <path
-                    d="M4.95703 4.68585C5.57461 4.6702 6.11944 4.2362 6.32958 3.65526C6.33605 3.63739 6.34267 3.61751 6.35593 3.57775L6.37517 3.52002C6.40681 3.4251 6.42263 3.37762 6.43956 3.33552C6.65571 2.79786 7.16221 2.43279 7.74063 2.39776C7.78593 2.39502 7.83596 2.39502 7.93602 2.39502H10.0643C10.1644 2.39502 10.2144 2.39502 10.2597 2.39776C10.8381 2.43279 11.3446 2.79786 11.5608 3.33552C11.5777 3.37763 11.5935 3.42509 11.6252 3.52002L11.6444 3.57775C11.6576 3.61746 11.6643 3.6374 11.6708 3.65526C11.8809 4.2362 12.4257 4.6702 13.0433 4.68585"
-                    stroke="#334155" stroke-width="1.2" />
-                  <path
-                    d="M16.2465 6.68481C13.9891 8.15211 12.8604 8.88576 11.6705 9.25545C9.9313 9.79581 8.06907 9.79581 6.32985 9.25545C5.13997 8.88576 4.01128 8.15211 1.75391 6.68481"
-                    stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                  <path d="M6 8.39502V9.89502" stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                  <path d="M12 8.39502V9.89502" stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                </svg>
-                <span class="text-sidebar">{{'sideNav.plans' | translate}}</span>
-              </li>
-              <li nz-menu-item routerLink="/admin/employees" routerLinkActive="ant-menu-item-selected">
-                <span nz-icon></span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                  <circle cx="9" cy="5.14502" r="3" stroke="#334155" stroke-width="1.2" />
-                  <path
-                    d="M13.5 7.39502C14.7426 7.39502 15.75 6.55555 15.75 5.52002C15.75 4.48449 14.7426 3.64502 13.5 3.64502"
-                    stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                  <path
-                    d="M4.5 7.39502C3.25736 7.39502 2.25 6.55555 2.25 5.52002C2.25 4.48449 3.25736 3.64502 4.5 3.64502"
-                    stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                  <ellipse cx="9" cy="13.395" rx="4.5" ry="3" stroke="#334155" stroke-width="1.2" />
-                  <path d="M15 14.895C16.3157 14.6065 17.25 13.8758 17.25 13.02C17.25 12.1642 16.3157 11.4335 15 11.145"
-                    stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                  <path d="M3 14.895C1.68431 14.6065 0.75 13.8758 0.75 13.02C0.75 12.1642 1.68431 11.4335 3 11.145"
-                    stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                </svg>
-                <span class="text-sidebar">{{'sideNav.subscriptions' | translate}}</span>
-              </li>
-              <li nz-menu-item routerLink="/admin/users" routerLinkActive="ant-menu-item-selected">
-                <span nz-icon></span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                  <circle cx="6.75" cy="6.89502" r="1.5" stroke="#334155" stroke-width="1.2" />
-                  <path
-                    d="M9.75 11.395C9.75 12.2234 9.75 12.895 6.75 12.895C3.75 12.895 3.75 12.2234 3.75 11.395C3.75 10.5666 5.09315 9.89502 6.75 9.89502C8.40685 9.89502 9.75 10.5666 9.75 11.395Z"
-                    stroke="#334155" stroke-width="1.2" />
-                  <path
-                    d="M1.5 9.14502C1.5 6.31659 1.5 4.90238 2.37868 4.0237C3.25736 3.14502 4.67157 3.14502 7.5 3.14502H10.5C13.3284 3.14502 14.7426 3.14502 15.6213 4.0237C16.5 4.90238 16.5 6.31659 16.5 9.14502C16.5 11.9734 16.5 13.3877 15.6213 14.2663C14.7426 15.145 13.3284 15.145 10.5 15.145H7.5C4.67157 15.145 3.25736 15.145 2.37868 14.2663C1.5 13.3877 1.5 11.9734 1.5 9.14502Z"
-                    stroke="#334155" stroke-width="1.2" />
-                  <path d="M14.25 9.14502H11.25" stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                  <path d="M14.25 6.89502H10.5" stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                  <path d="M14.25 11.395H12" stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                </svg>
-                <span class="text-sidebar">{{'sideNav.users' | translate}}</span>
-              </li>
-              <li nz-menu-item routerLink="/admin/employment" routerLinkActive="ant-menu-item-selected">
-                <span nz-icon></span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                  <circle cx="9" cy="9.14502" r="7.5" stroke="#334155" stroke-width="1.2" />
-                  <path d="M9 6.14502V9.14502L10.875 11.02" stroke="#334155" stroke-width="1.2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                </svg>
-                <span class="text-sidebar">{{'sideNav.subscriptionPayments' | translate}}</span>
-              </li>
-
-            </ng-container> -->
-
-            <!-- <li nz-menu-item routerLink="/user/officials" routerLinkActive="ant-menu-item-selected">
-                          <span nz-icon></span>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                            <circle cx="6.75" cy="6.89502" r="1.5" stroke="#334155" stroke-width="1.2" />
-                            <path
-                              d="M9.75 11.395C9.75 12.2234 9.75 12.895 6.75 12.895C3.75 12.895 3.75 12.2234 3.75 11.395C3.75 10.5666 5.09315 9.89502 6.75 9.89502C8.40685 9.89502 9.75 10.5666 9.75 11.395Z"
-                              stroke="#334155" stroke-width="1.2" />
-                            <path
-                              d="M1.5 9.14502C1.5 6.31659 1.5 4.90238 2.37868 4.0237C3.25736 3.14502 4.67157 3.14502 7.5 3.14502H10.5C13.3284 3.14502 14.7426 3.14502 15.6213 4.0237C16.5 4.90238 16.5 6.31659 16.5 9.14502C16.5 11.9734 16.5 13.3877 15.6213 14.2663C14.7426 15.145 13.3284 15.145 10.5 15.145H7.5C4.67157 15.145 3.25736 15.145 2.37868 14.2663C1.5 13.3877 1.5 11.9734 1.5 9.14502Z"
-                              stroke="#334155" stroke-width="1.2" />
-                            <path d="M14.25 9.14502H11.25" stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                            <path d="M14.25 6.89502H10.5" stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                            <path d="M14.25 11.395H12" stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                          </svg>
-                          <span class="text-sidebar">المسوْولون</span>
-                        </li> -->
-            <!-- <li *ngIf="showComponent({screenCode:33})" nz-menu-item routerLink="/user/officials"
-              routerLinkActive="ant-menu-item-selected">
-              <span nz-icon></span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
-                <circle cx="6.75" cy="6.89502" r="1.5" stroke="#334155" stroke-width="1.2" />
-                <path
-                  d="M9.75 11.395C9.75 12.2234 9.75 12.895 6.75 12.895C3.75 12.895 3.75 12.2234 3.75 11.395C3.75 10.5666 5.09315 9.89502 6.75 9.89502C8.40685 9.89502 9.75 10.5666 9.75 11.395Z"
-                  stroke="#334155" stroke-width="1.2" />
-                <path
-                  d="M1.5 9.14502C1.5 6.31659 1.5 4.90238 2.37868 4.0237C3.25736 3.14502 4.67157 3.14502 7.5 3.14502H10.5C13.3284 3.14502 14.7426 3.14502 15.6213 4.0237C16.5 4.90238 16.5 6.31659 16.5 9.14502C16.5 11.9734 16.5 13.3877 15.6213 14.2663C14.7426 15.145 13.3284 15.145 10.5 15.145H7.5C4.67157 15.145 3.25736 15.145 2.37868 14.2663C1.5 13.3877 1.5 11.9734 1.5 9.14502Z"
-                  stroke="#334155" stroke-width="1.2" />
-                <path d="M14.25 9.14502H11.25" stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                <path d="M14.25 6.89502H10.5" stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-                <path d="M14.25 11.395H12" stroke="#334155" stroke-width="1.2" stroke-linecap="round" />
-              </svg>
-              <span class="text-sidebar">الأجهزة</span>
-            </li> -->
-
-
-
-
-            <li nz-menu-item class="users-sidebar">
-
-              <div class="users d-flex align-items-center">
-                <ul class="list-unstyled ul-users p-0 m-0 d-flex">
-
-                  <li class="user">
-                    <img src="assets/img/noti1.png" alt="noti1">
-                  </li>
-                  <li class="user">
-                    <img src="assets/img/noti2.png" alt="noti2">
-                  </li>
-                  <li class="user">
-                    <img src="assets/img/noti3.png" alt="noti3">
-                  </li>
-                  <li class="user">
-                    <img src="assets/img/noti4.png" alt="noti4">
-                  </li>
-                  <li class="user">
-                    <img src="assets/img/noti5.png" alt="noti5">
-                  </li>
-                  <li class="user">
-                    <img src="assets/img/noti6.png" alt="noti6">
-                  </li>
-                  <li class="add">
-                    +
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
+            </ul>
+      
         </nz-sider>
 
       </nz-layout>
-    </mat-list-item>
   </mat-sidenav>
   <mat-sidenav-content [style]="
   translate.currentLang === 'ar' &&
@@ -640,6 +490,7 @@
       </mat-toolbar-row>
     </mat-toolbar>
     <div style="margin-top:1px;">
+
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>
