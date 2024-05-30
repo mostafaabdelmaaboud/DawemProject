@@ -15,6 +15,16 @@
         <label class="title">{{data!['setAsNecessary']|translate}}</label>
         <p-inputSwitch formControlName="isActive"></p-inputSwitch>
       </div>
+      
+      <ng-container *ngIf="editEmployee">
+        <div class="field-disabled mb-3 readOnly">
+          <label for="" class="label-input mb-2" [innerHTML]="data!['titleFieldDisabled']|translate"></label>
+          <div class="content-password">
+            <input type="text" pInputText formControlName="fieldDisabled" [readOnly]="true"
+              [placeholder]="data!['placeholdeieldDisabled']|translate" class="w-100" />
+          </div>
+        </div>
+      </ng-container>
       <div class="sectionTwo mb-3">
         <label class="title">فروع الشركة</label>
         <div class="content-password">
@@ -35,16 +45,6 @@
         </div>
 
       </div>
-      <ng-container *ngIf="editEmployee">
-        <div class="field-disabled mb-3 readOnly">
-          <label for="" class="label-input mb-2" [innerHTML]="data!['titleFieldDisabled']|translate"></label>
-          <div class="content-password">
-            <input type="text" pInputText formControlName="fieldDisabled" [readOnly]="true"
-              [placeholder]="data!['placeholdeieldDisabled']|translate" class="w-100" />
-          </div>
-        </div>
-      </ng-container>
-
       <div class="sectionField mb-3">
         <label for="" class="label-input mb-2" [innerHTML]="data!['fieldFirst']|translate"></label>
         <div class="content-password">

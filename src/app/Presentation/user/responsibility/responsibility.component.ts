@@ -384,7 +384,9 @@ export class ResponsibilityComponent {
       let formData: any = {};
       formData.name = result.name;
       formData.isActive = result.IsNecessary;
+      formData.forEmployeesApplication = result.forEmployeesApplication;
 
+      
       dialogRefAddCurrency.componentInstance.submitted = false;
 
       this.responsibilityService.createResponsibility(formData).subscribe(
@@ -453,7 +455,9 @@ export class ResponsibilityComponent {
       formData.id = data.id;
       formData.name = result.name;
       formData.isActive = result.IsNecessary;
+      formData.forEmployeesApplication = result.forEmployeesApplication;
 
+      
       dialogRefAddCurrency.componentInstance.submitted = false;
 
       this.responsibilityService.updateResponsibility(formData).subscribe(

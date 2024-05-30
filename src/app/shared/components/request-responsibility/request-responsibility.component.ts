@@ -61,6 +61,7 @@ export class RequestResponsibilityComponent {
   @Input() editJobTitle!: boolean;
   addBranchGroupForm: FormGroup = this.fb.group({
     IsNecessary: [false],
+    forEmployeesApplication: [false],
     name: ["", Validators.required]
   });
   AttachmentsFiles: any[] = [];
@@ -85,6 +86,7 @@ export class RequestResponsibilityComponent {
         {
           next: data => {
             this.addBranchGroupForm.get("IsNecessary")?.setValue(data.isActive);
+            this.addBranchGroupForm.get("forEmployeesApplication")?.setValue(data.forEmployeesApplication);
             this.addBranchGroupForm.get("name")?.setValue(data.name);
             this.loading = false;
           },
