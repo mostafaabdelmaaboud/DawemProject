@@ -141,7 +141,10 @@ export class AddTableComponent {
                 next: data => {
 
                   this.addBranchGroupForm.get("tableName")?.setValue(data.name);
+                
                   data?.scheduleDays?.forEach((day: any) => {
+               
+                  
 
                     (this.addBranchGroupForm.get("weekDays") as FormArray).controls.forEach((control: any, i: number) => {
 
@@ -149,14 +152,29 @@ export class AddTableComponent {
 
                         let getIndexList = this.list.findIndex(dayList => dayList?.weekDay === control.value.weekDay);
                         if (getIndexList >= 0) {
-
-
-                          let getshifts = this.list[getIndexList]?.data.findIndex((shift: any) => shift?.key === day.shiftId);
-                          
-                          if(getshifts >=0) {
-                            this.getFormArray().at(i).get("weekDayValue")?.setValue(this.list[getIndexList]?.data[getshifts]);
-
+                          if(day.shiftId != null) {
+                            this.schedulesService.GetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id:day.shiftId }).subscribe({
+                              next:data => {
+                                this.list[getIndexList].data = [];
+                                data.data.forEach(weekDay=>{
+                                  this.list[i].data.push({ name: weekDay.name, key: weekDay.id })
+  
+                                });
+                                let getshifts = this.list[getIndexList]?.data.findIndex((shift: any) => shift?.key === day.shiftId);
+                            
+                                if(getshifts >=0) {
+                                  this.getFormArray().at(i).get("weekDayValue")?.setValue(this.list[getIndexList]?.data[getshifts]);
+      
+                                }
+                              },
+                              error:err => {
+        
+                              }
+                            });
+  
                           }
+                        
+                     
                 
 
                           (this.getFormArray().at(i) as FormGroup).addControl("id", new FormControl(day.id));
