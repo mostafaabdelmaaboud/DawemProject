@@ -399,8 +399,11 @@ export class PlansComponent {
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editPlane = false;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-
       let formData: any = {};
+      formData.AllScreensAvailable = result.AllScreensAvailable;
+      if(!formData.AllScreensAvailable) {
+        formData.ScreensIds = result.ScreensIds.map(screen => screen.id);
+      }
       formData.NameTranslations = result.NameTranslations.map(translate => {
         return {
           LanguageId: translate.LanguageId.id, 

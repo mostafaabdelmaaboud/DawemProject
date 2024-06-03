@@ -14,7 +14,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PlansService } from '../../services/plans.service';
 import { ToastrService } from 'ngx-toastr';
-import { combineLatest } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 interface addBranchesInputsProps {
   LabelMessage: string;
   inputType: string;
@@ -61,9 +61,13 @@ export class AddPlanComponent {
   loading = false;
 
   @Input() editPlane!: boolean;
+  showAllScreensAvailable = true;
+  listAllScreensAvailable:any[] = [];
   addBranchGroupForm: FormGroup = this.fb.group({
     IsActive: [false],
     IsTrial: [false],
+    AllScreensAvailable:[false],
+    ScreensIds:["", [Validators.required]],
     NameTranslations: this.fb.array([this.createNewTranslate(0,[], false)]),
     MinNumberOfEmployees:["", [Validators.required]],
     MaxNumberOfEmployees:["", [Validators.required]],
@@ -92,12 +96,28 @@ export class AddPlanComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.loading = true;
+    this.addBranchGroupForm.get("AllScreensAvailable")?.valueChanges.subscribe(data => {
+      if(!data) {
+        this.addBranchGroupForm.addControl("ScreensIds", this.fb.control("", Validators.required))
+
+        this.showAllScreensAvailable = true;
+
+      } else {
+
+        this.showAllScreensAvailable = false;
+        this.addBranchGroupForm.removeControl("ScreensIds")
+
+      }
+    })
     if (this.editPlane) {
       let planGetById = this.plansService.planGetById({ planId: this.id });
       let getLanguages = this.plansService.getLanguages(this.filterationLanguages);
+      let screenGetForDropDown = this.plansService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+
       combineLatest({
         planGetById,
-        getLanguages
+        getLanguages,
+        screenGetForDropDown
       }).subscribe({
         next: data => {
           let planGetById = data.planGetById;
@@ -107,6 +127,41 @@ export class AddPlanComponent {
             this.languages.push({ name: country.name, id: country.id });
             this.copyLanguages.push({ name: country.name, id: country.id });
           });
+          // data.screenGetForDropDown.forEach((screen: any) => {
+          //   this.listAllScreensAvailable.push({ name: screen.name, id: screen.id });
+
+          // });
+          
+          this.addBranchGroupForm.get("AllScreensAvailable")?.setValue(planGetById.allScreensAvailable);
+          if(!planGetById.allScreensAvailable) {
+            this.plansService.screenGetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids: planGetById?.screenIds }).subscribe(dataDropdown => {
+              
+              this.listAllScreensAvailable = [];
+              dataDropdown?.forEach((list: any) => {
+                this.listAllScreensAvailable.push({ name: list.name, key: list.id });
+              });
+              planGetById?.screenIds?.forEach((employee: any) => {
+  
+  
+                let indexEmployees = this.listAllScreensAvailable.findIndex(list => list.key === employee);
+  
+  
+                if (indexEmployees >= 0) {
+                  if (Array.isArray(this.getControl("ScreensIds")?.value)) {
+                    this.getControl("ScreensIds")?.patchValue(([{ name: this.listAllScreensAvailable[indexEmployees].name, key: this.listAllScreensAvailable[indexEmployees].key }, ...this.getControl("ScreensIds")?.value]));
+                  } else {
+                    this.getControl("ScreensIds")?.patchValue(([{ name: this.listAllScreensAvailable[indexEmployees].name, key: this.listAllScreensAvailable[indexEmployees].key }]));
+                  }
+                }
+  
+              });
+  
+            });
+          }
+       
+
+          
+
           planGetById.nameTranslations?.forEach((translate, i) => {
             
             if(i === 0) {
@@ -151,6 +206,8 @@ export class AddPlanComponent {
           this.loading = false;
         },
         error:err => {
+          
+
           this.loading = false;
 
         }
@@ -172,8 +229,40 @@ export class AddPlanComponent {
 
     }
     if (!this.editPlane) {
-      this.loading = true;
-      this.getLanguages();
+      let getLanguages = this.plansService.getLanguages(this.filterationLanguages);
+      let screenGetForDropDown = this.plansService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+      combineLatest({
+        getLanguages,
+        screenGetForDropDown
+      }).subscribe({
+        next: data => {
+          let getLanguage = data.getLanguages;
+          
+
+          getLanguage.forEach((country: any) => {
+            
+            this.languages.push({ name: country.name, id: country.id });
+            this.copyLanguages.push({ name: country.name, id: country.id });
+          });
+          this.getControlArray("NameTranslations").at(0).get("languages")?.setValue(this.languages);
+
+          
+          data.screenGetForDropDown.forEach((screen: any) => {
+            
+            this.listAllScreensAvailable.push({ name: screen.name, id: screen.id });
+            // this.copyLanguages.push({ name: country.name, id: country.id });
+          });
+
+          this.loading = false;
+        },
+        error:err => {
+          
+
+          this.loading = false;
+
+        }
+      })
+      // this.getLanguages();
 
     }
 
@@ -222,11 +311,10 @@ export class AddPlanComponent {
         this.getControlArray("NameTranslations").at(index).get("readOnly")?.setValue(true);
   
         let findIdexLanguage = this.copyLanguages.findIndex(language => language.id === this.getControlArray("NameTranslations").at(index).get("LanguageId")?.value?.id);
-        if(findIdexLanguage => 0) {
+        if(findIdexLanguage >= 0) {
           // let deleteLanguages = [...this.copyLanguages];
           this.copyLanguages.splice(findIdexLanguage, 1);
           this.getControlArray("NameTranslations").push(this.createNewTranslate(0,this.copyLanguages, false));
-    
         }
       } else {
         this.getControlArray("NameTranslations").at(index).get("name")?.markAsDirty();
@@ -276,7 +364,9 @@ export class AddPlanComponent {
       this.getControl("MaxNumberOfEmployees")?.markAsDirty();
       this.getControl("EmployeeCost")?.markAsDirty();
       this.getControl("Notes")?.markAsDirty();
+      this.getControl("ScreensIds")?.markAsDirty();
 
+      
     }
 
   }
@@ -285,27 +375,24 @@ export class AddPlanComponent {
   searchDropdown(data: any, type: string) {
 
     switch (type) {
-      case 'JobTitleId':
+      case 'ScreensIds':
         if (data || data === "") {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
-            // this.employeesService.getJobTitles({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-            //   debounceTime(300),
-            //   distinctUntilChanged()).subscribe((res: any) => {
-            //     this.jobTitleFirst = [];
-            //     this.lastSearchQuery = "";
-
-            //     res?.data?.forEach((jobTitle: any) => {
-            //       this.jobTitleFirst.push({ name: jobTitle.name, key: jobTitle.id })
-            //     });
-            //   });
+            this.plansService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+            this.plansService.screenGetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+              debounceTime(300),
+              distinctUntilChanged()).subscribe((res: any) => {
+                this.listAllScreensAvailable = [];
+                this.lastSearchQuery = "";
+                res?.forEach((screen: any) => {
+                  this.listAllScreensAvailable.push({ name: screen.name, key: screen.id })
+                });
+              });
           }
-
         }
         break;
-     
       default:
-        
         break;
     }
   }

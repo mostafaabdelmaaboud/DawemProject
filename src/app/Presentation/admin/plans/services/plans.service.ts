@@ -85,6 +85,24 @@ export class PlansService {
     }
     return this.http.get<any>(`${environment.baseUrl}adminpanel/Plan/GetById`, { params: queryParams }).pipe(map(data => data.data))
   }
+  screenGetForDropDown(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]: any) => {
+        if (key === "ids") {
+          value.forEach((id: any) => {
+            queryParams = queryParams.append(key, id)
+
+          });
+        } else {
+          queryParams = queryParams.set(key, value);
+
+        }
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}adminpanel/Screen/GetForDropDown`, { params: queryParams }).pipe(map(data => data.data));
+  }
   jobTitleTypeDropdown(filter: any) {
     let queryParams = new HttpParams();
     if (filter) {

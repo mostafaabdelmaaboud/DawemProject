@@ -39,6 +39,25 @@
   
       </div>
       <div class="sectionTwo mb-3 line-bellow">
+        <label class="title"> كل الشاشات متاحة ؟</label>
+        <div class="content-password">
+          {{info?.allScreensAvailable ? "نعم" : "لا"}}
+  
+        </div>
+  
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">الشاشات المتاحة</label>
+        <ng-container *ngFor="let screen of info.screens">
+               
+        <div class="content-password content-border">
+            {{screen}}
+          </div>
+        </ng-container>
+     
+  
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
         <label class="title">أقل عدد من الموظفين</label>
         <div class="content-password">
           {{info?.minNumberOfEmployees ? info?.minNumberOfEmployees : "0"}}

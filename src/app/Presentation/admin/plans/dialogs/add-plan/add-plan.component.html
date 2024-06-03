@@ -71,6 +71,45 @@
           </ng-container>
             </div>
           </div>
+
+          <div class="section1 d-flex justify-content-between">
+            <div class="col">
+              <label class="title">كل الشاشات متاحة ؟</label>
+              <p-inputSwitch formControlName="AllScreensAvailable"></p-inputSwitch>
+            </div>
+          </div>
+
+          <div class="sectionTwo mb-3" *ngIf="showAllScreensAvailable">
+            <label class="title">إختر الشاشات المتاحة <span class="color-red">*</span></label>
+            <div class="content-password">
+              <p-multiSelect [options]="listAllScreensAvailable" [filter]="false" appendTo="body"
+                formControlName="ScreensIds" placeholder="إختر الشاشات المتاحة"
+                optionLabel="name">
+                <ng-template pTemplate="header">
+                  <span class="p-input-icon-left input-search-dropdown">
+
+                    <i class="pi pi-search"
+                      (click)="searchDropdown(searchScreensIds.value, 'ScreensIds')"></i>
+                    <input type="text" placeholder="بحث" pInputText #searchScreensIds />
+                  </span>
+                </ng-template>
+                <ng-template let-option pTemplate="item">
+                  {{ option.name }}
+                </ng-template>
+              </p-multiSelect>
+
+            </div>
+            <!--Start Custom Validators-->
+            <div class="container-alerts mt-2" *ngIf="getControl('ScreensIds')?.errors">
+              <div class="alert alert-danger"
+                *ngIf="getControl('ScreensIds')?.hasError('required') && getControl('ScreensIds')?.dirty">
+                 الشاشات المتاحة مطلوبة
+              </div>
+            </div>
+            <!--End Custom Validators-->
+          </div>
+
+
         <div class="sectionFive mb-3">
           <label for="" class="label-input mb-2" >  أقل عدد من الموظفين <span class="color-red">*</span></label>
           <div class="content-password">
