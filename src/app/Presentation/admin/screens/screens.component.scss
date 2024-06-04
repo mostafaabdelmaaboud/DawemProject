@@ -1,0 +1,41 @@
+@media (max-width:520px) {
+
+    :host ::ng-deep .table-basic #screen .p-datatable-tfoot>tr>td {
+      display: block !important;
+    }
+  }
+  
+  .td-green {
+    color: green;
+  }
+  
+  .td-red {
+    color: red;
+  }
+  
+  :host ::ng-deep .p-datatable .p-datatable-thead>tr>th:last-of-type {
+    width: 15% !important;
+  }
+  #screenHidden,
+  .title-table {
+    letter-spacing: normal !important;
+  
+  }
+  .logoTable {
+    img {
+      width: 180px;
+      height: 50px;
+      object-fit: scale-down
+    }
+  }
+  .hideTable {
+    overflow: hidden;
+    height: 0;
+    #screenHidden {
+      position: relative;
+      left: -100%;
+    }
+  }
+  :host ::ng-deep  #screenHidden .p-datatable .p-datatable-header {
+    background-color: white !important;
+  }

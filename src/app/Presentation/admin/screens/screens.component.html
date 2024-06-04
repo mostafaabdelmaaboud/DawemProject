@@ -1,6 +1,6 @@
 <div class="header-comp d-flex align-items-center">
     <span class="title-head">
-      ملخص مجموعات الشاشات
+      ملخص الشاشات
     </span>
     <div class="field-calendar-header">
       <p-calendar [(ngModel)]="date" [showIcon]="true" dateFormat="yy MM"></p-calendar>
@@ -11,7 +11,7 @@
     <div class="row" *ngIf="!spinnerCards">
       <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
         <div class="custom-card-dashboard">
-          <span class="title-card-dashboard Primary-700"> اجمالي مجموعات الشاشات</span>
+          <span class="title-card-dashboard Primary-700"> اجمالي الشاشات</span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
             <span class="number-card-dashboard">{{cards?.totalCount}}</span>
             <span class="icon-card-dashboard">
@@ -34,7 +34,7 @@
       </div>
       <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
         <div class="custom-card-dashboard">
-          <span class="title-card-dashboard Success-700"> مجموعات الشاشات النشطة</span>
+          <span class="title-card-dashboard Success-700"> الشاشات النشطة</span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
             <span class="number-card-dashboard">{{cards?.activeCount}}</span>
             <span class="icon-card-dashboard">
@@ -57,7 +57,7 @@
       </div>
       <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
         <div class="custom-card-dashboard">
-          <span class="title-card-dashboard Warning-700 "> مجموعات الشاشات المعلقة </span>
+          <span class="title-card-dashboard Warning-700 "> الشاشات المعلقة </span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
             <span class="number-card-dashboard">{{cards?.notActiveCount}}</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
@@ -76,7 +76,7 @@
   
       <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
         <div class="custom-card-dashboard">
-          <span class="title-card-dashboard Error-700">مجموعات الشاشات المعطلة</span>
+          <span class="title-card-dashboard Error-700">الشاشات المعطلة</span>
           <div class="body-card-dashboard d-flex align-items-center justify-content-between">
             <span class="number-card-dashboard">{{cards?.deletedCount}}</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
@@ -103,7 +103,7 @@
       <div class="actions-table-basic">
       </div>
     </div> -->
-    <p-table #dt1 [value]="screens" id="screens" [responsiveLayout]="opened ? 'stack' : 'scroll'"
+    <p-table #dt1 [value]="screens" id="screen" [responsiveLayout]="opened ? 'stack' : 'scroll'"
       [responsive]="true" [paginator]="false" [rows]="itemsPerPage" [first]="page" [rows]="10"
       [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
       currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
@@ -115,7 +115,7 @@
       <ng-template pTemplate="caption">
         <div class="custom-header-table d-flex justify-content-between align-items-center">
           <h2 class="title-table m-0">
-            مجموعات الشاشات
+            الشاشات
             <!-- <span class="subTitlte ml-2">(30 FLS )</span> -->
           </h2>
           <div class="custom-filteration d-flex align-items-center">
@@ -188,11 +188,7 @@
                   </div>
                 </form>
               </p-overlayPanel>
-              <button class="btn btn-primary action-button-t d-flex align-items-center"
-                *ngIf="showActions({actionCode:0})" (click)="requestScreen()">
-                <i class="pi bi-plus-circle-fill"></i>
-                <span>إضافة مجموعة شاشة</span>
-              </button>
+      
               <!--
               <button (click)="op.toggle($event)" class="btn button-filter-table">
   
@@ -281,10 +277,26 @@
                           class="btn btn-outline-secondary action-accept color-green"><i
                             class="bi bi-check-circle"></i></button>
                       </ng-container>
-                <button type="button" *ngIf="showActions({actionCode:2}) && rowData.isActive" (click)="reasonOfRefuse(rowData)"
+                <button type="button" *ngIf="showActions({actionCode:2})  && rowData.isActive" (click)="reasonOfRefuse(rowData)"
                   class="btn btn-outline-secondary action-close color-red"><i class="bi bi-x-circle"></i></button>
+  
+  
+  
               </div>
             </td>
+  
+            <!-- <td *ngIf="column.field != 'FLSname'&&column.field != 'Branchname' ">
+                                    <span class="first-number number-currency"
+                                        [class.invalidNumber]="rowData[column.field].first > (rowData[column.field].second * 90) / 100">{{rowData[column.field].first
+                                        | number:'1.0-0'}}</span>/
+                                    <span class="second-number number-currency">{{rowData[column.field].second |
+                                        number:'1.0-0'}}</span>
+                                    <i class="bi bi-info-circle-fill color-red-icon ml-2"
+                                        *ngIf="rowData[column.field].first > (rowData[column.field].second * 90) / 100"></i>
+  
+  
+                                </td> -->
+  
           </ng-container>
         </tr>
       </ng-template>
@@ -346,7 +358,7 @@
       </ng-template>
     </p-table>
     <div class="hideTable">
-      <p-table #dt1 [value]="screens" id="screensHidden" [responsiveLayout]="opened ? 'stack' : 'scroll'"
+      <p-table #dt1 [value]="screens" id="screenHidden" [responsiveLayout]="opened ? 'stack' : 'scroll'"
       [responsive]="true" [paginator]="false" [rows]="itemsPerPage" [first]="page" [rows]="10"
       [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
       currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
@@ -358,7 +370,7 @@
       <ng-template pTemplate="caption">
         <div class="custom-header-table d-flex justify-content-between align-items-center">
           <h2 class="title-table m-0">
-            مجموعات الشاشات
+            الشاشات
             <!-- <span class="subTitlte ml-2">(30 FLS )</span> -->
           </h2>
           <div class="logoTable">

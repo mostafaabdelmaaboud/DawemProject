@@ -19,17 +19,17 @@ import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { DialogResponsibilityFileAdminComponent } from 'src/app/shared/components/dialog-responsibility-file-admin/dialog-responsibility-file-admin.component';
 import { RequestResponsibilityAdminComponent } from 'src/app/shared/components/request-responsibility-admin/request-responsibility-admin.component';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
-import { ScreenGroupsService } from './services/screen-groups.service';
-import { UpdateScreenGroupsComponent } from './dialogs/update-screen-groups/update-screen-groups.component';
-import { ScreenGroupFileComponent } from './dialogs/screen-group-file/screen-group-file.component';
+import { ScreensService } from './services/screens.service';
+import { UpdateScreenComponent } from './dialogs/update-screen/update-screen.component';
+import { ScreenFileComponent } from './dialogs/screen-file/screen-file.component';
 
 
 @Component({
-  selector: 'app-screen-groups',
-  templateUrl: './screen-groups.component.html',
-  styleUrls: ['./screen-groups.component.scss']
+  selector: 'app-screens',
+  templateUrl: './screens.component.html',
+  styleUrls: ['./screens.component.scss']
 })
-export class ScreenGroupsComponent {
+export class ScreensComponent {
   date!: Date;
   arabic: any;
   subscription!: Subscription;
@@ -92,7 +92,7 @@ export class ScreenGroupsComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
-  private screenGroupsService = inject(ScreenGroupsService);
+  private screensService = inject(ScreensService);
   list: any[] = [
     { name: "نسيان تسجيل حضور", key: "1" },
     { name: "نسيان تسجيل انصراف", key: "2" },
@@ -174,7 +174,7 @@ export class ScreenGroupsComponent {
       decimalseparator: '.',
       showLabels: true, 
       showTitle: true,
-      title: 'مجموعات الشاشات',
+      title: 'الشاشات',
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
@@ -184,7 +184,7 @@ export class ScreenGroupsComponent {
       this.screensIsExport = [];
       let filteration = {...this.filteration, isExport:true};
    
-      this.screenGroupsService.getScreens(filteration).subscribe(
+      this.screensService.getScreens(filteration).subscribe(
         {
           next: data => {
    
@@ -221,7 +221,7 @@ export class ScreenGroupsComponent {
   exportTableToPDF() {
     if(!this.isLoading) {
       this.isLoading = true;
-      let table: any = document.getElementById("screensHidden");
+      let table: any = document.getElementById("screenHidden");
       html2canvas(table,{
         scale: 5,
         width: table.offsetWidth,
@@ -253,7 +253,7 @@ export class ScreenGroupsComponent {
   }
   getInformation() {
     this.spinnerCards = true;
-    this.screenGroupsService.getInformation().subscribe({
+    this.screensService.getInformation().subscribe({
       next: data => {
         
         this.cards = {
@@ -271,7 +271,7 @@ export class ScreenGroupsComponent {
   getScreens(filteration: any) {
     this.screens = [];
     this.isLoading = true;
-    this.screenGroupsService.getScreens(filteration).subscribe(
+    this.screensService.getScreens(filteration).subscribe(
       {
         next: data => {
           data.data.forEach((screen: any) => {
@@ -312,7 +312,7 @@ export class ScreenGroupsComponent {
   }
   sendRequest(data: any) {
 
-    this.screenGroupsService.accept({ screenGroupId: data.id }).subscribe(
+    this.screensService.accept({ screenGroupId: data.id }).subscribe(
       {
         next: res => {
           this.getScreens(this.filteration);
@@ -347,12 +347,12 @@ export class ScreenGroupsComponent {
     let reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
       width: "30vw",
       data: {
-        title: "هل متأكد من تعطيل مجموعة الشاشة ؟",
+        title: "هل متأكد من تعطيل الشاشة ؟",
         message: "برجاء توضيح السبب إن أمكن",
         titleReasonOfRefuse:"سبب التعطيل",
         placeholdeReasonOfRefuse: "برجاء كتابة سبب التعطيل",
         titleClose:"تراجع",
-        buttonSend: "تعطيل مجموعة الشاشة"
+        buttonSend: "تعطيل الشاشة"
       },
     });
 
@@ -360,7 +360,7 @@ export class ScreenGroupsComponent {
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
 
-      this.screenGroupsService.screenDisable({ id: data.id, disableReason: result.notes }).subscribe(
+      this.screensService.screenDisable({ id: data.id, disableReason: result.notes }).subscribe(
         {
           next: res => {
 
@@ -379,99 +379,17 @@ export class ScreenGroupsComponent {
   }
 
 
-  requestScreen() {
-    const dialogRefAddCurrency = this.dialog.open(UpdateScreenGroupsComponent, {
-      width: "50vw",
-      data: {
-        title: "إضافة مجموعة شاشة",
-        setAsNecessary: "تعيين كنشط",
-        titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
-        titleName: "الأسم<span class='color-red'>*</span>",
-        placeholdeName: "برجاء ادخال الأسم",
-        validationtitleName: "الأسم مطلوب",
-        buttonSend:"إضافة مجموعة شاشة",
-        titleClose: "تراجع"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editScreen = false;
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData: any = {};
-      formData.NameTranslations = result.NameTranslations.map(translate => {
-        return {
-          LanguageId: translate.LanguageId.id, 
-          Name: translate.name
-        }
-      })
-      formData.AuthenticationType = Number(result.AuthenticationType);
-      formData.ParentId = result.ParentId.id;
-      formData.Order = result.Order;
-      formData.Icon = result.Icon;
-      formData.IsActive = result.IsActive;
-      formData.Notes = result.Notes;
-      dialogRefAddCurrency.componentInstance.submitted = false;
-      dialogRefAddCurrency.componentInstance.loading = true;
-
-      
-      this.screenGroupsService.createScreen(formData).subscribe(
-        {
-          next: (data: any) => {
-
-            
-            dialogRefAddCurrency.componentInstance.submitted = true;
-            dialogRefAddCurrency.componentInstance.loading = false;
-
-            dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات الشاشات"
-
-              },
-            });
-            this.getScreens(this.filteration);
-
-            setTimeout(() => {
-              succressDialog.close();
-
-            }, 2000);
-            succressDialog.componentInstance.submitted = true;
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-              succressDialog.close();
-            })
-
-          },
-          error: (err: any) => {
-            
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-            dialogRefAddCurrency.componentInstance.loading = false;
-
-          }
-        }
-      )
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
-
-      }
-    });
-  }
   editScreen(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(UpdateScreenGroupsComponent, {
+    const dialogRefAddCurrency = this.dialog.open(UpdateScreenComponent, {
       width: "50vw",
-
       data: {
-        title: "تعديل مجموعة الشاشة",
+        title: "تعديل الشاشة",
         setAsNecessary: "تعيين كنشط",
         titleVacationTypeId: "نوع الاستئذانات <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend:"تعديل مجموعة الشاشة",
+        buttonSend:"تعديل الشاشة",
       titleClose: "تراجع"
       },
     });
@@ -494,6 +412,7 @@ export class ScreenGroupsComponent {
       formData.ParentId = result.ParentId.id;
       formData.Order = result.Order;
       formData.Icon = result.Icon;
+      formData.URL = result.URL;
       formData.IsActive = result.IsActive;
       formData.Notes = result.Notes;
 
@@ -502,7 +421,7 @@ export class ScreenGroupsComponent {
 
       dialogRefAddCurrency.componentInstance.submitted = false;
 
-      this.screenGroupsService.updateScreen(formData).subscribe(
+      this.screensService.updateScreen(formData).subscribe(
         {
           next: (data: any) => {
 
@@ -549,10 +468,10 @@ export class ScreenGroupsComponent {
 
 
   dialogScreenFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(ScreenGroupFileComponent, {
+    const dialogRefAddCurrency = this.dialog.open(ScreenFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف مجموعة الشاشة"
+        title: "ملف الشاشة"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id

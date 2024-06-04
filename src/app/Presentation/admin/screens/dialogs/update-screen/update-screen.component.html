@@ -1,0 +1,185 @@
+<div class="container-Dialog">
+    <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+      <h3 class="title-Dialog m-0">
+        {{data!['title']|translate}}
+  
+      </h3>
+      <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+        <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+        <i class="pi pi-times-circle"></i>
+      </button>
+    </header>
+    <div class="body-dialog p-15 f-s-16">
+      <form [formGroup]="addBranchGroupForm">
+        <div class="section1 d-flex justify-content-between">
+            <div class="col">
+              <label class="title">{{data!['setAsNecessary']|translate}}</label>
+              <p-inputSwitch formControlName="IsActive"></p-inputSwitch>
+            </div>
+          </div>
+          <div class="sectionFive mb-3">
+            <label for="" class="label-input mb-2">أسماء الشاشة <span class="color-red">*</span></label>
+            <div class="content-input position-relative content-choose-language">
+            <ng-container formArrayName="NameTranslations"
+            *ngFor="let item of getControlArray('NameTranslations')?.controls; let i=index">
+            <div class="d-flex mb-3">
+              <div class="content-field col">
+                <div class="content-password position-relative content-phone-number content-choose-country d-flex col" [formGroupName]="i">
+                  <span class="dropdown-code" [class.dropdownReadOnly]="getControlArray('NameTranslations').at(i).get('readOnly')?.value">
+                    <!-- {{code}} -->
+                    <p-dropdown appendTo="body" placeholder="اختر اللغة" [readonly]="getControlArray('NameTranslations').at(i).get('readOnly')?.value" 
+                    [options]="getControlArray('NameTranslations').at(i).get('languages')?.value" formControlName="LanguageId"
+                      optionLabel="name">
+                    <ng-template let-option pTemplate="selectedItem">
+                      <div class="d-flex align-items-center gap-2" >
+                          <div>{{ option.name }}</div>
+                      </div>
+                  </ng-template>
+                    <ng-template pTemplate="header">
+                      <span class="p-input-icon-left input-search-dropdown">
+                        <i class="pi pi-search"  (click)="searchDropdown({index: i, value:searchLanguageId.value}, 'LanguageId')"></i>
+                        <input type="text" placeholder="بحث" (keyup.enter)="searchDropdown({index: i, value:searchLanguageId.value}, 'LanguageId')" pInputText #searchLanguageId />
+                      </span>
+                    </ng-template>
+                    <ng-template let-option pTemplate="item">
+                      <span class="item-text">{{ option.name }}</span>
+                    </ng-template>
+                  </p-dropdown>
+                  </span>
+                  <input type="text" [class.inputReadOnly]="getControlArray('NameTranslations').at(i).get('readOnly')?.value" pInputText formControlName="name" [readonly]="getControlArray('NameTranslations').at(i).get('readOnly')?.value" 
+                    placeholder="اسم الخطة" class="w-100" />
+                </div>
+                     <div class="container-alerts mt-2 d-flex" *ngIf="getControlArray('NameTranslations').at(i).get('name')?.errors || 
+                     getControlArray('NameTranslations').at(i).get('LanguageId')?.errors">
+                         <div class="alert alert-danger col ml-2"
+                         *ngIf="getControlArray('NameTranslations').at(i).get('LanguageId')?.hasError('required') && getControlArray('NameTranslations').at(i).get('LanguageId')?.dirty">
+                         اللغة مطلوب
+                       </div>
+                  <div class="alert alert-danger col mr-2"
+                    *ngIf="getControlArray('NameTranslations').at(i).get('name')?.hasError('required') && getControlArray('NameTranslations').at(i).get('name')?.dirty">
+                    الاسم مطلوب
+                  </div>
+              
+                </div>
+              </div>
+              <ng-container *ngIf="!getControlArray('NameTranslations').at(i).get('readOnly')?.value">
+                <button class="btn square" (click)="newLanguage(i)">
+                  <i class="bi bi-plus-square color-green"></i>
+                </button>
+              </ng-container>
+              <ng-container *ngIf="getControlArray('NameTranslations').at(i).get('readOnly')?.value">
+                <button class="btn square"  (click)="deleteLanguage(i)">
+                  <i class="bi bi-dash-square color-red"></i>
+                </button>
+              </ng-container>
+            </div>
+          </ng-container>
+            </div>
+          </div>
+        <div class="sectionFive mb-3">
+            <label for="" class="label-input mb-2">نوع التطبيق</label>
+            <div class="d-flex flex-wrap gap-3">
+                <div class="flex align-items-center">
+                    <p-radioButton name="AuthenticationType" value="0" formControlName="AuthenticationType" inputId="AuthenticationType1"></p-radioButton>
+                    <label for="AuthenticationType1" class="mr-2">لوحة الإدارة</label>
+                </div>
+                <div class="flex align-items-center">
+                    <p-radioButton name="AuthenticationType" value="1" formControlName="AuthenticationType" inputId="AuthenticationType2"></p-radioButton>
+                    <label for="AuthenticationType2" class="mr-2">تطبيق الويب</label>
+                </div>
+                <div class="flex align-items-center">
+                    <p-radioButton name="AuthenticationType" value="2" formControlName="AuthenticationType" inputId="AuthenticationType3"></p-radioButton>
+                    <label for="AuthenticationType3" class="mr-2">تطبيق الموبايل</label>
+                </div>
+            </div>
+          </div>
+          <div class="sectionTwo mb-3">
+            <label class="title">إختر المجموعة</label>
+            <div class="content-password">
+              <p-dropdown appendTo="body" formControlName="ParentId" appendTo="body" [options]="listParent"
+                placeholder="اختر المجموعة" optionLabel="name">
+                <ng-template pTemplate="header">
+                  <span class="p-input-icon-left input-search-dropdown">
+                    <i class="pi pi-search" (click)="searchDropdown(searchParentId, 'ParentId')"></i>
+                    <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchParentId />
+                  </span>
+                </ng-template>
+                <ng-template let-option pTemplate="item">
+                  {{ option.name }}
+                </ng-template>
+              </p-dropdown>
+            </div>
+            <!--Start Custom Validators-->
+            <div class="container-alerts mt-2" *ngIf="getControl('ParentId')?.errors">
+              <div class="alert alert-danger"
+                *ngIf="getControl('ParentId')?.hasError('required') && getControl('ParentId')?.dirty">
+                المجموعة مطلوبة
+              </div>
+            </div>
+            <!--End Custom Validators-->
+          </div>
+     
+
+        <div class="sectionFive mb-3">
+            <label for="" class="label-input mb-2" > الترتيب <span class="color-red">*</span></label>
+            <div class="content-password">
+              <input type="number" pInputText formControlName="Order" placeholder="الترتيب"
+                class="w-100" />
+            </div>
+            <div class="container-alerts mt-2" *ngIf="getControl('Order')?.errors">
+              <div class="alert alert-danger" *ngIf="getControl('Order')?.hasError('required') && getControl('Order')?.dirty">
+                الترتيب مطلوبه
+              </div>
+            </div>
+          </div>
+          <div class="sectionFive mb-3">
+            <label for="" class="label-input mb-2" > الأيقونة <span class="color-red">*</span></label>
+            <div class="content-password">
+              <input type="text" pInputText formControlName="Icon" placeholder="الأيقونة"
+                class="w-100" />
+            </div>
+            <div class="container-alerts mt-2" *ngIf="getControl('Icon')?.errors">
+              <div class="alert alert-danger" *ngIf="getControl('Icon')?.hasError('required') && getControl('Icon')?.dirty">
+                الأيقونة مطلوبه
+              </div>
+            </div>
+          </div>
+          <div class="sectionFive mb-3">
+            <label for="" class="label-input mb-2" > المسار <span class="color-red">*</span></label>
+            <div class="content-password">
+              <input type="text" pInputText formControlName="URL" placeholder="المسار"
+                class="w-100" />
+            </div>
+            <div class="container-alerts mt-2" *ngIf="getControl('URL')?.errors">
+              <div class="alert alert-danger" *ngIf="getControl('URL')?.hasError('required') && getControl('URL')?.dirty">
+                المسار مطلوبه
+              </div>
+            </div>
+          </div>
+        <div class="sectionFive mb-3">
+          <label for="" class="label-input mb-2" > الملاحظات <span class="color-red">*</span></label>
+          <div class="content-password">
+            <input type="text" pInputText formControlName="Notes" placeholder="الرجاء إدخال الملاحظات الخاصة بك"
+              class="w-100" />
+          </div>
+          <div class="container-alerts mt-2" *ngIf="getControl('Notes')?.errors">
+            <div class="alert alert-danger" *ngIf="getControl('Notes')?.hasError('required') && getControl('Notes')?.dirty">
+              الملاحظات مطلوبه
+            </div>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+    <footer class="footer-dialog p-15 d-flex justify-content-end">
+
+        <button class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+        (click)="request()">{{submitted ?
+        (data!['buttonSend']|translate) : ('dialogs.loading'|translate)}}</button>
+      <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16"
+        (click)="close()">{{data!['titleClose']|translate}}</button>
+    </footer>
+  </div>
+  <div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+  </div>

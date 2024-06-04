@@ -84,11 +84,11 @@ const routes: Routes = [
         loadChildren: () => import('./settings/settings.module').then((m) => m.SettingsModule),
         canActivate: [PermissionAminGuard]
       },
-      // {
-      //   path: "Screens",
-      //   loadChildren: () => import('./screens/screens.module').then((m) => m.ScreensModule),
-      //   canActivate: [PermissionAminGuard]
-      // },
+      {
+        path: "Screens",
+        loadChildren: () => import('./screens/screens.module').then((m) => m.ScreensModule),
+        canActivate: [PermissionAminGuard]
+      },
       {
         path: "ScreenGroup",
         loadChildren: () => import('./screen-groups/screen-groups.module').then((m) => m.ScreenGroupsModule),
