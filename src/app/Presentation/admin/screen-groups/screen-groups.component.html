@@ -1,0 +1,455 @@
+<div class="header-comp d-flex align-items-center">
+    <span class="title-head">
+      ملخص مجموعات الشاشات
+    </span>
+    <div class="field-calendar-header">
+      <p-calendar [(ngModel)]="date" [showIcon]="true" dateFormat="yy MM"></p-calendar>
+  
+    </div>
+  </div>
+  <div class="cards-dashboard position-relative">
+    <div class="row" *ngIf="!spinnerCards">
+      <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
+        <div class="custom-card-dashboard">
+          <span class="title-card-dashboard Primary-700"> اجمالي مجموعات الشاشات</span>
+          <div class="body-card-dashboard d-flex align-items-center justify-content-between">
+            <span class="number-card-dashboard">{{cards?.totalCount}}</span>
+            <span class="icon-card-dashboard">
+              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
+                <g opacity="0.2">
+                  <path
+                    d="M18.5601 5.47833C19.6735 5.47833 20.5761 6.30488 20.5761 7.32449V11.0486C22.3643 11.0168 24.3687 11.0168 26.624 11.0168H37.3759C39.6312 11.0168 41.6356 11.0168 43.4239 11.0486V7.32449C43.4239 6.30488 44.3264 5.47833 45.4398 5.47833C46.5532 5.47833 47.4558 6.30488 47.4558 7.32449V11.2119C51.3247 11.4956 53.8646 12.1919 55.7305 13.9007C57.5965 15.6095 58.3568 17.9354 58.6667 21.4783V24.145H5.33331V21.4783C5.64312 17.9354 6.40344 15.6095 8.26943 13.9007C10.1354 12.1919 12.6753 11.4956 16.5442 11.2119V7.32449C16.5442 6.30488 17.4467 5.47833 18.5601 5.47833Z"
+                    fill="#2364C0" />
+                  <path opacity="0.5"
+                    d="M58.6666 37.4784V32.145C58.6666 29.9076 58.6328 25.9191 58.5984 24.145H5.34893C5.31454 25.9191 5.34835 29.9076 5.34835 32.145V37.4784C5.34835 47.535 5.34835 52.5633 8.47167 55.6875C11.595 58.8117 16.6219 58.8117 26.6757 58.8117H37.3393C47.3931 58.8117 52.42 58.8117 55.5433 55.6875C58.6666 52.5633 58.6666 47.535 58.6666 37.4784Z"
+                    fill="#2364C0" />
+                  <path
+                    d="M48 44.145C48 46.3542 46.2091 48.145 44 48.145C41.7909 48.145 40 46.3542 40 44.145C40 41.9359 41.7909 40.145 44 40.145C46.2091 40.145 48 41.9359 48 44.145Z"
+                    fill="#2364C0" />
+                </g>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
+        <div class="custom-card-dashboard">
+          <span class="title-card-dashboard Success-700"> مجموعات الشاشات النشطة</span>
+          <div class="body-card-dashboard d-flex align-items-center justify-content-between">
+            <span class="number-card-dashboard">{{cards?.activeCount}}</span>
+            <span class="icon-card-dashboard">
+              <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
+                <g opacity="0.2">
+                  <path opacity="0.4"
+                    d="M56.25 42.8071V26.8071V26.807C56.25 19.2646 56.25 15.4934 53.9069 13.1502C51.8578 11.1012 48.7167 10.844 42.9167 10.8117H21.5833C15.7833 10.844 12.6422 11.1012 10.5931 13.1502C8.25 15.4934 8.25 19.2646 8.25 26.8071V42.8071C8.25 50.3495 8.25 54.1208 10.5931 56.4639C12.9363 58.8071 16.7075 58.8071 24.25 58.8071H40.25C47.7925 58.8071 51.5637 58.8071 53.9069 56.4639C56.25 54.1208 56.25 50.3496 56.25 42.8071V42.8071Z"
+                    fill="#059669" />
+                  <path
+                    d="M21.5833 9.47833C21.5833 7.26919 23.3742 5.47833 25.5833 5.47833H38.9167C41.1258 5.47833 42.9167 7.26919 42.9167 9.47833V12.145C42.9167 14.3541 41.1258 16.145 38.9167 16.145H25.5833C23.3742 16.145 21.5833 14.3541 21.5833 12.145V9.47833Z"
+                    fill="#059669" />
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M41.7121 28.1137C42.4658 28.9212 42.4221 30.1868 41.6146 30.9405L30.1861 41.6071C29.4177 42.3243 28.2252 42.3243 27.4568 41.6071L22.8854 37.3405C22.0779 36.5868 22.0342 35.3212 22.7879 34.5137C23.5416 33.7062 24.8071 33.6626 25.6146 34.4162L28.8214 37.4092L38.8854 28.0162C39.6929 27.2626 40.9585 27.3062 41.7121 28.1137Z"
+                    fill="#059669" />
+                </g>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
+        <div class="custom-card-dashboard">
+          <span class="title-card-dashboard Warning-700 "> مجموعات الشاشات المعلقة </span>
+          <div class="body-card-dashboard d-flex align-items-center justify-content-between">
+            <span class="number-card-dashboard">{{cards?.notActiveCount}}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="65" viewBox="0 0 64 65" fill="none">
+              <g opacity="0.2">
+                <path opacity="0.4"
+                  d="M31.9999 58.8117C46.7275 58.8117 58.6666 46.8726 58.6666 32.145C58.6666 17.4174 46.7275 5.47833 31.9999 5.47833C17.2723 5.47833 5.33325 17.4174 5.33325 32.145C5.33325 46.8726 17.2723 58.8117 31.9999 58.8117Z"
+                  fill="#F59E0B" />
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M32 19.4783C33.1046 19.4783 34 20.3738 34 21.4783V31.3166L40.0809 37.3975C40.8619 38.1785 40.8619 39.4448 40.0809 40.2259C39.2998 41.0069 38.0335 41.0069 37.2525 40.2259L30.5858 33.5592C30.2107 33.1841 30 32.6754 30 32.145V21.4783C30 20.3738 30.8954 19.4783 32 19.4783Z"
+                  fill="#F59E0B" />
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+  
+      <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
+        <div class="custom-card-dashboard">
+          <span class="title-card-dashboard Error-700">مجموعات الشاشات المعطلة</span>
+          <div class="body-card-dashboard d-flex align-items-center justify-content-between">
+            <span class="number-card-dashboard">{{cards?.deletedCount}}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65" fill="none">
+              <g opacity="0.2">
+                <path opacity="0.5"
+                  d="M32.25 58.8117C19.6792 58.8117 13.3938 58.8117 9.48858 54.9064C5.58334 51.0012 5.58334 44.7158 5.58334 32.145C5.58334 19.5742 5.58334 13.2888 9.48858 9.38358C13.3938 5.47833 19.6792 5.47833 32.25 5.47833C44.8208 5.47833 51.1062 5.47833 55.0114 9.38358C58.9167 13.2888 58.9167 19.5742 58.9167 32.145C58.9167 44.7158 58.9167 51.0012 55.0114 54.9064C51.1062 58.8117 44.8208 58.8117 32.25 58.8117Z"
+                  fill="#D21C1C" />
+                <path
+                  d="M24.1691 24.0641C24.9502 23.2831 26.2165 23.2831 26.9975 24.0641L32.25 29.3166L37.5025 24.0642C38.2835 23.2831 39.5498 23.2831 40.3309 24.0642C41.1119 24.8452 41.1119 26.1116 40.3309 26.8926L35.0785 32.145L40.3308 37.3974C41.1119 38.1784 41.1119 39.4448 40.3308 40.2258C39.5498 41.0069 38.2834 41.0069 37.5024 40.2258L32.25 34.9735L26.9976 40.2259C26.2166 41.0069 24.9502 41.0069 24.1692 40.2259C23.3881 39.4448 23.3881 38.1785 24.1692 37.3974L29.4216 32.145L24.1691 26.8925C23.3881 26.1115 23.3881 24.8452 24.1691 24.0641Z"
+                  fill="#D21C1C" />
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="spinner spinner-cards d-flex justify-content-center align-items-center" *ngIf="spinnerCards">
+      <mat-spinner></mat-spinner>
+    </div>
+  </div>
+  <div class="table-basic">
+    <!-- <div class="header-table-basic">
+      <span class="title-table-basic">سجل الطلبات</span>
+      <div class="actions-table-basic">
+      </div>
+    </div> -->
+    <p-table #dt1 [value]="screens" id="screens" [responsiveLayout]="opened ? 'stack' : 'scroll'"
+      [responsive]="true" [paginator]="false" [rows]="itemsPerPage" [first]="page" [rows]="10"
+      [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
+      currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
+                'orderNumber',
+                'employeeName.name',
+                'typeOfRequest',
+                'date',
+                'time' ]">
+      <ng-template pTemplate="caption">
+        <div class="custom-header-table d-flex justify-content-between align-items-center">
+          <h2 class="title-table m-0">
+            مجموعات الشاشات
+            <!-- <span class="subTitlte ml-2">(30 FLS )</span> -->
+          </h2>
+          <div class="custom-filteration d-flex align-items-center">
+            <!-- <span class="p-input-icon-left ml-auto">
+              <i class="pi pi-search" (click)="searchKeyword(search.value)"></i>
+              <input pInputText type="text" #search (input)="dt1.filterGlobal(search.value, 'contains')"
+                placeholder="Search..." />
+            </span> -->
+            <button (click)="op.toggle($event)" class="btn btn-outline-primary action-button-t d-flex align-items-center">
+              <i class="pi pi-filter-fill"></i>
+  
+              <span>تصفية النتائج</span>
+            </button>
+            <button (click)="exportTableToPDF()" class="btn btn-outline-green action-button-t d-flex align-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-pdf"
+                viewBox="0 0 16 16">
+                <path
+                  d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1" />
+                <path
+                  d="M4.603 12.087a.8.8 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.7 7.7 0 0 1 1.482-.645 20 20 0 0 0 1.062-2.227 7.3 7.3 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.187-.012.395-.047.614-.084.51-.27 1.134-.52 1.794a11 11 0 0 0 .98 1.686 5.8 5.8 0 0 1 1.334.05c.364.065.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.86.86 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.7 5.7 0 0 1-.911-.95 11.6 11.6 0 0 0-1.997.406 11.3 11.3 0 0 1-1.021 1.51c-.29.35-.608.655-.926.787a.8.8 0 0 1-.58.029m1.379-1.901q-.25.115-.459.238c-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361q.016.032.026.044l.035-.012c.137-.056.355-.235.635-.572a8 8 0 0 0 .45-.606m1.64-1.33a13 13 0 0 1 1.01-.193 12 12 0 0 1-.51-.858 21 21 0 0 1-.5 1.05zm2.446.45q.226.244.435.41c.24.19.407.253.498.256a.1.1 0 0 0 .07-.015.3.3 0 0 0 .094-.125.44.44 0 0 0 .059-.2.1.1 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a4 4 0 0 0-.612-.053zM8.078 5.8a7 7 0 0 0 .2-.828q.046-.282.038-.465a.6.6 0 0 0-.032-.198.5.5 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822q.036.167.09.346z" />
+              </svg>
+        
+              <span class="me-1">PDF</span>
+            </button>
+            <button (click)="exportTableToExcel()"
+              class="btn btn-outline-green action-button-t d-flex align-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-filetype-xls" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM6.472 15.29a1.2 1.2 0 0 1-.111-.449h.765a.58.58 0 0 0 .254.384q.106.073.25.114.143.041.319.041.246 0 .413-.07a.56.56 0 0 0 .255-.193.5.5 0 0 0 .085-.29.39.39 0 0 0-.153-.326q-.152-.12-.462-.193l-.619-.143a1.7 1.7 0 0 1-.539-.214 1 1 0 0 1-.351-.367 1.1 1.1 0 0 1-.123-.524q0-.366.19-.639.19-.272.527-.422.338-.15.777-.149.457 0 .78.152.324.153.5.41.18.255.2.566h-.75a.56.56 0 0 0-.12-.258.6.6 0 0 0-.247-.181.9.9 0 0 0-.369-.068q-.325 0-.513.152a.47.47 0 0 0-.184.384q0 .18.143.3a1 1 0 0 0 .405.175l.62.143q.326.075.566.211a1 1 0 0 1 .375.358q.135.222.135.56 0 .37-.188.656a1.2 1.2 0 0 1-.539.439q-.351.158-.858.158-.381 0-.665-.09a1.4 1.4 0 0 1-.478-.252 1.1 1.1 0 0 1-.29-.375m-2.945-3.358h-.893L1.81 13.37h-.036l-.832-1.438h-.93l1.227 1.983L0 15.931h.861l.853-1.415h.035l.85 1.415h.908L2.253 13.94zm2.727 3.325H4.557v-3.325h-.79v4h2.487z" />
+              </svg>
+        
+              <span class="me-1">Excel</span>
+            </button>
+            <div class="container-filteration">
+              <p-overlayPanel #op>
+                <header class="header-filter d-flex justify-content-center align-items-center p-15 position-relative">
+                  <h3 class="title-filteration m-0">
+                    تصفية النتائج
+        
+                  </h3>
+                  <button class="icon-close iconCloseDialog iconCloseFilteration" type="button" (click)="op.hide()">
+                    <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+                    <i class="pi pi-times-circle"></i>
+                  </button>
+                </header>
+                <form [formGroup]="filterForm" class="formFilteration">
+                  <div class="sectionFive mb-3">
+                    <label for="" class="label-input mb-2">الكود</label>
+                    <div class="content-password">
+                      <input type="number" formControlName="code" pInputText placeholder="الكود" class="w-100" />
+                    </div>
+        
+                  </div>
+                  <div class="sectionFive mb-3">
+                    <label for="" class="label-input mb-2">بحث</label>
+                    <div class="content-password">
+                      <input type="text" formControlName="FreeText" pInputText placeholder="بحث" class="w-100" />
+                    </div>
+        
+                  </div>
+                  <div class="footer-filter">
+                    <button type="button" class="background-blue w-100 color-white b-r-4 button-action ml-2 mr-2 f-s-16"
+                      (click)="filter(); op.hide()">تصفية
+                      النتائج</button>
+        
+                    <button (click)="resetFilteration()"
+                      class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two ml-2 mr-2 f-s-16" type="button">إعادة
+                      ضبط</button>
+                  </div>
+                </form>
+              </p-overlayPanel>
+              <button class="btn btn-primary action-button-t d-flex align-items-center"
+                *ngIf="showActions({actionCode:0})" (click)="requestScreen()">
+                <i class="pi bi-plus-circle-fill"></i>
+                <span>إضافة مجموعة شاشة</span>
+              </button>
+              <!--
+              <button (click)="op.toggle($event)" class="btn button-filter-table">
+  
+                <i class="bi bi-filter"></i>
+              </button> -->
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+       
+          <ng-container *ngFor="let column of columns">
+       
+            <ng-container *ngIf="column.field === 'actions'">
+              <th  #lastTh>
+                {{ column.name }}
+              </th>
+            </ng-container>
+            <ng-container *ngIf="column.field != 'actions'">
+              <th [pSortableColumn]="column.field">
+  
+                {{ column.name }} <p-sortIcon [field]="column.field" class="sortIcon"></p-sortIcon>
+              </th>
+            </ng-container>
+          </ng-container>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData>
+        <tr *ngIf="!isLoading">
+          <!-- <ng-container *ngFor="
+                      let customer of customers
+                        | paginate
+                          : {
+                              id: 'some_id',
+                              itemsPerPage: itemsPerPage,
+                              currentPage: filteration.page,
+                              totalItems: totalItems
+                            }
+                    "></ng-container> -->
+          <ng-container *ngFor="let column of columns">
+            <!-- <td  *ngIf="column.field == 'flsName'">
+                                    <ng-container *ngIf="rowData[column.field][column.fieldTwo]">
+                                      {{ rowData[column.field][column.fieldTwo] }}
+                                    </ng-container>
+                                    <ng-container *ngIf="!rowData[column.field][column.fieldTwo] ">
+                                      No Data
+                                    </ng-container>
+  
+                                  </td> -->
+            <ng-container *ngIf="column.field != 'actions' && column.field != 'isActive'">
+              <td>
+                <span class="p-column-title">
+                  {{column.name}}
+                </span>
+                {{ rowData[column.field] }}
+              </td>
+            </ng-container>
+  
+            <ng-container *ngIf="column.field === 'isActive'">
+              <td>
+                <span class="p-column-title">
+                  {{column.name}}
+                </span>
+                <span>{{rowData[column.field] ? 'نشط' : 'غير نشط'}}
+                </span>
+  
+              </td>
+            </ng-container>
+  
+  
+            <td *ngIf="column.field === 'actions'">
+              <span class="p-column-title">
+                {{column.name}}
+              </span>
+              <div class="action-body-td">
+                <button type="button" *ngIf="showActions({actionCode:1})"
+                  class="btn btn-outline-secondary action-accept color-green" (click)="editScreen(rowData)"><i
+                    class="bi bi-pencil-square"></i></button>
+  
+                <button type="button" *ngIf="showActions({actionCode:3})"
+                  class="btn btn-outline-secondary action-close color-blue" (click)="dialogScreenFile(rowData)"><i
+                    class="bi bi-person-vcard"></i></button>
+                    <!-- <ng-container *ngIf="showActions({actionCode:4})">
+                        <button type="button" (click)="sendRequest(rowData)"
+                          class="btn btn-outline-secondary action-accept color-green"><i
+                            class="bi bi-check-circle"></i></button>
+                      </ng-container> -->
+                <button type="button" *ngIf="showActions({actionCode:2})" (click)="reasonOfRefuse(rowData)"
+                  class="btn btn-outline-secondary action-close color-red"><i class="bi bi-x-circle"></i></button>
+  
+  
+  
+              </div>
+            </td>
+  
+            <!-- <td *ngIf="column.field != 'FLSname'&&column.field != 'Branchname' ">
+                                    <span class="first-number number-currency"
+                                        [class.invalidNumber]="rowData[column.field].first > (rowData[column.field].second * 90) / 100">{{rowData[column.field].first
+                                        | number:'1.0-0'}}</span>/
+                                    <span class="second-number number-currency">{{rowData[column.field].second |
+                                        number:'1.0-0'}}</span>
+                                    <i class="bi bi-info-circle-fill color-red-icon ml-2"
+                                        *ngIf="rowData[column.field].first > (rowData[column.field].second * 90) / 100"></i>
+  
+  
+                                </td> -->
+  
+          </ng-container>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr *ngIf="isLoading ===false">
+          <td colspan="8">
+            <div class="container-empty-data w-100 d-flex justify-content-center align-items-center">
+              <svg width="65" height="40" viewBox="0 0 65 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_1920_5847)">
+                  <rect width="64" height="40" transform="translate(0.5)" fill="white" fill-opacity="0.01" />
+                  <path
+                    d="M32.5 39.7047C50.1731 39.7047 64.5 36.5939 64.5 32.7566C64.5 28.9193 50.1731 25.8086 32.5 25.8086C14.8269 25.8086 0.5 28.9193 0.5 32.7566C0.5 36.5939 14.8269 39.7047 32.5 39.7047Z"
+                    fill="#F5F5F5" />
+                  <path
+                    d="M55.5 13.6653L45.354 2.24866C44.867 1.47048 44.156 1 43.407 1H21.593C20.844 1 20.133 1.47048 19.646 2.24767L9.5 13.6663V22.8367H55.5V13.6653Z"
+                    stroke="#CED4DA" />
+                  <path
+                    d="M42.113 16.8116C42.113 15.2185 43.107 13.9033 44.34 13.9023H55.5V31.9047C55.5 34.0119 54.18 35.739 52.55 35.739H12.45C10.82 35.739 9.5 34.011 9.5 31.9047V13.9023H20.66C21.893 13.9023 22.887 15.2155 22.887 16.8086V16.8304C22.887 18.4235 23.892 19.7099 25.124 19.7099H39.876C41.108 19.7099 42.113 18.4116 42.113 16.8185V16.8116Z"
+                    fill="#FAFAFA" stroke="#CED4DA" />
+                </g>
+                <defs>
+                  <clipPath id="clip0_1920_5847">
+                    <rect width="64" height="40" fill="white" transform="translate(0.5)" />
+                  </clipPath>
+                </defs>
+              </svg>
+              <span class="empty-table f-s-16">No Data</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <tr *ngIf="isLoading">
+          <td colspan="8">
+            <div class="spinner d-flex justify-content-center align-items-center">
+              <mat-spinner></mat-spinner>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="8">
+            <div class="paginate d-flex align-items-center justify-content-end">
+              <div class="NumberOfRowsPerPage">
+                <span>عدد الصفوف بالصفحة:</span>
+                <p-dropdown [options]="RowsPerPage"  [(ngModel)]="defaultRowPerPage" appendTo="body" (onChange)="numberOfRowsPerPage($event)"
+                  optionLabel="name"></p-dropdown>
+  
+              </div>
+              <div class="text-paginator d-flex align-items-center">
+                {{mathRound(totalItems / filteration.PageSize)}} - {{filteration.PageNumber + 1}}
+  
+              </div>
+              <p-paginator (onPageChange)="onPageChange($event)" [first]="0" [rows]="filteration.PageSize"
+                [totalRecords]="totalItems"></p-paginator>
+  
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <div class="hideTable">
+      <p-table #dt1 [value]="screens" id="screensHidden" [responsiveLayout]="opened ? 'stack' : 'scroll'"
+      [responsive]="true" [paginator]="false" [rows]="itemsPerPage" [first]="page" [rows]="10"
+      [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
+      currentPageReportTemplate="Total {totalRecords} items" [globalFilterFields]="[
+                'orderNumber',
+                'employeeName.name',
+                'typeOfRequest',
+                'date',
+                'time' ]">
+      <ng-template pTemplate="caption">
+        <div class="custom-header-table d-flex justify-content-between align-items-center">
+          <h2 class="title-table m-0">
+            مجموعات الشاشات
+            <!-- <span class="subTitlte ml-2">(30 FLS )</span> -->
+          </h2>
+          <div class="logoTable">
+            <img  src="assets/img/Link.png" alt="logo">
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <ng-container *ngFor="let column of columns">
+            <ng-container *ngIf="column.field != 'actions'">
+              <th [pSortableColumn]="column.field">
+  
+                {{ column.name }} 
+              </th>
+            </ng-container>
+          </ng-container>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData>
+        <tr *ngIf="!isLoading">
+   
+          <ng-container *ngFor="let column of columns">
+  
+            <ng-container *ngIf="column.field != 'actions' && column.field != 'isActive'">
+              <td>
+                <span class="p-column-title">
+                  {{column.name}}
+                </span>
+                {{ rowData[column.field] }}
+              </td>
+            </ng-container>
+  
+            <ng-container *ngIf="column.field === 'isActive'">
+              <td>
+                <span class="p-column-title">
+                  {{column.name}}
+                </span>
+                <span>{{rowData[column.field] ? 'نشط' : 'غير نشط'}}
+                </span>
+  
+              </td>
+            </ng-container>
+          </ng-container>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr *ngIf="isLoading ===false">
+          <td colspan="8">
+            <div class="container-empty-data w-100 d-flex justify-content-center align-items-center">
+              <svg width="65" height="40" viewBox="0 0 65 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_1920_5847)">
+                  <rect width="64" height="40" transform="translate(0.5)" fill="white" fill-opacity="0.01" />
+                  <path
+                    d="M32.5 39.7047C50.1731 39.7047 64.5 36.5939 64.5 32.7566C64.5 28.9193 50.1731 25.8086 32.5 25.8086C14.8269 25.8086 0.5 28.9193 0.5 32.7566C0.5 36.5939 14.8269 39.7047 32.5 39.7047Z"
+                    fill="#F5F5F5" />
+                  <path
+                    d="M55.5 13.6653L45.354 2.24866C44.867 1.47048 44.156 1 43.407 1H21.593C20.844 1 20.133 1.47048 19.646 2.24767L9.5 13.6663V22.8367H55.5V13.6653Z"
+                    stroke="#CED4DA" />
+                  <path
+                    d="M42.113 16.8116C42.113 15.2185 43.107 13.9033 44.34 13.9023H55.5V31.9047C55.5 34.0119 54.18 35.739 52.55 35.739H12.45C10.82 35.739 9.5 34.011 9.5 31.9047V13.9023H20.66C21.893 13.9023 22.887 15.2155 22.887 16.8086V16.8304C22.887 18.4235 23.892 19.7099 25.124 19.7099H39.876C41.108 19.7099 42.113 18.4116 42.113 16.8185V16.8116Z"
+                    fill="#FAFAFA" stroke="#CED4DA" />
+                </g>
+                <defs>
+                  <clipPath id="clip0_1920_5847">
+                    <rect width="64" height="40" fill="white" transform="translate(0.5)" />
+                  </clipPath>
+                </defs>
+              </svg>
+              <span class="empty-table f-s-16">No Data</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+  
+    </p-table>
+    </div>
+  </div>

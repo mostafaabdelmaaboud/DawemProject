@@ -30,6 +30,10 @@ export class PermissionAminGuard implements CanActivate {
       return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 7 });
     }else if (state.url.includes("settings")) {
       return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 8 });
+    }else if (state.url.includes("Screens")) {
+      return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 9 });
+    } else if (state.url.includes("ScreenGroup")) {
+      return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 10 });
     } else {
       return false;
       this.router.navigate(["/notPermission"])

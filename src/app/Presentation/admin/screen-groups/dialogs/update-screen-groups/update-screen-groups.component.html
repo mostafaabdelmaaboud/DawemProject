@@ -11,9 +11,14 @@
     </header>
     <div class="body-dialog p-15 f-s-16">
       <form [formGroup]="addBranchGroupForm">
-
-        <div class="sectionFive mb-3">
-            <label for="" class="label-input mb-2">أسماء الخطة <span class="color-red">*</span></label>
+        <div class="section1 d-flex justify-content-between">
+            <div class="col">
+              <label class="title">{{data!['setAsNecessary']|translate}}</label>
+              <p-inputSwitch formControlName="IsActive"></p-inputSwitch>
+            </div>
+          </div>
+          <div class="sectionFive mb-3">
+            <label for="" class="label-input mb-2">أسماء الشاشة <span class="color-red">*</span></label>
             <div class="content-input position-relative content-choose-language">
             <ng-container formArrayName="NameTranslations"
             *ngFor="let item of getControlArray('NameTranslations')?.controls; let i=index">
@@ -71,93 +76,74 @@
           </ng-container>
             </div>
           </div>
-
-          <div class="section1 d-flex justify-content-between">
-            <div class="col">
-              <label class="title">كل الشاشات متاحة ؟</label>
-              <p-inputSwitch formControlName="AllScreensAvailable"></p-inputSwitch>
+        <div class="sectionFive mb-3">
+            <label for="" class="label-input mb-2">نوع التطبيق</label>
+            <div class="d-flex flex-wrap gap-3">
+                <div class="flex align-items-center">
+                    <p-radioButton name="AuthenticationType" value="0" formControlName="AuthenticationType" inputId="AuthenticationType1"></p-radioButton>
+                    <label for="AuthenticationType1" class="mr-2">لوحة الإدارة</label>
+                </div>
+                <div class="flex align-items-center">
+                    <p-radioButton name="AuthenticationType" value="1" formControlName="AuthenticationType" inputId="AuthenticationType2"></p-radioButton>
+                    <label for="AuthenticationType2" class="mr-2">تطبيق الويب</label>
+                </div>
+                <div class="flex align-items-center">
+                    <p-radioButton name="AuthenticationType" value="2" formControlName="AuthenticationType" inputId="AuthenticationType3"></p-radioButton>
+                    <label for="AuthenticationType3" class="mr-2">تطبيق الموبايل</label>
+                </div>
             </div>
           </div>
-
-          <div class="sectionTwo mb-3" *ngIf="showAllScreensAvailable">
-            <label class="title">إختر الشاشات المتاحة <span class="color-red">*</span></label>
+          <div class="sectionTwo mb-3">
+            <label class="title">إختر المجموعة </label>
             <div class="content-password">
-              <p-multiSelect [options]="listAllScreensAvailable" [filter]="false" appendTo="body"
-                formControlName="ScreensIds" placeholder="إختر الشاشات المتاحة"
-                optionLabel="name">
+              <p-dropdown appendTo="body" formControlName="ParentId" appendTo="body" [options]="listParent"
+                placeholder="اختر المجموعة" optionLabel="name">
                 <ng-template pTemplate="header">
                   <span class="p-input-icon-left input-search-dropdown">
-
-                    <i class="pi pi-search"
-                      (click)="searchDropdown(searchScreensIds.value, 'ScreensIds')"></i>
-                    <input type="text" placeholder="بحث" pInputText #searchScreensIds />
+                    <i class="pi pi-search" (click)="searchDropdown(searchParentId, 'ParentId')"></i>
+                    <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchParentId />
                   </span>
                 </ng-template>
                 <ng-template let-option pTemplate="item">
                   {{ option.name }}
                 </ng-template>
-              </p-multiSelect>
-
+              </p-dropdown>
             </div>
             <!--Start Custom Validators-->
-            <div class="container-alerts mt-2" *ngIf="getControl('ScreensIds')?.errors">
+            <div class="container-alerts mt-2" *ngIf="getControl('ParentId')?.errors">
               <div class="alert alert-danger"
-                *ngIf="getControl('ScreensIds')?.hasError('required') && getControl('ScreensIds')?.dirty">
-                 الشاشات المتاحة مطلوبة
+                *ngIf="getControl('ParentId')?.hasError('required') && getControl('ParentId')?.dirty">
+                المجموعة مطلوبة
               </div>
             </div>
             <!--End Custom Validators-->
           </div>
+     
 
-
         <div class="sectionFive mb-3">
-          <label for="" class="label-input mb-2" >  أقل عدد من الموظفين <span class="color-red">*</span></label>
-          <div class="content-password">
-            <input type="number" pInputText formControlName="MinNumberOfEmployees" placeholder="الرجاء إدخال عدد الموظفين"
-              class="w-100" />
-          </div>
-          <div class="container-alerts mt-2" *ngIf="getControl('MinNumberOfEmployees')?.errors">
-            <div class="alert alert-danger" *ngIf="getControl('MinNumberOfEmployees')?.hasError('required') && getControl('MinNumberOfEmployees')?.dirty">
-              أقل عدد من الموظفين مطلوب
+            <label for="" class="label-input mb-2" > الترتيب <span class="color-red">*</span></label>
+            <div class="content-password">
+              <input type="number" pInputText formControlName="Order" placeholder="الترتيب"
+                class="w-100" />
+            </div>
+            <div class="container-alerts mt-2" *ngIf="getControl('Order')?.errors">
+              <div class="alert alert-danger" *ngIf="getControl('Order')?.hasError('required') && getControl('Order')?.dirty">
+                الترتيب مطلوبه
+              </div>
             </div>
           </div>
-        </div>
-        <div class="sectionFive mb-3">
-          <label for="" class="label-input mb-2" >أكبر عدد من الموظفين <span class="color-red">*</span></label>
-          <div class="content-password">
-            <input type="number" pInputText formControlName="MaxNumberOfEmployees" placeholder="الرجاء إدخال عدد الموظفين"
-              class="w-100" />
-          </div>
-          <div class="container-alerts mt-2" *ngIf="getControl('MaxNumberOfEmployees')?.errors">
-            <div class="alert alert-danger" *ngIf="getControl('MaxNumberOfEmployees')?.hasError('required') && getControl('MaxNumberOfEmployees')?.dirty">
-              أكبر عدد من الموظفين مطلوب
+          <div class="sectionFive mb-3">
+            <label for="" class="label-input mb-2" > الأيقونة <span class="color-red">*</span></label>
+            <div class="content-password">
+              <input type="text" pInputText formControlName="Icon" placeholder="الأيقونة"
+                class="w-100" />
+            </div>
+            <div class="container-alerts mt-2" *ngIf="getControl('Icon')?.errors">
+              <div class="alert alert-danger" *ngIf="getControl('Icon')?.hasError('required') && getControl('Icon')?.dirty">
+                الأيقونة مطلوبه
+              </div>
             </div>
           </div>
-        </div>
-        <div class="sectionFive mb-3">
-          <label for="" class="label-input mb-2" > تكلفة الموظف الواحد <span class="color-red">*</span></label>
-          <div class="content-password">
-            <input type="number" pInputText formControlName="EmployeeCost" placeholder="الرجاء إدخال تكلفة الموظف"
-              class="w-100" />
-          </div>
-          <div class="container-alerts mt-2" *ngIf="getControl('EmployeeCost')?.errors">
-            <div class="alert alert-danger" *ngIf="getControl('EmployeeCost')?.hasError('required') && getControl('EmployeeCost')?.dirty">
-              تكلفة الموظف الواحد مطلوب
-            </div>
-          </div>
-        </div>
-        <div class="section1 d-flex justify-content-between">
-          <div class="col">
-            <label class="title">فترة تجريبية</label>
-            <p-inputSwitch formControlName="IsTrial"></p-inputSwitch>
-          </div>
-        </div>
-        <div class="section1 d-flex justify-content-between">
-          <div class="col">
-            <label class="title">{{data!['setAsNecessary']|translate}}</label>
-            <p-inputSwitch formControlName="IsActive"></p-inputSwitch>
-          </div>
-        </div>
         <div class="sectionFive mb-3">
           <label for="" class="label-input mb-2" > الملاحظات <span class="color-red">*</span></label>
           <div class="content-password">

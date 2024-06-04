@@ -234,7 +234,8 @@ export class SideNavBarAdminComponent {
       {screenCode:6, checkScreen:false},
       {screenCode:7, checkScreen:false},
       {screenCode:8, checkScreen:false},
-  
+      {screenCode:9, checkScreen:false},
+      {screenCode:10, checkScreen:false},
     ];
     this.checkLink(0);
     this.checkLink(1);
@@ -245,7 +246,8 @@ export class SideNavBarAdminComponent {
     this.checkLink(6);
     this.checkLink(7);
     this.checkLink(8);
-
+    this.checkLink(9);
+    this.checkLink(10);
     // admin names
     // this.dashboardService.getInformationProfile().subscribe(data => {
     //   this.profile = data;

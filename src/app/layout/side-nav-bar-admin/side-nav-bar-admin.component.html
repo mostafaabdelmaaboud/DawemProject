@@ -142,6 +142,28 @@
             </svg>
             <span class="text-sidebar">{{componentName({screenCode:8})}}</span>
           </li>
+          <li *ngIf="link.screenCode === 9 && link.checkScreen" nz-menu-item routerLink="/admin/Screens"
+            routerLinkActive="ant-menu-item-selected">
+                <!-- مدفوعات الإشتراكات -->
+            <span nz-icon></span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
+              <circle cx="9" cy="9.14502" r="7.5" stroke="#334155" stroke-width="1.2" />
+              <path d="M9 6.14502V9.14502L10.875 11.02" stroke="#334155" stroke-width="1.2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            <span class="text-sidebar">{{componentName({screenCode:9})}}</span>
+          </li>
+          <li *ngIf="link.screenCode === 10 && link.checkScreen" nz-menu-item routerLink="/admin/ScreenGroup"
+          routerLinkActive="ant-menu-item-selected">
+              <!-- مدفوعات الإشتراكات -->
+          <span nz-icon></span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
+            <circle cx="9" cy="9.14502" r="7.5" stroke="#334155" stroke-width="1.2" />
+            <path d="M9 6.14502V9.14502L10.875 11.02" stroke="#334155" stroke-width="1.2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+          <span class="text-sidebar">{{componentName({screenCode:10})}}</span>
+        </li>
               </ng-container>
               <li nz-menu-item class="users-sidebar">
   

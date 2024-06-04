@@ -12,9 +12,10 @@ import { CalendarModule } from "primeng/calendar";
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { PlansService } from '../../services/plans.service';
 import { ToastrService } from 'ngx-toastr';
 import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { ScreenGroupsService } from '../../services/screen-groups.service';
+import { RadioButtonModule } from 'primeng/radiobutton';
 interface addBranchesInputsProps {
   LabelMessage: string;
   inputType: string;
@@ -39,14 +40,13 @@ interface UploadEvent {
   files: File[];
 }
 @Component({
-  selector: 'app-add-plan',
+  selector: 'app-update-screen-groups',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatRadioModule, MatProgressSpinnerModule,MultiSelectModule, ReactiveFormsModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
-  templateUrl: './add-plan.component.html',
-  styleUrls: ['./add-plan.component.scss']
+  imports: [CommonModule, FormsModule, MatRadioModule, MatProgressSpinnerModule,MultiSelectModule,RadioButtonModule, ReactiveFormsModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
+  templateUrl: './update-screen-groups.component.html',
+  styleUrls: ['./update-screen-groups.component.scss']
 })
-export class AddPlanComponent {
-
+export class UpdateScreenGroupsComponent {
   @Output() submitClicked = new EventEmitter<any>();
   @Input() submitted!: boolean;
   @Input() list: any[] = [
@@ -59,29 +59,25 @@ export class AddPlanComponent {
   listEmployees: any[] = [
   ];
   loading = false;
-
-  @Input() editPlane!: boolean;
-  showAllScreensAvailable = true;
-  listAllScreensAvailable:any[] = [];
+  listParent: any[] = [
+  ];
+  @Input() editScreen!: boolean;
   addBranchGroupForm: FormGroup = this.fb.group({
+    AuthenticationType:["1"],
+    ParentId:[""],
     IsActive: [false],
-    IsTrial: [false],
-    AllScreensAvailable:[false],
-    ScreensIds:["", [Validators.required]],
+    Notes:["", [Validators.required]],
+    Order:["", [Validators.required]],
+    Icon:["", [Validators.required]],
     NameTranslations: this.fb.array([this.createNewTranslate(0,[], false)]),
-    MinNumberOfEmployees:["", [Validators.required]],
-    MaxNumberOfEmployees:["", [Validators.required]],
-    EmployeeCost:["", [Validators.required]],
-    Notes:["", [Validators.required]]
-
   });
   AttachmentsFiles: any[] = [];
   requiredCommercialRegFiles = false;
   toggleForEmployee = false;
-  private plansService = inject(PlansService);
+  private screenGroupsService = inject(ScreenGroupsService);
   filterationLanguages = {PagingEnabled: true, PageSize: 5, PageNumber: 0 }
   constructor(
-    public dialogRef: MatDialogRef<AddPlanComponent>,
+    public dialogRef: MatDialogRef<UpdateScreenGroupsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
     private toast: ToastrService,
@@ -96,31 +92,33 @@ export class AddPlanComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.loading = true;
-    this.addBranchGroupForm.get("AllScreensAvailable")?.valueChanges.subscribe(data => {
-      if(!data) {
-        this.addBranchGroupForm.addControl("ScreensIds", this.fb.control("", Validators.required))
+ 
+    this.addBranchGroupForm.get("AuthenticationType")?.valueChanges.subscribe(data => {
 
-        this.showAllScreensAvailable = true;
+      this.screenGroupsService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0, LocalAuthenticationType:data }).subscribe({
+        next:data => {
+          this.listParent = [];
+          data.forEach((screen: any) => {
+            this.listParent.push({ name: screen.name, id: screen.id });
+          });
+        },
+        error:err => {
 
-      } else {
-
-        this.showAllScreensAvailable = false;
-        this.addBranchGroupForm.removeControl("ScreensIds")
-
-      }
+        }
+      })
     })
-    if (this.editPlane) {
-      let planGetById = this.plansService.planGetById({ planId: this.id });
-      let getLanguages = this.plansService.getLanguages(this.filterationLanguages);
-      let screenGetForDropDown = this.plansService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+    if (this.editScreen) {
+      let ScreenGetById = this.screenGroupsService.ScreenGetById({ screenGroupId: this.id });
+      let getLanguages = this.screenGroupsService.getLanguages(this.filterationLanguages);
+      let screenGetForDropDown = this.screenGroupsService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0,LocalAuthenticationType:this.addBranchGroupForm.get("AuthenticationType")?.value });
 
       combineLatest({
-        planGetById,
+        ScreenGetById,
         getLanguages,
         screenGetForDropDown
       }).subscribe({
         next: data => {
-          let planGetById = data.planGetById;
+          let ScreenGetById = data.ScreenGetById;
           let getLanguage = data.getLanguages;
           
           getLanguage.forEach((country: any) => {
@@ -132,37 +130,12 @@ export class AddPlanComponent {
 
           // });
           
-          this.addBranchGroupForm.get("AllScreensAvailable")?.setValue(planGetById.allScreensAvailable);
-          if(!planGetById.allScreensAvailable) {
-            this.plansService.screenGetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids: planGetById?.screenIds }).subscribe(dataDropdown => {
-              
-              this.listAllScreensAvailable = [];
-              dataDropdown?.forEach((list: any) => {
-                this.listAllScreensAvailable.push({ name: list.name, key: list.id });
-              });
-              planGetById?.screenIds?.forEach((employee: any) => {
-  
-  
-                let indexEmployees = this.listAllScreensAvailable.findIndex(list => list.key === employee);
-  
-  
-                if (indexEmployees >= 0) {
-                  if (Array.isArray(this.getControl("ScreensIds")?.value)) {
-                    this.getControl("ScreensIds")?.patchValue(([{ name: this.listAllScreensAvailable[indexEmployees].name, key: this.listAllScreensAvailable[indexEmployees].key }, ...this.getControl("ScreensIds")?.value]));
-                  } else {
-                    this.getControl("ScreensIds")?.patchValue(([{ name: this.listAllScreensAvailable[indexEmployees].name, key: this.listAllScreensAvailable[indexEmployees].key }]));
-                  }
-                }
-  
-              });
-  
-            });
-          }
+
        
 
           
 
-          planGetById.nameTranslations?.forEach((translate, i) => {
+          ScreenGetById.nameTranslations?.forEach((translate, i) => {
             
             if(i === 0) {
               
@@ -177,10 +150,10 @@ export class AddPlanComponent {
               this.getControlArray("NameTranslations").at(i).get("name")?.setValue(translate.name);
 
             } else {
-              let findIndexLanguagesRemove = this.copyLanguages.findIndex(language => language.id === planGetById.nameTranslations[i-1].languageId);
+              let findIndexLanguagesRemove = this.copyLanguages.findIndex(language => language.id === ScreenGetById.nameTranslations[i-1].languageId);
               let findIndexLanguages = this.languages.findIndex(language => language.id === translate.languageId);
               if(findIndexLanguages >=0) {
-                let languages = this.copyLanguages.filter(language => language.id != planGetById.nameTranslations[i-1].languageId);
+                let languages = this.copyLanguages.filter(language => language.id != ScreenGetById.nameTranslations[i-1].languageId);
                 this.getControlArray("NameTranslations").push(this.createNewTranslate(translate.id,languages, false));
                 this.getControlArray("NameTranslations").at(i).get("LanguageId")?.setValue(this.languages[findIndexLanguages]);
                 this.copyLanguages.splice(findIndexLanguagesRemove, 1)
@@ -189,19 +162,31 @@ export class AddPlanComponent {
               }
             }
           });
-          // let nameTranslations =  planGetById.nameTranslations.map(translate => translate.languageId);
-          // let languages = this.copyLanguages.filter(language => !nameTranslations.includes(language.id));
-          // let selectLanguage = languages.findIndex(lang => lang.id === planGetById.nameTranslations[planGetById.nameTranslations.length -1].languageId);
-          // console.log(languages);
-          // this.getControlArray("NameTranslations").at(this.getControlArray("NameTranslations").controls.length - 1).get("languages")?.setValue(languages);
-          // this.getControlArray("NameTranslations").at(this.getControlArray("NameTranslations").controls.length - 1).get("LanguageId")?.setValue(languages[selectLanguage]);
 
-          this.getControl("IsActive")?.setValue(planGetById.isActive);
-          this.getControl("IsTrial")?.setValue(planGetById.isTrial);
-          this.getControl("MaxNumberOfEmployees")?.setValue(planGetById.maxNumberOfEmployees);
-          this.getControl("MinNumberOfEmployees")?.setValue(planGetById.minNumberOfEmployees);
-          this.getControl("Notes")?.setValue(planGetById.notes);
-          this.getControl("EmployeeCost")?.setValue(planGetById.employeeCost);
+     
+          this.getControl("IsActive")?.setValue(ScreenGetById.isActive);
+          this.getControl("Notes")?.setValue(ScreenGetById.notes);
+          this.getControl("AuthenticationType")?.setValue(ScreenGetById.authenticationType.toString());
+          
+
+          if(ScreenGetById.parentId >=0) {
+            this.screenGroupsService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0,LocalAuthenticationType:ScreenGetById.authenticationType, id: ScreenGetById.parentId }).subscribe(dataDropdown => {
+              
+              this.listParent = [];
+              dataDropdown?.forEach((screen: any) => {
+                this.listParent.push({ name: screen.name, key: screen.id });
+              });
+              let indexParentId = this.listParent.findIndex(list => list.key === ScreenGetById.parentId);
+              if (indexParentId >= 0) {
+                this.getControl("ParentId")?.setValue(this.listParent[indexParentId]);
+
+              }
+            })
+       
+
+          }
+          this.getControl("Icon")?.setValue(ScreenGetById.icon);
+          this.getControl("Order")?.setValue(ScreenGetById.order);
 
           this.loading = false;
         },
@@ -212,65 +197,41 @@ export class AddPlanComponent {
 
         }
       })
-      // this.plansService.planGetById({ planId: this.id }).subscribe(
-      //   {
-      //     next: data => {
-      //       
-      //       this.addBranchGroupForm.get("IsNecessary")?.setValue(data.isActive);
-      //       this.addBranchGroupForm.get("name")?.setValue(data.name);
-      //       this.getLanguages();
 
-      //     },
-      //     error: err => {
-      //       this.loading = false;
-      //     }
-      //   }
-      // )
 
     }
-    if (!this.editPlane) {
-      let getLanguages = this.plansService.getLanguages(this.filterationLanguages);
-      let screenGetForDropDown = this.plansService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+    if (!this.editScreen) {
+      let getLanguages = this.screenGroupsService.getLanguages(this.filterationLanguages);
+      let screenGetForDropDown = this.screenGroupsService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0 });
+      let screenGroupGetForDropDown  = this.screenGroupsService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0, LocalAuthenticationType:this.addBranchGroupForm.get("AuthenticationType")?.value });
+       
       combineLatest({
         getLanguages,
-        screenGetForDropDown
+        screenGetForDropDown,
+        screenGroupGetForDropDown
       }).subscribe({
         next: data => {
           let getLanguage = data.getLanguages;
-          
-
           getLanguage.forEach((country: any) => {
-            
             this.languages.push({ name: country.name, id: country.id });
             this.copyLanguages.push({ name: country.name, id: country.id });
           });
           this.getControlArray("NameTranslations").at(0).get("languages")?.setValue(this.languages);
-
-          
-          data.screenGetForDropDown.forEach((screen: any) => {
-            
-            this.listAllScreensAvailable.push({ name: screen.name, id: screen.id });
-            // this.copyLanguages.push({ name: country.name, id: country.id });
+        
+          data.screenGroupGetForDropDown.forEach((screen: any) => {
+            this.listParent.push({ name: screen.name, id: screen.id });
           });
-
           this.loading = false;
         },
         error:err => {
-          
-
           this.loading = false;
-
         }
       })
-      // this.getLanguages();
-
     }
-
-
   }
   getLanguages() {
 
-    this.plansService.getLanguages(this.filterationLanguages).subscribe({
+    this.screenGroupsService.getLanguages(this.filterationLanguages).subscribe({
       next:res => {
         
         res.forEach((country: any) => {
@@ -349,22 +310,10 @@ export class AddPlanComponent {
         this.getControlArray("NameTranslations").at(this.getControlArray("NameTranslations").controls.length - 1).get("name")?.markAsDirty();
         this.getControlArray("NameTranslations").at(this.getControlArray("NameTranslations").controls.length - 1).get("LanguageId")?.markAsDirty();
       }
-    
-      // addBranchGroupForm: FormGroup = this.fb.group({
-      //   IsActive: [false],
-      //   IsTrial: [false],
-      //   NameTranslations: this.fb.array([this.createNewTranslate([], false)]),
-      //   MinNumberOfEmployees:["", [Validators.required]],
-      //   MaxNumberOfEmployees:["", [Validators.required]],
-      //   EmployeeCost:["", [Validators.required]],
-      //   Notes:["", [Validators.required]]
-    
-      // });
-      this.getControl("MinNumberOfEmployees")?.markAsDirty();
-      this.getControl("MaxNumberOfEmployees")?.markAsDirty();
-      this.getControl("EmployeeCost")?.markAsDirty();
       this.getControl("Notes")?.markAsDirty();
-      this.getControl("ScreensIds")?.markAsDirty();
+      this.getControl("Order")?.markAsDirty();
+      this.getControl("Icon")?.markAsDirty();
+      this.getControl("ParentId")?.markAsDirty();
 
       
     }
@@ -373,41 +322,24 @@ export class AddPlanComponent {
   lastSearchQuery = "";
 
   searchDropdown(data: any, type: string) {
-
     switch (type) {
-      case 'ScreensIds':
-        if (data || data === "") {
-          if (data !== this.lastSearchQuery || data === "") {
-            this.lastSearchQuery = data;
-            this.plansService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-            this.plansService.screenGetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
+   
+        case 'LanguageId':
+        if (data.value || data.value === "") {
+          if (data.value !== this.lastSearchQuery || data.value === "") {
+            this.lastSearchQuery = data.value;
+            this.screenGroupsService.getLanguages({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listAllScreensAvailable = [];
-                this.lastSearchQuery = "";
-                res?.forEach((screen: any) => {
-                  this.listAllScreensAvailable.push({ name: screen.name, key: screen.id })
+                let languages:any[] = [];
+                res.forEach((country: any) => {
+                  languages.push({ name: country.name, id: country.id });
                 });
+                this.getControlArray("NameTranslations").at(data.index).get("languages")?.setValue(languages);
               });
           }
         }
-        break;
-        case 'LanguageId':
-          if (data.value || data.value === "") {
-            if (data.value !== this.lastSearchQuery || data.value === "") {
-              this.lastSearchQuery = data.value;
-              this.plansService.getLanguages({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).pipe(
-                debounceTime(300),
-                distinctUntilChanged()).subscribe((res: any) => {
-                  let languages:any[] = [];
-                  res.forEach((country: any) => {  
-                    languages.push({ name: country.name, id: country.id });
-                  });
-                  this.getControlArray("NameTranslations").at(data.index).get("languages")?.setValue(languages);
-                });
-            }
-          }
-          break
+        break
       default:
         break;
     }
