@@ -95,28 +95,28 @@ export class UpdateScreenComponent {
     this.loading = true;
  
     this.addBranchGroupForm.get("AuthenticationType")?.valueChanges.subscribe(data => {
-
-      this.screensService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0, LocalAuthenticationType:data }).subscribe({
-        next:data => {
-          this.listParent = [];
-          data.forEach((screen: any) => {
-            this.listParent.push({ name: screen.name, id: screen.id });
-          });
-        },
-        error:err => {
-
-        }
-      })
+      if(data != null) {
+        this.screensService.screenGroupGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0, LocalAuthenticationType:data }).subscribe({
+          next:data => {
+            this.listParent = [];
+            data.forEach((screen: any) => {
+              this.listParent.push({ name: screen.name, id: screen.id });
+            });
+          },
+          error:err => {
+  
+          }
+        })
+      }
+      
     })
     if (this.editScreen) {
       let ScreenGetById = this.screensService.ScreenGetById({ screenId: this.id });
       let getLanguages = this.screensService.getLanguages(this.filterationLanguages);
-      let screenGetForDropDown = this.screensService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0,LocalAuthenticationType:this.addBranchGroupForm.get("AuthenticationType")?.value });
 
       combineLatest({
         ScreenGetById,
         getLanguages,
-        screenGetForDropDown
       }).subscribe({
         next: data => {
           let ScreenGetById = data.ScreenGetById;
@@ -126,16 +126,7 @@ export class UpdateScreenComponent {
             this.languages.push({ name: country.name, id: country.id });
             this.copyLanguages.push({ name: country.name, id: country.id });
           });
-          // data.screenGetForDropDown.forEach((screen: any) => {
-          //   this.listAllScreensAvailable.push({ name: screen.name, id: screen.id });
-
-          // });
-          
-
-       
-
-          
-
+ 
           ScreenGetById.nameTranslations?.forEach((translate, i) => {
             
             if(i === 0) {
@@ -169,9 +160,11 @@ export class UpdateScreenComponent {
           this.getControl("Notes")?.setValue(ScreenGetById.notes);
           this.getControl("AuthenticationType")?.setValue(ScreenGetById.authenticationType.toString());
           
+          debugger;
 
-          if(ScreenGetById.parentId >=0) {
-            this.screensService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0,LocalAuthenticationType:ScreenGetById.authenticationType, id: ScreenGetById.parentId }).subscribe(dataDropdown => {
+          if(ScreenGetById.parentId != null) {
+            debugger;
+            this.screensService.screenGroupGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0,LocalAuthenticationType:ScreenGetById.authenticationType, id: ScreenGetById.parentId }).subscribe(dataDropdown => {
               
               this.listParent = [];
               dataDropdown?.forEach((screen: any) => {
@@ -185,6 +178,19 @@ export class UpdateScreenComponent {
             })
        
 
+          } else {
+            this.screensService.screenGroupGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0,LocalAuthenticationType:ScreenGetById.authenticationType }).subscribe(dataDropdown => {
+              
+              this.listParent = [];
+              dataDropdown?.forEach((screen: any) => {
+                this.listParent.push({ name: screen.name, key: screen.id });
+              });
+              let indexParentId = this.listParent.findIndex(list => list.key === ScreenGetById.parentId);
+              if (indexParentId >= 0) {
+                this.getControl("ParentId")?.setValue(this.listParent[indexParentId]);
+
+              }
+            })
           }
           this.getControl("Icon")?.setValue(ScreenGetById.icon);
           this.getControl("URL")?.setValue(ScreenGetById.url);
@@ -206,12 +212,10 @@ export class UpdateScreenComponent {
     }
     if (!this.editScreen) {
       let getLanguages = this.screensService.getLanguages(this.filterationLanguages);
-      let screenGetForDropDown = this.screensService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-      let screenGroupGetForDropDown  = this.screensService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0, LocalAuthenticationType:this.addBranchGroupForm.get("AuthenticationType")?.value });
+      let screenGroupGetForDropDown  = this.screensService.screenGroupGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0, LocalAuthenticationType:this.addBranchGroupForm.get("AuthenticationType")?.value });
        
       combineLatest({
         getLanguages,
-        screenGetForDropDown,
         screenGroupGetForDropDown
       }).subscribe({
         next: data => {
