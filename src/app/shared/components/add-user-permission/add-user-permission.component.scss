@@ -16,8 +16,20 @@
 :host ::ng-deep .p-dropdown {
   width: 100% !important;
 }
-
-
+.authenticationTypeName {
+  padding: 15px;
+  font-size: 18px;
+  background-color: #3085FE;
+  color: white;
+}
+:host ::ng-deep .p-accordion-header-link {
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+:host ::ng-deep .p-accordion .p-accordion-header .p-accordion-header-link .p-accordion-toggle-icon {
+  margin-left: 0.5rem !important;
+  margin-right: 0 !important;
+}
 :host ::ng-deep .p-calendar {
   width: 100%;
 }

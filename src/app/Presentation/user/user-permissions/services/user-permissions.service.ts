@@ -26,6 +26,15 @@ export class UserPermissionsService {
     }
     return this.http.get<any>(`${environment.baseUrl}Permission/GetAllScreensWithAvailableActions`, { params: queryParams })
   }
+  getAllScreensWithAvailableActions(filter: any): Observable<any> {
+    let queryParams = new HttpParams();
+    if (filter) {
+      Object.entries(filter).forEach(([key, value]: any) => {
+        queryParams = queryParams.set(key, value);
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}Screen/GetAllScreensWithAvailableActions`, { params: queryParams })
+  }
   getInformation(): Observable<any> {
 
     return this.http.get<any>(`${environment.baseUrl}Permission/GetPermissionsInformations`).pipe(map(data => data.data));

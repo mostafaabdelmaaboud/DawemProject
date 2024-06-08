@@ -23,6 +23,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import * as moment from 'moment';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ToastrService } from 'ngx-toastr';
+import { AccordionModule } from 'primeng/accordion';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -77,7 +78,7 @@ interface UploadEvent {
     TableModule,
     PaginatorModule,
     NgxPaginationModule,
-    MultiSelectModule, MatProgressSpinnerModule, CheckboxModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
+    MultiSelectModule, MatProgressSpinnerModule, CheckboxModule, DropdownModule,AccordionModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
   templateUrl: './add-user-permission.component.html',
   styleUrls: ['./add-user-permission.component.scss']
 })
@@ -212,7 +213,7 @@ export class AddUserPermissionComponent {
       this.columns = [
         {
           name: data.screenNamePermissionName,
-          field: "screenName",
+          field: "name",
         },
         {
           name: data.addition,
@@ -324,7 +325,7 @@ export class AddUserPermissionComponent {
 
                     });
                   }
-                  this.permissionScreens = data?.permissionScreens;
+                  this.permissionScreens = data?.screens;
                   this.getPermissions(this.filteration, this.permissionScreens);
 
                 },
@@ -533,69 +534,180 @@ export class AddUserPermissionComponent {
     this.getPermissions(this.filteration, this.permissionScreens)
   }
   lastSearchQuery = "";
+  searchNodes(nodes: any[]): any[] {
+    let result: any[] = [];
+  
+    function recursiveSearch(node: any,parentIndex, i, status) {
+      if (node?.groupOrScreenType === 0 && node?.children?.length) {
+        node.children.forEach((child:any, childIndex:number) => {
+          node.children[childIndex] = child;
+          recursiveSearch(child, parentIndex, childIndex, "child");
+        });
+      } else if (node.groupOrScreenType === 1) {
+        if(status === "child") {
+          node.changes = {
+            "0": {
+              readoOnly: node.availableActions.includes(0) ? false : true,
+              checkbox: false
+            },
+            "1": {
+              readoOnly: node.availableActions.includes(1) ? false : true,
+              checkbox: false
+            },
+            "2": {
+              readoOnly: node.availableActions.includes(2) ? false : true,
+              checkbox: false
+            },
+            "3": {
+              readoOnly: node.availableActions.length > 0 ? false : true,
+              checkbox: false
+            },
+            "4": {
+              readoOnly: node.availableActions.includes(4) ? false : true,
+              checkbox: false
+            },
+            "5": {
+              readoOnly: node.availableActions.includes(5) ? false : true,
+              checkbox: false
+            },
+            "6": {
+              readoOnly: node.availableActions.includes(6) ? false : true,
+              checkbox: false
+            },
+            "7": {
+              readoOnly: node.availableActions.includes(7) ? false : true,
+              checkbox: false
+            }
+          }
+          // node = 
+        } else {
+          node.changes = {
+            "0": {
+              readoOnly: node.availableActions.includes(0) ? false : true,
+              checkbox: false
+            },
+            "1": {
+              readoOnly: node.availableActions.includes(1) ? false : true,
+              checkbox: false
+            },
+            "2": {
+              readoOnly: node.availableActions.includes(2) ? false : true,
+              checkbox: false
+            },
+            "3": {
+              readoOnly: node.availableActions.length > 0 ? false : true,
+              checkbox: false
+            },
+            "4": {
+              readoOnly: node.availableActions.includes(4) ? false : true,
+              checkbox: false
+            },
+            "5": {
+              readoOnly: node.availableActions.includes(5) ? false : true,
+              checkbox: false
+            },
+            "6": {
+              readoOnly: node.availableActions.includes(6) ? false : true,
+              checkbox: false
+            },
+            "7": {
+              readoOnly: node.availableActions.includes(7) ? false : true,
+              checkbox: false
+            }
+          }
+        
+        }
+   
+        // result.push({
+         
+        // });
+      }
+    }
+  
+    nodes.forEach((node, i:number) => {
+      recursiveSearch(node, i, null, "parent");
+    });
+
+    return nodes;
+  }
+  searchChildren(nodes:any[]) {
+    let result: any[] = [];
+  
+    function recursiveSearch(node: any,parentIndex) {
+      if (node?.groupOrScreenType === 0 && node?.children?.length) {
+        node.children.forEach((child:any) => {
+          recursiveSearch(child, parentIndex);
+        });
+      } else if (node.groupOrScreenType === 1) {
+        result.push(node);
+   
+        // result.push({
+         
+        // });
+      }
+    }
+  
+    nodes.forEach((node, i:number) => {
+      recursiveSearch(node, i);
+    });
+
+    return result;
+  }
+  searchByActionId(nodes:any[], actions) {
+    function recursiveSearch(node: any,parentIndex) {
+      if (node?.groupOrScreenType === 0 && node?.children?.length) {
+        node.children.forEach((child:any) => {
+          recursiveSearch(child, parentIndex);
+        });
+      } else if (node.groupOrScreenType === 1) {
+        let findIndexActions = actions.findIndex(action => action.id === node.id);
+        if(findIndexActions >= 0) {
+          actions[findIndexActions].actions.forEach(actionInside => {
+            node.changes[actionInside].checkbox = true
+          });
+        }
+      }
+    }
+  
+    nodes.forEach((node, i:number) => {
+      recursiveSearch(node, i);
+    });
+  }
   getPermissions(filteration: any, permissionScreens: any) {
     this.permissions = [];
     this.isLoading = true;
 
-    this.userPermissionsService.availableActions(filteration).subscribe({
+    this.userPermissionsService.getAllScreensWithAvailableActions(filteration).subscribe({
       next: data => {
 
-        data.data.screens.forEach((screen: any) => {
+        data.data.menuItemsTypes.forEach((screen: any, i:number) => {
 
-
-          this.permissions.push({
-            screenCode: screen.screenCode,
-            screenName: screen.screenName,
-            "0": {
-              readoOnly: screen.availableActions.includes(0) ? false : true,
-              checkbox: false
-            },
-            "1": {
-              readoOnly: screen.availableActions.includes(1) ? false : true,
-              checkbox: false
-            },
-            "2": {
-              readoOnly: screen.availableActions.includes(2) ? false : true,
-              checkbox: false
-            },
-            "3": {
-              readoOnly: screen.availableActions.length > 0 ? false : true,
-              checkbox: false
-            },
-            "4": {
-              readoOnly: screen.availableActions.includes(4) ? false : true,
-              checkbox: false
-            },
-            "5": {
-              readoOnly: screen.availableActions.includes(5) ? false : true,
-              checkbox: false
-            },
-            "6": {
-              readoOnly: screen.availableActions.includes(6) ? false : true,
-              checkbox: false
-            },
-            "7": {
-              readoOnly: screen.availableActions.includes(7) ? false : true,
-              checkbox: false
-            }
-          })
+          let formatObject = this.searchNodes(screen.menuItems);
+          console.log(formatObject)
+          this.permissions.push({...screen, menuItems: formatObject});
+          
         });
 
         this.totalItems = data.totalCount
 
         if (this.editPermission) {
           if (permissionScreens.length > 0) {
-            permissionScreens.forEach((permission: any) => {
-              let indexPermission = this.permissions.findIndex((per: any) => per.screenCode == permission.screenCode);
-              if (indexPermission >= 0) {
-                permission.permissionScreenActions.forEach((action: any) => {
-                  this.permissions[indexPermission][action.actionCode.toString()].checkbox = true;
-                  this.permissions[indexPermission][action.actionCode.toString()].readoOnly = false;
+            
+            this.permissions.forEach(permission => {
+              this.searchByActionId(permission.menuItems, permissionScreens)
+            })
+            // permissionScreens.forEach((permission: any) => {
+            
+            //   let indexPermission = this.permissions.findIndex((per: any) => per.screenId == permission.screenId);
+            //   if (indexPermission >= 0) {
+            //     permission.actions.forEach((action: any) => {
+            //       this.permissions[indexPermission][action.ScreenId.toString()].checkbox = true;
+            //       this.permissions[indexPermission][action.ScreenId.toString()].readoOnly = false;
 
-                });
+            //     });
 
-              }
-            });
+            //   }
+            // });
           }
           this.isLoading = false;
           this.loading = false;
@@ -665,58 +777,59 @@ export class AddUserPermissionComponent {
 
   request() {
     let formatObject: any = {};
-    let filterPermission = this.permissions.filter((permission: any) => {
-      let changeCechbox = false;
-      for (let per in permission) {
-        const pro = permission[per];
-        if (pro.readoOnly === false && pro.checkbox === true) {
-          changeCechbox = true
-        }
-      }
-      return changeCechbox;
-
+    let childrenOnly:any[] = [];
+    this.permissions.forEach(item => {
+      let child:any = this.searchChildren(item.menuItems);
+      childrenOnly.push(...child)
     });
 
 
-    formatObject.PermissionScreens = filterPermission.map((permission: any) => {
-      let filterObject: any = {};
+    let filterPermission = childrenOnly.filter((permission: any) => {
+      let changeCechbox = false;
+ 
+          for (let perInsie in permission.changes) {
 
-      for (let per in permission) {
-        const pro = permission[per];
-        if (pro.readoOnly === false && pro.checkbox === true) {
-          filterObject[per] = pro;
+            if (permission.changes[perInsie].readoOnly === false && permission.changes[perInsie].checkbox === true) {
+
+              changeCechbox = true
+            }
+          }
+     
+      return changeCechbox;
+
+
+    });
+    formatObject.Screens = filterPermission.map((permission: any, i:number) => {
+      let filterObject: any = {};
+      for (let perInsie in permission.changes) {
+
+        if (permission.changes[perInsie].readoOnly === false && permission.changes[perInsie].checkbox === true) {
+          filterObject[perInsie] = permission;
         }
       }
       let arrayChange: any = Object.keys(filterObject);
       arrayChange = arrayChange.map((changeCheck: any) => {
-        return { ActionCode: Number(changeCheck) }
+        return  Number(changeCheck)
       })
-      return { ScreenCode: permission.screenCode, PermissionScreenActions: arrayChange };
+      return { ScreenId: permission.id, Actions: arrayChange };
     });
     //  && this.submitted
-    if (this.addBranchGroupForm.valid && this.submitted && formatObject.PermissionScreens.length > 0) {
+    console.log(formatObject);
+    if (this.addBranchGroupForm.valid && this.submitted && formatObject.Screens.length > 0) {
       this.submitted = false;
-
       formatObject.ForType = Number(this.addBranchGroupForm.value.ForType);
       formatObject.ResponsibilityId = formatObject.ForType === 0 ? this.addBranchGroupForm.value.ResponsibilityId.key : null;
       formatObject.UserId = formatObject.ForType === 1 ? this.addBranchGroupForm.value.UserId.key : null;
       formatObject.IsActive = this.addBranchGroupForm.get("isActive")?.value;
-
-
-
       this.submitClicked.emit(formatObject);
     } else {
       this.getControl("UserId")?.markAsDirty();
       this.getControl("ResponsibilityId")?.markAsDirty();
-      if (formatObject.PermissionScreens.length == 0) {
+      if (formatObject.Screens.length == 0) {
         this.translate.get("userPermissions").subscribe(translate => {
           this.toast.error(translate.pleaseSelectApermissionPeriod);
         });
-        
       }
-
-
-
     }
 
   }

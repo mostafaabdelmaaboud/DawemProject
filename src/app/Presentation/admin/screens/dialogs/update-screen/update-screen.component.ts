@@ -160,10 +160,7 @@ export class UpdateScreenComponent {
           this.getControl("Notes")?.setValue(ScreenGetById.notes);
           this.getControl("AuthenticationType")?.setValue(ScreenGetById.authenticationType.toString());
           
-          debugger;
-
           if(ScreenGetById.parentId != null) {
-            debugger;
             this.screensService.screenGroupGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0,LocalAuthenticationType:ScreenGetById.authenticationType, id: ScreenGetById.parentId }).subscribe(dataDropdown => {
               
               this.listParent = [];
