@@ -23,6 +23,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import * as moment from 'moment';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ToastrService } from 'ngx-toastr';
+import { AccordionModule } from 'primeng/accordion';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -77,7 +78,7 @@ interface UploadEvent {
     TableModule,
     PaginatorModule,
     NgxPaginationModule,
-    MultiSelectModule, MatProgressSpinnerModule, CheckboxModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
+    MultiSelectModule, MatProgressSpinnerModule, CheckboxModule,AccordionModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
   templateUrl: './add-user-permission-admin.component.html',
   styleUrls: ['./add-user-permission-admin.component.scss']
 })
@@ -119,7 +120,7 @@ export class AddUserPermissionAdminComponent {
   columns: any[] = [
     {
       name: "اسم الشاشة/اسم الصلاحية",
-      field: "screenName",
+      field: "name",
     },
     {
       name: "اضافة",
@@ -212,7 +213,7 @@ export class AddUserPermissionAdminComponent {
       this.columns = [
         {
           name: data.screenNamePermissionName,
-          field: "screenName",
+          field: "name",
         },
         {
           name: data.addition,
@@ -324,7 +325,7 @@ export class AddUserPermissionAdminComponent {
 
                     });
                   }
-                  this.permissionScreens = data?.permissionScreens;
+                  this.permissionScreens = data?.screens;
                   this.getPermissions(this.filteration, this.permissionScreens);
 
                 },
@@ -530,70 +531,180 @@ export class AddUserPermissionAdminComponent {
     this.filteration = { ...this.filteration, PageNumber: event.page };
     this.getPermissions(this.filteration, this.permissionScreens)
   }
+  searchNodes(nodes: any[]): any[] {
+    let result: any[] = [];
+  
+    function recursiveSearch(node: any,parentIndex, i, status) {
+      if (node?.groupOrScreenType === 0 && node?.children?.length) {
+        node.children.forEach((child:any, childIndex:number) => {
+          node.children[childIndex] = child;
+          recursiveSearch(child, parentIndex, childIndex, "child");
+        });
+      } else if (node.groupOrScreenType === 1) {
+        if(status === "child") {
+          node.changes = {
+            "0": {
+              readoOnly: node.availableActions.includes(0) ? false : true,
+              checkbox: false
+            },
+            "1": {
+              readoOnly: node.availableActions.includes(1) ? false : true,
+              checkbox: false
+            },
+            "2": {
+              readoOnly: node.availableActions.includes(2) ? false : true,
+              checkbox: false
+            },
+            "3": {
+              readoOnly: node.availableActions.length > 0 ? false : true,
+              checkbox: false
+            },
+            "4": {
+              readoOnly: node.availableActions.includes(4) ? false : true,
+              checkbox: false
+            },
+            "5": {
+              readoOnly: node.availableActions.includes(5) ? false : true,
+              checkbox: false
+            },
+            "6": {
+              readoOnly: node.availableActions.includes(6) ? false : true,
+              checkbox: false
+            },
+            "7": {
+              readoOnly: node.availableActions.includes(7) ? false : true,
+              checkbox: false
+            }
+          }
+          // node = 
+        } else {
+          node.changes = {
+            "0": {
+              readoOnly: node.availableActions.includes(0) ? false : true,
+              checkbox: false
+            },
+            "1": {
+              readoOnly: node.availableActions.includes(1) ? false : true,
+              checkbox: false
+            },
+            "2": {
+              readoOnly: node.availableActions.includes(2) ? false : true,
+              checkbox: false
+            },
+            "3": {
+              readoOnly: node.availableActions.length > 0 ? false : true,
+              checkbox: false
+            },
+            "4": {
+              readoOnly: node.availableActions.includes(4) ? false : true,
+              checkbox: false
+            },
+            "5": {
+              readoOnly: node.availableActions.includes(5) ? false : true,
+              checkbox: false
+            },
+            "6": {
+              readoOnly: node.availableActions.includes(6) ? false : true,
+              checkbox: false
+            },
+            "7": {
+              readoOnly: node.availableActions.includes(7) ? false : true,
+              checkbox: false
+            }
+          }
+        
+        }
+   
+        // result.push({
+         
+        // });
+      }
+    }
+  
+    nodes.forEach((node, i:number) => {
+      recursiveSearch(node, i, null, "parent");
+    });
+
+    return nodes;
+  }
+  searchChildren(nodes:any[]) {
+    let result: any[] = [];
+  
+    function recursiveSearch(node: any,parentIndex) {
+      if (node?.groupOrScreenType === 0 && node?.children?.length) {
+        node.children.forEach((child:any) => {
+          recursiveSearch(child, parentIndex);
+        });
+      } else if (node.groupOrScreenType === 1) {
+        result.push(node);
+   
+        // result.push({
+         
+        // });
+      }
+    }
+  
+    nodes.forEach((node, i:number) => {
+      recursiveSearch(node, i);
+    });
+
+    return result;
+  }
+  searchByActionId(nodes:any[], actions) {
+    function recursiveSearch(node: any,parentIndex) {
+      if (node?.groupOrScreenType === 0 && node?.children?.length) {
+        node.children.forEach((child:any) => {
+          recursiveSearch(child, parentIndex);
+        });
+      } else if (node.groupOrScreenType === 1) {
+        let findIndexActions = actions.findIndex(action => action.id === node.id);
+        if(findIndexActions >= 0) {
+          actions[findIndexActions].actions.forEach(actionInside => {
+            node.changes[actionInside].checkbox = true
+          });
+        }
+      }
+    }
+  
+    nodes.forEach((node, i:number) => {
+      recursiveSearch(node, i);
+    });
+  }
   lastSearchQuery = "";
   getPermissions(filteration: any, permissionScreens: any) {
     this.permissions = [];
     this.isLoading = true;
 
-    this.userPermissionsService.availableActions(filteration).subscribe({
+    this.userPermissionsService.getAllScreensWithAvailableActions(filteration).subscribe({
       next: data => {
+        data.data.menuItemsTypes.forEach((screen: any, i:number) => {
 
-        data.data.screens.forEach((screen: any) => {
-
-
-          this.permissions.push({
-            screenCode: screen.screenCode,
-            screenName: screen.screenName,
-            "0": {
-              readoOnly: screen.availableActions.includes(0) ? false : true,
-              checkbox: false
-            },
-            "1": {
-              readoOnly: screen.availableActions.includes(1) ? false : true,
-              checkbox: false
-            },
-            "2": {
-              readoOnly: screen.availableActions.includes(2) ? false : true,
-              checkbox: false
-            },
-            "3": {
-              readoOnly: screen.availableActions.length > 0 ? false : true,
-              checkbox: false
-            },
-            "4": {
-              readoOnly: screen.availableActions.includes(4) ? false : true,
-              checkbox: false
-            },
-            "5": {
-              readoOnly: screen.availableActions.includes(5) ? false : true,
-              checkbox: false
-            },
-            "6": {
-              readoOnly: screen.availableActions.includes(6) ? false : true,
-              checkbox: false
-            },
-            "7": {
-              readoOnly: screen.availableActions.includes(7) ? false : true,
-              checkbox: false
-            }
-          })
+          let formatObject = this.searchNodes(screen.menuItems);
+          console.log(formatObject)
+          this.permissions.push({...screen, menuItems: formatObject});
+          
         });
 
         this.totalItems = data.totalCount
 
         if (this.editPermission) {
           if (permissionScreens.length > 0) {
-            permissionScreens.forEach((permission: any) => {
-              let indexPermission = this.permissions.findIndex((per: any) => per.screenCode == permission.screenCode);
-              if (indexPermission >= 0) {
-                permission.permissionScreenActions.forEach((action: any) => {
-                  this.permissions[indexPermission][action.actionCode.toString()].checkbox = true;
-                  this.permissions[indexPermission][action.actionCode.toString()].readoOnly = false;
+            
+            this.permissions.forEach(permission => {
+              this.searchByActionId(permission.menuItems, permissionScreens)
+            })
+            // permissionScreens.forEach((permission: any) => {
+            
+            //   let indexPermission = this.permissions.findIndex((per: any) => per.screenId == permission.screenId);
+            //   if (indexPermission >= 0) {
+            //     permission.actions.forEach((action: any) => {
+            //       this.permissions[indexPermission][action.ScreenId.toString()].checkbox = true;
+            //       this.permissions[indexPermission][action.ScreenId.toString()].readoOnly = false;
 
-                });
+            //     });
 
-              }
-            });
+            //   }
+            // });
           }
           this.isLoading = false;
           this.loading = false;
@@ -601,7 +712,6 @@ export class AddUserPermissionAdminComponent {
           this.isLoading = false;
           this.loading = false;
         }
-
       },
       error: err => {
         this.isLoading = false;
