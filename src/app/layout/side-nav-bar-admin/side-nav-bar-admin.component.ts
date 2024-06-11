@@ -14,6 +14,15 @@ import { Router } from '@angular/router';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+interface MenuItem {
+  id: number;
+  groupOrScreenType: number;
+  name: string;
+  icon: string;
+  url: string;
+  availableActions: number[];
+  children: MenuItem[] | null;
+}
 
 @Component({
   selector: 'app-side-nav-bar-admin',
@@ -22,8 +31,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class SideNavBarAdminComponent {
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
-
-  
+ 
   items = Array.from({ length: 100000 }).map((_, i) => `Item #${i}`);
   currentLang = localStorage.getItem("lang");
   Newlang: string = '';
@@ -39,6 +47,7 @@ export class SideNavBarAdminComponent {
   private _mobileQueryListener: () => void;
   listComponents:any[] = [];
   router = inject(Router);
+  menuItems:MenuItem[] | any = [];
 
   // private dialog = inject(MatDialog);
   public permissionsService = inject(PermissionsService);
@@ -76,7 +85,19 @@ export class SideNavBarAdminComponent {
     {screenCode:7, checkScreen:false},
     {screenCode:8, checkScreen:false},
 
-  ]
+  ];
+  isSidebarExpanded: boolean = false;
+  step:any = null;
+  setStep(index: number) {
+    this.step = index;
+  }
+  onSidebarMouseEnter() {
+    this.isSidebarExpanded = true;
+  }
+
+  onSidebarMouseLeave() {
+    this.isSidebarExpanded = false;
+  }
   constructor(private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     public translate: TranslateService,
     public authService: AuthService,
@@ -116,6 +137,9 @@ export class SideNavBarAdminComponent {
   ngOnInit(): void {
     let permission = JSON.parse(localStorage.getItem('adminPermissions') as string)
     this.isAdmin = permission?.isAdmin;
+    let menuItems = JSON.parse(localStorage.getItem('menuItems') as string)
+    this.menuItems = menuItems;
+
     // this.notificationService.getNotification().subscribe(data => {
     //   this.numNotification = data?.NotificationData?.UnViewdNotificationCount;
     // });

@@ -65,9 +65,7 @@ export class PermissionsUserService {
   }
   checkPermissionAdmin(data: any): boolean {
     let check = false;
-    if (this.getPermissionsAdmin()?.isAdmin) {
-      check = true
-    } else {
+
       if (data?.type === "component") {
         if ((this.getPermissionsAdmin()?.availablePermissions as any[])?.length > 0) {
           let findIndexPermission = (this.getPermissionsAdmin().availablePermissions as any[]).findIndex(permission => permission.screenCode === data.screenCode);
@@ -88,7 +86,6 @@ export class PermissionsUserService {
           this.authService.logoutAdmin();
         }
       }
-    }
     return check
   }
 }

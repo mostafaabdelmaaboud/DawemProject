@@ -7,14 +7,16 @@
     <span class="logo"><img src="assets/img/Link.png" alt="logo"></span>
       <nz-layout>
         <nz-sider>
+          <div class="list-content" *ngIf="menuItems?.length > 0">
+            <ng-container *ngTemplateOutlet="recursiveTemplates; context: { $implicit: menuItems }"></ng-container>
 
-            <ul nz-menu nzMode="inline">
+          </div>
+            <!-- <ul nz-menu nzMode="inline">
  
               <ng-container *ngFor="let link of showLinks">
                 
                 <li *ngIf="link.screenCode === 0 && link.checkScreen" nz-menu-item routerLink="/admin/Companies"
                 routerLinkActive="ant-menu-item-selected">
-                <!-- الشركات -->
                 <span nz-icon></span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
                   <g id="Linear / Essentional, UI / Home Smile">
@@ -30,7 +32,6 @@
               </li>
               <li *ngIf="link.screenCode === 1 && link.checkScreen" nz-menu-item routerLink="/admin/userPermissions"
               routerLinkActive="ant-menu-item-selected">
-              <!-- الصلاحيات -->
               <span nz-icon></span>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -41,7 +42,6 @@
             </li>
               <li *ngIf="link.screenCode === 2 && link.checkScreen" nz-menu-item routerLink="/admin/PermissionLog"
                 routerLinkActive="ant-menu-item-selected">
-                <!-- سجلات الصلاحيات -->
                 <span nz-icon></span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
                   <g id="Linear / Electronic, Devices / Server">
@@ -63,7 +63,6 @@
               </li>
               <li *ngIf="link.screenCode === 3 && link.checkScreen" nz-menu-item routerLink="/admin/responsibility"
               routerLinkActive="ant-menu-item-selected">
-                              <!-- المسؤوليات -->
               <span nz-icon></span>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -74,7 +73,6 @@
             </li>
               <li *ngIf="link.screenCode === 4 && link.checkScreen" nz-menu-item routerLink="/admin/plans"
               routerLinkActive="ant-menu-item-selected">
-                                <!-- الخطط -->
               <span nz-icon></span>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
                 <path
@@ -93,7 +91,6 @@
             </li>
               <li *ngIf="link.screenCode === 5 && link.checkScreen" nz-menu-item routerLink="/admin/subscriptions"
                 routerLinkActive="ant-menu-item-selected">
-                  <!-- الإشتراكات -->
                 <span nz-icon></span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
                   <circle cx="9" cy="9.14502" r="7.5" stroke="#334155" stroke-width="1.2" />
@@ -104,7 +101,6 @@
               </li>
               <li *ngIf="link.screenCode === 6 && link.checkScreen" nz-menu-item routerLink="/admin/users"
               routerLinkActive="ant-menu-item-selected">
-                                <!-- المستخدمين -->
               <span nz-icon></span>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
                 <circle cx="6.75" cy="6.89502" r="1.5" stroke="#334155" stroke-width="1.2" />
@@ -122,7 +118,6 @@
             </li>
               <li *ngIf="link.screenCode === 7 && link.checkScreen" nz-menu-item routerLink="/admin/subscriptionsPayments"
               routerLinkActive="ant-menu-item-selected">
-                  <!-- مدفوعات الإشتراكات -->
               <span nz-icon></span>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
                 <circle cx="9" cy="9.14502" r="7.5" stroke="#334155" stroke-width="1.2" />
@@ -133,7 +128,6 @@
             </li>
             <li *ngIf="link.screenCode === 8 && link.checkScreen" nz-menu-item routerLink="/admin/settings"
             routerLinkActive="ant-menu-item-selected">
-                <!-- مدفوعات الإشتراكات -->
             <span nz-icon></span>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
               <circle cx="9" cy="9.14502" r="7.5" stroke="#334155" stroke-width="1.2" />
@@ -144,7 +138,6 @@
           </li>
           <li *ngIf="link.screenCode === 9 && link.checkScreen" nz-menu-item routerLink="/admin/Screens"
             routerLinkActive="ant-menu-item-selected">
-                <!-- مدفوعات الإشتراكات -->
             <span nz-icon></span>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
               <circle cx="9" cy="9.14502" r="7.5" stroke="#334155" stroke-width="1.2" />
@@ -155,7 +148,6 @@
           </li>
           <li *ngIf="link.screenCode === 10 && link.checkScreen" nz-menu-item routerLink="/admin/ScreenGroup"
           routerLinkActive="ant-menu-item-selected">
-              <!-- مدفوعات الإشتراكات -->
           <span nz-icon></span>
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
             <circle cx="9" cy="9.14502" r="7.5" stroke="#334155" stroke-width="1.2" />
@@ -194,10 +186,63 @@
                   </ul>
                 </div>
               </li>
-            </ul>
+            </ul> -->
       
         </nz-sider>
+        <ng-template #recursiveTemplates let-nodes>
+          <ng-container *ngFor="let node of nodes">
+            <ng-container *ngIf="node?.groupOrScreenType === 0">
+              <mat-expansion-panel class="mat-elevation-z0"
+              (opened)="isSidebarExpanded = true;setStep(node?.id)" [expanded]="step === node?.id"
+                           (closed)="isSidebarExpanded = false">
+                <mat-expansion-panel-header>
+                  <ng-container *ngIf="node?.icon?.includes('pi-')">
+                    <i [class]="'pi ' + node?.icon"></i>
+    
+                  </ng-container>
+                  <ng-container *ngIf="node?.icon?.includes('bi-')">
+                    <i [class]="'bi ' + node?.icon"></i>
+    
+                  </ng-container>
+                  <span class="label text-sidebar" [ngClass]="{ hidden: !isSidebarExpanded }">
+                  
+                    {{node?.name}}
+                  </span>
+                </mat-expansion-panel-header>
+                <mat-nav-list>
+                  <ul nz-menu nzMode="inline">
+                    <ng-container *ngIf="node?.children && node?.children.length > 0">
+                      <ng-container *ngTemplateOutlet="recursiveTemplates; context: { $implicit: node?.children }"></ng-container>
+                    </ng-container>
+                    </ul>
+                </mat-nav-list>
+              </mat-expansion-panel>
+            </ng-container>
+            <ng-container *ngIf="node?.groupOrScreenType === 1">
+              <mat-list-item  class="side-nav-item" [routerLink]="node?.url+'/'+node.id">
+                <ul nz-menu nzMode="inline">
+                  <li nz-menu-item [routerLink]="node?.url+'/'+node.id" routerLinkActive="ant-menu-item-selected">
+                    <span nz-icon></span>
+           
+                    <ng-container *ngIf="node?.icon?.includes('pi-')">
+                      <i [class]="'pi ' + node?.icon"></i>
+      
+                    </ng-container>
+                    <ng-container *ngIf="node?.icon?.includes('bi-')">
+                      <i [class]="'bi ' + node?.icon"></i>
+      
+                    </ng-container>
+                    <span class="text-sidebar">{{node?.name}}</span>
+                  </li>  
+                </ul>
+              </mat-list-item>
+        
+            </ng-container>
 
+          </ng-container>
+       
+       
+      </ng-template>
       </nz-layout>
   </mat-sidenav>
   <mat-sidenav-content [style]="

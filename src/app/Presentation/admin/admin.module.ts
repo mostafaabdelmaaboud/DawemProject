@@ -39,58 +39,58 @@ const routes: Routes = [
       //   canActivate: [PermissionAminGuard]
       // },
       {
-        path: "responsibility",
+        path: "responsibility/:id",
         loadChildren: () => import('./responsibility/responsibility.module').then((m) => m.ResponsibilityModule),
         canActivate: [PermissionAminGuard]
       },
       {
-        path: "subscriptions",
+        path: "subscriptions/:id",
         loadChildren: () => import('./subscriptions/subscriptions.module').then((m) => m.SubscriptionsModule),
         canActivate: [PermissionAminGuard]
       },
       {
-        path: "userPermissions",
+        path: "userPermissions/:id",
         loadChildren: () => import('./user-permissions/user-permissions.module').then((m) => m.UserPermissionsModule),
         canActivate: [PermissionAminGuard]
       },
       {
-        path: "plans",
+        path: "plans/:id",
         loadChildren: () => import('./plans/plans.module').then((m) => m.PlansModule),
         canActivate: [PermissionAminGuard]
       },
       {
-        path: "users",
+        path: "users/:id",
         loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
         canActivate: [PermissionAminGuard]
       },
       {
-        path: "PermissionLog",
+        path: "PermissionLog/:id",
         loadChildren: () => import('./permission-log/permission-log.module').then((m) => m.PermissionLogModule),
         canActivate: [PermissionAminGuard]
       },
       {
-        path: "subscriptionsPayments",
+        path: "subscriptionsPayments/:id",
         loadChildren: () => import('./subscriptions-payments/subscriptions-payments.module').then((m) => m.SubscriptionsPaymentsModule),
         canActivate: [PermissionAminGuard]
       },
       
       {
-        path: "Companies",
+        path: "Companies/:id",
         loadChildren: () => import('./companies/companies.module').then((m) => m.CompaniesModule),
         canActivate: [PermissionAminGuard]
       },
       {
-        path: "settings",
+        path: "settings/:id",
         loadChildren: () => import('./settings/settings.module').then((m) => m.SettingsModule),
         canActivate: [PermissionAminGuard]
       },
       {
-        path: "Screens",
+        path: "Screens/:id",
         loadChildren: () => import('./screens/screens.module').then((m) => m.ScreensModule),
         canActivate: [PermissionAminGuard]
       },
       {
-        path: "ScreenGroup",
+        path: "ScreenGroup/:id",
         loadChildren: () => import('./screen-groups/screen-groups.module').then((m) => m.ScreenGroupsModule),
         canActivate: [PermissionAminGuard]
       },

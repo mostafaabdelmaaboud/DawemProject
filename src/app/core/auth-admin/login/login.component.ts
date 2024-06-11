@@ -191,6 +191,34 @@ export class LoginComponent {
     // }
     this.cd.detectChanges();
   }
+  searchChildren(nodes:any[]) {
+    let result: any[] = [];
+  
+    function recursiveSearch(node: any,parentIndex) {
+      if (node?.groupOrScreenType === 0 && node?.children?.length) {
+        node.children.forEach((child:any) => {
+          recursiveSearch(child, parentIndex);
+        });
+      } else if (node.groupOrScreenType === 1) {
+        result.push({
+          screenCode: node.id,
+          availableActions:node.availableActions,
+          url:node.url,
+          name:node.name,
+        });
+   
+        // result.push({
+         
+        // });
+      }
+    }
+  
+    nodes.forEach((node, i:number) => {
+      recursiveSearch(node, i);
+    });
+
+    return result;
+  }
   submit() {
     if (this.FormGroup.valid && this.loading) {
       this.loading = false;
@@ -203,86 +231,42 @@ export class LoginComponent {
       }).subscribe(
         {
           next: (res: any) => {
-            if(res.data.isAdmin) {
-              this.authService.setTokenAdmin(res.data.token);
-              let queryParams = new HttpParams();
-              if (this.filteration) {
-                Object.entries(this.filteration).forEach(([key, value]: any) => {
-                  queryParams = queryParams.set(key, value);
-                })
-              }
-              this.userPermissionsService.availableActions(this.filteration).subscribe({
-                next: data => {
-          
-                  let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: data.data.screens })
-                  localStorage.setItem("adminPermissions", formatObjectPermissions);
-                  let parseJson = JSON.parse(formatObjectPermissions);
-                  if (parseJson.availablePermissions.length > 0) {
-                      this.isLoading = false;
-                      this.loading = true;
-                      this.toast.success(res.message,"", {timeOut: 2000});
-                      this.router.navigate(["/admin/responsibility"]);
-                    } else {
-                    this.toast.error("you don't have permissions");
-                  this.isLoading = false;
-                  this.loading = true;
-                  }
-          
-                },
-                error: err => {
-                  this.toast.error(err.error.message);
-                  this.isLoading = false;
-                  this.loading = true;
-                }
-              }
-              )
-            }else {
-              let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: res.data.availablePermissions })
+            localStorage.setItem("adminMenuItems", JSON.stringify(res.data.menuItems));
+
+            this.authService.setTokenAdmin(res.data.token);
+            let queryParams = new HttpParams();
+            if (this.filteration) {
+              Object.entries(this.filteration).forEach(([key, value]: any) => {
+                queryParams = queryParams.set(key, value);
+              })
+            }
+
+            let screen = this.searchChildren(res.data.menuItems);
+            if(screen.length >0) {
+              let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: screen })
               localStorage.setItem("adminPermissions", formatObjectPermissions);
               let parseJson = JSON.parse(formatObjectPermissions);
+
               if (parseJson.isAdmin || parseJson.availablePermissions.length > 0) {
                 this.authService.setTokenAdmin(res.data.token);
                   this.isLoading = false;
                   this.loading = true;
-                  switch (res.data.availablePermissions?.[0]?.screenCode) {
-                    case 0:
-                      this.router.navigate(["/admin/Companies"]);
-                      break;
-                      case 1:
-                        this.router.navigate(["/admin/userPermissions"]);
-                        break;
-                        case 2:
-                        this.router.navigate(["/admin/PermissionLog"]);
-                        break;
-                        case 3:
-                        this.router.navigate(["/admin/responsibility"]);
-                        break;
-                        case 4:
-                        this.router.navigate(["/admin/plans"]);
-                        break;
-                        case 5:
-                        this.router.navigate(["/admin/subscriptions"]);
-                        break;
-                        case 6:
-                        this.router.navigate(["/admin/users"]);
-                        break;
-                        case 7:
-                        this.router.navigate(["/admin/subscriptionPayments"]);
-                        break;
-                        
-                    default:
-                      break;
-                  }
                   this.toast.success(res.message,"", {timeOut: 2000});
-                  this.router.navigate(["/admin/responsibility"]);
+                  if(parseJson.availablePermissions?.[0]?.screenCode >=0) {
+                    this.router.navigate([`${parseJson.availablePermissions?.[0]?.url}/${parseJson.availablePermissions?.[0]?.screenCode}`]);
+                    // this.router.navigate([`/user/dashboard/${parseJson.availablePermissions?.[0]?.screenCode}`]);
+                  }
               } else {
                 this.toast.error("you don't have permissions");
               this.isLoading = false;
               this.loading = true;
               }
+            }else {
+              this.toast.error("No Screen Permission");
+              this.isLoading = false;
+              this.loading = true;
             }
         
-            // this.isLoading = false;
           },
           error: err => {
             this.toast.error(err.error.message);

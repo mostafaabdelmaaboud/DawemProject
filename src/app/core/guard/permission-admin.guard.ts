@@ -12,34 +12,9 @@ export class PermissionAminGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      // return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: Number(route?.paramMap?.get('id')) }) ? true : false;
+      return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: Number(route?.paramMap?.get('id')) }) ? true : false;
 
-    if (state.url.includes("Companies")) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 0 });
-    } else if (state.url.includes("userPermissions")) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 1 });
-    } else if (state.url.includes("PermissionLog")) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 2 });
-    } else if (state.url.includes("responsibility")) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 3 });
-    } else if (state.url.includes("plans")) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 4 });
-    } else if (state.url.includes("subscriptions")) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 5 });
-    } else if (state.url.includes("admin/users")) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 6 });
-    }else if (state.url.includes("subscriptionsPayments")) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 7 });
-    }else if (state.url.includes("settings")) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 8 });
-    }else if (state.url.includes("Screens")) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 9 });
-    } else if (state.url.includes("ScreenGroup")) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 10 });
-    } else {
-      return false;
-      this.router.navigate(["/notPermission"])
-    }
+
     
   }
 
