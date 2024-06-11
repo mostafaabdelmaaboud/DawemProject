@@ -20,6 +20,7 @@ import { ResponsibilityService } from './services/responsibility.service';
 import { DialogResponsibilityFileComponent } from 'src/app/shared/components/dialog-responsibility-file/dialog-responsibility-file.component';
 import { RequestResponsibilityComponent } from 'src/app/shared/components/request-responsibility/request-responsibility.component';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-responsibility',
@@ -118,7 +119,11 @@ export class ResponsibilityComponent {
       this.config.setTranslation(data);
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -286,7 +291,7 @@ export class ResponsibilityComponent {
     )
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 17, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   mathRound(data: any) {
     return Math.ceil(data)

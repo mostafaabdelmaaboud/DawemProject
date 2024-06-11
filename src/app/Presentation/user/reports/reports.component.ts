@@ -15,6 +15,7 @@ import jsPDF from 'jspdf';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { ReportsService } from './services/reports.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-reports',
@@ -152,7 +153,11 @@ export class ReportsComponent {
 
     return null;
   }
+  id:any;
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -302,7 +307,7 @@ export class ReportsComponent {
       )
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 31, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   lastSearchQuery = "";
 

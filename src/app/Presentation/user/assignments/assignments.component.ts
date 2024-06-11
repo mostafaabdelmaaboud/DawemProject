@@ -17,6 +17,7 @@ import { PermissionsUserService } from 'src/app/shared/services/permissions-user
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-assignments',
@@ -142,7 +143,11 @@ export class AssignmentsComponent {
 
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     this.translate.get("assignments").subscribe(data => {
       this.columns = [
         {
@@ -249,7 +254,7 @@ export class AssignmentsComponent {
 
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 24, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   filter() {
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {

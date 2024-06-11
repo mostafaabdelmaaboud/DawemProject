@@ -17,6 +17,7 @@ import { PermissionsUserService } from 'src/app/shared/services/permissions-user
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-schedual-plan',
@@ -124,7 +125,11 @@ export class SchedualPlanComponent {
 
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     this.translate.get("schedualPlan").subscribe(data => {
       this.columns = [
         {
@@ -223,7 +228,7 @@ export class SchedualPlanComponent {
     })
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 30, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   getGroups(filteration: any) {
     this.schedualPlan = [];

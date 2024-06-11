@@ -26,6 +26,9 @@ mat-sidenav {
   padding: 13px 15px 13px 15px;
   border-bottom: 1px solid rgba(222, 226, 230, 1);
 }
+:host ::ng-deep .mdc-list-item.mdc-list-item--with-one-line {
+  cursor: pointer;
+}
 .search-results {
   height: 20rem;
   overflow-y: scroll;

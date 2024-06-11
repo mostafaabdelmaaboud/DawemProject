@@ -17,6 +17,7 @@ import { SummonsService } from './services/summons.service';
 import { AddSummonComponent } from 'src/app/shared/components/add-summon/add-summon.component';
 import { DialogSummonFileComponent } from 'src/app/shared/components/dialog-summon-file/dialog-summon-file.component';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-summons',
@@ -115,7 +116,11 @@ export class SummonsComponent {
       this.config.setTranslation(data);
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -158,7 +163,7 @@ export class SummonsComponent {
     })
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 30, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   getSummons(filteration: any) {
     this.summons = [];

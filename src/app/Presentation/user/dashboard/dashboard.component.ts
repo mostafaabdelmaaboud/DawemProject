@@ -10,7 +10,7 @@ import {
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DashboardService } from './services/dashboard.service';
 import * as moment from 'moment';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddAnEmployeeComponent } from 'src/app/shared/components/dialog-add-an-employee/dialog-add-an-employee.component';
 import { EmployeesService } from '../employees/services/employees.service';
@@ -135,8 +135,11 @@ export class DashboardComponent {
   
   filterationStatusOfOrders:any = {
   }
-  
-  ngOnInit() {
+  id:any;
+  private route = inject(ActivatedRoute);
+
+  ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     this.RowsPerPage = [
       { name: '5', code: 5 },
       { name: '10', code: 10 },
@@ -417,7 +420,7 @@ export class DashboardComponent {
     this.getBestEmployees(this.filterationBestEmloyees);
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 4, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   onChangeStatusOfOrders(data:any) {
     switch (data.value.code) {

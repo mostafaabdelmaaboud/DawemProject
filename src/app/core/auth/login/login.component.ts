@@ -228,6 +228,34 @@ export class LoginComponent {
     // }
     this.cd.detectChanges();
   }
+  searchChildren(nodes:any[]) {
+    let result: any[] = [];
+  
+    function recursiveSearch(node: any,parentIndex) {
+      if (node?.groupOrScreenType === 0 && node?.children?.length) {
+        node.children.forEach((child:any) => {
+          recursiveSearch(child, parentIndex);
+        });
+      } else if (node.groupOrScreenType === 1) {
+        result.push({
+          screenCode: node.id,
+          availableActions:node.availableActions,
+          url:node.url,
+          name:node.name,
+        });
+   
+        // result.push({
+         
+        // });
+      }
+    }
+  
+    nodes.forEach((node, i:number) => {
+      recursiveSearch(node, i);
+    });
+
+    return result;
+  }
   submit() {
     if (this.FormGroup.valid && this.loading) {
       this.loading = false;
@@ -241,7 +269,8 @@ export class LoginComponent {
       }).subscribe(
         {
           next: (res: any) => {
-            if(res.data.isAdmin) {
+            
+            localStorage.setItem("menuItems", JSON.stringify(res.data.menuItems));
               this.authService.setToken(res.data.token);
               let queryParams = new HttpParams();
               if (this.filteration) {
@@ -249,151 +278,56 @@ export class LoginComponent {
                   queryParams = queryParams.set(key, value);
                 })
               }
+              let screen = this.searchChildren(res.data.menuItems);
+              
+              if(screen.length >0) {
+                
+
+                let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: screen })
+                  
+                localStorage.setItem("permissions", formatObjectPermissions);
+  
+                let parseJson = JSON.parse(formatObjectPermissions);
+                
+
          
-              this.userPermissionsService.availableActions(this.filteration).subscribe({
-                next: data => {
-          
-                  let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: data.data.screens })
-                  localStorage.setItem("permissions", formatObjectPermissions);
-                  let parseJson = JSON.parse(formatObjectPermissions);
-                  if (parseJson.availablePermissions.length > 0) {
-                      this.isLoading = false;
-                      this.loading = true;
-                      this.toast.success(res.message,"", {timeOut: 2000});
-                      this.router.navigate(["/user/dashboard"]);
-                  } else {
-                    this.toast.error("you don't have permissions");
-                  this.isLoading = false;
-                  this.loading = true;
-                  }
-          
-                },
-                error: err => {
-                  this.toast.error(err.error.message);
-                  this.isLoading = false;
-                  this.loading = true;
+                if (parseJson.isAdmin || parseJson.availablePermissions.length > 0) {
+                  this.authService.setToken(res.data.token);
+                    this.isLoading = false;
+                    this.loading = true;
+                    this.toast.success(res.message,"", {timeOut: 2000});
+                    
+
+                    if(parseJson.availablePermissions?.[0]?.screenCode >=0) {
+                      
+
+                      this.router.navigate([`${parseJson.availablePermissions?.[0]?.url}/${parseJson.availablePermissions?.[0]?.screenCode}`]);
+                      // this.router.navigate([`/user/dashboard/${parseJson.availablePermissions?.[0]?.screenCode}`]);
+
+                    }
+        
+                } else {
+                  this.toast.error("you don't have permissions");
+                this.isLoading = false;
+                this.loading = true;
                 }
-              }
-              )
-            } else {
-              let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: res.data.availablePermissions })
-              localStorage.setItem("permissions", formatObjectPermissions);
-              let parseJson = JSON.parse(formatObjectPermissions);
-              if (parseJson.isAdmin || parseJson.availablePermissions.length > 0) {
-                this.authService.setToken(res.data.token);
-                  this.isLoading = false;
-                  this.loading = true;
-                  this.toast.success(res.message,"", {timeOut: 2000});
-                  switch (res.data.availablePermissions?.[0]?.screenCode) {
-                    case 0:
-                      this.router.navigate(["/user/assignmentType"]);
-                      break;
-                      case 1:
-                      this.router.navigate(["/user/dashboard"]);
-                      break;
-                      case 2:
-                        this.router.navigate(["/user/sections"]);
-                        break;
-                        case 3:
-                          this.router.navigate(["/user/employees"]);
-                        break;
-                        case 4:
-                          this.router.navigate(["/user/employment"]);
-                          break;
-                          case 34:
-                            this.router.navigate(["/user/users"]);
-                            break;
-                        case 31:
-                          this.router.navigate(["/user/scheduleLogs"]);
-                          break;
-                          case 35:
-                          this.router.navigate(["/user/vacationBalance"]);
-                          break;
-                          case 38:
-                            this.router.navigate(["/user/sanctions"]);
-                            break;
-                            case 22:
-                              this.router.navigate(["/user/requests"]);
-                              break;  
-                              case 27:
-                              this.router.navigate(["/user/vacations"]);
-                              break;
-                              case 24:
-                                this.router.navigate(["/user/justifications"]);
-                                break;
-                                case 25:
-                                  this.router.navigate(["/user/permissions"]);
-                                  break;
-                                  case 26:
-                                    this.router.navigate(["/user/tasks"]);
-                                    break;
-                                    case 23:
-                                      this.router.navigate(["/user/assignments"]);
-                                      break;
-                                      case 39:
-                                        this.router.navigate(["/user/summons"]);
-                                        break;
-                                        case 40:
-                                          this.router.navigate(["/user/summonMissingLogs"]);
-                                          break;
-                                          case 13:
-                                            this.router.navigate(["/user/fingerPrintDevice"]);
-                                            break;
-                                            case 17:
-                                              this.router.navigate(["/user/jobTitles"]);
-                                              break;
-                                              case 14:
-                                                this.router.navigate(["/user/groups"]);
-                                                break;
-                                                case 37:
-                                                  this.router.navigate(["/user/zones"]);
-                                                  break;
-                                                  case 30:
-                                                    this.router.navigate(["/user/schedualPlan"]);
-                                                    break;
-                                                    case 29:
-                                                      this.router.navigate(["/user/tables"]);
-                                                      break;
-                                                      case 32:
-                                                        this.router.navigate(["/user/shifts"]);
-                                                        break;
-                                                        case 18:
-                                                          this.router.navigate(["/user/justificationsType"]);
-                                                          break;
-                                                          case 36:
-                                                            this.router.navigate(["/user/vacationType"]);
-                                                            break;
-                                                            case 21:
-                                                              this.router.navigate(["/user/permissionType"]);
-                                                              break;
-                                                              case 33:
-                                                                this.router.navigate(["/user/taskType"]);
-                                                                break;
-                                                                case 15:
-                                                                  this.router.navigate(["/user/holidays"]);
-                                                                  break;
-                                                                  case 28:
-                                                                    this.router.navigate(["/user/responsibility"]);
-                                                                    break;
-                                                                    case 19:
-                                                                      this.router.navigate(["/user/userPermissions"]);
-                                                                      break;
-                                                                      case 20:
-                                                                        this.router.navigate(["/user/PermissionLog"]);
-                                                                        break;
-                                                                                            
-
-
-                    default:
-                      break;
-                  }
               } else {
-                this.toast.error("you don't have permissions");
-              this.isLoading = false;
-              this.loading = true;
-              }
-              // this.isLoading = false;
-            }
+                this.toast.error("No Screen Permission");
+                this.isLoading = false;
+                this.loading = true;
+              };
+       
+              // this.userPermissionsService.availableActions(this.filteration).subscribe({
+              //   next: data => {
+          
+       
+              //   },
+              //   error: err => {
+                
+              //   }
+              // }
+              // )
+     
  
           },
           error: err => {

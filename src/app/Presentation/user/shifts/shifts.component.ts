@@ -17,6 +17,7 @@ import { PermissionsUserService } from 'src/app/shared/services/permissions-user
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-shifts',
@@ -131,7 +132,11 @@ export class ShiftsComponent {
 
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     this.translate.get("shifts").subscribe(data => {
       this.columns = [
         {
@@ -353,7 +358,7 @@ export class ShiftsComponent {
     })
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 32, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   getShifts(filteration: any) {
     this.shifts = [];

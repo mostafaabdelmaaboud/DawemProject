@@ -21,6 +21,7 @@ import moment from 'moment';
 import { HttpEventType } from '@angular/common/http';
 import { DialogUploadFileProgressBarComponent } from 'src/app/shared/components/uploadFiles/dialog-upload-file-progress-bar/dialog-upload-file-progress-bar.component';
 import { saveAs } from "file-saver";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-zones',
@@ -151,7 +152,11 @@ export class ZonesComponent {
 
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -314,7 +319,7 @@ export class ZonesComponent {
 
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 37, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   getInformation() {
     this.spinnerCards = true;

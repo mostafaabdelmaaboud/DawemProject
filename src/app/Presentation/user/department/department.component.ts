@@ -22,6 +22,7 @@ import { DialogUploadFileComponent } from 'src/app/shared/components/uploadFiles
 import { HttpEventType } from '@angular/common/http';
 import { DialogUploadFileProgressBarComponent } from 'src/app/shared/components/uploadFiles/dialog-upload-file-progress-bar/dialog-upload-file-progress-bar.component';
 import { saveAs } from "file-saver";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-department',
@@ -150,7 +151,11 @@ export class DepartmentComponent {
 
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -380,7 +385,7 @@ export class DepartmentComponent {
     this.getDepartment(this.filteration);
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 4, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   getInformation() {
     this.spinnerCards = true;

@@ -23,6 +23,7 @@ import { CompaniesService } from './services/companies.service';
 import { AddCompanyAdminComponent } from 'src/app/shared/components/add-company-admin/add-company-admin.component';
 import { DialogCompanyFileAdminComponent } from 'src/app/shared/components/dialog-company-file-admin/dialog-company-file-admin.component';
 import { SignupComponent } from './dialogs/signup/signup.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-companies',
@@ -133,8 +134,14 @@ export class CompaniesComponent {
     this.subscription = this.translate.stream('primeng').subscribe(data => {
       this.config.setTranslation(data);
     });
-  }
+  };
+  private route = inject(ActivatedRoute);
+
+  id:any;
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
+
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -390,7 +397,7 @@ export class CompaniesComponent {
   }
   showActions(data: any) {
     if(localStorage.getItem('adminPermissions')) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: 0, actionCode: data.actionCode });
+      return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode });
 
     } else {
       return ""

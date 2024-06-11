@@ -19,6 +19,7 @@ import { AddSubscriptionComponent } from './dialogs/add-subscription/add-subscri
 import { SubscriptionInfoComponent } from './dialogs/subscription-info/subscription-info.component';
 import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
 import { DialogApproveWithDateComponent } from 'src/app/shared/components/dialog-approve-with-date/dialog-approve-with-date.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-subscriptions',
@@ -124,7 +125,11 @@ export class SubscriptionsComponent {
       this.config.setTranslation(data);
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
+
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -299,7 +304,7 @@ export class SubscriptionsComponent {
   }
   showActions(data: any) {
     if(localStorage.getItem('adminPermissions')) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: 5, actionCode: data.actionCode });
+      return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode });
 
     } else {
       return ""

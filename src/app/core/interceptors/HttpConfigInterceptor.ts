@@ -175,7 +175,8 @@ export class HttpConfigInterceptor implements HttpInterceptor {
             localStorage.removeItem("me");
             localStorage.removeItem("rules");
             localStorage.removeItem("permissions");
-            
+            localStorage.removeItem("menuItems");
+
             localStorage.clear();
             sessionStorage.clear();
             if(this.router.url.includes("user/")) {
@@ -205,6 +206,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
                 localStorage.removeItem("fingerPrint");
                 localStorage.removeItem("isLogin");
                 localStorage.removeItem("permissions");
+                localStorage.removeItem("menuItems");
 
                 localStorage.clear();
                 sessionStorage.clear();

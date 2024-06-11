@@ -61,6 +61,8 @@ export class AuthService {
     localStorage.removeItem("token");
     localStorage.removeItem("usersMe");
     localStorage.removeItem("permissions");
+    localStorage.removeItem("menuItems");
+
     if(this.router.url.includes("user/")) {
       this.router.navigate(["./login"]);
 
@@ -78,6 +80,7 @@ export class AuthService {
     localStorage.removeItem("Admintoken");
     localStorage.removeItem("usersMe");
     localStorage.removeItem("adminPermissions");
+    localStorage.removeItem("adminMenuItems");
 
       this.router.navigate(["adminPanel/login"]);
 

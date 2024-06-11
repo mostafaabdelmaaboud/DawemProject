@@ -18,6 +18,7 @@ import jsPDF from 'jspdf';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { DialogPermissionFileComponent } from 'src/app/shared/components/dialog-permission-file/dialog-permission-file.component';
 import { DialogJustificationFileComponent } from 'src/app/shared/components/dialog-justification-file/dialog-justification-file.component';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-justifications',
   templateUrl: './justifications.component.html',
@@ -137,7 +138,11 @@ export class JustificationsComponent {
 
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -442,7 +447,7 @@ export class JustificationsComponent {
     return Math.ceil(data)
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 24, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   numberOfRowsPerPage(data: any) {
     this.filteration = { ...this.filteration, PageSize: data.value.code };

@@ -18,6 +18,7 @@ import { PermissionsUserService } from 'src/app/shared/services/permissions-user
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-requests',
@@ -135,7 +136,11 @@ export class RequestsComponent {
 
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -246,7 +251,7 @@ export class RequestsComponent {
 
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 22, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   filter() {
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {

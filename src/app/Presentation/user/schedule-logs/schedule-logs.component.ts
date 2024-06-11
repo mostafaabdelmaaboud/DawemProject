@@ -14,6 +14,7 @@ import { PermissionsUserService } from 'src/app/shared/services/permissions-user
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-schedule-logs',
@@ -118,7 +119,11 @@ export class ScheduleLogsComponent {
 
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -217,7 +222,7 @@ export class ScheduleLogsComponent {
     })
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 31, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   dialogScheduleFile(data: any) {
     let dialogRefAddCurrency!:MatDialogRef<DialogScheduleLogFileComponent, any>;

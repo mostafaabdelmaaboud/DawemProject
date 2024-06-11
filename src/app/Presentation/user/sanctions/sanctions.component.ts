@@ -16,6 +16,7 @@ import { SanctionsService } from './services/sanctions.service';
 import { AddSanctionComponent } from 'src/app/shared/components/add-sanction/add-sanction.component';
 import { DialogSanctionFileComponent } from 'src/app/shared/components/dialog-sanction-file/dialog-sanction-file.component';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-sanctions',
@@ -102,7 +103,11 @@ export class SanctionsComponent {
       this.config.setTranslation(data);
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -145,7 +150,7 @@ export class SanctionsComponent {
     })
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 30, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   getSummons(filteration: any) {
     this.sanactions = [];

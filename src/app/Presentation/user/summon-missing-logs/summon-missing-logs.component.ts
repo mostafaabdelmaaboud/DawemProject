@@ -17,6 +17,7 @@ import { AddSummonComponent } from 'src/app/shared/components/add-summon/add-sum
 import { SummonMissingLogsService } from './services/summon-missing-logs.service';
 import { DialogSummonMissingLogsComponent } from 'src/app/shared/components/dialog-summon-missing-logs/dialog-summon-missing-logs.component';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-summon-missing-logs',
@@ -115,7 +116,11 @@ export class SummonMissingLogsComponent {
       this.config.setTranslation(data);
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -161,7 +166,7 @@ export class SummonMissingLogsComponent {
     })
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 30, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   getSummons(filteration: any) {
     this.summons = [];

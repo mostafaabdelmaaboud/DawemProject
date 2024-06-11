@@ -199,6 +199,8 @@ export class SideNavBarAdminComponent {
       localStorage.removeItem("Admintoken");
       localStorage.removeItem("usersMe");
       localStorage.removeItem("adminPermissions");
+      localStorage.removeItem("adminMenuItems");
+
       this.router.navigate(["./adminPanel/login"]);
     }
     if (this.mobileQuery.matches) {

@@ -16,6 +16,7 @@ import { PermissionsUserService } from 'src/app/shared/services/permissions-user
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-finger-print-devices',
@@ -126,7 +127,11 @@ export class FingerPrintDevicesComponent {
       this.config.setTranslation(data);
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -266,7 +271,7 @@ export class FingerPrintDevicesComponent {
     })
   }
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 13, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   getFingerprintDevices(filteration: any) {
     this.fingerPrintDevices = [];

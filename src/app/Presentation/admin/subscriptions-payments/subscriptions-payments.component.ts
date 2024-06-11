@@ -18,6 +18,7 @@ import { SubscriptionsPaymentsService } from './services/subscriptions-payments.
 import { SubscriptionInfoComponent } from '../subscriptions/dialogs/subscription-info/subscription-info.component';
 import { AddSubscriptionPaymentsComponent } from './dialogs/add-subscription-payments/add-subscription-payments.component';
 import { SubscriptionPaymentsInfoComponent } from './dialogs/subscription-payments-info/subscription-payments-info.component';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -120,7 +121,11 @@ export class SubscriptionsPaymentsComponent {
       this.config.setTranslation(data);
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
+
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -289,7 +294,7 @@ export class SubscriptionsPaymentsComponent {
   }
   showActions(data: any) {
     if(localStorage.getItem('adminPermissions')) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: 7, actionCode: data.actionCode });
+      return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode });
 
     } else {
       return ""

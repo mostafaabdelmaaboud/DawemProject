@@ -35,7 +35,6 @@ export class EmployeesComponent {
   itemsPerPage = 5;
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
-  private route = inject(ActivatedRoute);
 
   list: any[] = [
     { name: "نسيان تسجيل حضور", key: "1" },
@@ -157,7 +156,11 @@ export class EmployeesComponent {
 
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -1006,7 +1009,7 @@ export class EmployeesComponent {
   }
 
   showActions(data: any) {
-    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: 4, actionCode: data.actionCode })
+    return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   dialogEmployeeFile(data: any) {
     let dialogRefAddCurrency!:MatDialogRef<DialogEmployeeFileComponent, any>;

@@ -22,6 +22,7 @@ import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dia
 import { PlansService } from './services/plans.service';
 import { AddPlanComponent } from './dialogs/add-plan/add-plan.component';
 import { DialogPlanInfoComponent } from './dialogs/dialog-plan-info/dialog-plan-info.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-plans',
@@ -128,7 +129,11 @@ export class PlansComponent {
       this.config.setTranslation(data);
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
+
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -302,7 +307,7 @@ export class PlansComponent {
   }
   showActions(data: any) {
     if(localStorage.getItem('adminPermissions')) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: 4, actionCode: data.actionCode })
+      return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
 
     } else {
       return ""

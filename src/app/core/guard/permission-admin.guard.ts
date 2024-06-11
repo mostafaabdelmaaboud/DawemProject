@@ -12,6 +12,8 @@ export class PermissionAminGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+      // return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: Number(route?.paramMap?.get('id')) }) ? true : false;
+
     if (state.url.includes("Companies")) {
       return this.permissionsUserService.checkPermissionAdmin({ type: "component", screenCode: 0 });
     } else if (state.url.includes("userPermissions")) {

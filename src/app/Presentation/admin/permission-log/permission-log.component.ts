@@ -19,6 +19,7 @@ import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { PermissionLogService } from './services/permission-log.service';
 import { DialogPermissionLogFileComponent } from 'src/app/shared/components/dialog-permission-log-file/dialog-permission-log-file.component';
 import { DialogPermissionLogFileForAdminComponent } from 'src/app/shared/components/dialog-permission-log-file-for-admin/dialog-permission-log-file-for-admin.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-permission-log',
@@ -114,7 +115,11 @@ export class PermissionLogComponent {
       this.config.setTranslation(data);
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
+
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -147,7 +152,7 @@ export class PermissionLogComponent {
 
   showActions(data: any) {
     if(localStorage.getItem('adminPermissions')) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: 2, actionCode: data.actionCode });
+      return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode });
 
     } else {
       return ""

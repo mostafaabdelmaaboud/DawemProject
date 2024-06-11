@@ -14,12 +14,16 @@ mat-sidenav {
   height: 100%;
   overflow-x: hidden !important;
 }
+
 .text-sidebar {
   width: 88%;
   white-space: break-spaces;
 }
 :host ::ng-deep .mdc-list-item.mdc-list-item--with-one-line {
   height: 45px !important;
+}
+:host ::ng-deep .mdc-list-item.mdc-list-item--with-one-line {
+  cursor: pointer;
 }
 :host ::ng-deep .mat-expansion-panel-body {
   .text-sidebar {

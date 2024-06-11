@@ -22,6 +22,7 @@ import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dia
 import { ScreenGroupsService } from './services/screen-groups.service';
 import { UpdateScreenGroupsComponent } from './dialogs/update-screen-groups/update-screen-groups.component';
 import { ScreenGroupFileComponent } from './dialogs/screen-group-file/screen-group-file.component';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -126,7 +127,11 @@ export class ScreenGroupsComponent {
       this.config.setTranslation(data);
     });
   }
+  id:any;
+  private route = inject(ActivatedRoute);
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') as string;
+
     if (this.mobileQuery.matches) {
       this.opened = true;
     } else {
@@ -296,7 +301,7 @@ export class ScreenGroupsComponent {
   }
   showActions(data: any) {
     if(localStorage.getItem('adminPermissions')) {
-      return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: 4, actionCode: data.actionCode })
+      return this.permissionsUserService.checkPermissionAdmin({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
 
     } else {
       return ""
