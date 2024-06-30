@@ -46,7 +46,7 @@ export class AssignmentsComponent {
       field: "employeeCode",
     },
     {
-      name: "رقم الوظيفي",
+      name: "الرقم الوظيفى",
       field: "orderNumber",
     },
     {
@@ -58,12 +58,12 @@ export class AssignmentsComponent {
       field: "assignmentTypeName"
     },
     {
-      name: "لوقت التكليف",
-      field: "assignmentTime"
+      name: "تاريخ البداية",
+      field: "dateFrom"
     },
     {
-      name: "تاريخ ووقت البدايه",
-      field: "dateFrom"
+      name: "تاريخ النهاية",
+      field: "dateTo"
     },
     {
       name: "حاله الطلب",
@@ -166,14 +166,16 @@ export class AssignmentsComponent {
           name: data.assignmentType,
           field: "assignmentTypeName"
         },
-        {
-          name: data.forTheTimeOfAssignment,
-          field: "assignmentTime"
-        },
+     
         {
           name: data.theBeginning,
           field: "dateFrom"
         },
+        {
+          name: data.theEnd,
+          field: "dateTo"
+        },
+  
         {
           name: data.orderStatus,
           field: "statusName"
@@ -205,13 +207,14 @@ export class AssignmentsComponent {
             name: data.assignmentType,
             field: "assignmentTypeName"
           },
-          {
-            name: data.forTheTimeOfAssignment,
-            field: "assignmentTime"
-          },
+       
           {
             name: data.theBeginning,
             field: "dateFrom"
+          },
+          {
+            name: data.theEnd,
+            field: "dateTo"
           },
           {
             name: data.orderStatus,
@@ -292,16 +295,13 @@ export class AssignmentsComponent {
         name: "نوع التكليف",
         field: "assignmentTypeName"
       },
+    
       {
-        name: "لوقت التكليف",
-        field: "assignmentTime"
-      },
-      {
-        name: "تاريخ ووقت البدايه",
+        name: "تاريخ البداية",
         field: "dateFrom"
       },
       {
-        name: "تاريخ ووقت النهاية",
+        name: "تاريخ النهاية",
         field: "dateTo"
       },
       {
@@ -344,12 +344,11 @@ export class AssignmentsComponent {
               alt: assignment.employee.name,
               img: assignment.employee.profileImagePath ? assignment.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
             },
-            assignmentTime:moment(new Date(assignment.dateFrom)).format("hh:mm:ss a"),
   
             assignmentTypeName: assignment.assignmentTypeName,
             statusName: assignment.statusName,
-            dateFrom: moment(new Date(assignment.dateFrom)).format("MMMM Do YYYY, h:mm:ss a"),
-            dateTo: moment(new Date(assignment.dateTo)).format("MMMM Do YYYY, h:mm:ss a"),
+            dateFrom: moment(new Date(assignment.dateFrom)).format("MM-DD-YYYY h:mm a"),
+            dateTo: moment(new Date(assignment.dateTo)).format("MM-DD-YYYY h:mm a"),
           })
         });
         let formatTable = this.assignmentsIsExport.map(assignment => {
@@ -438,11 +437,11 @@ export class AssignmentsComponent {
             alt: assignment.employee.name,
             img: assignment.employee.profileImagePath ? assignment.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
           },
-          assignmentTime:moment(new Date(assignment.dateFrom)).format("hh:mm:ss a"),
 
           assignmentTypeName: assignment.assignmentTypeName,
           statusName: assignment.statusName,
-          dateFrom: moment(new Date(assignment.dateFrom)).format("MMMM Do YYYY, h:mm:ss a")
+          dateFrom: moment(new Date(assignment.dateFrom)).format("MM-DD-YYYY h:mm a"),
+          dateTo: moment(new Date(assignment.dateTo)).format("MM-DD-YYYY h:mm a")
         })
       });
       this.totalItems = data.totalCount
@@ -654,7 +653,7 @@ export class AssignmentsComponent {
       dialogRefAddCurrency = this.dialog.open(AssignmentRequestComponent, {
         width: "50vw",
         data: {
-          title: translate.amendmentAssignment,
+          title: "تعديل التكليف",
           setAsNecessary: translate.setAsEssential,
           titleAssignmentTypeId: translate.typeOfAssignment+" <span class='color-red'>*</span>",
           placeholderAssignmentTypeId: translate.pleaseSelectTheTypeOfAssignment,

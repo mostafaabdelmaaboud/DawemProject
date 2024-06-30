@@ -35,7 +35,7 @@
                 <mat-radio-group aria-label="Select an option" color="primary" formControlName="ForType">
                   <mat-radio-button value="0">{{data!['firstRadio']|translate}}
                   </mat-radio-button>
-                  <mat-radio-button value="1">{{data!['secondRadio']|translate}}</mat-radio-button>
+                  <mat-radio-button value="1">لمجموعه</mat-radio-button>
                   <mat-radio-button value="2">{{data!['thirdRadio']|translate}}</mat-radio-button>
 
                 </mat-radio-group>
@@ -72,10 +72,10 @@
               <!--End Custom Validators-->
             </div>
             <div class="sectionTwo mb-3" *ngIf="groupIdToggle">
-              <label class="title">{{data!['titleGroupId']|translate}} <span class="color-red">*</span></label>
+              <label class="title">اسم المجموعه<span class="color-red">*</span></label>
               <div class="content-password">
                 <p-dropdown appendTo="body" formControlName="GroupId" appendTo="body" [options]="listGroupId"
-                  [placeholder]="data!['placeholdeGroupId']|translate" optionLabel="name">
+                  placeholder="اسم المجموعه" optionLabel="name">
                   <ng-template pTemplate="header">
                     <span class="p-input-icon-left input-search-dropdown">
 
@@ -127,10 +127,10 @@
             </div>
 
             <div class="sectionTwo mb-3">
-              <label class="title">{{data!['titleVacationType']|translate}} <span class="color-red">*</span></label>
+              <label class="title">نوع الاجازه <span class="color-red">*</span></label>
               <div class="content-password">
                 <p-dropdown appendTo="body" formControlName="VacationType" appendTo="body" [options]="listVacationType"
-                  [placeholder]="data!['placeholdeVacationType']|translate" optionLabel="name">
+                  placeholder="نوع الاجازه" optionLabel="name">
                   <ng-template pTemplate="header">
                     <span class="p-input-icon-left input-search-dropdown">
 
@@ -188,19 +188,12 @@
               <!--End Custom Validators-->
             </div>
             <div class="sectionFive mb-3">
-              <label for="" class="label-input mb-2" [innerHTML]="data!['titleNotes']|translate"></label>
+              <label for="" class="label-input mb-2">الملاحظات</label>
               <div class="content-password">
                 <input type="text" pInputText formControlName="notes" [placeholder]="data!['placeholdeNotes']|translate"
                   class="w-100" />
               </div>
-              <!--Start Custom Validators-->
-              <div class="container-alerts mt-2" *ngIf="getControl('notes')?.errors">
-                <div class="alert alert-danger"
-                  *ngIf="getControl('notes')?.hasError('required') && getControl('notes')?.dirty">
-                  {{data!['ValidationNotes']|translate}}
-                </div>
-              </div>
-              <!--End Custom Validators-->
+   
             </div>
 
 

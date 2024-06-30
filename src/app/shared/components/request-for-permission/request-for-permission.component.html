@@ -113,11 +113,11 @@
           </div>
           <div class="col-lg-6 col-12">
             <div class="sectionThree">
-              <label class="title" >{{'permissions.askingTime' | translate}} <span class="color-red">*</span></label>
+              <label class="title" >بدايه وقت الاستئذان - نهايه وقت الاستئذان <span class="color-red">*</span></label>
               <div class="content-password">
                 <div class="content-pCalendar-default" dir="ltr">
                   <p-calendar formControlName="time" appendTo="body" [timeOnly]="true"
-                    [placeholder]="'permissions.askingTime' | translate" [showTime]="true" [showSeconds]="true" [showIcon]="true"></p-calendar>
+                  placeholder="بدايه وقت الاستئذان - نهايه وقت الاستئذان" [showTime]="true" [showSeconds]="true" [showIcon]="true"></p-calendar>
                 </div>
               </div>
               <!--Start Custom Validators-->
@@ -196,20 +196,12 @@
 
       </div>
       <div class="sectionFive">
-        <label for="" class="label-input mb-2" [innerHTML]="data!['titleNotes']|translate"></label>
+        <label for="" class="label-input mb-2">الملاحظات</label>
         <div class="content-password">
           <input type="text" pInputText formControlName="Notes" [placeholder]="data!['placeholdeNotes']|translate"
             class="w-100" />
         </div>
-        <!--Start Custom Validators-->
-        <div class="container-alerts mt-2" *ngIf="getControl('Notes')?.errors">
-          <div class="alert alert-danger"
-            *ngIf="getControl('Notes')?.hasError('required') && getControl('Notes')?.dirty">
-            {{data!['NotesValidation']|translate}}
-
-          </div>
-        </div>
-        <!--End Custom Validators-->
+    
       </div>
     </form>
 

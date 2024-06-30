@@ -38,7 +38,7 @@ export class TasksComponent {
       field: "orderNumber",
     },
     {
-      name: "رقم الوظيفي",
+      name: "الرقم الوظيفى",
       field: "employeeCode",
     },
     {
@@ -46,13 +46,10 @@ export class TasksComponent {
       field: "employeeName",
     },
     {
-      name: "المهمة",
+      name: "نوع المهمه",
       field: "task"
     },
-    {
-      name: "لوقت المهمة",
-      field: "taskTime"
-    },
+ 
     {
       name: "تاريخ البداية",
       field: "dateFrom"
@@ -180,10 +177,7 @@ export class TasksComponent {
           name: data.theMission,
           field: "task"
         },
-        {
-          name: data.forMissionTime,
-          field: "taskTime"
-        },
+    
         {
           name: data.startDate,
           field: "dateFrom"
@@ -221,10 +215,7 @@ export class TasksComponent {
             name: data.theMission,
             field: "task"
           },
-          {
-            name: data.forMissionTime,
-            field: "taskTime"
-          },
+        
           {
             name: data.startDate,
             field: "dateFrom"
@@ -308,10 +299,11 @@ export class TasksComponent {
               alt: employee.employee.name,
               img: employee.employee.profileImagePath ? employee.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
             },
-            taskTime:moment(new Date(employee.dateFrom)).format("hh:mm:ss a"),
             task: employee.taskTypeName,
-            dateFrom: moment(new Date(employee.dateFrom)).format("MM/DD/YYYY"),
-            dateTo: moment(new Date(employee.dateTo)).format("MM/DD/YYYY"),
+            dateFrom:  moment(new Date(employee.dateFrom)).format("MM-DD-YYYY h:mm a"),
+
+            // moment(new Date(employee.dateFrom)).format("MM/DD/YYYY"),
+            dateTo: moment(new Date(employee.dateTo)).format("MM-DD-YYYY h:mm a"),
             statusName: employee.statusName ? employee.statusName : "لا يوجد"
           })
         });
@@ -383,10 +375,9 @@ export class TasksComponent {
             alt: employee.employee.name,
             img: employee.employee.profileImagePath ? employee.employee.profileImagePath : "../../../../assets/img/5034901-200.png"
           },
-          taskTime:moment(new Date(employee.dateFrom)).format("hh:mm:ss a"),
           task: employee.taskTypeName,
-          dateFrom: moment(new Date(employee.dateFrom)).format("MM/DD/YYYY"),
-          dateTo: moment(new Date(employee.dateTo)).format("MM/DD/YYYY"),
+          dateFrom:  moment(new Date(employee.dateFrom)).format("MM-DD-YYYY h:mm a"),
+          dateTo: moment(new Date(employee.dateTo)).format("MM-DD-YYYY h:mm a"),
 
           statusName: employee.statusName ? employee.statusName : "لا يوجد"
         })
@@ -427,7 +418,7 @@ export class TasksComponent {
           chooseLabel: translate.selectTheFileToUpload,
           titleNotes: translate.comments,
           placeholdeNotes: translate.pleaseWriteNotesHere,
-          buttonSend: translate.saveOrder,
+          buttonSend: "موافق",
         },
       });
     });

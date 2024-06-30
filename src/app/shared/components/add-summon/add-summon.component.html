@@ -39,7 +39,7 @@
                       <mat-radio-group aria-label="Select an option" color="primary" formControlName="forType">
                         <mat-radio-button value="0">{{data!['firstRadio']|translate}}
                         </mat-radio-button>
-                        <mat-radio-button value="1">{{data!['secondRadio']|translate}}</mat-radio-button>
+                        <mat-radio-button value="1">لمجموعات</mat-radio-button>
                         <mat-radio-button value="2">{{data!['thirdRadio']|translate}}</mat-radio-button>
       
                       </mat-radio-group>
@@ -75,7 +75,7 @@
                     <!--End Custom Validators-->
                   </div>
                   <div class="sectionTwo mb-3" *ngIf="groupIdToggle">
-                    <label class="title">{{data!['titleGroupId']|translate}} <span class="color-red">*</span></label>
+                    <label class="title">اسم المجموعه <span class="color-red">*</span></label>
                     <div class="content-password">
                       <p-multiSelect [options]="listGroupId" appendTo="body" [filter]="false" formControlName="Groups"
                       [placeholder]="data!['placeholdeGroupId']|translate" optionLabel="name">

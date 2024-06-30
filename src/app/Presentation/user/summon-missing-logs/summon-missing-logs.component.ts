@@ -50,7 +50,7 @@ export class SummonMissingLogsComponent {
       field: "sanctionsCount"
     },
     {
-      name: "تم التنبية",
+      name: "حاله الاستدعاء وعرض حاله الاستدعاء",
       field: "doneNotify"
     },
     {
@@ -283,7 +283,7 @@ export class SummonMissingLogsComponent {
     const dialogRefAddCurrency = this.dialog.open(DialogSummonMissingLogsComponent, {
       width: "40vw",
       data: {
-        title: "ملف سجلات الإستدعاءات"
+        title: "ملف سجل الاستدعاء"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id

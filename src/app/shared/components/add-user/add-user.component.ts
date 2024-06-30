@@ -171,120 +171,127 @@ export class AddUserComponent {
       rolesDropDown,
       employeeForDropDown,
       countries
-    }).subscribe(data => {
-      this.listRoles = [];
-      this.listEmployees = [];
-
-      data.rolesDropDown?.data?.forEach((jobTitle: any) => {
-        this.listRoles.push({ name: jobTitle.name, key: jobTitle.id })
-      });
-
-      data.employeeForDropDown?.data?.forEach((employee: any) => {
-        this.listEmployees.push({ name: employee.name, key: employee.id })
-      });
-      this.countriesPhone = [];
-      data.countries?.forEach((country: any) => {
-        
-        this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath });
-        if(country.isCurrentCountry) {
-          this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath };
-        }
-      });
-      if (this.editUser) {
-
-
-        this.usersService.userGetById({ userId: this.id }).subscribe(
-          {
-            next: data => {
-
-
-              // if (data?.files.length) {
-              //   data?.files.forEach((attachment: any) => {
-              //     this.employeesService.downloadImage(attachment.filePath).subscribe(response => {
-              //       const blob = new Blob([response]);
-              //       const file = new File([blob], attachment.fileName);
-
-              //       this.AttachmentsFiles.push({ imageSrc: attachment.filePath, fileUpload: file, detailsImage: true });
-              //     });
-              //   });
-              // }
-              
-
-              // IsActive: [false],
-              //   Name: ["", Validators.required],
-              //     Email: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
-              //       Password: ["", [Validators.required, Validators.minLength(5)]],
-              //         ConfirmPassword: ["", [Validators.required, Validators.minLength(5), , this.passwordMatchValidator()]],
-
-              //             Roles: [""],
-
-              //               EmployeeId: ["", Validators.required],
-              //                 IsAdmin: [],
-              // this.addBranchGroupForm.get("Password")?.setValue(data.isNecessary);
-              // this.addBranchGroupForm.get("ConfirmPassword")?.setValue(data.isNecessary);
-           
-              let findIndexCountryCode = this.countriesPhone.findIndex(country => country.id === data.mobileCountryId);
-              if(findIndexCountryCode>=0) {
-                this.isCurrentCountry = this.countriesPhone[findIndexCountryCode];
-              }
-              this.addBranchGroupForm.get("IsAdmin")?.setValue(data.isAdmin);
-              
-              this.usersService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.employeeId }).subscribe(dataDropdown => {
-                
-
-                this.listEmployees = []
-                
-
-                dataDropdown.data?.forEach((insideData: any) => {
-                  
-
-                  this.listEmployees.push({ name: insideData.name, key: insideData.id })
-                });
-                
-
-                let indexEmployeeId = this.listEmployees.findIndex(job => job.key === data.employeeId);
-                
-
-                if (indexEmployeeId >= 0) {
-                  
-
-                  this.addBranchGroupForm.get("EmployeeId")?.setValue(this.listEmployees[indexEmployeeId]);
-                }
-              });
-              this.usersService.getRolesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids: data?.responsibilities }).subscribe(dataDropdown => {
-                this.listRoles = [];
-                dataDropdown.data?.forEach((list: any) => {
-                  this.listRoles.push({ name: list.name, key: list.id });
-                });
-                data?.responsibilities?.forEach((responsibility: any) => {
-                  let indexRole = this.listRoles.findIndex(list => list.key === responsibility);
-                  if (indexRole >= 0) {
-                    if (Array.isArray(this.getControl("Roles")?.value)) {
-                      this.getControl("Roles")?.patchValue(([{ name: this.listRoles[indexRole].name, key: this.listRoles[indexRole].key }, ...this.getControl("Roles")?.value]));
-                    } else {
-                      this.getControl("Roles")?.patchValue(([{ name: this.listRoles[indexRole].name, key: this.listRoles[indexRole].key }]));
-                    }
-                  }
-
-                });
-
-              });
-
-              this.loading = false;
-            },
-            error: err => {
-              this.loading = false;
-            }
+    }).subscribe({
+      next: data => {
+        this.listRoles = [];
+        this.listEmployees = [];
+  
+        data.rolesDropDown?.data?.forEach((jobTitle: any) => {
+          this.listRoles.push({ name: jobTitle.name, key: jobTitle.id })
+        });
+  
+        data.employeeForDropDown?.data?.forEach((employee: any) => {
+          this.listEmployees.push({ name: employee.name, key: employee.id })
+        });
+        this.countriesPhone = [];
+        data.countries?.forEach((country: any) => {
+          
+          this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath });
+          if(country.isCurrentCountry) {
+            this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath };
           }
-        )
-
-      }
-      if (!this.editUser) {
+        });
+        if (this.editUser) {
+  
+  
+          this.usersService.userGetById({ userId: this.id }).subscribe(
+            {
+              next: data => {
+  
+  
+                // if (data?.files.length) {
+                //   data?.files.forEach((attachment: any) => {
+                //     this.employeesService.downloadImage(attachment.filePath).subscribe(response => {
+                //       const blob = new Blob([response]);
+                //       const file = new File([blob], attachment.fileName);
+  
+                //       this.AttachmentsFiles.push({ imageSrc: attachment.filePath, fileUpload: file, detailsImage: true });
+                //     });
+                //   });
+                // }
+                
+  
+                // IsActive: [false],
+                //   Name: ["", Validators.required],
+                //     Email: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
+                //       Password: ["", [Validators.required, Validators.minLength(5)]],
+                //         ConfirmPassword: ["", [Validators.required, Validators.minLength(5), , this.passwordMatchValidator()]],
+  
+                //             Roles: [""],
+  
+                //               EmployeeId: ["", Validators.required],
+                //                 IsAdmin: [],
+                // this.addBranchGroupForm.get("Password")?.setValue(data.isNecessary);
+                // this.addBranchGroupForm.get("ConfirmPassword")?.setValue(data.isNecessary);
+             
+                let findIndexCountryCode = this.countriesPhone.findIndex(country => country.id === data.mobileCountryId);
+                if(findIndexCountryCode>=0) {
+                  this.isCurrentCountry = this.countriesPhone[findIndexCountryCode];
+                }
+                this.addBranchGroupForm.get("IsAdmin")?.setValue(data.isAdmin);
+                
+                this.usersService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.employeeId }).subscribe(dataDropdown => {
+                  
+  
+                  this.listEmployees = []
+                  
+  
+                  dataDropdown.data?.forEach((insideData: any) => {
+                    
+  
+                    this.listEmployees.push({ name: insideData.name, key: insideData.id })
+                  });
+                  
+  
+                  let indexEmployeeId = this.listEmployees.findIndex(job => job.key === data.employeeId);
+                  
+  
+                  if (indexEmployeeId >= 0) {
+                    
+  
+                    this.addBranchGroupForm.get("EmployeeId")?.setValue(this.listEmployees[indexEmployeeId]);
+                  }
+                });
+                this.usersService.getRolesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, ids: data?.responsibilities }).subscribe(dataDropdown => {
+                  this.listRoles = [];
+                  dataDropdown.data?.forEach((list: any) => {
+                    this.listRoles.push({ name: list.name, key: list.id });
+                  });
+                  data?.responsibilities?.forEach((responsibility: any) => {
+                    let indexRole = this.listRoles.findIndex(list => list.key === responsibility);
+                    if (indexRole >= 0) {
+                      if (Array.isArray(this.getControl("Roles")?.value)) {
+                        this.getControl("Roles")?.patchValue(([{ name: this.listRoles[indexRole].name, key: this.listRoles[indexRole].key }, ...this.getControl("Roles")?.value]));
+                      } else {
+                        this.getControl("Roles")?.patchValue(([{ name: this.listRoles[indexRole].name, key: this.listRoles[indexRole].key }]));
+                      }
+                    }
+  
+                  });
+  
+                });
+  
+                this.loading = false;
+              },
+              error: err => {
+                this.loading = false;
+              }
+            }
+          )
+  
+        }
+        if (!this.editUser) {
+          this.loading = false;
+  
+        }
+  
+      },
+      error:err=> {
         this.loading = false;
 
       }
-
-    })
+    }
+     )
 
   }
 

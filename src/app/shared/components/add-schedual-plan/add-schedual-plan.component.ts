@@ -113,7 +113,7 @@ export class AddSchedualPlanComponent {
 
     ScheduleId: ["", Validators.required],
     DateFrom: ['', Validators.required],
-    notes: ["", Validators.required],
+    notes: [""],
 
   });
   uploadedCommercialRegFiles: any[] = [];
@@ -468,7 +468,6 @@ export class AddSchedualPlanComponent {
       this.getControl("ScheduleId")?.markAsDirty();
       this.getControl("SchedulePlanType")?.markAsDirty();
       this.getControl("DateFrom")?.markAsDirty();
-      this.getControl("notes")?.markAsDirty();
       this.getControl("EmployeeId")?.markAsDirty();
       this.getControl("DepartmentId")?.markAsDirty();
       this.getControl("GroupId")?.markAsDirty();

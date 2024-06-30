@@ -34,11 +34,11 @@ export class JobTitlesComponent {
 
   columns: any[] = [
     {
-      name: "الكود",
+      name: "كود المسمى الوظيفى",
       field: "code",
     },
     {
-      name: "الاسم",
+      name: "المسمى الوظيفى",
       field: "name",
     },
     {
@@ -337,7 +337,7 @@ export class JobTitlesComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestJobTitleComponent, {
       width: "50vw",
       data: {
-        title: "طلب المسمي الوظيفي",
+        title: "اضافه مسمى وظيفى",
         setAsNecessary: "تعيين كضرورية",
         titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",

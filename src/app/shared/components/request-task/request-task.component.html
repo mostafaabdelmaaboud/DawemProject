@@ -55,7 +55,7 @@
         <!--End Custom Validators-->
       </div>
       <div class="sectionTwo mb-3">
-        <label class="title" [innerHTML]="data!['titleDropdownOne']|translate"></label>
+        <label class="title">نوع مهمه العمل <span class="color-red">*</span></label>
         <div class="content-password">
           <p-dropdown appendTo="body" formControlName="TaskTypeId" [options]="list"
             [placeholder]="data!['placeholderDropdown']|translate" optionLabel="name">
@@ -85,11 +85,11 @@
         <div class="row">
           <div class="col-lg-6 col-12">
             <div class="sectionThree">
-              <label class="title" [innerHTML]="data!['titleCalendar']|translate"></label>
+              <label class="title">تاريخ مهمه العمل <span class="color-red">*</span></label>
               <div class="content-password">
                 <div class="content-pCalendar-default" dir="ltr">
                   <p-calendar formControlName="dateTask" appendTo="body" selectionMode="range"
-                    [placeholder]="data!['placeholderCalendar']|translate" [showIcon]="true"></p-calendar>
+                    placeholder="تاريخ مهمه العمل" [showIcon]="true"></p-calendar>
                 </div>
               </div>
               <!--Start Custom Validators-->

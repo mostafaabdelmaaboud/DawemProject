@@ -16,7 +16,9 @@ export class FormatDateService {
     const months = Math.floor(days / 30);
     const years = Math.floor(months / 12);
   
-    if (years > 0) {
+    if (seconds < 1) {
+      return `just now`;
+    }else if (years > 0) {
       return `${years} years ago`;
     } else if (months > 0) {
       return `${months} months ago`;

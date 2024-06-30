@@ -218,20 +218,12 @@
 
       </div>
       <div class="sectionFive">
-        <label for="" class="label-input mb-2" [innerHTML]="data!['titleNotes']|translate"></label>
+        <label for="" class="label-input mb-2">الملاحظات</label>
         <div class="content-password">
           <input type="text" pInputText formControlName="Notes" [placeholder]="data!['placeholdeNotes']|translate"
             class="w-100" />
         </div>
-        <!--Start Custom Validators-->
-        <div class="container-alerts mt-2" *ngIf="getControl('Notes')?.errors">
-          <div class="alert alert-danger"
-            *ngIf="getControl('Notes')?.hasError('required') && getControl('Notes')?.dirty">
-            {{data!['NotesValidation']|translate}}
-
-          </div>
-        </div>
-        <!--End Custom Validators-->
+      
       </div>
     </form>
 

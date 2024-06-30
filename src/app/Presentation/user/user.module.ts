@@ -15,16 +15,19 @@ const routes: Routes = [
         path: 'dashboard/:id',
         loadChildren: () => import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
         canActivate: [PermissionGuard]
+
       },
       {
         path: 'requests/:id',
         loadChildren: () => import('./requests/requests.module').then((m) => m.RequestsModule),
         canActivate: [PermissionGuard]
+
       },
       {
         path: 'employees/:id',
         loadChildren: () => import('./employees/employees.module').then((m) => m.EmployeesModule),
         canActivate: [PermissionGuard]
+
       },
       {
         path: "employment/:id",
@@ -36,162 +39,193 @@ const routes: Routes = [
         path: "schedualPlan/:id",
         loadChildren: () => import('./schedual-plan/schedual-plan.module').then((m) => m.SchedualPlanModule),
         canActivate: [PermissionGuard]
+
       },
       {
         path: "summons/:id",
         loadChildren: () => import('./summons/summons.module').then((m) => m.SummonsModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "summonMissingLogs/:id",
         loadChildren: () => import('./summon-missing-logs/summon-missing-logs.module').then((m) => m.SummonMissingLogsModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       
       {
         path: "sanctions/:id",
         loadChildren: () => import('./sanctions/sanctions.module').then((m) => m.SanctionsModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "justificationsType/:id",
         loadChildren: () => import('./justifications-type/justifications-type.module').then((m) => m.JustificationsTypeModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "justifications/:id",
         loadChildren: () => import('./justifications/justifications.module').then((m) => m.JustificationsModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "groups/:id",
         loadChildren: () => import('./groups/groups.module').then((m) => m.GroupsModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "jobTitles/:id",
         loadChildren: () => import('./job-titles/job-titles.module').then((m) => m.JobTitlesModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "vacationBalance/:id",
         loadChildren: () => import('./vacation-balance/vacation-balance.module').then((m) => m.VacationBalanceModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
 
       {
         path: "fingerPrintDevice/:id",
         loadChildren: () => import('./finger-print-devices/finger-print-devices.module').then((m) => m.FingerPrintDevicesModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "assignmentType/:id",
         loadChildren: () => import('./assignment-type/assignment-type.module').then((m) => m.AssignmentTypeModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "permissionType/:id",
         loadChildren: () => import('./permission-type/permission-type.module').then((m) => m.PermissionTypeModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "vacationType/:id",
         loadChildren: () => import('./vacation-type/vacation-type.module').then((m) => m.VacationTypeModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
 
       {
         path: "vacations/:id",
         loadChildren: () => import('./vacations/vacations.module').then((m) => m.VacationsModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "scheduleLogs/:id",
         loadChildren: () => import('./schedule-logs/schedule-logs.module').then((m) => m.ScheduleLogsModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "PermissionLog/:id",
         loadChildren: () => import('./permission-log/permission-log.module').then((m) => m.PermissionLogModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       
       {
         path: "users/:id",
         loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
 
       {
         path: "permissions/:id",
         loadChildren: () => import('./permissions/permissions.module').then((m) => m.PermissionsModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "userPermissions/:id",
         loadChildren: () => import('./user-permissions/user-permissions.module').then((m) => m.UserPermissionsModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "responsibility/:id",
         loadChildren: () => import('./responsibility/responsibility.module').then((m) => m.ResponsibilityModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "updateCompany/:id",
         loadChildren: () => import('./update-company/update-company.module').then((m) => m.UpdateCompanyModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "taskType/:id",
         loadChildren: () => import('./task-type/task-type.module').then((m) => m.TaskTypeModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
 
       {
         path: "tasks/:id",
         loadChildren: () => import('./tasks/tasks.module').then((m) => m.TasksModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "holidays/:id",
         loadChildren: () => import('./holidays/holidays.module').then((m) => m.HolidaysModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "assignments/:id",
         loadChildren: () => import('./assignments/assignments.module').then((m) => m.AssignmentsModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "sections/:id",
         loadChildren: () => import('./sections/sections.module').then((m) => m.SectionsModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "officials/:id",
         loadChildren: () => import('./officials/officials.module').then((m) => m.OfficialsModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "shifts/:id",
         loadChildren: () => import('./shifts/shifts.module').then((m) => m.ShiftsModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "tables/:id",
         loadChildren: () => import('./tables/tables.module').then((m) => m.TablesModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "zones/:id",
         loadChildren: () => import('./zones/zones.module').then((m) => m.ZonesModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
       {
         path: "reports/:id",
         loadChildren: () => import('./reports/reports.module').then((m) => m.ReportsModule),
-        canActivate: [PermissionGuard]
+        canActivate: [PermissionGuard]  
+
       },
 
     ]

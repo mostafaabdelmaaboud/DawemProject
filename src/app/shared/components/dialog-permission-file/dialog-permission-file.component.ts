@@ -123,8 +123,8 @@ export class DialogPermissionFileComponent {
                 }
               });
             }
-            this.info.dateFrom = moment(new Date(this.info.dateFrom)).format("MM/DD/YYYY");
-            this.info.dateTo = moment(new Date(this.info.dateTo)).format("MM/DD/YYYY");
+            this.info.dateFrom = moment(new Date(this.info.dateFrom)).format("MM-DD-YYYY h:mm a");
+            this.info.dateTo = moment(new Date(this.info.dateTo)).format("MM-DD-YYYY h:mm a");
 
             this.loading = false;
 

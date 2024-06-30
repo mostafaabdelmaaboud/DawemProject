@@ -46,22 +46,7 @@
       </div>
 
     </div>
-    <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">{{"users.phoneNumber"|translate}}</label>
-      <div class="content-password d-flex align-items-center">
-        <ng-container *ngIf="info?.mobileNumber">
-          <span class="image-country-mobilePhone select-country-image">
-            <img [src]="info.mobileCountryFlagPath" width="40" height="30" [alt]="info.mobileCountryCode">
-          </span>
-          <span class="info-mobileCountryCode">{{ info.mobileCountryCode }}</span>
-          <span class="info-text-mobile">{{info?.mobileNumber ? info?.mobileNumber : "لا يوجد"}}</span>
-        </ng-container>
-        <ng-container *ngIf="!info?.mobileNumber">
-          {{"department.nothing"|translate}}
-        </ng-container>
-      </div>
-
-    </div>
+ 
     <div class="sectionTwo mb-3 line-bellow">
       <label class="title">{{"users.theBoss"|translate}}</label>
       <div class="content-password">

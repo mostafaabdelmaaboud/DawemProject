@@ -39,7 +39,7 @@ export class VacationsComponent {
       field: "orderNumber",
     },
     {
-      name: "رقم الوظيفي",
+      name: "الرقم الوظيفى",
       field: "employeeCode",
     },
     {
@@ -51,11 +51,11 @@ export class VacationsComponent {
       field: "kindOfHoliday"
     },
     {
-      name: "البداية",
+      name: "تاريخ البدايه ",
       field: "beginning"
     },
     {
-      name: "النهاية",
+      name: "تاريخ النهايه",
       field: "final"
     },
     {

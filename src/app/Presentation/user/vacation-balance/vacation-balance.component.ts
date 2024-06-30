@@ -47,7 +47,7 @@ export class VacationBalanceComponent {
       field: "vacationTypeName"
     },
     {
-      name: "الرصيد",
+      name: "رصيد الاجازات",
       field: "balance"
     },
     {
@@ -293,7 +293,7 @@ export class VacationBalanceComponent {
           placeholdeNotes: translate.notes,
           ValidationNotes: translate.feedbackRequired,
           titleClose: translate.toRetreat,
-          buttonSend: translate.addVacationBalance
+          buttonSend: "موافق"
         },
       });
     });
@@ -369,7 +369,7 @@ export class VacationBalanceComponent {
       dialogRefAddCurrency = this.dialog.open(AddVacationBalanceComponent, {
         width: "70vw",
         data: {
-          title: translate.modifyVacationBalance,
+          title: "تعديل رصيد الاجازه",
           setAsActive: translate.setAsActive,
           titleDepartmentId: translate.sectionType,
           placeholdeDepartmentId: translate.departmentName,
@@ -398,7 +398,7 @@ export class VacationBalanceComponent {
           placeholdeNotes: translate.notes,
           ValidationNotes: translate.feedbackRequired,
           titleClose: translate.toRetreat,
-          buttonSend: translate.saveVacationBalance
+          buttonSend: "موافق"
         },
       });
     });

@@ -55,15 +55,15 @@ export class PermissionsComponent {
       field: "statusName"
     },
     {
-      name: "البداية",
+      name: "تاريخ ووقت البدايه",
       field: "dateFrom"
     },
     {
-      name: "النهاية",
+      name: "تاريخ ووقت النهايه",
       field: "dateTo"
     },
     {
-      name: "لمده الأستئذان",
+      name: "مده الاستئذان",
       field: "period"
     },
    
@@ -333,8 +333,8 @@ export class PermissionsComponent {
             statusName: permission.statusName,
   
             typeOfPermission: permission.permissionTypeName,
-            dateFrom: moment(new Date(permission.dateFrom)).format("MM/DD/YYYY"),
-            dateTo: moment(new Date(permission.dateTo)).format("MM/DD/YYYY"),
+            dateFrom: moment(new Date(permission.dateFrom)).format("MM-DD-YYYY h:mm a"),
+            dateTo: moment(new Date(permission.dateTo)).format("MM-DD-YYYY h:mm a"),
           })
         });
         let formatTable = this.permissionsIsExport.map(permission => {
@@ -408,8 +408,8 @@ export class PermissionsComponent {
           statusName: permission.statusName,
 
           typeOfPermission: permission.permissionTypeName,
-          dateFrom: moment(new Date(permission.dateFrom)).format("MM/DD/YYYY"),
-          dateTo: moment(new Date(permission.dateTo)).format("MM/DD/YYYY"),
+          dateFrom: moment(new Date(permission.dateFrom)).format("MM-DD-YYYY h:mm a"),
+          dateTo: moment(new Date(permission.dateTo)).format("MM-DD-YYYY h:mm a"),
         })
       });
       this.totalItems = data.totalCount
@@ -591,7 +591,7 @@ export class PermissionsComponent {
       dialogRefAddCurrency = this.dialog.open(RequestForPermissionComponent, {
         width: "50vw",
         data: {
-          title: translate.amendPermission,
+          title: "تعديل الاستئذان",
           setAsNecessary: translate.setAsEssential,
           titlePermissionTypeId: translate.typeOfPermission+" <span class='color-red'>*</span>",
           placeholderPermissionTypeId: translate.pleaseSelectTheTypeOfPermission,
@@ -710,7 +710,7 @@ export class PermissionsComponent {
       dialogRefAddCurrency = this.dialog.open(DialogPermissionFileComponent, {
         width: "60vw",
         data: {
-          title: translate.permissionsFile
+          title: "ملف الاستئذان"
         },
       });
     })

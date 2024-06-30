@@ -34,11 +34,11 @@ export class ScheduleLogsComponent {
 
   columns: any[] = [
     {
-      name: "اسم الدوم",
+      name: "اسم الدوام",
       field: "scheduleName",
     },
     {
-      name: "النوع الطبق عليه",
+      name: "النوع المطبق عليه",
       field: "schedulePlanTypeName",
     },
     {

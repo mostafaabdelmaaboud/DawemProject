@@ -104,7 +104,7 @@ export class RequestForJustificationComponent {
     radioButtons: ["false"],
     ForEmployee: [false],
     JustificationTypeId: ['', Validators.required],
-    Notes: ['', Validators.required],
+    Notes: [''],
     dateTask: [null, Validators.required],
     time:[null, Validators.required]
   });

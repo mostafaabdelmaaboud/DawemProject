@@ -120,8 +120,8 @@ export class DialogTaskFileComponent {
                 }
               });
             }
-            this.info.dateFrom = moment(new Date(this.info.dateFrom)).format("MM/DD/YYYY");
-            this.info.dateTo = moment(new Date(this.info.dateFrom)).format("MM/DD/YYYY");
+            this.info.dateFrom = moment(new Date(this.info.dateFrom)).format("MM-DD-YYYY h:mm a");
+            this.info.dateTo = moment(new Date(this.info.dateFrom)).format("MM-DD-YYYY h:mm a");
             this.info.taskTime = moment(new Date(this.info.dateFrom)).format("hh:mm:ss a");
             
             this.loading = false;

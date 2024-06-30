@@ -98,7 +98,7 @@ export class AssignmentRequestComponent {
     timeStart:[null, Validators.required],
     timeEnd:[null, Validators.required],
 
-    Notes: [null, Validators.required],
+    Notes: [null],
     idCopyFile:[""]
   });
   AttachmentsFiles: any[] = [];
@@ -440,7 +440,6 @@ export class AssignmentRequestComponent {
       this.getControl("timeStart")?.markAsDirty();
       this.getControl("timeEnd")?.markAsDirty();
 
-      this.getControl("Notes")?.markAsDirty();
       this.getControl("AssignmentTypeId")?.markAsDirty();
       this.getControl("EmployeeId")?.markAsDirty();
       this.getControl("idCopyFile")?.markAsDirty();

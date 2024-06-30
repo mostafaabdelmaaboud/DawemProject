@@ -56,12 +56,16 @@ export class JustificationsComponent {
       field: "typeOfJustification"
     },
     {
-      name: "حالة الطلب للتبرير",
+      name: "حاله الطلب",
       field: "statusName"
     },
     {
       name: "تاريخ ووقت البدايه",
       field: "dateFrom"
+    },
+    {
+      name: "تاريخ ووقت النهايه",
+      field: "dateTo"
     },
     {
       name: "الإجراء",
@@ -198,6 +202,10 @@ export class JustificationsComponent {
           field: "dateFrom"
         },
         {
+          name: data.theEnd,
+          field: "dateTo"
+        },
+        {
           name: data.action,
           field: "actions"
         }
@@ -230,6 +238,10 @@ export class JustificationsComponent {
           {
             name:  data.theBeginning,
             field: "dateFrom"
+          },
+          {
+            name: data.theEnd,
+            field: "dateTo"
           },
           {
             name: data.action,
@@ -320,8 +332,8 @@ export class JustificationsComponent {
             employeeCode:employee.employee.employeeNumber,
             typeOfJustification: employee.justificationTypeName,
             status:employee.status,
-            dateFrom: moment(new Date(employee.dateFrom)).format("MMMM Do YYYY, h:mm:ss a"),
-            dateTo: moment(new Date(employee.dateTo)).format("MMMM Do YYYY, h:mm:ss a"),
+            dateFrom: moment(new Date(employee.dateFrom)).format("MM-DD-YYYY h:mm a"),
+            dateTo: moment(new Date(employee.dateTo)).format("MM-DD-YYYY h:mm a")
 
           })
         });
@@ -436,7 +448,8 @@ export class JustificationsComponent {
           employeeCode:employee.employee.employeeNumber,
           typeOfJustification: employee.justificationTypeName,
           status:employee.status,
-          dateFrom: moment(new Date(employee.dateFrom)).format("MMMM Do YYYY, h:mm:ss a"),
+          dateFrom: moment(new Date(employee.dateFrom)).format("MM-DD-YYYY h:mm a"),
+          dateTo: moment(new Date(employee.dateTo)).format("MM-DD-YYYY h:mm a")
         })
       });
       this.totalItems = data.totalCount
@@ -464,7 +477,7 @@ export class JustificationsComponent {
        dialogRefAddCurrency = this.dialog.open(RequestForJustificationComponent, {
         width: "50vw",
         data: {
-          title: translate.seekingJustification,
+          title: "طلب تبرير",
           setAsNecessary: translate.setAsEssential,
           titlePermissionTypeId: translate.typeOfJustification+" <span class='color-red'>*</span>",
           placeholderPermissionTypeId: translate.pleaseSelectTheTypeOfJustification,

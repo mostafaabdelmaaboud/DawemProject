@@ -100,7 +100,7 @@ export class RequestForPermissionComponent {
     PermissionTypeId: ['', Validators.required],
     dateTask: [null, Validators.required],
     time: [null, Validators.required],
-    Notes: [null, Validators.required],
+    Notes: [null],
     idCopyFile: ['']
 
   });
@@ -435,13 +435,7 @@ export class RequestForPermissionComponent {
       this.getControl("dateTask")?.markAsDirty();
       this.getControl("time")?.markAsDirty();
       this.getControl("EmployeeId")?.markAsDirty();
-
-
-      this.getControl("Notes")?.markAsDirty();
       this.getControl("idCopyFile")?.markAsDirty();
-
-
-
     }
 
   }

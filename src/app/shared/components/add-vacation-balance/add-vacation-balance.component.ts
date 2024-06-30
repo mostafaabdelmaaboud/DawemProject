@@ -123,7 +123,7 @@ export class AddVacationBalanceComponent {
     Balance: ['', Validators.required],
     VacationType: ["", Validators.required],
     Year: ['', Validators.required],
-    notes: ["", Validators.required],
+    notes: [""],
 
   });
   uploadedCommercialRegFiles: any[] = [];
@@ -407,10 +407,7 @@ export class AddVacationBalanceComponent {
       this.getControl("VacationType")?.markAsDirty();
       this.getControl("ForType")?.markAsDirty();
       this.getControl("Year")?.markAsDirty();
-      this.getControl("notes")?.markAsDirty();
       this.getControl("Balance")?.markAsDirty();
-
-
       this.getControl("EmployeeId")?.markAsDirty();
       this.getControl("DepartmentId")?.markAsDirty();
       this.getControl("GroupId")?.markAsDirty();

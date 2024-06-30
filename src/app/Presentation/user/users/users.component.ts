@@ -407,7 +407,7 @@ export class UsersComponent {
         width: "30vw",
         data: {
           title: translate.areYouSureYouDeletedTheUser,
-          message: translate.pleaseExplainWhyIfPossible,
+          message: "",
   
           titleClose: translate.toRetreat,
           buttonSend: translate.delete
