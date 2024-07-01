@@ -4,8 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { SideNavBarComponent } from 'src/app/layout/side-nav-bar/side-nav-bar.component';
 import { CoreModule } from 'src/app/core/core.module';
 import { PermissionGuard } from 'src/app/core/guard/permission.guard';
-import { SummonMissingLogsComponent } from './summon-missing-logs/summon-missing-logs.component';
-
 
 const routes: Routes = [
   {
@@ -227,13 +225,20 @@ const routes: Routes = [
         canActivate: [PermissionGuard]  
 
       },
+      {
+        path: "attendanceAndDepartureReports/:id",
+        loadChildren: () => import('./attendance-and-departure-reports/attendance-and-departure-reports.module').then((m) => m.AttendanceAndDepartureReportsModule),
+        // canActivate: [PermissionGuard]  
 
+      },
+      // AttendanceAndDepartureReportsModule
     ]
   }
 ];
 
 @NgModule({
   declarations: [
+  
   ],
   imports: [
     CommonModule,
