@@ -102,6 +102,28 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         request.url.includes("/forgetPassword") ||
         request.url.includes("setNewPassword")
       ) {
+        if (!request.url.includes("assets/i18n")) {
+          let translate = this.injector.get(TranslateService)
+          if (translate.currentLang == "ar") {
+            request = request.clone({
+              headers: request.headers.set("lang", "ar")
+              // .set(
+              //   "fingerPrint",
+              //   this.cookieService.get("fingerPrint") || "123456"
+              // ),
+            })
+          } else {
+            request = request.clone({
+              headers: request.headers.set("lang", "en")
+              // .set(
+              //   "fingerPrint",
+              //   this.cookieService.get("fingerPrint") || "123456"
+              // ),
+            });
+          } 
+  
+       
+        }
         // request.body.fingerPrint =
         //   this.cookieService.get("fingerPrint") || "123456";
       } else {

@@ -137,7 +137,7 @@ export class SideNavBarAdminComponent {
   ngOnInit(): void {
     let permission = JSON.parse(localStorage.getItem('adminPermissions') as string)
     this.isAdmin = permission?.isAdmin;
-    let menuItems = JSON.parse(localStorage.getItem('menuItems') as string)
+    let menuItems = JSON.parse(localStorage.getItem('adminMenuItems') as string)
     this.menuItems = menuItems;
 
     // this.notificationService.getNotification().subscribe(data => {

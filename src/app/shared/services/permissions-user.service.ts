@@ -45,11 +45,8 @@ export class PermissionsUserService {
 
         let findIndexPermission = (this.getPermissions().availablePermissions as any[]).findIndex(permission => permission.screenCode === data.screenCode);
         
-
         if(findIndexPermission >=0) {
-          
-
-          let checkActionCode = (this.getPermissions().availablePermissions[findIndexPermission].availableActions as any[]).findIndex(permission => permission.actionCode === data.actionCode);
+          let checkActionCode = (this.getPermissions().availablePermissions[findIndexPermission].availableActions as any[]).findIndex(permission => permission === data.actionCode);
           
 
           checkActionCode >= 0 ? check = true : check = false
@@ -77,7 +74,7 @@ export class PermissionsUserService {
         if ((this.getPermissionsAdmin()?.availablePermissions as any[])?.length > 0) {
           let findIndexPermission = (this.getPermissionsAdmin().availablePermissions as any[]).findIndex(permission => permission.screenCode === data.screenCode);
           if(findIndexPermission >=0) {
-            let checkActionCode = (this.getPermissionsAdmin().availablePermissions[findIndexPermission].availableActions as any[]).findIndex(permission => permission.actionCode === data.actionCode)
+            let checkActionCode = (this.getPermissionsAdmin().availablePermissions[findIndexPermission].availableActions as any[]).findIndex(permission => permission === data.actionCode)
             checkActionCode >= 0 ? check = true : check = false
           } else {
             check = false
