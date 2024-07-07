@@ -231,7 +231,43 @@ const routes: Routes = [
         // canActivate: [PermissionGuard]  
 
       },
-      // AttendanceAndDepartureReportsModule
+      {
+        path: "basicDataReports/:id",
+        loadChildren: () => import('./basic-data-reports/basic-data-reports.module').then((m) => m.BasicDataReportsModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      {
+        path: "delayReports/:id",
+        loadChildren: () => import('./delay-reports/delay-reports.module').then((m) => m.DelayReportsModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      {
+        path: "absenceReports/:id",
+        loadChildren: () => import('./absence-reports/absence-reports.module').then((m) => m.AbsenceReportsModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      {
+        path: "overtimeReports/:id",
+        loadChildren: () => import('./overtime-reports/overtime-reports.module').then((m) => m.OvertimeReportsModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      {
+        path: "recallReports/:id",
+        loadChildren: () => import('./recall-reports/recall-reports.module').then((m) => m.RecallReportsModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      {
+        path: "statisticsReports/:id",
+        loadChildren: () => import('./statistics-reports/statistics-reports.module').then((m) => m.StatisticsReportsModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      
     ]
   }
 ];

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AttendanceAndDepartureReportsComponent } from './attendance-and-departure-reports.component';
-import { AttendanceAndDepartureReportsRoutingModule } from './attendance-and-departure-reports-routing.module';
+
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
@@ -10,23 +9,23 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
+import { BasicDataReportsRoutingModule } from './basic-data-reports-routing.module';
+import { BasicDataReportsComponent } from './basic-data-reports.component';
 import { SafeUrlPipe } from './safeUrl.pipe';
-
 
 
 @NgModule({
   declarations: [
-    AttendanceAndDepartureReportsComponent,
+    BasicDataReportsComponent,
     SafeUrlPipe
   ],
   imports: [
-    FormsModule,
     CommonModule,
-    AttendanceAndDepartureReportsRoutingModule,
+    BasicDataReportsRoutingModule,
     HttpClientModule,
     MatDialogModule,
     TranslateModule,
@@ -42,4 +41,4 @@ import { SafeUrlPipe } from './safeUrl.pipe';
     SharedModule
   ]
 })
-export class AttendanceAndDepartureReportsModule { }
+export class BasicDataReportsModule { }

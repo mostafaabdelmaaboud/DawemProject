@@ -71,6 +71,67 @@ export class EmployeesService {
     return this.http.get<any>(`${environment.baseUrl}Employee/GetForDropDown`, { params: queryParams })
 
   }
+  GetForDropDownDepartment(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+
+      Object.entries(params).forEach(([key, value]: any) => {
+        if (key === "ids") {
+          value.forEach((id: any) => {
+            queryParams = queryParams.append(key, id)
+
+          });
+        } else {
+          queryParams = queryParams.set(key, value);
+
+        }
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}Department/GetForDropDown`, { params: queryParams })
+
+  }
+  GetForDropDownZones(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+
+      Object.entries(params).forEach(([key, value]: any) => {
+        if (key === "ids") {
+          value.forEach((id: any) => {
+            queryParams = queryParams.append(key, id)
+
+          });
+        } else {
+          queryParams = queryParams.set(key, value);
+
+        }
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}Zone/GetForDropDown`, { params: queryParams })
+
+  }
+  GetForDropDownJobTitle(params: any) {
+    let queryParams = new HttpParams();
+
+    if (params) {
+
+      Object.entries(params).forEach(([key, value]: any) => {
+        if (key === "ids") {
+          value.forEach((id: any) => {
+            queryParams = queryParams.append(key, id)
+
+          });
+        } else {
+          queryParams = queryParams.set(key, value);
+
+        }
+      })
+    }
+    return this.http.get<any>(`${environment.baseUrl}JobTitle/GetForDropDown`, { params: queryParams })
+
+  }
+  
   enabledEmployee(params: any) {
     let queryParams = new HttpParams();
 

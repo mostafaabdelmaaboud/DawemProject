@@ -301,7 +301,7 @@ export class LoginComponent {
                     if(parseJson.availablePermissions?.[0]?.screenCode >=0) {
                       
 
-                      this.router.navigate([`${parseJson.availablePermissions?.[0]?.url}/${parseJson.availablePermissions?.[0]?.screenCode}`]);
+                      this.router.navigate([`${parseJson.availablePermissions?.[1]?.url}/${parseJson.availablePermissions?.[1]?.screenCode}`]);
                       // this.router.navigate([`/user/dashboard/${parseJson.availablePermissions?.[0]?.screenCode}`]);
 
                     }
@@ -346,3 +346,42 @@ export class LoginComponent {
     return this.FormGroup.get(FormControl);
   }
 }
+
+
+
+
+// let user = 
+
+
+// {
+//   groupOrScreenType: 0,
+//   name:"التقارير",
+//   id:uniqueId,
+//   url:null,
+//   children:[
+//     {
+//       groupOrScreenType: 1,
+//       name:"تقارير البيانات الأساسية",
+//       id:uniqueId,
+//       url:"/user/basicDataReports",
+//     },
+//     {
+//       groupOrScreenType: 1,
+//       name:"تقارير الحضور والانصراف",
+//       id:uniqueId,
+//       url:"/user/attendanceAndDepartureReports",
+//     },
+//     {
+//       groupOrScreenType: 1,
+//       name:"تقارير التأخير",
+//       id:uniqueId,
+//       url:"/user/attendanceAndDepartureReports",
+//     },
+//     {
+//       groupOrScreenType: 1,
+//       name:"تقارير التأخير",
+//       id:uniqueId,
+//       url:"/user/attendanceAndDepartureReports",
+//     }
+//   ]
+// }

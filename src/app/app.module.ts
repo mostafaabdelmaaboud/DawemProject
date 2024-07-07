@@ -35,7 +35,7 @@ registerLocaleData(en);
 
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     RouterModule,
     AppRoutingModule,
     BrowserAnimationsModule,

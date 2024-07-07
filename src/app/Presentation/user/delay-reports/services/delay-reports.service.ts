@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class ReportService {
+export class DelayReportsService {
 
   constructor(private http: HttpClient) { }
   GetEmployeeDailyAttendanceGroupByDayPath(filter: any): Observable<Blob> {
@@ -18,5 +18,4 @@ export class ReportService {
     }
     return this.http.post(`${environment.baseUrl}Report/GetEmployeeDailyAttendanceGroupByDay`,{}, { params: queryParams, responseType: 'blob' })
   }
-
 }

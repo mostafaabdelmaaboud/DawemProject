@@ -7,15 +7,15 @@ import { ToastrService } from 'ngx-toastr';
 import { PrimeNGConfig } from 'primeng/api';
 import { Subscription, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { EmployeesService } from '../employees/services/employees.service';
-import { ReportService } from './services/report.service';
 import moment from 'moment';
+import { StatisticsReportsService } from './services/statistics-reports.service';
 
 @Component({
-  selector: 'app-attendance-and-departure-reports',
-  templateUrl: './attendance-and-departure-reports.component.html',
-  styleUrls: ['./attendance-and-departure-reports.component.scss']
+  selector: 'app-statistics-reports',
+  templateUrl: './statistics-reports.component.html',
+  styleUrls: ['./statistics-reports.component.scss']
 })
-export class AttendanceAndDepartureReportsComponent {
+export class StatisticsReportsComponent {
   date!: Date;
   mobileQuery: MediaQueryList;
   subscription!: Subscription;
@@ -30,7 +30,7 @@ export class AttendanceAndDepartureReportsComponent {
     JobTitleId:[''],
   });
   private employeesService = inject(EmployeesService);
-  private reportService = inject(ReportService);
+  private statisticsReportsService = inject(StatisticsReportsService);
   show = false;
   private route = inject(ActivatedRoute);
   lastSearchQuery = "";
@@ -93,11 +93,9 @@ export class AttendanceAndDepartureReportsComponent {
       jobTitle
     }).subscribe({
       next:data => {
-
         data?.employee?.data?.forEach((employee: any) => {
           this.employeesList.push({ name: employee.name, key: employee.id })
         });
-
         data?.department?.data?.forEach((department: any) => {
           this.depatmentsList.push({ name: department.name, key: department.id })
         });
@@ -165,6 +163,7 @@ export class AttendanceAndDepartureReportsComponent {
         }
   
       });
+      // this.filteration.PageNumber = 0;
       this.getReport(this.filteration);
     } else {
       this.reportForm.get("DateFrom")?.markAsDirty();
@@ -175,7 +174,7 @@ export class AttendanceAndDepartureReportsComponent {
   getReport(filteration) {
     this.loadingReport = true;
 
-    this.reportService.GetEmployeeDailyAttendanceGroupByDayPath(filteration).subscribe({
+    this.statisticsReportsService.GetEmployeeDailyAttendanceGroupByDayPath(filteration).subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         this.url = url;

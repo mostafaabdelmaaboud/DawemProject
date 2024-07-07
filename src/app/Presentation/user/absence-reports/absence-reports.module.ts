@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AttendanceAndDepartureReportsComponent } from './attendance-and-departure-reports.component';
-import { AttendanceAndDepartureReportsRoutingModule } from './attendance-and-departure-reports-routing.module';
+
+import { AbsenceReportsRoutingModule } from './absence-reports-routing.module';
+import { AbsenceReportsComponent } from './absence-reports.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
@@ -17,16 +18,15 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SafeUrlPipe } from './safeUrl.pipe';
 
 
-
 @NgModule({
   declarations: [
-    AttendanceAndDepartureReportsComponent,
+    AbsenceReportsComponent,
     SafeUrlPipe
+
   ],
   imports: [
-    FormsModule,
     CommonModule,
-    AttendanceAndDepartureReportsRoutingModule,
+    AbsenceReportsRoutingModule,
     HttpClientModule,
     MatDialogModule,
     TranslateModule,
@@ -42,4 +42,4 @@ import { SafeUrlPipe } from './safeUrl.pipe';
     SharedModule
   ]
 })
-export class AttendanceAndDepartureReportsModule { }
+export class AbsenceReportsModule { }

@@ -6,8 +6,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class ReportService {
-
+export class BasicDataReportsService {
   constructor(private http: HttpClient) { }
   GetEmployeeDailyAttendanceGroupByDayPath(filter: any): Observable<Blob> {
     let queryParams = new HttpParams();
