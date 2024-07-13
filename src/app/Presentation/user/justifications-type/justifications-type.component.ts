@@ -42,7 +42,7 @@ export class JustificationsTypeComponent {
       field: "name",
     },
     {
-      name: "حاله الطلب",
+      name: "حاله التبرير",
       field: "isActive"
     },
     {
@@ -303,7 +303,7 @@ export class JustificationsTypeComponent {
     const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
       width: "30vw",
       data: {
-        title: "هل متأكد من حذف الطلب؟",
+        title: "هل متاكد من حذف نوع التبرير؟",
         titleClose: "تراجع",
         buttonSend: "حذف"
       },

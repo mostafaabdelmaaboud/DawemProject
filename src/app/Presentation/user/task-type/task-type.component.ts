@@ -42,7 +42,7 @@ export class TaskTypeComponent {
       field: "name",
     },
     {
-      name: "حاله الطلب",
+      name: "حاله المهمه",
       field: "isActive"
     },
     {
@@ -299,7 +299,7 @@ export class TaskTypeComponent {
     const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
       width: "30vw",
       data: {
-        title: "هل متأكد من حذف الطلب؟",
+        title: "هل متاكد من حذف نوع المهمه؟",
         titleClose: "تراجع",
         buttonSend: "حذف"
       },
@@ -464,7 +464,7 @@ export class TaskTypeComponent {
     const dialogRefAddCurrency = this.dialog.open(DialogTaskTypeFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف المهمات"
+        title: "ملف المهمه"
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id

@@ -87,7 +87,7 @@ export class AddAholidayComponent {
     startDate: ['', [Validators.required, this.startDateValidator("endDate")]],
     endDate: ['', [Validators.required, this.endDateValidator("startDate")]],
     isSpecifiedByYear: [false],
-    notes: ['', Validators.required]
+    notes: ['']
   });
   private holidaysService = inject(HolidaysService);
   @Input() id!: boolean;
@@ -357,7 +357,6 @@ export class AddAholidayComponent {
       this.getControl("name")?.markAsDirty();
       this.getControl("startDate")?.markAsDirty();
       this.getControl("endDate")?.markAsDirty();
-      this.getControl("notes")?.markAsDirty();
     }
 
   }

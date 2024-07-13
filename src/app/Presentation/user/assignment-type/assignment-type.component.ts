@@ -41,7 +41,7 @@ export class AssignmentTypeComponent {
       field: "name",
     },
     {
-      name: "حاله الطلب",
+      name: "حاله التكليف",
       field: "isActive"
     },
     {
@@ -301,7 +301,7 @@ export class AssignmentTypeComponent {
     const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
       width: "30vw",
       data: {
-        title: "هل متأكد من حذف الطلب؟",
+        title: "هل متاكد من حذف نوع التكليف؟",
         titleClose: "تراجع",
         buttonSend: "حذف"
       },
@@ -331,7 +331,7 @@ export class AssignmentTypeComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestAssignmentTypeComponent, {
       width: "50vw",
       data: {
-        title: "نوع تكليف",
+        title: " نوع التكليف",
         setAsNecessary: "تعيين كضرورية",
         titleVacationTypeId: "نوع التكليف <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",

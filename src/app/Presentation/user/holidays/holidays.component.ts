@@ -283,7 +283,7 @@ export class HolidaysComponent {
           placeholderCalendarSecond: translate.chooseEndDate,
           titleNotes: translate.comments+" <span class='color-red'>*</span>",
           placeholdeNotes: translate.pleaseWriteNotesHere,
-          buttonSend: translate.addVacation,
+          buttonSend: "موافق",
           titleClose: translate.toRetreat
         },
       });
@@ -364,7 +364,7 @@ export class HolidaysComponent {
       dialogRefAddCurrency = this.dialog.open(AddAholidayComponent, {
         width: "50vw",
         data: {
-          title: translate.modifyHoliday,
+          title: "تعديل العطله",
           titleHolidayName: translate.holidayName +" <span class='color-red'>*</span>",
           placeholdeHolidayName: translate.holidayName,
           labelRadioButtonFirst: translate.holidayByCalendar,
@@ -381,7 +381,7 @@ export class HolidaysComponent {
           placeholderCalendarSecond: translate.chooseEndDate,
           titleNotes: translate.comments+" <span class='color-red'>*</span>",
           placeholdeNotes: translate.pleaseWriteNotesHere,
-          buttonSend: translate.saveTheHoliday,
+          buttonSend: "موافق",
           titleClose: translate.toRetreat
         },
       });
@@ -562,11 +562,11 @@ export class HolidaysComponent {
         width: "40vw",
         data: {
           title: translate.areYouSureYoureOnHoldForVacation,
-          message: translate.pleaseExplainTheReasonIfPossible,
+          message: "",
           titleReasonOfRefuse: translate.reasonForComment,
           placeholdeReasonOfRefuse: translate.pleaseWriteTheReasonForRejection,
           titleClose: translate.toRetreat,
-          buttonSend: translate.accountSuspension
+          buttonSend: "تعليق العطله"
         },
       });
     });

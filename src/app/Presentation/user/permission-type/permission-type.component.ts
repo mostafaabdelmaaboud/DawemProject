@@ -42,7 +42,7 @@ export class PermissionTypeComponent {
       field: "name",
     },
     {
-      name: "حاله الطلب",
+      name: "حاله الاستئذان",
       field: "isActive"
     },
     {
@@ -303,7 +303,7 @@ export class PermissionTypeComponent {
     const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
       width: "30vw",
       data: {
-        title: "هل متأكد من حذف الطلب؟",
+        title: "هل متاكد من حذف نوع الاستئذان؟",
         titleClose: "تراجع",
         buttonSend: "حذف"
       },
@@ -333,7 +333,7 @@ export class PermissionTypeComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestPermissionTypeComponent, {
       width: "50vw",
       data: {
-        title: "نوع استئذان",
+        title: "نوع الاستئذان",
         setAsNecessary: "تعيين كضرورية",
         titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
@@ -366,7 +366,7 @@ export class PermissionTypeComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "انواع الأذونات"
+                buttonSend: "انواع الاستئذانات"
 
               },
             });
@@ -435,7 +435,7 @@ export class PermissionTypeComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "انواع الأذونات"
+                buttonSend: "انواع الاستئذانات"
 
               },
             });

@@ -46,7 +46,7 @@ export class VacationTypeComponent {
     },
 
     {
-      name: "حاله الطلب",
+      name: "حاله الاجازه",
       field: "isActive"
     },
     {
@@ -305,7 +305,7 @@ export class VacationTypeComponent {
     const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
       width: "30vw",
       data: {
-        title: "هل متأكد من حذف الطلب؟",
+        title: "هل متاكد من حذف نوع الاجازه؟",
         titleClose: "تراجع",
         buttonSend: "حذف"
       },
