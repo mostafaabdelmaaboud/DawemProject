@@ -41,9 +41,22 @@ mat-sidenav {
     span {
       font-size: 17px;
     color: #6b6969;
+    text-align: right;
     }
   }
 } 
+:host ::ng-deep .mat-expansion-panel {
+  .mat-expansion-panel {
+    .mat-expansion-panel-header {
+      .text-sidebar {
+        font-size: 14px !important;
+      }
+    }
+   
+  }
+
+}
+
 :host ::ng-deep .mat-expansion-indicator::after {
   color: black !important;
 }

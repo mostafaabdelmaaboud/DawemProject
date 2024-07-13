@@ -227,46 +227,77 @@ const routes: Routes = [
       },
       {
         path: "attendanceAndDepartureReports/:id",
-        loadChildren: () => import('./attendance-and-departure-reports/attendance-and-departure-reports.module').then((m) => m.AttendanceAndDepartureReportsModule),
+        loadChildren: () => import('./attendance-and-departure-reports/components/attendance-and-departure-report/attendance-and-departure-reports.module').then((m) => m.AttendanceAndDepartureReportsModule),
         // canActivate: [PermissionGuard]  
 
       },
       {
-        path: "basicDataReports/:id",
-        loadChildren: () => import('./basic-data-reports/basic-data-reports.module').then((m) => m.BasicDataReportsModule),
+        path: "attendanceAndDepartureFromDepartmentReports/:id",
+        loadChildren: () => import('./attendance-and-departure-reports/components/attendance-and-departure-from-department-report/attendance-and-departure-from-department-report.module').then((m) => m.AttendanceAndDepartureFromDepartmentReportModule),
         // canActivate: [PermissionGuard]  
 
       },
       {
-        path: "delayReports/:id",
-        loadChildren: () => import('./delay-reports/delay-reports.module').then((m) => m.DelayReportsModule),
+        path: "attendanceAndDepartureReports/:id",
+        loadChildren: () => import('./attendance-and-departure-reports/components/attendance-and-departure-report/attendance-and-departure-reports.module').then((m) => m.AttendanceAndDepartureReportsModule),
         // canActivate: [PermissionGuard]  
 
       },
       {
-        path: "absenceReports/:id",
-        loadChildren: () => import('./absence-reports/absence-reports.module').then((m) => m.AbsenceReportsModule),
+        path: "SummaryOfAttendanceAndDepartureReports/:id",
+        loadChildren: () => import('./attendance-and-departure-reports/components/summary-of-attendance-and-departure-report/summary-of-attendance-and-departure-report.module').then((m) => m.SummaryOfAttendanceAndDepartureReportModule),
         // canActivate: [PermissionGuard]  
 
       },
       {
-        path: "overtimeReports/:id",
-        loadChildren: () => import('./overtime-reports/overtime-reports.module').then((m) => m.OvertimeReportsModule),
+        path: "EarlyAndLateAttendanceRepoers/:id",
+        loadChildren: () => import('./attendance-and-departure-reports/components/early-and-late-attendance/early-and-late-attendance.module').then((m) => m.EarlyAndLateAttendanceModule),
         // canActivate: [PermissionGuard]  
 
       },
       {
-        path: "recallReports/:id",
-        loadChildren: () => import('./recall-reports/recall-reports.module').then((m) => m.RecallReportsModule),
+        path: "AttendanceAndDepartureDetailsReports/:id",
+        loadChildren: () => import('./attendance-and-departure-reports/components/attendance-and-departure-details/attendance-and-departure-details.module').then((m) => m.AttendanceAndDepartureDetailsModule),
         // canActivate: [PermissionGuard]  
 
       },
-      {
-        path: "statisticsReports/:id",
-        loadChildren: () => import('./statistics-reports/statistics-reports.module').then((m) => m.StatisticsReportsModule),
-        // canActivate: [PermissionGuard]  
+      
+      // {
+      //   path: "basicDataReports/:id",
+      //   loadChildren: () => import('./basic-data-reports/basic-data-reports.module').then((m) => m.BasicDataReportsModule),
+      //   canActivate: [PermissionGuard]  
 
-      },
+      // },
+      // {
+      //   path: "delayReports/:id",
+      //   loadChildren: () => import('./delay-reports/delay-reports.module').then((m) => m.DelayReportsModule),
+      //   canActivate: [PermissionGuard]  
+
+      // },
+      // {
+      //   path: "absenceReports/:id",
+      //   loadChildren: () => import('./absence-reports/absence-reports.module').then((m) => m.AbsenceReportsModule),
+      //   canActivate: [PermissionGuard]  
+
+      // },
+      // {
+      //   path: "overtimeReports/:id",
+      //   loadChildren: () => import('./overtime-reports/overtime-reports.module').then((m) => m.OvertimeReportsModule),
+      //   canActivate: [PermissionGuard]  
+
+      // },
+      // {
+      //   path: "recallReports/:id",
+      //   loadChildren: () => import('./recall-reports/recall-reports.module').then((m) => m.RecallReportsModule),
+      //   canActivate: [PermissionGuard]  
+
+      // },
+      // {
+      //   path: "statisticsReports/:id",
+      //   loadChildren: () => import('./statistics-reports/statistics-reports.module').then((m) => m.StatisticsReportsModule),
+      //   canActivate: [PermissionGuard]  
+
+      // },
       
     ]
   }

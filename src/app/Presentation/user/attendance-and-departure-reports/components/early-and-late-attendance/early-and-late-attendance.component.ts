@@ -6,16 +6,16 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { PrimeNGConfig } from 'primeng/api';
 import { Subscription, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
-import { EmployeesService } from '../employees/services/employees.service';
 import moment from 'moment';
-import { AbseceReportsService } from './services/absece-reports.service';
+import { EmployeesService } from '../../../employees/services/employees.service';
+import { ReportService } from '../../services/report.service';
 
 @Component({
-  selector: 'app-absence-reports',
-  templateUrl: './absence-reports.component.html',
-  styleUrls: ['./absence-reports.component.scss']
+  selector: 'app-early-and-late-attendance',
+  templateUrl: './early-and-late-attendance.component.html',
+  styleUrls: ['./early-and-late-attendance.component.scss']
 })
-export class AbsenceReportsComponent {
+export class EarlyAndLateAttendanceComponent {
   date!: Date;
   mobileQuery: MediaQueryList;
   subscription!: Subscription;
@@ -30,7 +30,7 @@ export class AbsenceReportsComponent {
     JobTitleId:[''],
   });
   private employeesService = inject(EmployeesService);
-  private abseceReportsService = inject(AbseceReportsService);
+  private reportService = inject(ReportService);
   show = false;
   private route = inject(ActivatedRoute);
   lastSearchQuery = "";
@@ -175,7 +175,7 @@ export class AbsenceReportsComponent {
   getReport(filteration) {
     this.loadingReport = true;
 
-    this.abseceReportsService.getLateEarlyArrivalGroupByDepartmentReport(filteration).subscribe({
+    this.reportService.getLateEarlyArrivalGroupByDepartmentReport(filteration).subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         this.url = url;

@@ -6,16 +6,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { PrimeNGConfig } from 'primeng/api';
 import { Subscription, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
-import { EmployeesService } from '../employees/services/employees.service';
+
 import moment from 'moment';
-import { AbseceReportsService } from './services/absece-reports.service';
+import { EmployeesService } from '../../../employees/services/employees.service';
+import { ReportService } from '../../services/report.service';
 
 @Component({
-  selector: 'app-absence-reports',
-  templateUrl: './absence-reports.component.html',
-  styleUrls: ['./absence-reports.component.scss']
+  selector: 'app-attendance-and-departure-from-department-report',
+  templateUrl: './attendance-and-departure-from-department-report.component.html',
+  styleUrls: ['./attendance-and-departure-from-department-report.component.scss']
 })
-export class AbsenceReportsComponent {
+export class AttendanceAndDepartureFromDepartmentReportComponent {
   date!: Date;
   mobileQuery: MediaQueryList;
   subscription!: Subscription;
@@ -30,7 +31,7 @@ export class AbsenceReportsComponent {
     JobTitleId:[''],
   });
   private employeesService = inject(EmployeesService);
-  private abseceReportsService = inject(AbseceReportsService);
+  private reportService = inject(ReportService);
   show = false;
   private route = inject(ActivatedRoute);
   lastSearchQuery = "";
@@ -93,9 +94,11 @@ export class AbsenceReportsComponent {
       jobTitle
     }).subscribe({
       next:data => {
+
         data?.employee?.data?.forEach((employee: any) => {
           this.employeesList.push({ name: employee.name, key: employee.id })
         });
+
         data?.department?.data?.forEach((department: any) => {
           this.depatmentsList.push({ name: department.name, key: department.id })
         });
@@ -163,19 +166,17 @@ export class AbsenceReportsComponent {
         }
   
       });
-      // this.filteration.PageNumber = 0;
       this.getReport(this.filteration);
     } else {
       this.reportForm.get("DateFrom")?.markAsDirty();
       this.reportForm.get("DateTo")?.markAsDirty();
-
 
     }
   }
   getReport(filteration) {
     this.loadingReport = true;
 
-    this.abseceReportsService.getLateEarlyArrivalGroupByDepartmentReport(filteration).subscribe({
+    this.reportService.getEmployeeAttendanceByDepartmentReport(filteration).subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         this.url = url;

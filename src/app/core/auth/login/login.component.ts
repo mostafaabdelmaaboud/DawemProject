@@ -301,7 +301,7 @@ export class LoginComponent {
                     if(parseJson.availablePermissions?.[0]?.screenCode >=0) {
                       
 
-                      this.router.navigate([`${parseJson.availablePermissions?.[1]?.url}/${parseJson.availablePermissions?.[1]?.screenCode}`]);
+                      this.router.navigate([`${parseJson.availablePermissions?.[0]?.url}/${parseJson.availablePermissions?.[0]?.screenCode}`]);
                       // this.router.navigate([`/user/dashboard/${parseJson.availablePermissions?.[0]?.screenCode}`]);
 
                     }

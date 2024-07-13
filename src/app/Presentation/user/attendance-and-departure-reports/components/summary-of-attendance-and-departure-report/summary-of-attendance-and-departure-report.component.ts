@@ -6,16 +6,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { PrimeNGConfig } from 'primeng/api';
 import { Subscription, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
-import { EmployeesService } from '../employees/services/employees.service';
-import { ReportService } from './services/report.service';
+
 import moment from 'moment';
+import { EmployeesService } from '../../../employees/services/employees.service';
+import { ReportService } from '../../services/report.service';
 
 @Component({
-  selector: 'app-attendance-and-departure-reports',
-  templateUrl: './attendance-and-departure-reports.component.html',
-  styleUrls: ['./attendance-and-departure-reports.component.scss']
+  selector: 'app-summary-of-attendance-and-departure-report',
+  templateUrl: './summary-of-attendance-and-departure-report.component.html',
+  styleUrls: ['./summary-of-attendance-and-departure-report.component.scss']
 })
-export class AttendanceAndDepartureReportsComponent {
+export class SummaryOfAttendanceAndDepartureReportComponent {
   date!: Date;
   mobileQuery: MediaQueryList;
   subscription!: Subscription;
@@ -175,7 +176,7 @@ export class AttendanceAndDepartureReportsComponent {
   getReport(filteration) {
     this.loadingReport = true;
 
-    this.reportService.GetEmployeeDailyAttendanceGroupByDayPath(filteration).subscribe({
+    this.reportService.getAttendaceLeaveStatusShortGroupByJobReport(filteration).subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         this.url = url;

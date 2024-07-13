@@ -8,12 +8,13 @@ import { environment } from 'src/environments/environment';
 })
 export class AbseceReportsService {
   constructor(private http: HttpClient) { }
-  GetEmployeeDailyAttendanceGroupByDayPath(filter: any): Observable<Blob> {
+  getLateEarlyArrivalGroupByDepartmentReport(filter: any): Observable<Blob> {
     let queryParams = new HttpParams();
     if (filter) {
       Object.entries(filter).forEach(([key, value]: any) => {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.post(`${environment.baseUrl}Report/GetEmployeeDailyAttendanceGroupByDay`,{}, { params: queryParams, responseType: 'blob' })
-  }}
+    return this.http.post(`${environment.baseUrl}Report/GetLateEarlyArrivalGroupByDepartmentReport`,{}, { params: queryParams, responseType: 'blob' })
+  }
+}
