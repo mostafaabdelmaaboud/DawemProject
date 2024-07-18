@@ -79,6 +79,9 @@ export class AttendanceAndDepartureFromDepartmentReportComponent {
   submitted = true;
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') as string;
+  this.loadDataDropdown();
+  }
+  loadDataDropdown() {
     let employee = this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let department =  this.employeesService.GetForDropDownDepartment({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let zones =  this.employeesService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
@@ -198,8 +201,24 @@ export class AttendanceAndDepartureFromDepartmentReportComponent {
 
   }
   reset() {
+    this.reportForm.get("DateFrom")?.setValue("");
+    this.reportForm.get("DateTo")?.setValue("");
+    this.reportForm.get("EmployeeId")?.setValue("");
+    this.reportForm.get("DepartmentId")?.setValue("");
+    this.reportForm.get("ZoneId")?.setValue("");
+    this.reportForm.get("JobTitleId")?.setValue("");
+    this.loadDataDropdown();
+
+
+    // this.filter();
+    this.show = false;
 
   }
+  employeeIDClearData = false;
+  departmentIdClearData = false;
+  zoneIdClearData = false;
+  jobTitleIdData = false;
+
   searchDropdown(data: any, type: string) {
 
     switch (type) {
@@ -207,6 +226,7 @@ export class AttendanceAndDepartureFromDepartmentReportComponent {
         if (data || data === "") {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
+         
             this.employeesService.GetForDropDownEmployee({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
@@ -216,6 +236,12 @@ export class AttendanceAndDepartureFromDepartmentReportComponent {
                 res?.data?.forEach((jobTitle: any) => {
                   this.employeesList.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                if(data != "") {
+                  this.employeeIDClearData = true;
+                } else {
+                  this.employeeIDClearData = false;
+    
+                }
               });
           }
 
@@ -234,6 +260,12 @@ export class AttendanceAndDepartureFromDepartmentReportComponent {
                   res?.data?.forEach((jobTitle: any) => {
                     this.depatmentsList.push({ name: jobTitle.name, key: jobTitle.id })
                   });
+                  if(data != "") {
+                    this.departmentIdClearData = true;
+                  } else {
+                    this.departmentIdClearData = false;
+      
+                  }
                 });
             }
   
@@ -252,6 +284,12 @@ export class AttendanceAndDepartureFromDepartmentReportComponent {
                     res?.data?.forEach((jobTitle: any) => {
                       this.zonesList.push({ name: jobTitle.name, key: jobTitle.id })
                     });
+                    if(data != "") {
+                      this.zoneIdClearData = true;
+                    } else {
+                      this.zoneIdClearData = false;
+        
+                    }
                   });
               }
             }
@@ -269,6 +307,12 @@ export class AttendanceAndDepartureFromDepartmentReportComponent {
                       res?.data?.forEach((jobTitle: any) => {
                         this.jobTitleList.push({ name: jobTitle.name, key: jobTitle.id })
                       });
+                      if(data != "") {
+                        this.jobTitleIdData = true;
+                      } else {
+                        this.jobTitleIdData = false;
+          
+                      }
                     });
                 }
               }

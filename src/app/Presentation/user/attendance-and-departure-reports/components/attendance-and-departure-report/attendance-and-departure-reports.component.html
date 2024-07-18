@@ -9,170 +9,178 @@
       </div>
     </div>
     <div class="container-reports">
-        <form [formGroup]="reportForm">
-            <div class="col-12">
-                <div class="row">
-                  <div class="col-lg-4 col-12 mb-3">
-                    <div class="sectionThree">
-                      <label class="label-input mb-2">تاريخ البداية <span class="color-red">*</span></label>
-                      <div class="content-password">
-                        <div class="content-pCalendar-default" dir="ltr">
-                          <p-calendar formControlName="DateFrom" appendTo="body"
-                            placeholder="تاريخ البداية" [showIcon]="true"></p-calendar>
-                        </div>
-                      </div>
-                      <!--Start Custom Validators-->
-                      <div class="container-alerts mt-2" *ngIf="getControl('DateFrom')?.errors">
-                        <div class="alert alert-danger"
-                          *ngIf="getControl('DateFrom')?.hasError('required') && getControl('DateFrom')?.dirty">
-                          تاريخ البداية مطلوب
-                        </div>
-                      </div>
-                      <!--End Custom Validators-->
+      <form [formGroup]="reportForm">
+        <div class="col-12">
+            <div class="row">
+              <div class="col-lg-4 col-12 mb-3">
+                <div class="sectionThree">
+                  <label class="label-input mb-2">تاريخ البداية <span class="color-red">*</span></label>
+                  <div class="content-password">
+                    <div class="content-pCalendar-default" dir="ltr">
+                      <p-calendar formControlName="DateFrom" appendTo="body"
+                        placeholder="تاريخ البداية" [showIcon]="true"></p-calendar>
                     </div>
                   </div>
-                  <div class="col-lg-4 col-12 mb-3">
-                    <div class="sectionThree">
-                      <label class="label-input mb-2">تاريخ النهاية <span class="color-red">*</span></label>
-                      <div class="content-password">
-                        <div class="content-pCalendar-default" dir="ltr">
-                          <p-calendar formControlName="DateTo" appendTo="body"
-                            placeholder="تاريخ النهاية" [showIcon]="true"></p-calendar>
-                        </div>
-                      </div>
-                      <!--Start Custom Validators-->
-                      <div class="container-alerts mt-2" *ngIf="getControl('DateTo')?.errors">
-                        <div class="alert alert-danger"
-                          *ngIf="getControl('DateTo')?.hasError('required') && getControl('DateTo')?.dirty">
-                          تاريخ النهاية مطلوب
-                        </div>
-                      </div>
-                      <!--End Custom Validators-->
+                  <!--Start Custom Validators-->
+                  <div class="container-alerts mt-2" *ngIf="getControl('DateFrom')?.errors">
+                    <div class="alert alert-danger"
+                      *ngIf="getControl('DateFrom')?.hasError('required') && getControl('DateFrom')?.dirty">
+                      تاريخ البداية مطلوب
                     </div>
                   </div>
-                  <div class="col-lg-4 col-12">
-                    <div class="sectionTwo mb-3">
-                        <label class="label-input mb-2">الموظفين <span class="color-red">*</span></label>
-                        <div class="content-password">
-                          <p-dropdown appendTo="body" formControlName="EmployeeId" [options]="employeesList"
-                            placeholder="الموظفين" optionLabel="name">
-                            <ng-template pTemplate="header">
-                              <span class="p-input-icon-left input-search-dropdown">
-                
-                                <i class="pi pi-search" (click)="searchDropdown(searchEmployeeID.value, 'EmployeeID')"></i>
-                                <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchEmployeeID />
-                              </span>
-                            </ng-template>
-                            <ng-template let-option pTemplate="item">
-                              {{ option.name }}
-                            </ng-template>
-                          </p-dropdown>
-                        </div>
-                        <!--Start Custom Validators-->
-                        <div class="container-alerts mt-2" *ngIf="getControl('EmployeeId')?.errors">
-                          <div class="alert alert-danger"
-                            *ngIf="getControl('EmployeeId')?.hasError('required') && getControl('EmployeeId')?.dirty">
-                            الموظفين مطلوبة
-                          </div>
-                        </div>
-                        <!--End Custom Validators-->
-                      </div>
-                  </div>
-                  <div class="col-lg-4 col-12">
-                    <div class="sectionTwo mb-3">
-                        <label class="label-input mb-2">الأقسام <span class="color-red">*</span></label>
-                        <div class="content-password">
-                          <p-dropdown appendTo="body" formControlName="DepartmentId" [options]="depatmentsList"
-                            placeholder="الأقسام" optionLabel="name">
-                            <ng-template pTemplate="header">
-                              <span class="p-input-icon-left input-search-dropdown">
-                
-                                <i class="pi pi-search" (click)="searchDropdown(searchDepartmentId.value, 'DepartmentId')"></i>
-                                <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchDepartmentId />
-                              </span>
-                            </ng-template>
-                            <ng-template let-option pTemplate="item">
-                              {{ option.name }}
-                            </ng-template>
-                          </p-dropdown>
-                        </div>
-                        <!--Start Custom Validators-->
-                        <div class="container-alerts mt-2" *ngIf="getControl('DepartmentId')?.errors">
-                          <div class="alert alert-danger"
-                            *ngIf="getControl('DepartmentId')?.hasError('required') && getControl('DepartmentId')?.dirty">
-                            الأقسام مطلوبة
-                          </div>
-                        </div>
-                        <!--End Custom Validators-->
-                      </div>
-                  </div>
-                  <div class="col-lg-4 col-12">
-                    <div class="sectionTwo mb-3">
-                        <label class="label-input mb-2">المناطق <span class="color-red">*</span></label>
-                        <div class="content-password">
-                          <p-dropdown appendTo="body" formControlName="ZoneId" [options]="zonesList"
-                            placeholder="المناطق" optionLabel="name">
-                            <ng-template pTemplate="header">
-                              <span class="p-input-icon-left input-search-dropdown">
-                
-                                <i class="pi pi-search" (click)="searchDropdown(searchZoneId.value, 'ZoneId')"></i>
-                                <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchZoneId />
-                              </span>
-                            </ng-template>
-                            <ng-template let-option pTemplate="item">
-                              {{ option.name }}
-                            </ng-template>
-                          </p-dropdown>
-                        </div>
-                        <!--Start Custom Validators-->
-                        <div class="container-alerts mt-2" *ngIf="getControl('ZoneId')?.errors">
-                          <div class="alert alert-danger"
-                            *ngIf="getControl('ZoneId')?.hasError('required') && getControl('ZoneId')?.dirty">
-                            المناطق مطلوبة
-                          </div>
-                        </div>
-                        <!--End Custom Validators-->
-                      </div>
-                  </div>
-                  <div class="col-lg-4 col-12">
-                    <div class="sectionTwo mb-3">
-                        <label class="label-input mb-2">المسميات الوظيفية <span class="color-red">*</span></label>
-                        <div class="content-password">
-                          <p-dropdown appendTo="body" formControlName="JobTitleId" [options]="jobTitleList"
-                            placeholder="المسميات الوظيفية" optionLabel="name">
-                            <ng-template pTemplate="header">
-                              <span class="p-input-icon-left input-search-dropdown">
-                
-                                <i class="pi pi-search" (click)="searchDropdown(searchJobTitleId.value, 'JobTitleId')"></i>
-                                <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchJobTitleId />
-                              </span>
-                            </ng-template>
-                            <ng-template let-option pTemplate="item">
-                              {{ option.name }}
-                            </ng-template>
-                          </p-dropdown>
-                        </div>
-                        <!--Start Custom Validators-->
-                        <div class="container-alerts mt-2" *ngIf="getControl('JobTitleId')?.errors">
-                          <div class="alert alert-danger"
-                            *ngIf="getControl('JobTitleId')?.hasError('required') && getControl('JobTitleId')?.dirty">
-                            المسميات الوظيفية مطلوبة
-                          </div>
-                        </div>
-                        <!--End Custom Validators-->
-                      </div>
-                  </div>
+                  <!--End Custom Validators-->
                 </div>
               </div>
-              <footer class=" d-flex justify-content-end">
+              <div class="col-lg-4 col-12 mb-3">
+                <div class="sectionThree">
+                  <label class="label-input mb-2">تاريخ النهاية <span class="color-red">*</span></label>
+                  <div class="content-password">
+                    <div class="content-pCalendar-default" dir="ltr">
+                      <p-calendar formControlName="DateTo" appendTo="body"
+                        placeholder="تاريخ النهاية" [showIcon]="true"></p-calendar>
+                    </div>
+                  </div>
+                  <!--Start Custom Validators-->
+                  <div class="container-alerts mt-2" *ngIf="getControl('DateTo')?.errors">
+                    <div class="alert alert-danger"
+                      *ngIf="getControl('DateTo')?.hasError('required') && getControl('DateTo')?.dirty">
+                      تاريخ النهاية مطلوب
+                    </div>
+                  </div>
+                  <!--End Custom Validators-->
+                </div>
+              </div>
+              <div class="col-lg-4 col-12">
+                <div class="sectionTwo mb-3">
+                    <label class="label-input mb-2">الموظفين <span class="color-red">*</span></label>
+                    <div class="content-password">
+                      <p-dropdown appendTo="body" formControlName="EmployeeId" [options]="employeesList"
+                        placeholder="الموظفين" optionLabel="name">
+                        <ng-template pTemplate="header">
+                          <span class="p-input-icon-left input-search-dropdown">
+            
+                            <i class="pi pi-search" (click)="searchDropdown(searchEmployeeID.value, 'EmployeeID')"></i>
+                            <i class="pi pi-times-circle ml-2" *ngIf="employeeIDClearData" (click)="searchDropdown('', 'EmployeeID')"></i>
 
-                <button class="background-blue w-100 color-white b-r-4 button-action ml-2 f-s-16"
-                  (click)="filter()">{{submitted ?
-                  'مشاهدة' : ('dialogs.loading'|translate)}}</button>
-                <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two mr-2 f-s-16"
-                  (click)="reset()">إعادة تعيين</button>
-              </footer>
-        </form>
+                            <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchEmployeeID />
+                          </span>
+                        </ng-template>
+                        <ng-template let-option pTemplate="item">
+                          {{ option.name }}
+                        </ng-template>
+                      </p-dropdown>
+                    </div>
+                    <!--Start Custom Validators-->
+                    <div class="container-alerts mt-2" *ngIf="getControl('EmployeeId')?.errors">
+                      <div class="alert alert-danger"
+                        *ngIf="getControl('EmployeeId')?.hasError('required') && getControl('EmployeeId')?.dirty">
+                        الموظفين مطلوبة
+                      </div>
+                    </div>
+                    <!--End Custom Validators-->
+                  </div>
+              </div>
+              <div class="col-lg-4 col-12">
+                <div class="sectionTwo mb-3">
+                    <label class="label-input mb-2">الأقسام <span class="color-red">*</span></label>
+                    <div class="content-password">
+                      <p-dropdown appendTo="body" formControlName="DepartmentId" [options]="depatmentsList"
+                        placeholder="الأقسام" optionLabel="name">
+                        <ng-template pTemplate="header">
+                          <span class="p-input-icon-left input-search-dropdown">
+            
+                            <i class="pi pi-search" (click)="searchDropdown(searchDepartmentId.value, 'DepartmentId')"></i>
+                            <i class="pi pi-times-circle ml-2" *ngIf="departmentIdClearData" (click)="searchDropdown('', 'DepartmentId')"></i>
+
+                            <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchDepartmentId />
+                          </span>
+                        </ng-template>
+                        <ng-template let-option pTemplate="item">
+                          {{ option.name }}
+                        </ng-template>
+                      </p-dropdown>
+                    </div>
+                    <!--Start Custom Validators-->
+                    <div class="container-alerts mt-2" *ngIf="getControl('DepartmentId')?.errors">
+                      <div class="alert alert-danger"
+                        *ngIf="getControl('DepartmentId')?.hasError('required') && getControl('DepartmentId')?.dirty">
+                        الأقسام مطلوبة
+                      </div>
+                    </div>
+                    <!--End Custom Validators-->
+                  </div>
+              </div>
+              <div class="col-lg-4 col-12">
+                <div class="sectionTwo mb-3">
+                    <label class="label-input mb-2">المناطق <span class="color-red">*</span></label>
+                    <div class="content-password">
+                      <p-dropdown appendTo="body" formControlName="ZoneId" [options]="zonesList"
+                        placeholder="المناطق" optionLabel="name">
+                        <ng-template pTemplate="header">
+                          <span class="p-input-icon-left input-search-dropdown">
+            
+                            <i class="pi pi-search" (click)="searchDropdown(searchZoneId.value, 'ZoneId')"></i>
+                            <i class="pi pi-times-circle ml-2" *ngIf="zoneIdClearData" (click)="searchDropdown('', 'ZoneId')"></i>
+
+                            <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchZoneId />
+                          </span>
+                        </ng-template>
+                        <ng-template let-option pTemplate="item">
+                          {{ option.name }}
+                        </ng-template>
+                      </p-dropdown>
+                    </div>
+                    <!--Start Custom Validators-->
+                    <div class="container-alerts mt-2" *ngIf="getControl('ZoneId')?.errors">
+                      <div class="alert alert-danger"
+                        *ngIf="getControl('ZoneId')?.hasError('required') && getControl('ZoneId')?.dirty">
+                        المناطق مطلوبة
+                      </div>
+                    </div>
+                    <!--End Custom Validators-->
+                  </div>
+              </div>
+              <div class="col-lg-4 col-12">
+                <div class="sectionTwo mb-3">
+                    <label class="label-input mb-2">المسميات الوظيفية <span class="color-red">*</span></label>
+                    <div class="content-password">
+                      <p-dropdown appendTo="body" formControlName="JobTitleId" [options]="jobTitleList"
+                        placeholder="المسميات الوظيفية" optionLabel="name">
+                        <ng-template pTemplate="header">
+                          <span class="p-input-icon-left input-search-dropdown">
+            
+                            <i class="pi pi-search" (click)="searchDropdown(searchJobTitleId.value, 'JobTitleId')"></i>
+                            <i class="pi pi-times-circle ml-2" *ngIf="jobTitleIdData" (click)="searchDropdown('', 'JobTitleId')"></i>
+
+                            <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchJobTitleId />
+                          </span>
+                        </ng-template>
+                        <ng-template let-option pTemplate="item">
+                          {{ option.name }}
+                        </ng-template>
+                      </p-dropdown>
+                    </div>
+                    <!--Start Custom Validators-->
+                    <div class="container-alerts mt-2" *ngIf="getControl('JobTitleId')?.errors">
+                      <div class="alert alert-danger"
+                        *ngIf="getControl('JobTitleId')?.hasError('required') && getControl('JobTitleId')?.dirty">
+                        المسميات الوظيفية مطلوبة
+                      </div>
+                    </div>
+                    <!--End Custom Validators-->
+                  </div>
+              </div>
+            </div>
+          </div>
+          <footer class=" d-flex justify-content-end">
+
+            <button class="background-blue w-100 color-white b-r-4 button-action ml-2 f-s-16"
+              (click)="filter()">{{submitted ?
+              'مشاهدة' : ('dialogs.loading'|translate)}}</button>
+            <button class="btn-outline-primary w-100 ml-2  b-r-4 button-action-two mr-2 f-s-16"
+              (click)="reset()">إعادة تعيين</button>
+          </footer>
+    </form>
         <div class="viewer-report position-relative">
             <div *ngIf="!show && !loadingReport" class="container-empty-data mt-3 mb-3 w-100 d-flex justify-content-center align-items-center">
                 <svg width="65" height="40" viewBox="0 0 65 40" fill="none" xmlns="http://www.w3.org/2000/svg">

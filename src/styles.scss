@@ -482,10 +482,23 @@ p-calendar.ng-dirty.ng-invalid .p-button {
 .p-inputtext {
   direction: ltr;
 }
+.p-input-icon-left .pi-times-circle {
+  position: absolute;
+  top: 50%;
+  margin-top: -.5rem;
+  left: 2.5rem;
+  color: #6c757d;
+  cursor: pointer;
+}
 [lang="ar"] {
   .p-inputtext {
     text-align: right !important;
     direction: rtl;
+  }
+}
+.input-search-dropdown {
+  .p-inputtext {
+    width: 100%;
   }
 }
 html[lang="ar"] {
@@ -1533,6 +1546,7 @@ img.flag {
   margin-top: 15px;
   margin-left: 15px;
   margin-right: 15px;
+  width: calc(100% - 30px);
 }
 
 
