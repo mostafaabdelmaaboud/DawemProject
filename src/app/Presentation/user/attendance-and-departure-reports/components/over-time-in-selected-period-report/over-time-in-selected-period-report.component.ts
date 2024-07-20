@@ -6,17 +6,16 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { PrimeNGConfig } from 'primeng/api';
 import { Subscription, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
-
 import moment from 'moment';
 import { EmployeesService } from '../../../employees/services/employees.service';
 import { ReportService } from '../../services/report.service';
 
 @Component({
-  selector: 'app-get-employee-absense-in-period-group-by-department-report',
-  templateUrl: './get-employee-absense-in-period-group-by-department-report.component.html',
-  styleUrls: ['./get-employee-absense-in-period-group-by-department-report.component.scss']
+  selector: 'app-over-time-in-selected-period-report',
+  templateUrl: './over-time-in-selected-period-report.component.html',
+  styleUrls: ['./over-time-in-selected-period-report.component.scss']
 })
-export class GetEmployeeAbsenseInPeriodGroupByDepartmentReportComponent {
+export class OverTimeInSelectedPeriodReportComponent {
   date!: Date;
   mobileQuery: MediaQueryList;
   subscription!: Subscription;
@@ -129,21 +128,20 @@ export class GetEmployeeAbsenseInPeriodGroupByDepartmentReportComponent {
   filter() {
     if(this.reportForm.valid && this.submitted) {
       this.submitted = false;
-
-      // this.filteration.PageNumber = 0;
+  
       this.getReport(this.reportForm?.value);
     } else {
       this.reportForm.get("DateFrom")?.markAsDirty();
       this.reportForm.get("DateTo")?.markAsDirty();
 
-
     }
   }
   removeText = true;
+
   getReport(filteration) {
     this.loadingReport = true;
 
-    this.reportService.getEmployeeAbsenseInPeriodGroupByDepartmentReport(filteration).subscribe({
+    this.reportService.getOverTimeInSelectedPeriodReport(filteration).subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         this.url = url;
@@ -156,14 +154,18 @@ export class GetEmployeeAbsenseInPeriodGroupByDepartmentReportComponent {
       error:err=> {
         this.submitted = true;
         this.show = false;
-        this.removeText = true;
         this.loadingReport = false;
+        this.removeText = true;
+
 
       }
     }
      )
   }
  
+  request() {
+
+  }
   reset() {
     this.reportForm.get("DateFrom")?.setValue("");
     this.reportForm.get("DateTo")?.setValue("");

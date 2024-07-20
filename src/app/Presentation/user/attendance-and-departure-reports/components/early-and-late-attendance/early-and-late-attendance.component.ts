@@ -128,51 +128,9 @@ export class EarlyAndLateAttendanceComponent {
   filter() {
     if(this.reportForm.valid && this.submitted) {
       this.submitted = false;
-      this.filteration = {
 
-      };
-      Object.entries(this.reportForm?.value).forEach(([key, value]: any) => {
-        if (key === "EmployeeIds") {
-          if (value != "") {
-            this.filteration[key] = value?.length > 0 ? value.map(row => row.key) : 0
-          } 
-        } else if (key === "DepartmentIds") {
-          if (value != "") {
-            this.filteration[key] = value?.length > 0 ? value.map(row => row.key) : 0
-          }
-        } else if (key === "ZoneIds") {
-          if (value != "") {
-            this.filteration[key] = value?.length > 0 ? value.map(row => row.key) : 0
-          }
-        }else if (key === "JobTitleIds") {
-          if (value != "") {
-            this.filteration[key] = value?.length > 0 ? value.map(row => row.key) : 0
-          }
-        } else if (key === "DateFrom") {
-          if (value != "") {
-            this.filteration[key] = moment(value).format("MM/DD/YYYY")
-          }
-        }else if (key === "DateTo") {
-          if (value != "") {
-            this.filteration[key] = moment(value).format("MM/DD/YYYY")
-          }
-        }else {
-          if (typeof value  === 'string') {
-            if(value != "") {
-              this.filteration[key] = value.trim();
-            }
-          } else {
-            if(value >=0) {
-              this.filteration[key] = value;
-    
-            }
-    
-          }
-        }
-  
-      });
       // this.filteration.PageNumber = 0;
-      this.getReport(this.filteration);
+      this.getReport(this.reportForm?.value);
     } else {
       this.reportForm.get("DateFrom")?.markAsDirty();
       this.reportForm.get("DateTo")?.markAsDirty();
@@ -218,6 +176,7 @@ export class EarlyAndLateAttendanceComponent {
     this.reportForm.get("ZoneIds")?.setValue("");
     this.reportForm.get("JobTitleIds")?.setValue("");
     this.loadDataDropdown();
+    this.removeText = true;
 
 
     // this.filter();

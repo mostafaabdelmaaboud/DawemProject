@@ -279,6 +279,19 @@ const routes: Routes = [
         // canActivate: [PermissionGuard]  
 
       },
+      {
+        path: "OverTimeInSelectedPeriod/:id",
+        loadChildren: () => import('./attendance-and-departure-reports/components/over-time-in-selected-period-report/over-time-in-selected-period-report.module').then((m) => m.OverTimeInSelectedPeriodReportModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      {
+        path: "AttendaceLeaveSummary/:id",
+        loadChildren: () => import('./attendance-and-departure-reports/components/attendace-leave-summary-report/attendace-leave-summary-report.module').then((m) => m.AttendaceLeaveSummaryReportModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      
       // {
       //   path: "basicDataReports/:id",
       //   loadChildren: () => import('./basic-data-reports/basic-data-reports.module').then((m) => m.BasicDataReportsModule),
