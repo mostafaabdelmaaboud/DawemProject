@@ -12,11 +12,11 @@ import { EmployeesService } from '../../../employees/services/employees.service'
 import { ReportService } from '../../services/report.service';
 
 @Component({
-  selector: 'app-attendance-and-departure-from-department-report',
-  templateUrl: './attendance-and-departure-from-department-report.component.html',
-  styleUrls: ['./attendance-and-departure-from-department-report.component.scss']
+  selector: 'app-late-early-arrival-group-by-employee',
+  templateUrl: './late-early-arrival-group-by-employee.component.html',
+  styleUrls: ['./late-early-arrival-group-by-employee.component.scss']
 })
-export class AttendanceAndDepartureFromDepartmentReportComponent {
+export class LateEarlyArrivalGroupByEmployeeComponent {
   date!: Date;
   mobileQuery: MediaQueryList;
   subscription!: Subscription;
@@ -136,7 +136,7 @@ export class AttendanceAndDepartureFromDepartmentReportComponent {
         if (key === "EmployeeIds") {
           if (value != "") {
             this.filteration[key] = value?.length > 0 ? value.map(row => row.key) : 0
-          } 
+          }
         } else if (key === "DepartmentIds") {
           if (value != "") {
             this.filteration[key] = value?.length > 0 ? value.map(row => row.key) : 0
@@ -182,11 +182,10 @@ export class AttendanceAndDepartureFromDepartmentReportComponent {
     }
   }
   removeText = true;
-
   getReport(filteration) {
     this.loadingReport = true;
 
-    this.reportService.getEmployeeAttendanceByDepartmentReport(filteration).subscribe({
+    this.reportService.getLateEarlyArrivalGroupByEmployeeReport(filteration).subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         this.url = url;
@@ -199,16 +198,14 @@ export class AttendanceAndDepartureFromDepartmentReportComponent {
       error:err=> {
         this.submitted = true;
         this.show = false;
-        this.loadingReport = false;
         this.removeText = true;
+        this.loadingReport = false;
+
       }
     }
      )
   }
  
-  request() {
-
-  }
   reset() {
     this.reportForm.get("DateFrom")?.setValue("");
     this.reportForm.get("DateTo")?.setValue("");

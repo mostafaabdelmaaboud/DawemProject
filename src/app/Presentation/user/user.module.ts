@@ -261,7 +261,24 @@ const routes: Routes = [
         // canActivate: [PermissionGuard]  
 
       },
-      
+      {
+        path: "LateEarlyArrivalGroupByEmployee/:id",
+        loadChildren: () => import('./attendance-and-departure-reports/components/late-early-arrival-group-by-employee/late-early-arrival-group-by-employee.module').then((m) => m.LateEarlyArrivalGroupByEmployeeModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      {
+        path: "EmployeeAbsenseInPeriodGroupByEmployee/:id",
+        loadChildren: () => import('./attendance-and-departure-reports/components/employee-absense-in-period-group-by-employee-report/employee-absense-in-period-group-by-employee-report.module').then((m) => m.EmployeeAbsenseInPeriodGroupByEmployeeReportModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      {
+        path: "EmployeeAbsenseInPeriodGroupByDepartment/:id",
+        loadChildren: () => import('./attendance-and-departure-reports/components/get-employee-absense-in-period-group-by-department-report/get-employee-absense-in-period-group-by-department-report.module').then((m) => m.GetEmployeeAbsenseInPeriodGroupByDepartmentReportModule),
+        // canActivate: [PermissionGuard]  
+
+      },
       // {
       //   path: "basicDataReports/:id",
       //   loadChildren: () => import('./basic-data-reports/basic-data-reports.module').then((m) => m.BasicDataReportsModule),

@@ -25,10 +25,10 @@ export class AttendanceAndDepartureReportsComponent {
   reportForm: FormGroup = this.fb.group({
     DateFrom: ['', Validators.required],
     DateTo: ['', Validators.required],
-    EmployeeId:[''],
-    DepartmentId:[''],
-    ZoneId:[''],
-    JobTitleId:[''],
+    EmployeeIds:[''],
+    DepartmentIds:[''],
+    ZoneIds:[''],
+    JobTitleIds:[''],
   });
   private employeesService = inject(EmployeesService);
   private reportService = inject(ReportService);
@@ -129,22 +129,25 @@ export class AttendanceAndDepartureReportsComponent {
   filter() {
     if(this.reportForm.valid && this.submitted) {
       this.submitted = false;
+      this.filteration = {
+
+      };
       Object.entries(this.reportForm?.value).forEach(([key, value]: any) => {
-        if (key === "EmployeeId") {
+        if (key === "EmployeeIds") {
           if (value != "") {
-            this.filteration[key] = value.key ? value.key : 0
+            this.filteration[key] = value?.length > 0 ? value.map(row => row.key) : 0
           }
-        } else if (key === "DepartmentId") {
+        } else if (key === "DepartmentIds") {
           if (value != "") {
-            this.filteration[key] = value.key ? value.key : 0
+            this.filteration[key] = value?.length > 0 ? value.map(row => row.key) : 0
           }
-        } else if (key === "ZoneId") {
+        } else if (key === "ZoneIds") {
           if (value != "") {
-            this.filteration[key] = value.key ? value.key : 0
+            this.filteration[key] = value?.length > 0 ? value.map(row => row.key) : 0
           }
-        }else if (key === "JobTitleId") {
+        }else if (key === "JobTitleIds") {
           if (value != "") {
-            this.filteration[key] = value.key ? value.key : 0
+            this.filteration[key] = value?.length > 0 ? value.map(row => row.key) : 0
           }
         } else if (key === "DateFrom") {
           if (value != "") {
@@ -169,13 +172,16 @@ export class AttendanceAndDepartureReportsComponent {
         }
   
       });
+      // this.filteration.PageNumber = 0;
       this.getReport(this.filteration);
     } else {
       this.reportForm.get("DateFrom")?.markAsDirty();
       this.reportForm.get("DateTo")?.markAsDirty();
 
+
     }
   }
+  removeText = true;
   getReport(filteration) {
     this.loadingReport = true;
 
@@ -186,10 +192,13 @@ export class AttendanceAndDepartureReportsComponent {
         this.submitted = true;
         this.loadingReport = false;
         this.show = true;
+        this.removeText = false;
+
       },
       error:err=> {
         this.submitted = true;
         this.show = false;
+        this.removeText = true;
         this.loadingReport = false;
 
       }
@@ -200,10 +209,10 @@ export class AttendanceAndDepartureReportsComponent {
   reset() {
     this.reportForm.get("DateFrom")?.setValue("");
     this.reportForm.get("DateTo")?.setValue("");
-    this.reportForm.get("EmployeeId")?.setValue("");
-    this.reportForm.get("DepartmentId")?.setValue("");
-    this.reportForm.get("ZoneId")?.setValue("");
-    this.reportForm.get("JobTitleId")?.setValue("");
+    this.reportForm.get("EmployeeIds")?.setValue("");
+    this.reportForm.get("DepartmentIds")?.setValue("");
+    this.reportForm.get("ZoneIds")?.setValue("");
+    this.reportForm.get("JobTitleIds")?.setValue("");
     this.loadDataDropdown();
 
 
