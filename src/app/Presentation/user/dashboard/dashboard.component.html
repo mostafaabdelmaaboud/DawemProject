@@ -119,7 +119,7 @@
               <div class="header-section-three d-flex align-items-center justify-content-between">
                 <span class="title-section-three">{{'dashboard.staffAttendanceStatus' | translate}}</span>
                 <div class="field-action">
-                  <button type="button" routerLink="/user/employees" class="btn btn-outline-secondary button-border-67748E">{{'dashboard.viewAll' | translate}}</button>
+                  <button type="button" (click)="navigateComponent('employees')" class="btn btn-outline-secondary button-border-67748E">{{'dashboard.viewAll' | translate}}</button>
                 </div>
               </div>
               <div class="body-StaffAttendanceStatus">
@@ -341,13 +341,12 @@
           </div>
         </div>
       </div>
-
       <div class="col-lg-4 col-12 sectionLeft mb-4">
         <div class="content-DepartmentsAndTeamFormation h-100 background-color-white box-style">
           <div class="header-section-three d-flex align-items-center justify-content-between">
             <span class="title-section-three">{{'dashboard.departmentsAndTeamFormation' | translate}}</span>
             <div class="field-action">
-              <button type="button" class="btn btn-outline-secondary button-border-67748E" routerLink="/user/sections">{{'dashboard.viewAll' | translate}}</button>
+              <button type="button" class="btn btn-outline-secondary button-border-67748E" (click)="navigateComponent('sections')">{{'dashboard.viewAll' | translate}}</button>
             </div>
           </div>
           <div class="body-DepartmentsAndTeamFormation">

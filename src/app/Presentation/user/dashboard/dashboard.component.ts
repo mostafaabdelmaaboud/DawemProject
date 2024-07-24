@@ -419,6 +419,14 @@ export class DashboardComponent {
     this.getDepartmentsInformations(this.filterationDepartments);
     this.getBestEmployees(this.filterationBestEmloyees);
   }
+  navigateComponent(componentName:string) {
+    let permissions = JSON.parse(localStorage.getItem("permissions") as string);
+    let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes(componentName));
+    if(findIndexRoute >= 0) {
+      this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`]);
+
+    }
+  }
   showActions(data: any) {
     return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
@@ -772,11 +780,17 @@ export class DashboardComponent {
       }
     })
   }
+ 
   navigateEmployeesStatus(status:any, value:any) {
-    if(value > 0) {
-      this.router.navigate(['/user/employees'], {queryParams:{Status:status}})
-
+    let permissions = JSON.parse(localStorage.getItem("permissions") as string);
+    let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("employees"));
+    if(findIndexRoute >= 0) {
+      if(value > 0) {
+        this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`], {queryParams:{Status:status}})
+  
+      }
     }
+
   }
   getEmployeesStatus() {
     this.loadingEmployeesStatus = true;
