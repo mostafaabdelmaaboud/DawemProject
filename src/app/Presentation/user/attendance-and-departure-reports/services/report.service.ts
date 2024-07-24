@@ -240,7 +240,7 @@ export class ReportService {
   
       });
     }
-    return fetch(`${environment.baseUrl}EmployeeAttendanceByDepartmentEmployeeAttendanceByDepartment/GetEmployeeAttendanceByDepartmentReport?${queryParams}`, {
+    return fetch(`${environment.baseUrl}EmployeeAttendanceByDepartment/GetEmployeeAttendanceByDepartmentReport?${queryParams}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
