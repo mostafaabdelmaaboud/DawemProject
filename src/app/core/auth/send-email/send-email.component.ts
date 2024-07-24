@@ -124,15 +124,19 @@ export class SendEmailComponent {
     this.cd.detectChanges();
   }
   submit() {
-
+    
     if (this.FormGroup.valid && this.loading) {
       this.loading = false;
       this.isLoading = true;
+      
+
       this.authService.signup({
         UserEmail: this.FormGroup.value.Email,
       }).subscribe(
         {
           next: (res: any) => {
+            
+
             // let formatObjectPermissions = JSON.stringify({ isAdmin: res.data.isAdmin, availablePermissions: res.data.availablePermissions })
             // localStorage.setItem("permissions", formatObjectPermissions);
             // let parseJson = JSON.parse(formatObjectPermissions);
@@ -158,6 +162,8 @@ export class SendEmailComponent {
 
           },
           error: err => {
+            
+
             this.toast.error(err.error.message);
             this.isLoading = false;
             this.loading = true;

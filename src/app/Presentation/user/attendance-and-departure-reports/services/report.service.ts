@@ -10,7 +10,7 @@ import moment from 'moment';
 export class ReportService {
 
   constructor(private http: HttpClient) { }
-  GetEmployeeDailyAttendanceGroupByDayPath(filter: any): Observable<Blob> {
+  GetEmployeeDailyAttendanceGroupByDayPath(filter: any) {
     let queryParams = new HttpParams();
     if (filter) {
 
@@ -81,9 +81,16 @@ export class ReportService {
   
       });
     }
-    return this.http.post(`${environment.baseUrl}EmployeeDailyAttendanceGroupByDay/GetEmployeeDailyAttendanceGroupByDay`,{}, { params: queryParams, responseType: 'blob' })
+    return fetch(`${environment.baseUrl}EmployeeDailyAttendanceGroupByDay/GetEmployeeDailyAttendanceGroupByDay?${queryParams}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
+      }
+    });
+    // return this.http.post(`${environment.baseUrl}EmployeeDailyAttendanceGroupByDay/GetEmployeeDailyAttendanceGroupByDay`,{}, { params: queryParams, responseType: 'blob' })
   }
-  getLateEarlyArrivalGroupByDepartmentReport(filter: any): Observable<Blob> {
+  getLateEarlyArrivalGroupByDepartmentReport(filter: any): any {
     let queryParams = new HttpParams();
     if (filter) {
 
@@ -154,9 +161,15 @@ export class ReportService {
   
       });
     }
-    return this.http.post(`${environment.baseUrl}LateEarlyArrivalGroupByDepartment/GetLateEarlyArrivalGroupByDepartmentReport`,{}, { params: queryParams, responseType: 'blob' })
+    return fetch(`${environment.baseUrl}LateEarlyArrivalGroupByDepartment/GetLateEarlyArrivalGroupByDepartmentReport?${queryParams}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
+      }
+    });
   }
-  getEmployeeAttendanceByDepartmentReport(filter: any): Observable<Blob> {
+  getEmployeeAttendanceByDepartmentReport(filter: any):any {
     let queryParams = new HttpParams();
     if (filter) {
 
@@ -227,9 +240,15 @@ export class ReportService {
   
       });
     }
-    return this.http.post(`${environment.baseUrl}EmployeeAttendanceByDepartmentEmployeeAttendanceByDepartment/GetEmployeeAttendanceByDepartmentReport`,{}, { params: queryParams, responseType: 'blob' })
+    return fetch(`${environment.baseUrl}EmployeeAttendanceByDepartmentEmployeeAttendanceByDepartment/GetEmployeeAttendanceByDepartmentReport?${queryParams}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
+      }
+    });
   }
-  getAttendaceLeaveStatusShortGroupByJobReport(filter: any): Observable<Blob> {
+  getAttendaceLeaveStatusShortGroupByJobReport(filter: any): any {
     let queryParams = new HttpParams();
     if (filter) {
 
@@ -300,9 +319,15 @@ export class ReportService {
   
       });
     }
-    return this.http.post(`${environment.baseUrl}AttendaceLeaveStatusShortGroupByJob/GetAttendaceLeaveStatusShortGroupByJobReport`,{}, { params: queryParams, responseType: 'blob' })
+    return fetch(`${environment.baseUrl}AttendaceLeaveStatusShortGroupByJob/GetAttendaceLeaveStatusShortGroupByJobReport?${queryParams}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
+      }
+    });
   }
-  getAttendanceDetailsByEmployeeIDReport(filter: any): Observable<Blob> {
+  getAttendanceDetailsByEmployeeIDReport(filter: any): any {
     let queryParams = new HttpParams();
     if (filter) {
 
@@ -373,12 +398,18 @@ export class ReportService {
   
       });
     }
-    return this.http.post(`${environment.baseUrl}AttendanceDetailsByEmployeeID/GetAttendanceDetailsByEmployeeIDReport`,{}, { params: queryParams, responseType: 'blob' })
+    return fetch(`${environment.baseUrl}AttendanceDetailsByEmployeeID/GetAttendanceDetailsByEmployeeIDReport?${queryParams}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
+      }
+    });
   }
 
 
   // الحضور مبكرا او متأخرا بالموظفين
-  getLateEarlyArrivalGroupByEmployeeReport(filter: any): Observable<Blob> {
+  getLateEarlyArrivalGroupByEmployeeReport(filter: any): any {
     let queryParams = new HttpParams();
     if (filter) {
 
@@ -449,10 +480,16 @@ export class ReportService {
   
       });
     }
-    return this.http.post(`${environment.baseUrl}LateEarlyArrivalGroupByEmployee/GetLateEarlyArrivalGroupByEmployeeReport`,{}, { params: queryParams, responseType: 'blob' })
+    return fetch(`${environment.baseUrl}LateEarlyArrivalGroupByEmployee/GetLateEarlyArrivalGroupByEmployeeReport?${queryParams}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
+      }
+    });
   }
   // غياب الموظفين فى فتره 
-  getEmployeeAbsenseInPeriodGroupByEmployeeReport(filter: any): Observable<Blob> {
+  getEmployeeAbsenseInPeriodGroupByEmployeeReport(filter: any): any{
     let queryParams = new HttpParams();
     if (filter) {
 
@@ -523,10 +560,16 @@ export class ReportService {
   
       });
     }
-    return this.http.post(`${environment.baseUrl}EmployeeAbsenseInPeriodGroupByEmployee/GetEmployeeAbsenseInPeriodGroupByEmployeeReport`,{}, { params: queryParams, responseType: 'blob' })
+    return fetch(`${environment.baseUrl}EmployeeAbsenseInPeriodGroupByEmployee/GetEmployeeAbsenseInPeriodGroupByEmployeeReport?${queryParams}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
+      }
+    });
   }
   // غياب الموظفين فى فتره بالقسم
-  getEmployeeAbsenseInPeriodGroupByDepartmentReport(filter: any): Observable<Blob> {
+  getEmployeeAbsenseInPeriodGroupByDepartmentReport(filter: any): any {
     let queryParams = new HttpParams();
     if (filter) {
 
@@ -597,10 +640,16 @@ export class ReportService {
   
       });
     }
-    return this.http.post(`${environment.baseUrl}EmployeeAbsenseInPeriodGroupByDepartment/GetEmployeeAbsenseInPeriodGroupByDepartmentReport`,{}, { params: queryParams, responseType: 'blob' })
+    return fetch(`${environment.baseUrl}EmployeeAbsenseInPeriodGroupByDepartment/GetEmployeeAbsenseInPeriodGroupByDepartmentReport?${queryParams}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
+      }
+    });
   }
   // الوقت الاضافى فى فتره
-  getOverTimeInSelectedPeriodReport(filter: any): Observable<Blob> {
+  getOverTimeInSelectedPeriodReport(filter: any): any {
     let queryParams = new HttpParams();
     if (filter) {
 
@@ -671,10 +720,16 @@ export class ReportService {
   
       });
     }
-    return this.http.post(`${environment.baseUrl}OverTimeInSelectedPeriod/GetOverTimeInSelectedPeriodReport`,{}, { params: queryParams, responseType: 'blob' })
+    return fetch(`${environment.baseUrl}OverTimeInSelectedPeriod/GetOverTimeInSelectedPeriodReport?${queryParams}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
+      }
+    });
   }
   // ملخص الحضور والانصراف
-  getAttendaceLeaveSummaryReport(filter: any): Observable<Blob> {
+  getAttendaceLeaveSummaryReport(filter: any): any {
     let queryParams = new HttpParams();
     if (filter) {
 
@@ -745,6 +800,12 @@ export class ReportService {
   
       });
     }
-    return this.http.post(`${environment.baseUrl}AttendaceLeaveSummary/GetAttendaceLeaveSummaryReport`,{}, { params: queryParams, responseType: 'blob' })
+    return fetch(`${environment.baseUrl}AttendaceLeaveSummary/GetAttendaceLeaveSummaryReport?${queryParams}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
+      }
+    });
   }
 }

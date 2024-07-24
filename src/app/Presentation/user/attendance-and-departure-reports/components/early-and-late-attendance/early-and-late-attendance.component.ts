@@ -142,27 +142,23 @@ export class EarlyAndLateAttendanceComponent {
 
   getReport(filteration) {
     this.loadingReport = true;
+    this.reportService.getLateEarlyArrivalGroupByDepartmentReport(filteration)
+    .then(response => response.blob())
+    .then(blob => {
+      this.url = window.URL.createObjectURL(blob);
+      this.submitted = true;
+      this.loadingReport = false;
+      this.show = true;
+      this.removeText = false;
+    })
+    .catch(error => {
+      this.submitted = true;
+      this.loadingReport = false;
+      this.show = true;
+      this.removeText = false;
 
-    this.reportService.getLateEarlyArrivalGroupByDepartmentReport(filteration).subscribe({
-      next: (blob: Blob) => {
-        const url = window.URL.createObjectURL(blob);
-        this.url = url;
-        this.submitted = true;
-        this.loadingReport = false;
-        this.show = true;
-        this.removeText = false;
+    });
 
-      },
-      error:err=> {
-        this.submitted = true;
-        this.show = false;
-        this.removeText = true;
-
-        this.loadingReport = false;
-
-      }
-    }
-     )
   }
  
   request() {

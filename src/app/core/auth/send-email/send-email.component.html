@@ -47,7 +47,7 @@
             <p class="sub-text">{{'login.sendAFollowUpEmail' | translate}}</p>
           </div>
           <div class="form">
-            <form class="w-100" [formGroup]="FormGroup" (submit)="submit()">
+            <form class="w-100" [formGroup]="FormGroup" >
               <div class="section-field mb-3">
                 <label class="mb-2 d-block f-s-16 label-form">{{'login.email' | translate}}<span
                     class="color-red ml-2">*</span></label>
@@ -68,7 +68,7 @@
                   </div>
                 </div>
               </div>
-              <button class="btn btn-primary w-100 button-submit">
+              <button class="btn btn-primary w-100 button-submit" type="button" (click)="submit()">
                 <ng-container *ngIf="loading">
                   {{'login.sendEmail' | translate}}
                 </ng-container>
