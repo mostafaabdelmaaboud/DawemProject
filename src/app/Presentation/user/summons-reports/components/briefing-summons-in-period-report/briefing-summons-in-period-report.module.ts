@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { StatisticsReportsRoutingModule } from './statistics-reports-routing.module';
-import { StatisticsReportsComponent } from './statistics-reports.component';
+import { BriefingSummonsInPeriodReportRoutingModule } from './briefing-summons-in-period-report-routing.module';
+import { BriefingSummonsInPeriodReportComponent } from './briefing-summons-in-period-report.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
@@ -16,24 +16,24 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
 import { SafeUrlPipe } from './safeUrl.pipe';
-
-
-
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   declarations: [
-    StatisticsReportsComponent,
+    BriefingSummonsInPeriodReportComponent,
     SafeUrlPipe
-
   ],
   imports: [
     CommonModule,
-    StatisticsReportsRoutingModule,
+    BriefingSummonsInPeriodReportRoutingModule,
     HttpClientModule,
     MatDialogModule,
     TranslateModule,
     InputSwitchModule,
     MatRadioModule,
+    CheckboxModule,
+    RadioButtonModule,
     MatProgressSpinnerModule,
     MultiSelectModule, 
     ReactiveFormsModule, 
@@ -44,4 +44,4 @@ import { SafeUrlPipe } from './safeUrl.pipe';
     SharedModule
   ]
 })
-export class StatisticsReportsModule { }
+export class BriefingSummonsInPeriodReportModule { }

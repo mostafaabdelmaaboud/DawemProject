@@ -187,17 +187,44 @@
                       </mat-expansion-panel-header>
                       <mat-nav-list>
                         <ul nz-menu nzMode="inline">
-                          <mat-list-item  class="side-nav-item" routerLink="statisticsReports/300">
+                          <mat-list-item  class="side-nav-item" routerLink="StatisticsOverAperiod/600">
                             <ul nz-menu nzMode="inline">
                               <li nz-menu-item routerLinkActive="ant-menu-item-selected">
                                 <span nz-icon></span>
                                 <i class="pi pi-flag"></i>
-                                <span class="text-sidebar"> الاحصائيات</span>
+                                <span class="text-sidebar"> الاحصائيات خلال فتره على مستوي الشركه</span>
                               </li>  
                             </ul>
                           </mat-list-item>
                         </ul>
                       </mat-nav-list>
+                      <mat-nav-list>
+                        <ul nz-menu nzMode="inline">
+                          <mat-list-item  class="side-nav-item" routerLink="StatisticsReportOverAperiodByDepartment/601">
+                            <ul nz-menu nzMode="inline">
+                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                                <span nz-icon></span>
+                                <i class="pi pi-flag"></i>
+                                <span class="text-sidebar">الاحصائيات خلال فتره بالقسم</span>
+                              </li>  
+                            </ul>
+                          </mat-list-item>
+                        </ul>
+                      </mat-nav-list>
+                      <mat-nav-list>
+                        <ul nz-menu nzMode="inline">
+                          <mat-list-item  class="side-nav-item" routerLink="StatisticsReportOverAperiodGroupByMonth/602">
+                            <ul nz-menu nzMode="inline">
+                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                                <span nz-icon></span>
+                                <i class="pi pi-flag"></i>
+                                <span class="text-sidebar">الاحصائيات خلال فتره بالشهر</span>
+                              </li>  
+                            </ul>
+                          </mat-list-item>
+                        </ul>
+                      </mat-nav-list>
+                      
                     </mat-expansion-panel>
                     <mat-expansion-panel class="mat-elevation-z0"
                     (opened)="isSidebarExpanded = true"
@@ -212,12 +239,31 @@
                       </mat-expansion-panel-header>
                       <mat-nav-list>
                         <ul nz-menu nzMode="inline">
-                          <mat-list-item  class="side-nav-item" routerLink="recallReports/301">
+                          
+                          <mat-list-item  class="side-nav-item" routerLink="BriefingSummonsInPeriodReport/303">
                             <ul nz-menu nzMode="inline">
                               <li nz-menu-item routerLinkActive="ant-menu-item-selected">
                                 <span nz-icon></span>
                                 <i class="pi pi-flag"></i>
-                                <span class="text-sidebar"> الاستدعاءات</span>
+                                <span class="text-sidebar">ملخص الاستدعاءات فى فتره</span>
+                              </li>  
+                            </ul>
+                          </mat-list-item>
+                          <mat-list-item  class="side-nav-item" routerLink="SummonsDetailsGroupByEmployee/301">
+                            <ul nz-menu nzMode="inline">
+                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                                <span nz-icon></span>
+                                <i class="pi pi-flag"></i>
+                                <span class="text-sidebar"> تفاصيل الاستدعاءات بالموظف</span>
+                              </li>  
+                            </ul>
+                          </mat-list-item>
+                          <mat-list-item  class="side-nav-item" routerLink="SummonsDetailsInPeriod/302">
+                            <ul nz-menu nzMode="inline">
+                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                                <span nz-icon></span>
+                                <i class="pi pi-flag"></i>
+                                <span class="text-sidebar">تفاصيل الاستدعاءات فى فتره</span>
                               </li>  
                             </ul>
                           </mat-list-item>

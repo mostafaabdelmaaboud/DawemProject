@@ -1,14 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { StatisticsReportsComponent } from './statistics-reports.component';
+import { SummonsDetailsInPeriodComponent } from './summons-details-in-period.component';
 
 const routes: Routes = [
-  {path:"", component:StatisticsReportsComponent}
-
+  {path:"", component:SummonsDetailsInPeriodComponent}
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class StatisticsReportsRoutingModule { }
+export class SummonsDetailsInPeriodRoutingModule { }

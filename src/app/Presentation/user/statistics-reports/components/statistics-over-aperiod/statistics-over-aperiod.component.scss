@@ -100,6 +100,11 @@
   height: 600px !important;
 
 }
+:host .container-radio-button {
+  .mat-mdc-radio-group {
+    margin: 0 -25px
+  }
+}
 .container-empty-data,
 .viewer-report {
   min-height: 400px;

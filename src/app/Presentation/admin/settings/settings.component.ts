@@ -100,7 +100,6 @@ export class SettingsComponent {
                     settingType:insideControl.get("settingType")?.value,
                     value:insideControl.get("settingValue")?.value
                   })
-                  console.log(this.getControlArray("gorup").controls);
   
   
             })

@@ -680,7 +680,6 @@ export class AddUserPermissionAdminComponent {
         data.data.menuItemsTypes.forEach((screen: any, i:number) => {
 
           let formatObject = this.searchNodes(screen.menuItems);
-          console.log(formatObject)
           this.permissions.push({...screen, menuItems: formatObject});
           
         });

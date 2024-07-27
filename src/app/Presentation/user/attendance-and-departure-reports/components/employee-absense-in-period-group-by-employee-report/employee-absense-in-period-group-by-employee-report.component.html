@@ -4,9 +4,7 @@
       <span class="title-head">
         غياب الموظفين فى فتره 
       </span>
-      <div class="field-calendar-header">
-        <p-calendar [(ngModel)]="date" [showIcon]="true" dateFormat="yy MM"></p-calendar>
-      </div>
+
     </div>
     <div class="container-reports">
       <form [formGroup]="reportForm">
@@ -52,7 +50,7 @@
             </div>
             <div class="col-lg-4 col-12">
               <div class="sectionTwo mb-3">
-                  <label class="label-input mb-2">الموظفين <span class="color-red">*</span></label>
+                  <label class="label-input mb-2">الموظفين </label>
                   <div class="content-password">
                     <p-multiSelect [options]="employeesList" [filter]="false" appendTo="body"
                     formControlName="EmployeeIds" placeholder="الموظفين"
@@ -84,7 +82,7 @@
             </div>
             <div class="col-lg-4 col-12">
               <div class="sectionTwo mb-3">
-                  <label class="label-input mb-2">الأقسام <span class="color-red">*</span></label>
+                  <label class="label-input mb-2">الأقسام </label>
                   <div class="content-password">
         
                     <p-multiSelect [options]="depatmentsList" [filter]="false" appendTo="body"
@@ -117,7 +115,7 @@
             </div>
             <div class="col-lg-4 col-12">
               <div class="sectionTwo mb-3">
-                  <label class="label-input mb-2">المناطق <span class="color-red">*</span></label>
+                  <label class="label-input mb-2">المناطق </label>
                   <div class="content-password">
                
                     <p-multiSelect [options]="zonesList" [filter]="false" appendTo="body"
@@ -150,7 +148,7 @@
             </div>
             <div class="col-lg-4 col-12">
               <div class="sectionTwo mb-3">
-                  <label class="label-input mb-2">المسميات الوظيفية <span class="color-red">*</span></label>
+                  <label class="label-input mb-2">المسميات الوظيفية </label>
                   <div class="content-password">
                     <p-multiSelect [options]="jobTitleList" [filter]="false" appendTo="body"
                     formControlName="JobTitleIds" placeholder="المسميات الوظيفية"

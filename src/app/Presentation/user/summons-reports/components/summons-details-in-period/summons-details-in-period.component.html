@@ -2,7 +2,7 @@
 <div class="position-relative">
     <div class="header-comp d-flex align-items-center">
       <span class="title-head">
-        الحضور مبكرا او متأخرا بالموظفين
+        تفاصيل الاستدعاءات فى فتره
       </span>
 
     </div>
@@ -84,7 +84,6 @@
               <div class="sectionTwo mb-3">
                   <label class="label-input mb-2">الأقسام </label>
                   <div class="content-password">
-        
                     <p-multiSelect [options]="depatmentsList" [filter]="false" appendTo="body"
                     formControlName="DepartmentIds" placeholder="الأقسام"
                     optionLabel="name">
@@ -108,39 +107,6 @@
                     <div class="alert alert-danger"
                       *ngIf="getControl('DepartmentIds')?.hasError('required') && getControl('DepartmentIds')?.dirty">
                       الأقسام مطلوبة
-                    </div>
-                  </div>
-                  <!--End Custom Validators-->
-                </div>
-            </div>
-            <div class="col-lg-4 col-12">
-              <div class="sectionTwo mb-3">
-                  <label class="label-input mb-2">المناطق </label>
-                  <div class="content-password">
-               
-                    <p-multiSelect [options]="zonesList" [filter]="false" appendTo="body"
-                    formControlName="ZoneIds" placeholder="المناطق"
-                    optionLabel="name">
-                    <ng-template pTemplate="header">
-                      <span class="p-input-icon-left input-search-dropdown">
-  
-                        <i class="pi pi-search" (click)="searchDropdown(searchZoneId.value, 'ZoneId')"></i>
-
-                        <i class="pi pi-times-circle ml-2" *ngIf="zoneIdClearData" (click)="searchDropdown('', 'ZoneId')"></i>
-
-                        <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchZoneId />
-                      </span>
-                    </ng-template>
-                    <ng-template let-option pTemplate="item">
-                      {{ option.name }}
-                    </ng-template>
-                  </p-multiSelect>
-                  </div>
-                  <!--Start Custom Validators-->
-                  <div class="container-alerts mt-2" *ngIf="getControl('ZoneIds')?.errors">
-                    <div class="alert alert-danger"
-                      *ngIf="getControl('ZoneIds')?.hasError('required') && getControl('ZoneIds')?.dirty">
-                      المناطق مطلوبة
                     </div>
                   </div>
                   <!--End Custom Validators-->
@@ -175,6 +141,94 @@
                   <!--End Custom Validators-->
                 </div>
             </div>
+            <div class="col-lg-4 col-12">
+                <div class="sectionTwo mb-3">
+                    <label class="label-input mb-2"> طريقه الاشعار</label>
+                    <div class="content-password">
+                      <p-dropdown appendTo="body" formControlName="NotifiyWay" appendTo="body" [options]="notifiyWayList"
+                        placeholder="طريقه الاشعار" optionLabel="name">
+                        <!-- <ng-template pTemplate="header">
+                          <span class="p-input-icon-left input-search-dropdown">
+      
+                            <i class="pi pi-search" (click)="searchDropdown(searchNotifiyWay, 'NotifiyWay')"></i>
+                            <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchNotifiyWay />
+                          </span>
+                        </ng-template> -->
+                        <ng-template let-option pTemplate="item">
+                          {{ option.name }}
+                        </ng-template>
+                      </p-dropdown>
+                    </div>
+                    <!--Start Custom Validators-->
+                    <!-- <div class="container-alerts mt-2" *ngIf="getControl('NotifiyWay')?.errors">
+                      <div class="alert alert-danger"
+                        *ngIf="getControl('NotifiyWay')?.hasError('required') && getControl('NotifiyWay')?.dirty">
+                        {{data!['ValidationGroupId']|translate}}
+      
+                      </div>
+                    </div> -->
+                    <!--End Custom Validators-->
+                  </div>
+            </div>
+       
+              <div class="col-lg-4 col-12">
+                <div class="sectionTwo mb-3">
+                    <label class="label-input mb-2">الوقت المسموح بالدقائق</label>
+                    <div class="row">
+                        <div class="col-lg-6 col-12">
+                            <div class="input-inside">
+                                <label class="label-input mb-2">من</label>
+                                <div class="content-password">
+                                    <input type="number" pInputText formControlName="AllowedTimeWithMinutesFrom" placeholder="من"
+                                      class="w-100" />
+                                  </div>
+                                  <!--Start Custom Validators-->
+                                    <div class="container-alerts mt-2" *ngIf="getControl('AllowedTimeWithMinutesFrom')?.errors">
+                                        <div class="alert alert-danger"
+                                            *ngIf="getControl('AllowedTimeWithMinutesFrom')?.hasError('dateRangeError') && getControl('AllowedTimeWithMinutesFrom')?.dirty">
+                                            يجب ان يكون الوقت المسموح من اصغر من الوقت المسموح الي
+                                        </div>
+                                    </div>
+                                <!--End Custom Validators-->
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12">
+                            <div class="input-inside">
+                                <label class="label-input mb-2">الي</label>
+                                <div class="content-password">
+                                    <input type="number" pInputText formControlName="AllowedTimeWithMinutesTo" placeholder="الي"
+                                      class="w-100" />
+                                  </div>
+                                <!--Start Custom Validators-->
+                                <div class="container-alerts mt-2" *ngIf="getControl('AllowedTimeWithMinutesTo')?.errors">
+                                    <div class="alert alert-danger"
+                                        *ngIf="getControl('AllowedTimeWithMinutesTo')?.hasError('dateRangeError') && getControl('AllowedTimeWithMinutesTo')?.dirty">
+                                        يجب ان يكون الوقت المسموح الي اكبر من الوقت المسموح من
+                                    </div>
+                                </div>
+                                <!--End Custom Validators-->
+                            </div>
+                        </div>
+                    </div>
+                       <!--Start Custom Validators-->
+                       <div class="container-alerts mt-2" *ngIf="allowedTimeWithMinutesRequired">
+                        <div class="alert alert-danger">
+                            يجب ان يكون الوقت المسموح من اصغر من الوقت المسموح الي
+                        </div>
+                    </div>
+                <!--End Custom Validators-->
+                    <!--Start Custom Validators-->
+                    <!-- <div class="container-alerts mt-2" *ngIf="getControl('NotifiyWay')?.errors">
+                      <div class="alert alert-danger"
+                        *ngIf="getControl('NotifiyWay')?.hasError('required') && getControl('NotifiyWay')?.dirty">
+                        {{data!['ValidationGroupId']|translate}}
+      
+                      </div>
+                    </div> -->
+                    <!--End Custom Validators-->
+                  </div>
+            </div>
+  
           </div>
           </div>
           <footer class=" d-flex justify-content-end">
@@ -188,28 +242,28 @@
     </form>
         <div class="viewer-report position-relative">
           <div class="text-center title-reporting" *ngIf="removeText">برجاء البحث لإظهار التقرير</div>
-            <div *ngIf="!removeText && !show && !loadingReport" class="container-empty-data mt-3 mb-3 w-100 d-flex justify-content-center align-items-center">
-                <svg width="65" height="40" viewBox="0 0 65 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_1920_5847)">
-                    <rect width="64" height="40" transform="translate(0.5)" fill="white" fill-opacity="0.01" />
-                    <path
-                      d="M32.5 39.7047C50.1731 39.7047 64.5 36.5939 64.5 32.7566C64.5 28.9193 50.1731 25.8086 32.5 25.8086C14.8269 25.8086 0.5 28.9193 0.5 32.7566C0.5 36.5939 14.8269 39.7047 32.5 39.7047Z"
-                      fill="#F5F5F5" />
-                    <path
-                      d="M55.5 13.6653L45.354 2.24866C44.867 1.47048 44.156 1 43.407 1H21.593C20.844 1 20.133 1.47048 19.646 2.24767L9.5 13.6663V22.8367H55.5V13.6653Z"
-                      stroke="#CED4DA" />
-                    <path
-                      d="M42.113 16.8116C42.113 15.2185 43.107 13.9033 44.34 13.9023H55.5V31.9047C55.5 34.0119 54.18 35.739 52.55 35.739H12.45C10.82 35.739 9.5 34.011 9.5 31.9047V13.9023H20.66C21.893 13.9023 22.887 15.2155 22.887 16.8086V16.8304C22.887 18.4235 23.892 19.7099 25.124 19.7099H39.876C41.108 19.7099 42.113 18.4116 42.113 16.8185V16.8116Z"
-                      fill="#FAFAFA" stroke="#CED4DA" />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_1920_5847">
-                      <rect width="64" height="40" fill="white" transform="translate(0.5)" />
-                    </clipPath>
-                  </defs>
-                </svg>
-                <span class="empty-table f-s-16">{{'requests.noData' | translate}}</span>
-              </div>
+          <div *ngIf="!removeText && !show && !loadingReport" class="container-empty-data mt-3 mb-3 w-100 d-flex justify-content-center align-items-center">
+              <svg width="65" height="40" viewBox="0 0 65 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_1920_5847)">
+                  <rect width="64" height="40" transform="translate(0.5)" fill="white" fill-opacity="0.01" />
+                  <path
+                    d="M32.5 39.7047C50.1731 39.7047 64.5 36.5939 64.5 32.7566C64.5 28.9193 50.1731 25.8086 32.5 25.8086C14.8269 25.8086 0.5 28.9193 0.5 32.7566C0.5 36.5939 14.8269 39.7047 32.5 39.7047Z"
+                    fill="#F5F5F5" />
+                  <path
+                    d="M55.5 13.6653L45.354 2.24866C44.867 1.47048 44.156 1 43.407 1H21.593C20.844 1 20.133 1.47048 19.646 2.24767L9.5 13.6663V22.8367H55.5V13.6653Z"
+                    stroke="#CED4DA" />
+                  <path
+                    d="M42.113 16.8116C42.113 15.2185 43.107 13.9033 44.34 13.9023H55.5V31.9047C55.5 34.0119 54.18 35.739 52.55 35.739H12.45C10.82 35.739 9.5 34.011 9.5 31.9047V13.9023H20.66C21.893 13.9023 22.887 15.2155 22.887 16.8086V16.8304C22.887 18.4235 23.892 19.7099 25.124 19.7099H39.876C41.108 19.7099 42.113 18.4116 42.113 16.8185V16.8116Z"
+                    fill="#FAFAFA" stroke="#CED4DA" />
+                </g>
+                <defs>
+                  <clipPath id="clip0_1920_5847">
+                    <rect width="64" height="40" fill="white" transform="translate(0.5)" />
+                  </clipPath>
+                </defs>
+              </svg>
+              <span class="empty-table f-s-16">{{'requests.noData' | translate}}</span>
+            </div>
               <div *ngIf="show && !loadingReport">
                 <iframe id="report" class="report-design" [src]="url | safeUrl"></iframe>
 

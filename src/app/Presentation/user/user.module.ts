@@ -291,6 +291,45 @@ const routes: Routes = [
         // canActivate: [PermissionGuard]  
 
       },
+      {
+        path: "SummonsDetailsGroupByEmployee/:id",
+        loadChildren: () => import('./summons-reports/components/summons-details-group-by-employee/summons-details-group-by-employee.module').then((m) => m.SummonsDetailsGroupByEmployeeModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      {
+        path: "SummonsDetailsInPeriod/:id",
+        loadChildren: () => import('./summons-reports/components/summons-details-in-period/summons-details-in-period.module').then((m) => m.SummonsDetailsInPeriodModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      {
+        path: "BriefingSummonsInPeriodReport/:id",
+        loadChildren: () => import('./summons-reports/components/briefing-summons-in-period-report/briefing-summons-in-period-report.module').then((m) => m.BriefingSummonsInPeriodReportModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      {
+        path: "StatisticsOverAperiod/:id",
+        loadChildren: () => import('./statistics-reports/components/statistics-over-aperiod/statistics-over-aperiod.module').then((m) => m.StatisticsOverAperiodModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      {
+        path: "StatisticsReportOverAperiodByDepartment/:id",
+        loadChildren: () => import('./statistics-reports/components/statistics-report-over-aperiod-by-department/statistics-report-over-aperiod-by-department.module').then((m) => m.StatisticsReportOverAperiodByDepartmentModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      {
+        path: "StatisticsReportOverAperiodGroupByMonth/:id",
+        loadChildren: () => import('./statistics-reports/components/statistics-report-over-aperiod-group-by-month/statistics-report-over-aperiod-group-by-month.module').then((m) => m.StatisticsReportOverAperiodGroupByMonthModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      
+      
+      
       
       // {
       //   path: "basicDataReports/:id",

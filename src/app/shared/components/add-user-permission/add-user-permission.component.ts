@@ -683,7 +683,6 @@ export class AddUserPermissionComponent {
         data.data.menuItemsTypes.forEach((screen: any, i:number) => {
 
           let formatObject = this.searchNodes(screen.menuItems);
-          console.log(formatObject)
           this.permissions.push({...screen, menuItems: formatObject});
           
         });
@@ -814,7 +813,6 @@ export class AddUserPermissionComponent {
       return { ScreenId: permission.id, Actions: arrayChange };
     });
     //  && this.submitted
-    console.log(formatObject);
     if (this.addBranchGroupForm.valid && this.submitted && formatObject.Screens.length > 0) {
       this.submitted = false;
       formatObject.ForType = Number(this.addBranchGroupForm.value.ForType);
