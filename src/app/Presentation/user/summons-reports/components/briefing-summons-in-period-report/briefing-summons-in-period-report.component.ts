@@ -23,8 +23,8 @@ export class BriefingSummonsInPeriodReportComponent {
   id:any;
   allowedTimeWithMinutesRequired = false;
   reportForm: FormGroup = this.fb.group({
-    DateFrom: ['', Validators.required],
-    DateTo: ['', Validators.required],
+    DateFrom: ['', [Validators.required, this.dateFromValidator("DateTo")]],
+    DateTo: ['', [Validators.required, this.dateToValidator("DateFrom")]],
     DepartmentIds:[''],
     JobTitleIds:[''],
     AllowedTimeWithMinutesFrom:[null, [this.allowedTimeWithMinutesFromValidator('AllowedTimeWithMinutesTo')]],
@@ -79,6 +79,49 @@ export class BriefingSummonsInPeriodReportComponent {
       this.date = new Date();
 
     });
+  }
+  dateFromValidator(conInput: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value: any = control.value;
+      let checkMin = true;
+      
+
+      if (value != '') {
+        
+        if (this.reportForm?.get(conInput)?.dirty && !this.reportForm?.get(conInput)?.hasError('required')) {
+          
+
+          if (value > this.reportForm?.get(conInput)?.value) {
+            
+
+            checkMin = false;
+          }
+        }
+        if(this.reportForm?.get(conInput)?.invalid) {
+          this.reportForm?.get(conInput)?.setValue( this.reportForm?.get(conInput)?.value)
+        }
+      }
+      return checkMin ? null : { dateRangeError: true };
+    };
+  }
+  dateToValidator(conInput: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value: any = control.value;
+      let checkMin = true;
+
+
+      if (value != null) {
+        if (this.reportForm?.get(conInput)?.dirty && !this.reportForm?.get(conInput)?.hasError('required')) {
+          if (value < this.reportForm?.get(conInput)?.value) {
+            checkMin = false;
+          }
+        }
+        if(this.reportForm?.get(conInput)?.invalid) {
+          this.reportForm?.get(conInput)?.setValue( this.reportForm?.get(conInput)?.value)
+        }
+      }
+      return checkMin ? null : { dateRangeError: true };
+    };
   }
   submitted = true;
   ngOnInit(): void {

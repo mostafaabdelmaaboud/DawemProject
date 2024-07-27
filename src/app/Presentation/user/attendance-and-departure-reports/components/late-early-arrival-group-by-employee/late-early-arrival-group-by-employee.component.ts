@@ -1,6 +1,6 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
@@ -23,8 +23,8 @@ export class LateEarlyArrivalGroupByEmployeeComponent {
   loading = false;
   id:any;
   reportForm: FormGroup = this.fb.group({
-    DateFrom: ['', Validators.required],
-    DateTo: ['', Validators.required],
+    DateFrom: ['', [Validators.required, this.dateFromValidator("DateTo")]],
+    DateTo: ['', [Validators.required, this.dateToValidator("DateFrom")]],
     EmployeeIds:[''],
     DepartmentIds:[''],
     ZoneIds:[''],
@@ -75,6 +75,49 @@ export class LateEarlyArrivalGroupByEmployeeComponent {
       this.date = new Date();
 
     });
+  }
+  dateFromValidator(conInput: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value: any = control.value;
+      let checkMin = true;
+      
+
+      if (value != '') {
+        
+        if (this.reportForm?.get(conInput)?.dirty && !this.reportForm?.get(conInput)?.hasError('required')) {
+          
+
+          if (value > this.reportForm?.get(conInput)?.value) {
+            
+
+            checkMin = false;
+          }
+        }
+        if(this.reportForm?.get(conInput)?.invalid) {
+          this.reportForm?.get(conInput)?.setValue( this.reportForm?.get(conInput)?.value)
+        }
+      }
+      return checkMin ? null : { dateRangeError: true };
+    };
+  }
+  dateToValidator(conInput: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value: any = control.value;
+      let checkMin = true;
+
+
+      if (value != null) {
+        if (this.reportForm?.get(conInput)?.dirty && !this.reportForm?.get(conInput)?.hasError('required')) {
+          if (value < this.reportForm?.get(conInput)?.value) {
+            checkMin = false;
+          }
+        }
+        if(this.reportForm?.get(conInput)?.invalid) {
+          this.reportForm?.get(conInput)?.setValue( this.reportForm?.get(conInput)?.value)
+        }
+      }
+      return checkMin ? null : { dateRangeError: true };
+    };
   }
   submitted = true;
   ngOnInit(): void {

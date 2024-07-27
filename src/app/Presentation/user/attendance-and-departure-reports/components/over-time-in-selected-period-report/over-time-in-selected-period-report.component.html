@@ -2,7 +2,7 @@
 <div class="position-relative">
     <div class="header-comp d-flex align-items-center">
       <span class="title-head">
-        الوقت الاضافى فى فتره
+        الوقت الاضافى خلال فتره
       </span>
 
     </div>
@@ -25,6 +25,10 @@
                     *ngIf="getControl('DateFrom')?.hasError('required') && getControl('DateFrom')?.dirty">
                     تاريخ البداية مطلوب
                   </div>
+                  <div class="alert alert-danger"
+                  *ngIf="getControl('DateFrom')?.hasError('dateRangeError') && !getControl('DateFrom')?.hasError('required') ">
+                  عفوا تاريخ البدايه يجب ان يكون اقل من تاريخ النهايه
+                  </div>
                 </div>
                 <!--End Custom Validators-->
               </div>
@@ -43,6 +47,10 @@
                   <div class="alert alert-danger"
                     *ngIf="getControl('DateTo')?.hasError('required') && getControl('DateTo')?.dirty">
                     تاريخ النهاية مطلوب
+                  </div>
+                  <div class="alert alert-danger"
+                  *ngIf="getControl('DateTo')?.hasError('dateRangeError') && !getControl('DateTo')?.hasError('required') ">
+                  عفوا تاريخ النهاية يجب ان يكون اكبر من تاريخ البداية
                   </div>
                 </div>
                 <!--End Custom Validators-->
