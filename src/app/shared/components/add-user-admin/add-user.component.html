@@ -32,6 +32,10 @@
             {{data!['nameValidation']|translate}}
 
           </div>
+          <div class="alert alert-danger" *ngIf="getControl('Name')?.hasError('pattern') && !getControl('Name')?.hasError('required')">
+            لا يقبل الارقام
+
+          </div>
         </div>
         <!--End Custom Validators-->
       </div>

@@ -82,7 +82,7 @@ export class DialogUserFileComponent {
             
 
             if (data?.profileImagePath) {
-              var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg");
+              var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg", ".docx");
               let fileExt = data?.profileImageName?.substring(data?.profileImageName?.lastIndexOf('.'));
               if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
                 let file!:File;
@@ -97,6 +97,18 @@ export class DialogUserFileComponent {
                     name:data?.profileImageName,
                   }, detailsImage: true });
 
+                } else if(fileExt.toLowerCase().includes("docx") || fileExt.toLowerCase().includes("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
+                  file = new File([data.profileImagePath],data.profileImageName, {
+                    type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                  });
+           
+                  this.AttachmentsFiles.push({ imageSrc: "assets/img/word.png", download:data.profileImagePath, fileUpload: {
+                    lastModified:file.lastModified,
+                    size:file.size,
+                    type:file.type,
+                    name:data.profileImageName,
+                  }, detailsImage: true });
+                  // this.viewImagesIdCopy.push("assets/img/word.png");    
                 } else if(fileExt?.toLowerCase().includes("pdf")) {
                    file = new File([data?.profileImagePath], `pdf-file${validExts}`, {
                     type: 'application/pdf',

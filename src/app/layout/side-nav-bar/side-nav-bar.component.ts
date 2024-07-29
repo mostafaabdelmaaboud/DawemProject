@@ -420,46 +420,78 @@ export class SideNavBarComponent {
     }
 
   }
-  markAsRead(id:any) {
-    this.loadingNotification = true;
+  markAsRead(notification:any) {
+    if(!notification.isRead) {
+      this.loadingNotification = true;
 
-    let params = {notificationStoreId:id};
-    this.notificationService.markAsRead(params).subscribe({
-      next:data => {
-        let findIndexIsRead = this.notificationList.findIndex(item => item.id === id);
-        if(findIndexIsRead >= 0) {
-          this.notificationList[findIndexIsRead].isRead = data.data;
+      let params = {notificationId:notification.id};
+      this.notificationService.markAsRead(params).subscribe({
+        next:data => {
+          let findIndexIsRead = this.notificationList.findIndex(item => item.id === notification.id);
+          if(findIndexIsRead >= 0) {
+            this.notificationList[findIndexIsRead].isRead = data.data;
+          }
+          this.loadingNotification = false;
+          this.notificationType(notification.notificationType);
+        },
+        error: err => {
+          this.loadingNotification = false;
         }
-        this.loadingNotification = false;
-      },
-      error: err => {
-        this.loadingNotification = false;
-      }
-    })
-  }
-  notificationType(type:any) {
-    this.trigger.closeMenu();
- 
-    if(type >=0 && type <= 2) {
-      this.router.navigate(["/user/vacations"]);
-
-    } else if(type>=3  && type <= 5) {
-      this.router.navigate(["/user/tasks"]);
-
-    } else if(type === 6) {
-      this.router.navigate(["/user/justifications"]);
-
-    }else if(type === 7) {
-      this.router.navigate(["/user/permissions"]);
-
-    }else if(type === 8) {
-      this.router.navigate(["/user/sanctions"]);
-
-    }else if(type === 9) {
-      this.router.navigate(["/user/summons"]);
+      })
+    } else {
+      this.notificationType(notification.notificationType);
 
     }
-    
+
+  }
+  notificationType(type:any) {
+    let permissions = JSON.parse(localStorage.getItem("permissions") as string);
+
+    if(type >=0 && type <= 2) {
+      let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("vacations"));
+      if(findIndexRoute >= 0) {
+        this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`]);
+
+      }
+
+    } else if(type>=3  && type <= 5) {
+      let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("tasks"));
+      if(findIndexRoute >= 0) {
+        this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`]);
+  
+      }
+
+    } else if(type === 6) {
+      let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("justifications"));
+      if(findIndexRoute >= 0) {
+        this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`]);
+  
+      }
+
+    }else if(type === 7) {
+      let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("permissions"));
+      if(findIndexRoute >= 0) {
+        this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`]);
+  
+      }
+
+    }else if(type === 8) {
+      let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("sanctions"));
+      if(findIndexRoute >= 0) {
+        this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`]);
+  
+      }
+
+    }else if(type === 9) {
+      let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("summons"));
+      if(findIndexRoute >= 0) {
+        this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`]);
+  
+      }
+
+    }
+    this.trigger.closeMenu();
+
 
   }
   ngOnInit(): void {

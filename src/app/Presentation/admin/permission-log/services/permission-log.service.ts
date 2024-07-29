@@ -55,7 +55,7 @@ export class PermissionLogService {
         }
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}adminpanel/Permission/GetAllScreens`)
+    return this.http.get<any>(`${environment.baseUrl}adminpanel/Screen/GetForDropDown`, { params: queryParams })
   }
   actionCodeForDropdown(params: any) {
     let queryParams = new HttpParams();

@@ -33,11 +33,11 @@ export class HttpConfigInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     if (request.method == "GET" || request.method == "PATCH") {
-      
+     
       let token: any;
       if (
         !request.url.includes("/api/Browse/Browse") &&
-        !this.router.url.includes("/signUp")
+       !this.router.url.includes("/signUp") 
       ) {
          if(this.router.url.includes("admin/") || this.router.url.includes("adminPanel/login")) {
           if (typeof localStorage.getItem("Admintoken") === 'string') {
@@ -95,6 +95,40 @@ export class HttpConfigInterceptor implements HttpInterceptor {
           });
         }
       }
+     
+      if (
+        this.router.url.includes("/signUp")
+      ) {
+       
+
+        if (!request.url.includes("assets/i18n")) {
+         
+
+          let translate = this.injector.get(TranslateService)
+         
+
+          if (translate.currentLang == "ar") {
+            request = request.clone({
+              headers: request.headers.set("lang", "ar")
+              // .set(
+              //   "fingerPrint",
+              //   this.cookieService.get("fingerPrint") || "123456"
+              // ),
+            })
+          } else {
+            request = request.clone({
+              headers: request.headers.set("lang", "en")
+              // .set(
+              //   "fingerPrint",
+              //   this.cookieService.get("fingerPrint") || "123456"
+              // ),
+            });
+          } 
+  
+       
+        }
+      }
+    
     
     } else if (request.method == "POST" || request.method == "PUT" || request.method == "DELETE") {
       if (
@@ -128,6 +162,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         //   this.cookieService.get("fingerPrint") || "123456";
       } else {
         let token: any;
+       
 
        
         if(this.router.url.includes("admin/")) {
@@ -155,36 +190,41 @@ export class HttpConfigInterceptor implements HttpInterceptor {
 
 
         let translate = this.injector.get(TranslateService);
+       
+        if( !this.router.url.includes("/signUp")) {
           if (translate.currentLang == "ar") {
             request = request.clone({
               headers: request.headers
                 .set("Authorization", token).set("lang", "ar")
-              // .set(
-              //   "fingerPrint",
-              //   this.cookieService.get("fingerPrint") || "123456"
-              // ),
+       
             })
           } else {
             request = request.clone({
               headers: request.headers
                 .set("Authorization", token).set("lang", "en")
-              // .set(
-              //   "fingerPrint",
-              //   this.cookieService.get("fingerPrint") || "123456"
-              // ),
+      
             });
           } 
-    
-
-
-        // request.body.token = this.authService.getToken() || "";
-        // request.body.fingerPrint = this.cookieService.get("fingerPrint") || "123456";
+        } else {
+          if (translate.currentLang == "ar") {
+            request = request.clone({
+              headers: request.headers.set("lang", "ar")
+        
+            })
+          } else {
+            request = request.clone({
+              headers: request.headers.set("lang", "en")
+ 
+            });
+          } 
+        }
       }
     }
+   
 
     return next.handle(request).pipe(
       catchError((error: any) => {
-
+       
         let errorMsg = "";
         if (error.error instanceof ErrorEvent) {
           errorMsg = `Error: ${error.error.message}`;

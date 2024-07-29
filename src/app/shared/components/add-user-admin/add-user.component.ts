@@ -123,7 +123,7 @@ export class AddUserComponent {
   @Input() editUser!: boolean;
   addBranchGroupForm: FormGroup = this.fb.group({
     IsActive: [false],
-    Name: ["", Validators.required],
+    Name: ["", [Validators.required, Validators.pattern(/^[^\d]*$/)]],
     Email: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
     Roles: ["", Validators.required],
     IsAdmin: [false],

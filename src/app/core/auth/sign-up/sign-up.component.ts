@@ -190,6 +190,7 @@ export class SignUpComponent {
 
 
       this.getCountries();
+      this.getCountriesbyPhone();
 
     } else if (lang.value.code == "AR") {
       document.documentElement.setAttribute('lang', 'ar');
@@ -204,6 +205,7 @@ export class SignUpComponent {
       this.selectedCountry = this.countries[findIndexCountry];
 
       this.getCountries();
+      this.getCountriesbyPhone();
 
     } 
     // else if (lang.value.code == "IN") {
@@ -276,7 +278,6 @@ export class SignUpComponent {
     }
   }
   submit() {
-
     if (this.FormGroup.valid && this.loading && this.FormGroup.value.agreed) {
       this.loading = false;
       this.isLoading = true;

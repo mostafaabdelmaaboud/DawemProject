@@ -106,7 +106,6 @@ export class AddUserComponent {
   ];
   @Input() id!: string;
   code="+966";
-  countriesPhone: any[] = [];
   isCurrentCountry;
   viewImagesIdCopy: any[] = [];
   imageArray: any[] = [];
@@ -165,12 +164,10 @@ export class AddUserComponent {
 
     }
 
-    let countries = this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
 
     combineLatest({
       rolesDropDown,
-      employeeForDropDown,
-      countries
+      employeeForDropDown
     }).subscribe({
       next: data => {
         this.listRoles = [];
@@ -180,17 +177,10 @@ export class AddUserComponent {
           this.listRoles.push({ name: jobTitle.name, key: jobTitle.id })
         });
   
-        data.employeeForDropDown?.data?.forEach((employee: any) => {
-          this.listEmployees.push({ name: employee.name, key: employee.id })
-        });
-        this.countriesPhone = [];
-        data.countries?.forEach((country: any) => {
-          
-          this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath });
-          if(country.isCurrentCountry) {
-            this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath };
-          }
-        });
+        // data.employeeForDropDown?.data?.forEach((employee: any) => {
+        //   this.listEmployees.push({ name: employee.name, key: employee.id })
+        // });
+ 
         if (this.editUser) {
   
   
@@ -224,10 +214,7 @@ export class AddUserComponent {
                 // this.addBranchGroupForm.get("Password")?.setValue(data.isNecessary);
                 // this.addBranchGroupForm.get("ConfirmPassword")?.setValue(data.isNecessary);
              
-                let findIndexCountryCode = this.countriesPhone.findIndex(country => country.id === data.mobileCountryId);
-                if(findIndexCountryCode>=0) {
-                  this.isCurrentCountry = this.countriesPhone[findIndexCountryCode];
-                }
+          
                 this.addBranchGroupForm.get("IsAdmin")?.setValue(data.isAdmin);
                 
                 this.usersService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, id: data?.employeeId }).subscribe(dataDropdown => {
@@ -295,21 +282,7 @@ export class AddUserComponent {
 
   }
 
-  getCountriesbyPhone() {
-    this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
-      next: data => {
-        this.countriesPhone = [];
-        data.forEach((country: any) => {          
-          this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath });
-          if(country.isCurrentCountry) {
-            this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath };
-          }
-        });
-      },
-      error: err => {
-      }
-    });
-  }
+
   passwordMatchValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       const value: string = control.value;

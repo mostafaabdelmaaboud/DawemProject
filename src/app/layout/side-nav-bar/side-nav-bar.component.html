@@ -569,8 +569,8 @@
                             <ng-container
                               *ngFor="let notification of notificationList; trackBy:notificationTrackRequests">
                               <div class="item-notification">
-                                <div class="d-flex content-inside-notification mb-2" [class.colorIsRead]="!notification.isRead">
-                                  <div class="col cursor-pointer" (click)="notificationType(notification.notificationType)">
+                                <div class="d-flex content-inside-notification mb-2" [class.colorIsRead]="!notification.isRead" (click)="markAsRead(notification)">
+                                  <div class="col cursor-pointer">
                                     <div class="content-notifi d-flex">
                                       <span class="img-notification position-relative" [ngClass]="{'back-high': notification.priority == 0, 'back-medium': notification.priority == 1, 'back-low': notification.priority == 2}">
                                         <img width="56px" height="56px" [src]="notification.iconUrl" [alt]="notification.shortMessege">
@@ -619,7 +619,7 @@
                                   </div>
                              
                                   <div class="content-mark-as-read d-flex align-items-center">
-                                    <span class="icon-mark-as-read" *ngIf="!notification.isRead" (click)="markAsRead(notification.id)"></span>
+                                    <span class="icon-mark-as-read" *ngIf="!notification.isRead" ></span>
     
                                   </div>
                                 </div>

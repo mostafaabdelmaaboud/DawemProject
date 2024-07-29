@@ -40,7 +40,7 @@ export class ScreensService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.put<any>(`${environment.baseUrl}Screen/Disable`, {}, { params: queryParams })
+    return this.http.put<any>(`${environment.baseUrl}adminpanel/Screen/Disable`, {}, { params: queryParams })
   }
   accept(params: any) {
     let queryParams = new HttpParams();

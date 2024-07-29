@@ -137,7 +137,7 @@ export class DialogAddAnEmployeeComponent {
     ScheduleId: [''],
     isActive: [false],
     AllowChangeFingerprintMobileCode:[false],
-    name: ['', Validators.required],
+    name: ["", [Validators.required, Validators.pattern(/^[^\d]*$/)]],
     employeeNumber: ['', [Validators.required, Validators.min(0)]],
     JobTitleId: ['', Validators.required],
     DepartmentId: ['', Validators.required],

@@ -364,7 +364,6 @@ export class ScreensComponent {
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
-
       this.screensService.screenDisable({ id: data.id, disableReason: result.notes }).subscribe(
         {
           next: res => {

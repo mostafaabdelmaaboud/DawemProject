@@ -350,7 +350,7 @@ export class ScreenGroupsComponent {
   reasonOfRefuse(data: any) {
 
     let reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
-      width: "30vw",
+      width: "40vw",
       data: {
         title: "هل متأكد من تعطيل مجموعة الشاشة ؟",
         message: "برجاء توضيح السبب إن أمكن",

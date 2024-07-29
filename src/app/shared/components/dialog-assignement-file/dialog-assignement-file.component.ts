@@ -84,7 +84,7 @@ export class DialogAssignementFileComponent {
                 //   const file = new File([blob], attachment.fileName);
                 //   this.AttachmentsFiles.push({ imageSrc: attachment.filePath, fileUpload: file, detailsImage: true });
                 // });
-                var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg");
+                var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg", ".docx");
                 let fileExt = attachment.fileName.substring(attachment.fileName.lastIndexOf('.'));
                 if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
                   let file!:File;
@@ -99,6 +99,18 @@ export class DialogAssignementFileComponent {
                       name:attachment.fileName,
                     }, detailsImage: true });
 
+                  }else if(fileExt.toLowerCase().includes("docx") || fileExt.toLowerCase().includes("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
+                    file = new File([attachment.filePath],attachment.fileName, {
+                      type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    });
+          
+                    this.AttachmentsFiles.push({ imageSrc: "assets/img/word.png", download:attachment.filePath, fileUpload: {
+                      lastModified:file.lastModified,
+                      size:file.size,
+                      type:file.type,
+                      name:attachment.fileName,
+                    }, detailsImage: true });
+                    // this.viewImagesIdCopy.push("assets/img/word.png");    
                   } else if(fileExt?.toLowerCase().includes("pdf")) {
                      file = new File([attachment.filePath], `pdf-file${validExts}`, {
                       type: 'application/pdf',

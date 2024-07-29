@@ -52,6 +52,10 @@
           <div class="alert alert-danger" *ngIf="getControl('name')?.hasError('required') && getControl('name')?.dirty">
             {{data!['validationtitlefieldFirst']|translate}}
           </div>
+          <div class="alert alert-danger" *ngIf="getControl('name')?.hasError('pattern') && !getControl('name')?.hasError('required')">
+            لا يقبل الارقام
+
+          </div>
         </div>
         <!--End Custom Validators-->
       </div>

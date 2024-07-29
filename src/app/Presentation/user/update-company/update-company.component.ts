@@ -407,7 +407,7 @@ export class UpdateCompanyComponent {
         // }
         if (this.editBefore?.attachments.length) {
           this.editBefore?.attachments.forEach((attachment: any) => {
-            var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg",".xlsx", ".xls", ".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+            var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg", ".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
             let fileExt = attachment.fileName.substring(attachment.fileName.lastIndexOf('.'));
             
 
