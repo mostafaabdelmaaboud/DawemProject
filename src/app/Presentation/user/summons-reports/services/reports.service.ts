@@ -26,8 +26,10 @@ export class ReportsService {
             }
           }
         } else if (key === "NotifiyWay") {
-          queryParams = queryParams.set(key, value.key)
-        
+          if (value != "") {
+            queryParams = queryParams.set(key, value.key)
+
+          }        
         } else if (key === "DepartmentIds") {
           if (value != "") {
             if(value?.length > 0) {
@@ -112,7 +114,10 @@ export class ReportsService {
             }
           }
         } else if (key === "NotifiyWay") {
-          queryParams = queryParams.set(key, value.key)
+          if (value != "") {
+            queryParams = queryParams.set(key, value.key)
+
+          }
         
         } else if (key === "DepartmentIds") {
           if (value != "") {

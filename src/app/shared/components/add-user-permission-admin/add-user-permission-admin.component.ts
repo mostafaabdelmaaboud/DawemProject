@@ -428,7 +428,7 @@ export class AddUserPermissionAdminComponent {
 
           });
         }
-        this.permissionScreens = role?.permissionScreens;
+        this.permissionScreens = role?.screens;
         this.getPermissions(this.filteration, this.permissionScreens);
         this.translate.get("userPermissions").subscribe(translate => {
           this.toast.success(translate.unifiesPreviousUserPermissions);
@@ -440,13 +440,27 @@ export class AddUserPermissionAdminComponent {
           this.data!['buttonSend'] = translate.addPermission;
           this.data!['title'] = translate.addPermission;
         });
-     
+        this.toast.error(err.error.message);
+
         this.editPermission = false;
         this.permissionScreens = [];
         this.getPermissions(this.filteration, this.permissionScreens);
 
       }
     })
+  }
+  hasPropertyCheckBoxIsTrue(row:any):boolean {
+    let findIndexCheckbox = row?.children?.findIndex(child => child.selected === true);
+    if(findIndexCheckbox >=0) {
+      return true;
+
+    } else {
+      return false;
+
+    }
+
+
+ 
   }
   dropdownChangedRoleId(RoleId: any) {
 
@@ -501,7 +515,7 @@ export class AddUserPermissionAdminComponent {
           this.toast.success(translate.thereArePreExistingPowersForThePosition);
         });
 
-        this.permissionScreens = role?.permissionScreens;
+        this.permissionScreens = role?.screens;
         this.getPermissions(this.filteration, this.permissionScreens);
 
       },
@@ -510,7 +524,8 @@ export class AddUserPermissionAdminComponent {
           this.data!['buttonSend'] = translate.addPermission;
           this.data!['title'] = translate.addPermission;
         });
-   
+        this.toast.error(err.error.message);
+
         this.editPermission = false;
         this.permissionScreens = [];
         this.getPermissions(this.filteration, this.permissionScreens);
@@ -660,7 +675,9 @@ export class AddUserPermissionAdminComponent {
         let findIndexActions = actions.findIndex(action => action.id === node.id);
         if(findIndexActions >= 0) {
           actions[findIndexActions].actions.forEach(actionInside => {
-            node.changes[actionInside].checkbox = true
+            node.changes[actionInside].checkbox = true;
+            node.selected = true;
+
           });
         }
       }
@@ -772,36 +789,42 @@ export class AddUserPermissionAdminComponent {
 
   request() {
     let formatObject: any = {};
-    let filterPermission = this.permissions.filter((permission: any) => {
+    let childrenOnly:any[] = [];
+    this.permissions.forEach(item => {
+      let child:any = this.searchChildren(item.menuItems);
+      childrenOnly.push(...child)
+    });
+    let filterPermission = childrenOnly.filter((permission: any) => {
       let changeCechbox = false;
-      for (let per in permission) {
-        const pro = permission[per];
-        if (pro.readoOnly === false && pro.checkbox === true) {
-          changeCechbox = true
-        }
-      }
+ 
+          for (let perInsie in permission.changes) {
+
+            if (permission.changes[perInsie].readoOnly === false && permission.changes[perInsie].checkbox === true) {
+
+              changeCechbox = true
+            }
+          }
+     
       return changeCechbox;
 
+
     });
-
-
-    formatObject.PermissionScreens = filterPermission.map((permission: any) => {
+    formatObject.Screens = filterPermission.map((permission: any, i:number) => {
       let filterObject: any = {};
+      for (let perInsie in permission.changes) {
 
-      for (let per in permission) {
-        const pro = permission[per];
-        if (pro.readoOnly === false && pro.checkbox === true) {
-          filterObject[per] = pro;
+        if (permission.changes[perInsie].readoOnly === false && permission.changes[perInsie].checkbox === true) {
+          filterObject[perInsie] = permission;
         }
       }
       let arrayChange: any = Object.keys(filterObject);
       arrayChange = arrayChange.map((changeCheck: any) => {
-        return { ActionCode: Number(changeCheck) }
+        return  Number(changeCheck)
       })
-      return { ScreenCode: permission.screenCode, PermissionScreenActions: arrayChange };
+      return { ScreenId: permission.id, Actions: arrayChange };
     });
     //  && this.submitted
-    if (this.addBranchGroupForm.valid && this.submitted && formatObject.PermissionScreens.length > 0) {
+    if (this.addBranchGroupForm.valid && this.submitted && formatObject.Screens.length > 0) {
       this.submitted = false;
 
       formatObject.ForType = Number(this.addBranchGroupForm.value.ForType);

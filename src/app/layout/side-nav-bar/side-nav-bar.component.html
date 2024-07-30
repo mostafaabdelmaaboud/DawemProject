@@ -32,7 +32,7 @@
                         </li>  
                       </ul>
                     </mat-list-item> -->
-                    <mat-expansion-panel class="mat-elevation-z0"
+                    <!-- <mat-expansion-panel class="mat-elevation-z0"
                     (opened)="isSidebarExpanded = true"
                                  (closed)="isSidebarExpanded = false">
                       <mat-expansion-panel-header>
@@ -44,7 +44,7 @@
                         </span>
                       </mat-expansion-panel-header>
                       <mat-nav-list>
-                        <!-- <ul nz-menu nzMode="inline">
+                        <ul nz-menu nzMode="inline">
                           <mat-list-item  class="side-nav-item" routerLink="attendanceAndDepartureReports/25">
                             <ul nz-menu nzMode="inline">
                               <li nz-menu-item routerLinkActive="ant-menu-item-selected">
@@ -54,9 +54,9 @@
                               </li>  
                             </ul>
                           </mat-list-item>
-                        </ul> -->
+                        </ul>
                       </mat-nav-list>
-                    </mat-expansion-panel>
+                    </mat-expansion-panel> -->
                     <!-- <mat-list-item  class="side-nav-item" routerLink="attendanceAndDepartureReports/25">
                       <ul nz-menu nzMode="inline">
                         <li nz-menu-item routerLinkActive="ant-menu-item-selected">
@@ -93,7 +93,7 @@
                               <li nz-menu-item routerLinkActive="ant-menu-item-selected">
                                 <span nz-icon></span>
                                 <i class="pi pi-flag"></i>
-                                <span class="text-sidebar"> الحضور والانصراف بالقسم</span>
+                                <span class="text-sidebar">الحضور والانصراف للقسم</span>
                               </li>  
                             </ul>
                           </mat-list-item>
@@ -102,29 +102,10 @@
                               <li nz-menu-item routerLinkActive="ant-menu-item-selected">
                                 <span nz-icon></span>
                                 <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">مختصر الحضور والانصراف</span>
+                                <span class="text-sidebar">الحضور والانصراف المختصر</span>
                               </li>  
                             </ul>
                           </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="EarlyAndLateAttendanceRepoers/543">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">التاخير والانصراف المبكر للقسم</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="LateEarlyArrivalGroupByEmployee/545">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">التاخير والانصراف المبكر للموظفين</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          
                           <mat-list-item  class="side-nav-item" routerLink="AttendanceAndDepartureDetailsReports/544">
                             <ul nz-menu nzMode="inline">
                               <li nz-menu-item routerLinkActive="ant-menu-item-selected">
@@ -143,6 +124,9 @@
                               </li>  
                             </ul>
                           </mat-list-item>
+
+
+           
                           <mat-list-item  class="side-nav-item" routerLink="EmployeeAbsenseInPeriodGroupByEmployee/546">
                             <ul nz-menu nzMode="inline">
                               <li nz-menu-item routerLinkActive="ant-menu-item-selected">
@@ -157,7 +141,25 @@
                               <li nz-menu-item routerLinkActive="ant-menu-item-selected">
                                 <span nz-icon></span>
                                 <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">غياب الموظفين خلال فتره بالقسم</span>
+                                <span class="text-sidebar">غياب الموظفين خلال فتره للقسم</span>
+                              </li>  
+                            </ul>
+                          </mat-list-item>
+                          <mat-list-item  class="side-nav-item" routerLink="EarlyAndLateAttendanceRepoers/543">
+                            <ul nz-menu nzMode="inline">
+                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                                <span nz-icon></span>
+                                <i class="pi pi-flag"></i>
+                                <span class="text-sidebar">التاخير والانصراف المبكر للقسم</span>
+                              </li>  
+                            </ul>
+                          </mat-list-item>
+                          <mat-list-item  class="side-nav-item" routerLink="LateEarlyArrivalGroupByEmployee/545">
+                            <ul nz-menu nzMode="inline">
+                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                                <span nz-icon></span>
+                                <i class="pi pi-flag"></i>
+                                <span class="text-sidebar">التاخير والانصراف المبكر للموظفين</span>
                               </li>  
                             </ul>
                           </mat-list-item>
@@ -181,7 +183,6 @@
                         <i class="pi pi-flag"></i>
       
                         <span class="label text-sidebar" [ngClass]="{ hidden: !isSidebarExpanded }">
-                        
                           تقارير الاحصائيات
                         </span>
                       </mat-expansion-panel-header>
@@ -192,7 +193,7 @@
                               <li nz-menu-item routerLinkActive="ant-menu-item-selected">
                                 <span nz-icon></span>
                                 <i class="pi pi-flag"></i>
-                                <span class="text-sidebar"> الاحصائيات خلال فتره على مستوي الشركه</span>
+                                <span class="text-sidebar">الاحصائيات خلال فتره على مستوي الشركه</span>
                               </li>  
                             </ul>
                           </mat-list-item>
@@ -205,7 +206,7 @@
                               <li nz-menu-item routerLinkActive="ant-menu-item-selected">
                                 <span nz-icon></span>
                                 <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الاحصائيات خلال فتره بالقسم</span>
+                                <span class="text-sidebar">الاحصائيات خلال فتره للقسم</span>
                               </li>  
                             </ul>
                           </mat-list-item>
@@ -218,7 +219,7 @@
                               <li nz-menu-item routerLinkActive="ant-menu-item-selected">
                                 <span nz-icon></span>
                                 <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الاحصائيات خلال فتره بالشهر</span>
+                                <span class="text-sidebar">الاحصائيات خلال فتره للشهر</span>
                               </li>  
                             </ul>
                           </mat-list-item>
@@ -239,7 +240,6 @@
                       </mat-expansion-panel-header>
                       <mat-nav-list>
                         <ul nz-menu nzMode="inline">
-                          
                           <mat-list-item  class="side-nav-item" routerLink="BriefingSummonsInPeriodReport/303">
                             <ul nz-menu nzMode="inline">
                               <li nz-menu-item routerLinkActive="ant-menu-item-selected">
@@ -254,7 +254,7 @@
                               <li nz-menu-item routerLinkActive="ant-menu-item-selected">
                                 <span nz-icon></span>
                                 <i class="pi pi-flag"></i>
-                                <span class="text-sidebar"> تفاصيل الاستدعاءات بالموظف</span>
+                                <span class="text-sidebar">تفاصيل الاستدعاءات للموظف</span>
                               </li>  
                             </ul>
                           </mat-list-item>

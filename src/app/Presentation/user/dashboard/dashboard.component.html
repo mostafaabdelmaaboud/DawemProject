@@ -367,13 +367,11 @@
                         </ng-container>
                         <ng-container *ngIf="!department?.lastEditDate?.currentDate">
                           {{department?.lastEditDate?.Date}}
-
                         </ng-container>
-
                         <!-- اليوم الساعة 12:48 م -->
                       </span>
                     </div>
-                    <div class="dropdown-StaffAttendanceStatus">
+                    <!-- <div class="dropdown-StaffAttendanceStatus">
                       <div ngbDropdown class="d-inline-block">
                         <span id="dropdownBasic1" ngbDropdownToggle>
                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25"
@@ -403,7 +401,7 @@
                           <button ngbDropdownItem>Something else is here</button>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
                   <div class="body-li-StaffAttendanceStatus d-flex align-items-center justify-content-between">
                     <div class="right-StaffAttendanceStatus">
@@ -444,7 +442,7 @@
                       </div>
                     </div>
                     <div class="left-StaffAttendanceStatus">
-                      <button type="button" class="btn btn-primary" *ngIf="showActions({actionCode:0})"   (click)="addAnEmployee(department)">{{'dashboard.addAnEmployee' | translate}}</button>
+                      <button type="button" class="btn btn-primary" *ngIf="showActiosEmployee({actionCode:0})" (click)="addAnEmployee(department)">{{'dashboard.addAnEmployee' | translate}}</button>
                       <!-- routerLink="/user/employees" -->
                     </div>
                   </div>

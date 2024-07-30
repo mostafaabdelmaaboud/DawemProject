@@ -387,16 +387,21 @@ export class UserPermissionsComponent {
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       if (dialogRefAddCurrency.componentInstance.editPermission) {
         result.id = dialogRefAddCurrency.componentInstance.id;
+        dialogRefAddCurrency.componentInstance.loading = true;
+
         this.userPermissionsService.updatePermission(result).subscribe(
           {
             next: data => {
 
               if (data?.state === 2) {
                 this.toast.error(data?.message);
+                dialogRefAddCurrency.componentInstance.loading = false;
+
                 dialogRefAddCurrency.close();
 
               } else {
                 dialogRefAddCurrency.componentInstance.submitted = true;
+                dialogRefAddCurrency.componentInstance.loading = false;
 
                 dialogRefAddCurrency.close();
                 let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
@@ -428,21 +433,27 @@ export class UserPermissionsComponent {
             },
             error: err => {
               dialogRefAddCurrency.componentInstance.submitted = true;
+              dialogRefAddCurrency.componentInstance.loading = false;
 
             }
           }
         )
       } else {
+        dialogRefAddCurrency.componentInstance.loading = true;
+
         this.userPermissionsService.createPermission(result).subscribe(
           {
             next: data => {
 
               if (data?.state === 2) {
                 this.toast.error(data?.message);
+                dialogRefAddCurrency.componentInstance.loading = false;
+
                 dialogRefAddCurrency.close();
 
               } else {
                 dialogRefAddCurrency.componentInstance.submitted = true;
+                dialogRefAddCurrency.componentInstance.loading = false;
 
                 dialogRefAddCurrency.close();
                 let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
@@ -474,6 +485,7 @@ export class UserPermissionsComponent {
             },
             error: err => {
               dialogRefAddCurrency.componentInstance.submitted = true;
+              dialogRefAddCurrency.componentInstance.loading = false;
 
             }
           }

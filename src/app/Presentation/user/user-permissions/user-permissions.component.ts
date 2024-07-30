@@ -380,20 +380,28 @@ export class UserPermissionsComponent {
     dialogRefAddCurrency.componentInstance.editPermission = false;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+      
+
       if (dialogRefAddCurrency.componentInstance.editPermission) {
+        
+
         result.id = dialogRefAddCurrency.componentInstance.id;
+        dialogRefAddCurrency.componentInstance.loading = true;
+
         this.userPermissionsService.updatePermission(result).subscribe(
           {
             next: data => {
-
+              
               if (data?.state === 2) {
                 this.toast.error(data?.message);
+                dialogRefAddCurrency.componentInstance.loading = false;
+
                 dialogRefAddCurrency.close();
 
               } else {
                 dialogRefAddCurrency.componentInstance.submitted = true;
+                dialogRefAddCurrency.componentInstance.loading = false;
 
-                dialogRefAddCurrency.close();
                 let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
                   this.translate.get("userPermissions").subscribe(translate => {
                     succressDialog = this.dialog.open(ToastSuccessComponent, {
@@ -411,6 +419,7 @@ export class UserPermissionsComponent {
                   succressDialog.close();
 
                 }, 2000);
+                dialogRefAddCurrency.close();
 
                 succressDialog.componentInstance.submitted = true;
                 succressDialog.componentInstance.submitClicked.subscribe(result => {
@@ -423,23 +432,32 @@ export class UserPermissionsComponent {
             },
             error: err => {
               dialogRefAddCurrency.componentInstance.submitted = true;
+              dialogRefAddCurrency.componentInstance.loading = false;
 
             }
           }
         )
       } else {
+        
+        dialogRefAddCurrency.componentInstance.loading = true;
+
         this.userPermissionsService.createPermission(result).subscribe(
           {
             next: data => {
+              
 
               if (data?.state === 2) {
+                
+
                 this.toast.error(data?.message);
                 dialogRefAddCurrency.close();
 
               } else {
-                dialogRefAddCurrency.componentInstance.submitted = true;
+                
 
-                dialogRefAddCurrency.close();
+                dialogRefAddCurrency.componentInstance.submitted = true;
+                dialogRefAddCurrency.componentInstance.loading = false;
+
                 let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
                 this.translate.get("userPermissions").subscribe(translate => {
                   succressDialog = this.dialog.open(ToastSuccessComponent, {
@@ -451,12 +469,13 @@ export class UserPermissionsComponent {
                     },
                   });
                 });
-  
+
                 this.getPermissions(this.filteration);
                 setTimeout(() => {
                   succressDialog.close();
 
                 }, 2000);
+                dialogRefAddCurrency.close();
 
                 succressDialog.componentInstance.submitted = true;
                 succressDialog.componentInstance.submitClicked.subscribe(result => {
@@ -469,6 +488,7 @@ export class UserPermissionsComponent {
             },
             error: err => {
               dialogRefAddCurrency.componentInstance.submitted = true;
+              dialogRefAddCurrency.componentInstance.loading = false;
 
             }
           }

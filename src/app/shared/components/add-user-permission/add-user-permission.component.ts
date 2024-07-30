@@ -112,7 +112,6 @@ export class AddUserPermissionComponent {
   mobileQuery: MediaQueryList;
   subscription!: Subscription;
   isLoading = true;
-
   RoleToggle = true;
   userIdToggle = false;
   itemsPerPage = 5;
@@ -430,7 +429,7 @@ export class AddUserPermissionComponent {
           });
         }
         
-        this.permissionScreens = role?.permissionScreens;
+        this.permissionScreens = role?.screens;
         this.getPermissions(this.filteration, this.permissionScreens);
         this.translate.get("userPermissions").subscribe(translate => {
           this.toast.success(translate.unifiesPreviousUserPermissions);
@@ -453,16 +452,18 @@ export class AddUserPermissionComponent {
     })
   }
   dropdownChangedRoleId(RoleId: any) {
-
+    
     this.userPermissionsService.checkAndGetPermission({ ResponsibilityId: RoleId.value.key }).subscribe({
       next: role => {
+        
+
+        
         this.translate.get("userPermissions").subscribe(translate => {
           this.data!['titleClose'] = translate.toRetreat;
           this.data!['title'] = translate.modifyPermission;
           this.data!['buttonSend'] = translate.modifyPermission;
         });
   
-
         this.editPermission = true;
         this.id = role.id
         this.getControl("isActive")?.setValue(role.isActive);
@@ -499,8 +500,9 @@ export class AddUserPermissionComponent {
         this.translate.get("userPermissions").subscribe(translate => {
           this.toast.success(translate.thereArePreExistingPowersForThePosition);
         });
+        
 
-        this.permissionScreens = role?.permissionScreens;
+        this.permissionScreens = role?.screens;
         this.getPermissions(this.filteration, this.permissionScreens);
 
       },
@@ -510,12 +512,16 @@ export class AddUserPermissionComponent {
           this.data!['title'] = translate.addPermission;
         });
         
+        
 
         this.toast.error(err.error.message);
+        
 
         this.editPermission = false;
         this.permissionScreens = [];
         this.getPermissions(this.filteration, this.permissionScreens);
+        
+
       }
     })
   }
@@ -653,6 +659,19 @@ export class AddUserPermissionComponent {
 
     return result;
   }
+  hasPropertyCheckBoxIsTrue(row:any):boolean {
+    let findIndexCheckbox = row?.children?.findIndex(child => child.selected === true);
+    if(findIndexCheckbox >=0) {
+      return true;
+
+    } else {
+      return false;
+
+    }
+
+
+ 
+  }
   searchByActionId(nodes:any[], actions) {
     function recursiveSearch(node: any,parentIndex) {
       if (node?.groupOrScreenType === 0 && node?.children?.length) {
@@ -663,8 +682,12 @@ export class AddUserPermissionComponent {
         let findIndexActions = actions.findIndex(action => action.id === node.id);
         if(findIndexActions >= 0) {
           actions[findIndexActions].actions.forEach(actionInside => {
-            node.changes[actionInside].checkbox = true
+            node.changes[actionInside].checkbox = true;
+            node.selected = true;
           });
+        } else {
+          node.selected = false;
+
         }
       }
     }
@@ -676,22 +699,28 @@ export class AddUserPermissionComponent {
   getPermissions(filteration: any, permissionScreens: any) {
     this.permissions = [];
     this.isLoading = true;
-
+    
     this.userPermissionsService.getAllScreensWithAvailableActions(filteration).subscribe({
       next: data => {
-
+        
         data.data.menuItemsTypes.forEach((screen: any, i:number) => {
 
           let formatObject = this.searchNodes(screen.menuItems);
+          
+
           this.permissions.push({...screen, menuItems: formatObject});
           
         });
+        
 
-        this.totalItems = data.totalCount
+        this.totalItems = data.totalCount;
 
         if (this.editPermission) {
+          
+
           if (permissionScreens.length > 0) {
             
+
             this.permissions.forEach(permission => {
               this.searchByActionId(permission.menuItems, permissionScreens)
             })
@@ -711,6 +740,8 @@ export class AddUserPermissionComponent {
           this.isLoading = false;
           this.loading = false;
         } else {
+          
+
           this.isLoading = false;
           this.loading = false;
         }
@@ -723,6 +754,8 @@ export class AddUserPermissionComponent {
     }
     )
   }
+  roleIdClearData = false;
+
   searchDropdown(data: any, type: string) {
 
     switch (type) {
@@ -743,7 +776,12 @@ export class AddUserPermissionComponent {
 
                 });
 
-
+                if(data != "") {
+                  this.roleIdClearData = true;
+                } else {
+                  this.roleIdClearData = false;
+    
+                }
               });
           }
 

@@ -424,7 +424,15 @@ export class DashboardComponent {
     let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes(componentName));
     if(findIndexRoute >= 0) {
       this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`]);
-
+    }
+  }
+  showActiosEmployee(data: any) {
+    let permissions = JSON.parse(localStorage.getItem("permissions") as string);
+    let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("employees"));
+    if(findIndexRoute >= 0) {
+      return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(permissions?.availablePermissions[findIndexRoute]?.screenCode), actionCode: data.actionCode })
+    } else {
+     return false;
     }
   }
   showActions(data: any) {

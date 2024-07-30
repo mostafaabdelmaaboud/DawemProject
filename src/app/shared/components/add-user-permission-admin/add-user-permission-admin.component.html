@@ -133,7 +133,7 @@
               <tr *ngIf="rowData.groupOrScreenType === 0">
                 <td colspan="9">
                   <p-accordion>
-                    <p-accordionTab [header]="rowData.name">
+                    <p-accordionTab  [selected]="hasPropertyCheckBoxIsTrue(rowData)" [header]="rowData.name">
                       <p-table *ngIf="rowData.children" [value]="rowData.children">
                         <ng-template pTemplate="header">
                           <tr>

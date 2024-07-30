@@ -136,7 +136,13 @@ export class BriefingSummonsInPeriodReportComponent {
         
         if (this.reportForm?.get(conInput)?.dirty && !this.reportForm?.get(conInput)?.hasError('required')) {
           if (value > this.reportForm?.get(conInput)?.value) {
-            checkMin = false;
+            if(this.reportForm?.get(conInput)?.value != "" && this.reportForm?.get(conInput)?.value != null) {
+              if(this.reportForm?.get(conInput)?.value != "" && this.reportForm?.get(conInput)?.value != null) {
+                checkMin = false;
+  
+              }
+
+            }
           }
           if(this.reportForm?.get(conInput)?.invalid) {
             this.reportForm?.get(conInput)?.setValue( this.reportForm?.get(conInput)?.value)
@@ -156,7 +162,10 @@ export class BriefingSummonsInPeriodReportComponent {
         if (this.reportForm?.get(conInput)?.dirty && !this.reportForm?.get(conInput)?.hasError('required')) {
           
           if (value < this.reportForm?.get(conInput)?.value) {
-            checkMin = false;
+            if(this.reportForm?.get(conInput)?.value != "" && this.reportForm?.get(conInput)?.value != null) {
+              checkMin = false;
+
+            }
           }
           
           if(this.reportForm?.get(conInput)?.invalid) {
@@ -174,7 +183,13 @@ export class BriefingSummonsInPeriodReportComponent {
       if (value != '') {
         if (this.reportForm?.get(conInput)?.dirty && !this.reportForm?.get(conInput)?.hasError('required')) {
           if (value > this.reportForm?.get(conInput)?.value) {
-            checkMin = false;
+            if(this.reportForm?.get(conInput)?.value != "" && this.reportForm?.get(conInput)?.value != null) {
+              if(this.reportForm?.get(conInput)?.value != "" && this.reportForm?.get(conInput)?.value != null) {
+                checkMin = false;
+  
+              }
+
+            }
           }
           if(this.reportForm?.get(conInput)?.invalid) {
             this.reportForm?.get(conInput)?.setValue( this.reportForm?.get(conInput)?.value)
@@ -195,7 +210,13 @@ export class BriefingSummonsInPeriodReportComponent {
         if (this.reportForm?.get(conInput)?.dirty && !this.reportForm?.get(conInput)?.hasError('required')) {
           
           if (value < this.reportForm?.get(conInput)?.value) {
-            checkMin = false;
+            if(this.reportForm?.get(conInput)?.value != "" && this.reportForm?.get(conInput)?.value != null) {
+              if(this.reportForm?.get(conInput)?.value != "" && this.reportForm?.get(conInput)?.value != null) {
+                checkMin = false;
+  
+              }
+
+            }
           }
           
           if(this.reportForm?.get(conInput)?.invalid) {

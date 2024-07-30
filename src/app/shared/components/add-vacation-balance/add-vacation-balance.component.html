@@ -52,7 +52,7 @@
                   <ng-template pTemplate="header">
                     <span class="p-input-icon-left input-search-dropdown">
 
-                      <i class="pi pi-search" (click)="searchDropdown(searchEmployeeId, 'EmployeeId')"></i>
+                      <i class="pi pi-search" (click)="searchDropdown(searchEmployeeId.value, 'EmployeeId')"></i>
                       <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchEmployeeId />
                     </span>
                   </ng-template>
@@ -79,7 +79,7 @@
                   <ng-template pTemplate="header">
                     <span class="p-input-icon-left input-search-dropdown">
 
-                      <i class="pi pi-search" (click)="searchDropdown(searchGroupId, 'GroupId')"></i>
+                      <i class="pi pi-search" (click)="searchDropdown(searchGroupId.value, 'GroupId')"></i>
                       <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchGroupId />
                     </span>
                   </ng-template>
@@ -106,7 +106,7 @@
                   <ng-template pTemplate="header">
                     <span class="p-input-icon-left input-search-dropdown">
 
-                      <i class="pi pi-search" (click)="searchDropdown(searchDepartmentId, 'DepartmentId')"></i>
+                      <i class="pi pi-search" (click)="searchDropdown(searchDepartmentId.value, 'DepartmentId')"></i>
                       <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchDepartmentId />
                     </span>
                   </ng-template>
@@ -134,7 +134,7 @@
                   <ng-template pTemplate="header">
                     <span class="p-input-icon-left input-search-dropdown">
 
-                      <i class="pi pi-search" (click)="searchDropdown(searchVacationType, 'VacationType')"></i>
+                      <i class="pi pi-search" (click)="searchDropdown(searchVacationType.value, 'VacationType')"></i>
                       <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchVacationType />
                     </span>
                   </ng-template>

@@ -493,7 +493,7 @@
     "permissionType":"نوع الاستئذان",
     "orderStatus":"حالة الطلب",
     "theBeginning":"تاريخ ووقت البدايه",
-    "forThePeriodOfAskingPermission":"لمده الأستئذان",
+    "forThePeriodOfAskingPermission":"مده الأستئذان",
     "theEnd":"تاريخ ووقت النهايه",
     "action":"الإجراء",
     "requestPermission":"طلب استئذان",

@@ -53,6 +53,8 @@
                     <span class="p-input-icon-left input-search-dropdown">
 
                       <i class="pi pi-search" (click)="searchDropdown(searchRoleId.value, 'RoleId')"></i>
+                      <i class="pi pi-times-circle ml-2" *ngIf="roleIdClearData" (click)="searchDropdown('', 'RoleId')"></i>
+
                       <input type="text" [placeholder]="'requests.search'|translate" pInputText #searchRoleId />
                     </span>
                   </ng-template>
@@ -133,7 +135,7 @@
             <tr *ngIf="rowData.groupOrScreenType === 0">
               <td colspan="9">
                 <p-accordion>
-                  <p-accordionTab [header]="rowData.name">
+                  <p-accordionTab [selected]="hasPropertyCheckBoxIsTrue(rowData)" [header]="rowData.name">
                     <p-table *ngIf="rowData.children" [value]="rowData.children">
                       <ng-template pTemplate="header">
                         <tr>
