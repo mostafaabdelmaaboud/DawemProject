@@ -38,7 +38,10 @@ export class AuthService {
   getToken(): string {
     return localStorage.getItem('token') as string;
   }
- 
+  getInformationProfile() {
+    return this.http.get<any>(`${environment.baseUrl}adminpanel/Dashboard/GetHeaderInformations`).pipe(map(data => data.data))
+
+  }
   getCountries(filter: any) {
     let queryParams = new HttpParams();
     if (filter) {

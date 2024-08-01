@@ -15,6 +15,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { MatRadioModule } from '@angular/material/radio';
 import { SummonsService } from 'src/app/Presentation/user/summons/services/summons.service';
 import moment from 'moment';
+import { ToastrService } from 'ngx-toastr';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -127,6 +128,7 @@ export class AddSummonComponent {
     public dialogRef: MatDialogRef<AddSummonComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
+    private toast: ToastrService,
     private fb: FormBuilder
   ) {
     this.dialogRef.disableClose = true;
@@ -565,7 +567,12 @@ this.listnotifyWays = [
   }
 
   request() {
-    if (this.addBranchGroupForm.valid && this.submitted) {
+  this.addBranchGroupForm?.get("LocalDateAndTime")?.setValue(this.addBranchGroupForm?.get("LocalDateAndTime")?.value);
+  if(this.addBranchGroupForm?.get("LocalDateAndTime")?.invalid) {
+    this.toast.error("عفوا لا يمكن تسجيل استدعاء لوقت مضى");
+
+  }
+  if (this.addBranchGroupForm.valid && this.submitted) {
       this.submitted = false;
       this.submitClicked.emit(this.addBranchGroupForm.value);
       // this.dialogRef.close(true);

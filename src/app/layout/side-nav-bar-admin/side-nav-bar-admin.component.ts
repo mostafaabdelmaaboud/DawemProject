@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
 import { PermissionsService } from 'src/app/Presentation/user/services/permission.service';
 import { TranslateService } from '@ngx-translate/core';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { AuthService } from 'src/app/core/auth/services/auth-service.service';
+import { AuthService } from 'src/app/core/auth-admin/services/auth-service.service';
 import { MatDialog } from '@angular/material/dialog';
 import { LogoutComponent } from 'src/app/shared/components/logout/logout.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
@@ -146,7 +146,6 @@ export class SideNavBarAdminComponent {
 
     }
 
-
     // this.notificationService.getNotification().subscribe(data => {
     //   this.numNotification = data?.NotificationData?.UnViewdNotificationCount;
     // });
@@ -282,9 +281,10 @@ export class SideNavBarAdminComponent {
     this.checkLink(9);
     this.checkLink(10);
     // admin names
-    // this.dashboardService.getInformationProfile().subscribe(data => {
-    //   this.profile = data;
-    // })
+    this.authService.getInformationProfile().subscribe(data => {
+      this.profile = data;
+    });
+
   }
 
 

@@ -255,7 +255,8 @@ export class RequestsComponent {
 
   navigateComponent(componentName) {
     let permissions = JSON.parse(localStorage.getItem("permissions") as string);
-    let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes(componentName));
+    let regex = new RegExp(componentName + '$');
+    let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => regex.test(permission?.url));
     if(findIndexRoute >= 0) {
         this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`])
   
