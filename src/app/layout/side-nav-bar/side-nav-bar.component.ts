@@ -75,7 +75,7 @@ export class SideNavBarComponent {
   loadingNotification = false;
   notificationList: any[] = [];
   selectedTabIndex = 1;
-
+  updateCompanyScreenCode = "";
   isSidebarExpanded: boolean = false;
   step:any = null;
   setStep(index: number) {
@@ -207,7 +207,16 @@ export class SideNavBarComponent {
   }
   componentName(data: any): string {
     let findIndexPermission = (this.getPermissions()?.availablePermissions as any[])?.findIndex(permission => permission.screenCode === data.screenCode);
-    return findIndexPermission >=0 ? this.getPermissions()?.availablePermissions[findIndexPermission]?.screenName : ''
+    return findIndexPermission >=0 ? this.getPermissions()?.availablePermissions[findIndexPermission]?.name : ''
+
+  }
+  navigateUpdateCompany() {
+    let permissions = JSON.parse(localStorage.getItem("permissions") as string);
+    let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("updateCompany"));
+    if(findIndexRoute >= 0) {
+        this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`])
+  
+    }
 
   }
   numberNotification(showFirstOnly:boolean, unread:boolean) {
@@ -498,7 +507,12 @@ export class SideNavBarComponent {
     let permission = JSON.parse(localStorage.getItem('permissions') as string)
     this.isAdmin = permission?.isAdmin;
     let menuItems = JSON.parse(localStorage.getItem('menuItems') as string)
+    let findIndexRoute = permission?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("updateCompany"));
 
+    if(findIndexRoute >= 0) {
+      this.updateCompanyScreenCode = permission?.availablePermissions[findIndexRoute]?.screenCode;
+      
+    }
 //     this.menuItems = [
 //       {
 //         id: 2,

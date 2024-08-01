@@ -901,11 +901,11 @@
               </button>
               <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                 <ng-container *ngIf="isAdmin">
-                  <button ngbDropdownItem routerLink="/user/updateCompany">{{'sideNav.companyProfile' | translate}}</button>
+                  <button ngbDropdownItem *ngIf="showComponent({screenCode:updateCompanyScreenCode})" (click)="navigateUpdateCompany()">{{componentName({screenCode:updateCompanyScreenCode})}}</button>
 
                 </ng-container>
                 <ng-container *ngIf="!isAdmin">
-                  <button *ngIf="showComponent({screenCode:43})"  ngbDropdownItem routerLink="/user/updateCompany">{{componentName({screenCode:43})}}</button>
+                  <button *ngIf="showComponent({screenCode:updateCompanyScreenCode})"  ngbDropdownItem (click)="navigateUpdateCompany()">{{componentName({screenCode:updateCompanyScreenCode})}}</button>
 
                 </ng-container>
                 <button ngbDropdownItem (click)="logout()">تسجيل الخروج</button>
