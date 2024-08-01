@@ -80,7 +80,6 @@
  
         <div class="content-password border-section" *ngFor="let item of info?.sanctions">
           <div class="name">الأسم : {{item.name}}</div>
-          <div class="name">رسالة تحذير : {{item.warningMessage}}</div>
         </div>
         <div class="content-password" *ngIf="info?.sanctions.length === 0">
             لايوجد

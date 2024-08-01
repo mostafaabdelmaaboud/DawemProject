@@ -178,7 +178,7 @@ export class SummonsComponent {
           summonStatus: summon.summonStatus,
 
           numberOfTargetedEmployees: summon.numberOfTargetedEmployees,
-          LocalDateAndTime: moment(new Date(summon.localDateAndTime)).format("MMMM Do YYYY, h:mm:ss a") ,
+          LocalDateAndTime: moment(new Date(summon.localDateAndTime)).format("MMMM Do YYYY, h:mm:ss a"),
           isActive: summon.isActive
         })
       });
@@ -338,7 +338,6 @@ export class SummonsComponent {
       this.isLoading = true;
       this.summonsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
-
       this.summonsService.listSummons(filteration).subscribe(data => {
         data.data.forEach((summon: any) => {
           this.summonsIsExport.push({
@@ -347,7 +346,7 @@ export class SummonsComponent {
             forTypeName: summon.forTypeName,
             summonStatusName: summon.summonStatusName,
             numberOfTargetedEmployees: summon.numberOfTargetedEmployees,
-            LocalDateAndTime: moment(new Date(summon.LocalDateAndTime)).format("MMMM Do YYYY, h:mm:ss a") ,
+            LocalDateAndTime: moment(new Date(summon.localDateAndTime)).format("MMMM Do YYYY, h:mm:ss a"),
   
             isActive: summon.isActive
           })

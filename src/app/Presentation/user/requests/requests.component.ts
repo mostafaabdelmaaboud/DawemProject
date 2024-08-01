@@ -18,7 +18,7 @@ import { PermissionsUserService } from 'src/app/shared/services/permissions-user
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-requests',
@@ -32,6 +32,8 @@ export class RequestsComponent {
   itemsPerPage = 5;
   filterForm!: FormGroup;
   private dialog = inject(MatDialog);
+  router = inject(Router);
+
   list: any[] = [
     { name: "نسيان تسجيل حضور", key: "1" },
     { name: "نسيان تسجيل انصراف", key: "2" },
@@ -248,6 +250,16 @@ export class RequestsComponent {
     this.getRequests(this.filteration);
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+
+  }
+
+  navigateComponent(componentName) {
+    let permissions = JSON.parse(localStorage.getItem("permissions") as string);
+    let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes(componentName));
+    if(findIndexRoute >= 0) {
+        this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`])
+  
+    }
 
   }
   showActions(data: any) {

@@ -186,6 +186,11 @@
                       *ngIf="getControl('LocalDateAndTime')?.hasError('required') && getControl('LocalDateAndTime')?.dirty">
                       {{data!['validationCalendar']|translate}}
                     </div>
+                    <div class="alert alert-danger"
+                    *ngIf="getControl('LocalDateAndTime')?.hasError('invalidDateTime') && !getControl('LocalDateAndTime')?.hasError('required')">
+                    عدم السماح بتسجيل استدعاء لوقت او يوم انتهى
+                  </div>
+                    
                   </div>
                   <!--End Custom Validators-->
                 </div>
@@ -204,7 +209,7 @@
                                 <div class="container-alerts mt-2" *ngIf="getControl('allowedTime')?.errors">
                                     <div class="alert alert-danger"
                                     *ngIf="getControl('allowedTime')?.hasError('required') && getControl('allowedTime')?.dirty">
-                                    {{data!['validationCalendar']|translate}}
+                                    الوقت مطلوب
                                     </div>
                                     <div class="alert alert-danger"
                                     *ngIf="getControl('allowedTime')?.hasError('min') && getControl('allowedTime')?.dirty">

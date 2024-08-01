@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/core/auth/services/auth-service.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DropdownModule } from 'primeng/dropdown';
@@ -118,7 +118,7 @@ export class AddSummonComponent {
     Employees: ['', Validators.required],
 
     Sanctions: ["", Validators.required],
-    LocalDateAndTime: ['', Validators.required]
+    LocalDateAndTime: ['', [Validators.required,this.dateTimeValidator()]]
 
   });
   uploadedCommercialRegFiles: any[] = [];
@@ -462,6 +462,15 @@ this.listnotifyWays = [
 
 
     })
+  }
+  dateTimeValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const selectedDate = new Date(control.value);
+      const now = new Date();
+  
+      // تحقق من أن التاريخ أو الوقت المحدد ليس في الماضي
+      return selectedDate >= now ? null : { invalidDateTime: true };
+    };
   }
   nodeSelect(data: any) {
   }
