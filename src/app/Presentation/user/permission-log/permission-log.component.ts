@@ -190,7 +190,7 @@ export class PermissionLogComponent {
 
   getScreenCode() {
     this.permissionLogService.screenCodeForDropdown({PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe(data => {
-      data?.data?.screens?.forEach((user: any) => {
+      data?.data?.forEach((user: any) => {
         this.listScreenCode.push({ name: user.name, key: user.id })
       });
     })
@@ -281,17 +281,12 @@ export class PermissionLogComponent {
   }
 
   filter() {
-    // Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
-    //   if (typeof value  === 'string') {
-    //     if(value != "") {
-    //       this.filteration[key] = value.trim();
-    //     }
-    //   } else {
-    //     if(value >=0) {
-    //       this.filteration[key] = value;
-    //     }
-    //   }
-    // });
+  
+    this.filteration = {
+      PageSize: 5,
+      PageNumber: 0,
+      PagingEnabled: true
+    };
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
      if (key === "UserId") {
         if (value != "") {
@@ -299,7 +294,7 @@ export class PermissionLogComponent {
         }
       } else if(key === "ScreenCode") {
         if (value != "") {
-          this.filteration[key] = value.key
+          this.filteration["ScreenId"] = value.key
         }
       } else if(key === "ActionCode") {
         if (value != "") {

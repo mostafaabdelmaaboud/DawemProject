@@ -39,6 +39,7 @@ export class PermissionLogService {
     }
     return this.http.get<any>(`${environment.baseUrl}User/GetForDropDown`, { params: queryParams })
   }
+
   screenCodeForDropdown(params: any) {
     let queryParams = new HttpParams();
 
@@ -55,7 +56,7 @@ export class PermissionLogService {
         }
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}Permission/GetAllScreens`)
+    return this.http.get<any>(`${environment.baseUrl}Screen/GetForDropDown`, { params: queryParams })
   }
   actionCodeForDropdown(params: any) {
     let queryParams = new HttpParams();
