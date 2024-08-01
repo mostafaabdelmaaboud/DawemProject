@@ -382,7 +382,7 @@ export class SubscriptionsPaymentsComponent {
       data: {
         title: "اضافة إشتراك",
         setAsActive: "تعيين كنشط",
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
+        titleNotes: "الملاحظات ",
         placeholdeNotes: "الملاحظات",
         ValidationNotes: "الملاحظات مطلوبة",
         titleClose: "تراجع",
@@ -451,7 +451,7 @@ export class SubscriptionsPaymentsComponent {
       data: {
         title: "تعديل الإشتراك",
         setAsActive: "تعيين كنشط",
-        titleNotes: "الملاحظات <span class='color-red'>*</span>",
+        titleNotes: "الملاحظات ",
         placeholdeNotes: "الملاحظات",
         ValidationNotes: "الملاحظات مطلوبة",
         titleClose: "تراجع",

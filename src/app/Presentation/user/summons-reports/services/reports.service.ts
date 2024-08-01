@@ -26,10 +26,16 @@ export class ReportsService {
             }
           }
         } else if (key === "NotifiyWay") {
+      
           if (value != "") {
-            queryParams = queryParams.set(key, value.key)
-
-          }        
+            if(value?.length > 0) {
+              value.forEach(report => {
+                queryParams = queryParams.append(key, report.key)
+              });
+            } else {
+              queryParams = queryParams.set(key, 0)
+            }
+          }   
         } else if (key === "DepartmentIds") {
           if (value != "") {
             if(value?.length > 0) {
@@ -114,11 +120,16 @@ export class ReportsService {
             }
           }
         } else if (key === "NotifiyWay") {
+      
           if (value != "") {
-            queryParams = queryParams.set(key, value.key)
-
-          }
-        
+            if(value?.length > 0) {
+              value.forEach(report => {
+                queryParams = queryParams.append(key, report.key)
+              });
+            } else {
+              queryParams = queryParams.set(key, 0)
+            }
+          }   
         } else if (key === "DepartmentIds") {
           if (value != "") {
             if(value?.length > 0) {
@@ -281,7 +292,7 @@ export class ReportsService {
   
       });
     }
-    return fetch(`${environment.baseUrl}SummonsDetailsInPeriod/GetSummonsDetailsInPeriodReport?${queryParams}`, {
+    return fetch(`${environment.baseUrl}BriefingSummonsInPeriod/GetBriefingSummonsInPeriodReport?${queryParams}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

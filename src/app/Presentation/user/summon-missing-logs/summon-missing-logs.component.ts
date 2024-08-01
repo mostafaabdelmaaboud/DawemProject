@@ -50,8 +50,8 @@ export class SummonMissingLogsComponent {
       field: "sanctionsCount"
     },
     {
-      name: "حاله الاستدعاء وعرض حاله الاستدعاء",
-      field: "doneNotify"
+      name: "حاله الاستدعاء",
+      field: "doneSummon"
     },
     {
       name: "الإجراء",
@@ -180,7 +180,7 @@ export class SummonMissingLogsComponent {
           employeeName: summon.employeeName,
           summonDate: moment(new Date(summon.summonDate)).format("MMMM Do YYYY, h:mm:ss a") ,
           sanctionsCount: summon.sanctionsCount,
-          doneNotify: summon.doneNotify ? 'نعم' : 'لا',
+          doneSummon: summon.doneSummon ? 'نعم' : 'لا',
           isActive: summon.isActive
         })
       });
@@ -364,7 +364,7 @@ export class SummonMissingLogsComponent {
             summonDate: moment(new Date(summon.summonDate)).format("MMMM Do YYYY, h:mm:ss a"),
             sanctionsCount: summon.sanctionsCount,
 
-            doneNotify: summon.doneNotify ? 'نعم' : 'لا',
+            doneSummon: summon.doneSummon ? 'نعم' : 'لا',
             isActive: summon.isActive
           })
         });
@@ -374,7 +374,7 @@ export class SummonMissingLogsComponent {
             summonCode: summon.summonCode,
             summonDate: summon.summonDate,
             sanctionsCount: summon.sanctionsCount,
-            doneNotify: summon.doneNotify
+            doneSummon: summon.doneSummon
           }
         })
         this.isLoading = false;

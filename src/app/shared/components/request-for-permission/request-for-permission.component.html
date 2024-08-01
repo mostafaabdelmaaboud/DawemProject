@@ -84,7 +84,7 @@
 
       <div class="col-12  mb-3">
         <div class="row">
-          <div class="col-lg-6 col-12">
+          <div class="col-lg-6 col-12 mb-3">
             <div class="sectionThree">
               <label class="title" [innerHTML]="data!['titleCalendar']|translate"></label>
               <div class="content-password">
@@ -111,25 +111,46 @@
               <!--End Custom Validators-->
             </div>
           </div>
-          <div class="col-lg-6 col-12">
+          <div class="col-lg-6 col-12 mb-3">
             <div class="sectionThree">
-              <label class="title" >بدايه وقت الاستئذان - نهايه وقت الاستئذان <span class="color-red">*</span></label>
+              <label class="title" >بداية {{"assignments.assignmentTime"|translate}} <span class="color-red">*</span></label>
               <div class="content-password">
                 <div class="content-pCalendar-default" dir="ltr">
-                  <p-calendar formControlName="time" appendTo="body" [timeOnly]="true"
-                  placeholder="بدايه وقت الاستئذان - نهايه وقت الاستئذان" [showTime]="true" [showSeconds]="true" [showIcon]="true"></p-calendar>
+                  <p-calendar formControlName="timeStart" appendTo="body" [timeOnly]="true"
+                    [placeholder]="'assignments.assignmentTime'|translate" [showTime]="true" [showSeconds]="true" [showIcon]="true"></p-calendar>
                 </div>
               </div>
               <!--Start Custom Validators-->
-              <div class="container-alerts mt-2" *ngIf="getControl('time')?.errors">
+              <div class="container-alerts mt-2" *ngIf="getControl('timeStart')?.errors">
                 <div class="alert alert-danger"
-                  *ngIf="getControl('time')?.hasError('required') && getControl('time')?.dirty">
-                  {{'permissions.askingTimeIsRequired' | translate}}
+                  *ngIf="getControl('timeStart')?.hasError('required') && getControl('timeStart')?.dirty">
+                  {{"assignments.commissioningTimeRequired"|translate}}
                 </div>
               </div>
               <!--End Custom Validators-->
             </div>
           </div>
+
+          <div class="col-lg-6 col-12">
+            <div class="sectionThree">
+              <label class="title" >نهاية {{"assignments.assignmentTime"|translate}} <span class="color-red">*</span></label>
+              <div class="content-password">
+                <div class="content-pCalendar-default" dir="ltr">
+                  <p-calendar formControlName="timeEnd" appendTo="body" [timeOnly]="true"
+                    [placeholder]="'assignments.assignmentTime'|translate" [showTime]="true" [showSeconds]="true" [showIcon]="true"></p-calendar>
+                </div>
+              </div>
+              <!--Start Custom Validators-->
+              <div class="container-alerts mt-2" *ngIf="getControl('timeEnd')?.errors">
+                <div class="alert alert-danger"
+                  *ngIf="getControl('timeEnd')?.hasError('required') && getControl('timeEnd')?.dirty">
+                  {{"assignments.commissioningTimeRequired"|translate}}
+                </div>
+              </div>
+              <!--End Custom Validators-->
+            </div>
+          </div>
+
 
         </div>
       </div>

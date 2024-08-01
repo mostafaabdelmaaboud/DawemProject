@@ -99,7 +99,8 @@ export class RequestForPermissionComponent {
     ForEmployee: [false],
     PermissionTypeId: ['', Validators.required],
     dateTask: [null, Validators.required],
-    time: [null, Validators.required],
+    timeStart:[null, Validators.required],
+    timeEnd:[null, Validators.required],
     Notes: [null],
     idCopyFile: ['']
 
@@ -122,7 +123,15 @@ export class RequestForPermissionComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.loading = true;
-
+    this.addBranchGroupForm.get("dateTask")?.valueChanges.subscribe(data => {
+      if (data != null) {
+        if (data[1] === null) {
+          this.dateTaskMultiple = true;
+        } else {
+          this.dateTaskMultiple = false;
+        }
+      }
+    })
     let vacationTypeForDropDown = this.permissionsService.permissionTypeDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let employeeForDropDown = this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     combineLatest({
@@ -238,7 +247,8 @@ export class RequestForPermissionComponent {
                 }
               });
               this.addBranchGroupForm.get("dateTask")?.setValue([new Date(data.dateFrom), new Date(data.dateTo)]);
-              this.addBranchGroupForm.get("time")?.setValue(new Date(data.dateFrom));
+              this.addBranchGroupForm.get("timeStart")?.setValue(new Date(data.dateFrom));
+              this.addBranchGroupForm.get("timeEnd")?.setValue(new Date(data.dateTo));
               this.addBranchGroupForm.get("Notes")?.setValue(data?.notes);
 
               this.loading = false;
@@ -414,7 +424,7 @@ export class RequestForPermissionComponent {
     }
   }
   request() {
-
+    this.dateTaskMultiple = false;
     if (this.addBranchGroupForm.value.dateTask != null) {
       if (this.addBranchGroupForm.value.dateTask[1] === null) {
         this.dateTaskMultiple = true;
@@ -425,7 +435,6 @@ export class RequestForPermissionComponent {
     }
 
 
-
     if (this.addBranchGroupForm.valid && !this.dateTaskMultiple && this.submitted) {
       this.submitted = false;
       this.submitClicked.emit({ ...this.addBranchGroupForm.value, files: this.AttachmentsFiles });
@@ -433,7 +442,8 @@ export class RequestForPermissionComponent {
     } else {
       this.getControl("PermissionTypeId")?.markAsDirty();
       this.getControl("dateTask")?.markAsDirty();
-      this.getControl("time")?.markAsDirty();
+      this.getControl("timeStart")?.markAsDirty();
+      this.getControl("timeEnd")?.markAsDirty();
       this.getControl("EmployeeId")?.markAsDirty();
       this.getControl("idCopyFile")?.markAsDirty();
     }

@@ -234,16 +234,25 @@ export class EarlyAndLateAttendanceComponent {
         if (data || data === "") {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
-         
             this.employeesService.GetForDropDownEmployee({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.employeesList = [];
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-
                 res?.data?.forEach((jobTitle: any) => {
-                  this.employeesList.push({ name: jobTitle.name, key: jobTitle.id })
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.employeesList.some(oldItem => oldItem.key === newItem.key)
+                );
+                if(newArray.length > 0){
+                  this.employeesList = [...this.employeesList, ...newArray]
+                } else {
+                  if(!res?.data?.length) {
+                    this.toast.error("لا يوجد بيانات");
+                  }
+                }
+
                 if(data != "") {
                   this.employeeIDClearData = true;
                 } else {
@@ -262,12 +271,21 @@ export class EarlyAndLateAttendanceComponent {
               this.employeesService.GetForDropDownDepartment({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
                 debounceTime(300),
                 distinctUntilChanged()).subscribe((res: any) => {
-                  this.depatmentsList = [];
+                  let newArray:any[]= [];
                   this.lastSearchQuery = "";
-  
                   res?.data?.forEach((jobTitle: any) => {
-                    this.depatmentsList.push({ name: jobTitle.name, key: jobTitle.id })
+                    newArray.push({ name: jobTitle.name, key: jobTitle.id })
                   });
+                  newArray = newArray.filter(newItem => 
+                    !this.depatmentsList.some(oldItem => oldItem.key === newItem.key)
+                  );
+                  if(newArray.length > 0){
+                    this.depatmentsList = [...this.depatmentsList, ...newArray]
+                  } else {
+                    if(!res?.data?.length) {
+                      this.toast.error("لا يوجد بيانات");
+                    }
+                  }
                   if(data != "") {
                     this.departmentIdClearData = true;
                   } else {
@@ -286,12 +304,21 @@ export class EarlyAndLateAttendanceComponent {
                 this.employeesService.GetForDropDownZones({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
                   debounceTime(300),
                   distinctUntilChanged()).subscribe((res: any) => {
-                    this.zonesList = [];
+                    let newArray:any[]= [];
                     this.lastSearchQuery = "";
-    
                     res?.data?.forEach((jobTitle: any) => {
-                      this.zonesList.push({ name: jobTitle.name, key: jobTitle.id })
+                      newArray.push({ name: jobTitle.name, key: jobTitle.id })
                     });
+                    newArray = newArray.filter(newItem => 
+                      !this.zonesList.some(oldItem => oldItem.key === newItem.key)
+                    );
+                    if(newArray.length > 0){
+                      this.zonesList = [...this.zonesList, ...newArray]
+                    } else {
+                      if(!res?.data?.length) {
+                        this.toast.error("لا يوجد بيانات");
+                      }
+                    }
                     if(data != "") {
                       this.zoneIdClearData = true;
                     } else {
@@ -309,12 +336,21 @@ export class EarlyAndLateAttendanceComponent {
                   this.employeesService.GetForDropDownJobTitle({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
                     debounceTime(300),
                     distinctUntilChanged()).subscribe((res: any) => {
-                      this.jobTitleList = [];
+                      let newArray:any[]= [];
                       this.lastSearchQuery = "";
-      
                       res?.data?.forEach((jobTitle: any) => {
-                        this.jobTitleList.push({ name: jobTitle.name, key: jobTitle.id })
+                        newArray.push({ name: jobTitle.name, key: jobTitle.id })
                       });
+                      newArray = newArray.filter(newItem => 
+                        !this.jobTitleList.some(oldItem => oldItem.key === newItem.key)
+                      );
+                      if(newArray.length > 0){
+                        this.jobTitleList = [...this.jobTitleList, ...newArray]
+                      } else {
+                        if(!res?.data?.length) {
+                          this.toast.error("لا يوجد بيانات");
+                        }
+                      }
                       if(data != "") {
                         this.jobTitleIdData = true;
                       } else {

@@ -2,7 +2,7 @@
 <div class="position-relative">
     <div class="header-comp d-flex align-items-center">
       <span class="title-head">
-        ملخص الاستدعاءات فى فتره
+        ملخص الاستدعاءات خلال فتره
       </span>
  
     </div>
@@ -169,6 +169,10 @@
                                             *ngIf="getControl('AllowedTimeWithMinutesFrom')?.hasError('dateRangeError') && getControl('AllowedTimeWithMinutesFrom')?.dirty">
                                             يجب ان يكون الوقت المسموح من اصغر من الوقت المسموح الي
                                         </div>
+                                        <div class="alert alert-danger"
+                                        *ngIf="getControl('AllowedTimeWithMinutesFrom')?.hasError('min') && getControl('AllowedTimeWithMinutesFrom')?.dirty">
+                                        اقل رقم 0
+                                    </div>
                                     </div>
                                 <!--End Custom Validators-->
                             </div>
@@ -186,6 +190,10 @@
                                         *ngIf="getControl('AllowedTimeWithMinutesTo')?.hasError('dateRangeError') && getControl('AllowedTimeWithMinutesTo')?.dirty">
                                         يجب ان يكون الوقت المسموح الي اكبر من الوقت المسموح من
                                     </div>
+                                    <div class="alert alert-danger"
+                                    *ngIf="getControl('AllowedTimeWithMinutesTo')?.hasError('min') && getControl('AllowedTimeWithMinutesTo')?.dirty">
+                                    اقل رقم 0
+                                </div>
                                 </div>
                                 <!--End Custom Validators-->
                             </div>
@@ -211,6 +219,10 @@
                                             *ngIf="getControl('NoOfRequiredEmployeeFrom')?.hasError('dateRangeError') && getControl('NoOfRequiredEmployeeFrom')?.dirty">
                                             يجب ان يكون  عدد الموظفين للاستدعاء من اصغر من عدد الموظفين للاستدعاء الي
                                         </div>
+                                        <div class="alert alert-danger"
+                                        *ngIf="getControl('NoOfRequiredEmployeeFrom')?.hasError('min') && getControl('NoOfRequiredEmployeeFrom')?.dirty">
+                                        اقل رقم 0
+                                    </div>
                                     </div>
                                 <!--End Custom Validators-->
                             </div>
@@ -228,6 +240,10 @@
                                         *ngIf="getControl('NoOfRequiredEmployeeTo')?.hasError('dateRangeError') && getControl('NoOfRequiredEmployeeTo')?.dirty">
                                         يجب ان يكون عدد الموظفين للاستدعاء الي اكبر من عدد الموظفين للاستدعاء من
                                     </div>
+                                    <div class="alert alert-danger"
+                                    *ngIf="getControl('NoOfRequiredEmployeeTo')?.hasError('min') && getControl('NoOfRequiredEmployeeTo')?.dirty">
+                                    اقل رقم 0
+                                </div>
                                 </div>
                                 <!--End Custom Validators-->
                             </div>
@@ -264,6 +280,10 @@
                                         *ngIf="getControl('PercentageOfDoneFrom')?.hasError('max') && getControl('PercentageOfDoneFrom')?.dirty">
                                         الرقم يجب أن يكون أقل من أو يساوي 100                                    
                                     </div>
+                                    <div class="alert alert-danger"
+                                    *ngIf="getControl('PercentageOfDoneFrom')?.hasError('min') && getControl('PercentageOfDoneFrom')?.dirty">
+                                    اقل رقم 0
+                                </div>
                                     </div>
                                 <!--End Custom Validators-->
                             </div>
@@ -292,6 +312,10 @@
                                     *ngIf="getControl('PercentageOfDoneTo')?.hasError('max') && getControl('PercentageOfDoneTo')?.dirty">
                                     الرقم يجب أن يكون أقل من أو يساوي 100                                    
                                 </div>
+                                <div class="alert alert-danger"
+                                *ngIf="getControl('PercentageOfDoneTo')?.hasError('min') && getControl('PercentageOfDoneTo')?.dirty">
+                                اقل رقم 0
+                            </div>
                                 </div>
                                 <!--End Custom Validators-->
                             </div>

@@ -27,12 +27,12 @@ export class BriefingSummonsInPeriodReportComponent {
     DateTo: ['', [Validators.required, this.dateToValidator("DateFrom")]],
     DepartmentIds:[''],
     JobTitleIds:[''],
-    AllowedTimeWithMinutesFrom:[null, [this.allowedTimeWithMinutesFromValidator('AllowedTimeWithMinutesTo')]],
-    AllowedTimeWithMinutesTo:[null, [this.allowedTimeWithMinutesToValidator('AllowedTimeWithMinutesFrom')]],
-    NoOfRequiredEmployeeFrom:[null, [this.allowedTimeWithMinutesFromValidator('NoOfRequiredEmployeeTo')]],
-    NoOfRequiredEmployeeTo:[null, [this.allowedTimeWithMinutesToValidator('NoOfRequiredEmployeeFrom')]],
-    PercentageOfDoneFrom:[null, [this.percentageOfDoneFromValidator('PercentageOfDoneTo'),  Validators.max(100)]],
-    PercentageOfDoneTo:[null, [this.percentageOfDoneToValidator('PercentageOfDoneFrom'), Validators.max(100)]]
+    AllowedTimeWithMinutesFrom:[null, [this.allowedTimeWithMinutesFromValidator('AllowedTimeWithMinutesTo'), Validators.min(0)]],
+    AllowedTimeWithMinutesTo:[null, [this.allowedTimeWithMinutesToValidator('AllowedTimeWithMinutesFrom'), Validators.min(0)]],
+    NoOfRequiredEmployeeFrom:[null, [this.allowedTimeWithMinutesFromValidator('NoOfRequiredEmployeeTo'), Validators.min(0)]],
+    NoOfRequiredEmployeeTo:[null, [this.allowedTimeWithMinutesToValidator('NoOfRequiredEmployeeFrom'), Validators.min(0)]],
+    PercentageOfDoneFrom:[null, [this.percentageOfDoneFromValidator('PercentageOfDoneTo'),  Validators.max(100), Validators.min(0)]],
+    PercentageOfDoneTo:[null, [this.percentageOfDoneToValidator('PercentageOfDoneFrom'), Validators.max(100), Validators.min(0)]]
   });
   private employeesService = inject(EmployeesService);
   private reportService = inject(ReportsService);
@@ -371,12 +371,21 @@ export class BriefingSummonsInPeriodReportComponent {
               this.employeesService.GetForDropDownDepartment({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
                 debounceTime(300),
                 distinctUntilChanged()).subscribe((res: any) => {
-                  this.depatmentsList = [];
+                  let newArray:any[]= [];
                   this.lastSearchQuery = "";
-  
                   res?.data?.forEach((jobTitle: any) => {
-                    this.depatmentsList.push({ name: jobTitle.name, key: jobTitle.id })
+                    newArray.push({ name: jobTitle.name, key: jobTitle.id })
                   });
+                  newArray = newArray.filter(newItem => 
+                    !this.depatmentsList.some(oldItem => oldItem.key === newItem.key)
+                  );
+                  if(newArray.length > 0){
+                    this.depatmentsList = [...this.depatmentsList, ...newArray]
+                  } else {
+                    if(!res?.data?.length) {
+                      this.toast.error("لا يوجد بيانات");
+                    }
+                  }
                   if(data != "") {
                     this.departmentIdClearData = true;
                   } else {
@@ -395,12 +404,21 @@ export class BriefingSummonsInPeriodReportComponent {
                 this.employeesService.GetForDropDownZones({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
                   debounceTime(300),
                   distinctUntilChanged()).subscribe((res: any) => {
-                    this.zonesList = [];
+                    let newArray:any[]= [];
                     this.lastSearchQuery = "";
-    
                     res?.data?.forEach((jobTitle: any) => {
-                      this.zonesList.push({ name: jobTitle.name, key: jobTitle.id })
+                      newArray.push({ name: jobTitle.name, key: jobTitle.id })
                     });
+                    newArray = newArray.filter(newItem => 
+                      !this.zonesList.some(oldItem => oldItem.key === newItem.key)
+                    );
+                    if(newArray.length > 0){
+                      this.zonesList = [...this.zonesList, ...newArray]
+                    } else {
+                      if(!res?.data?.length) {
+                        this.toast.error("لا يوجد بيانات");
+                      }
+                    }
                     if(data != "") {
                       this.zoneIdClearData = true;
                     } else {
@@ -418,12 +436,21 @@ export class BriefingSummonsInPeriodReportComponent {
                   this.employeesService.GetForDropDownJobTitle({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
                     debounceTime(300),
                     distinctUntilChanged()).subscribe((res: any) => {
-                      this.jobTitleList = [];
+                      let newArray:any[]= [];
                       this.lastSearchQuery = "";
-      
                       res?.data?.forEach((jobTitle: any) => {
-                        this.jobTitleList.push({ name: jobTitle.name, key: jobTitle.id })
+                        newArray.push({ name: jobTitle.name, key: jobTitle.id })
                       });
+                      newArray = newArray.filter(newItem => 
+                        !this.jobTitleList.some(oldItem => oldItem.key === newItem.key)
+                      );
+                      if(newArray.length > 0){
+                        this.jobTitleList = [...this.jobTitleList, ...newArray]
+                      } else {
+                        if(!res?.data?.length) {
+                          this.toast.error("لا يوجد بيانات");
+                        }
+                      }
                       if(data != "") {
                         this.jobTitleIdData = true;
                       } else {

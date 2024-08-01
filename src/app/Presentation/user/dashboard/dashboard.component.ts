@@ -721,7 +721,7 @@ export class DashboardComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الموظفين"
+                buttonSend: "الموظفين"
               },
             });
             setTimeout(() => {

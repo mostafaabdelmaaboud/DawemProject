@@ -215,12 +215,23 @@ export class StatisticsReportOverAperiodGroupByMonthComponent {
               this.employeesService.GetForDropDownDepartment({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
                 debounceTime(300),
                 distinctUntilChanged()).subscribe((res: any) => {
-                  this.depatmentsList = [];
+                  let newArray:any[]= [];
                   this.lastSearchQuery = "";
-  
                   res?.data?.forEach((jobTitle: any) => {
-                    this.depatmentsList.push({ name: jobTitle.name, key: jobTitle.id })
+                    newArray.push({ name: jobTitle.name, key: jobTitle.id })
                   });
+                  newArray = newArray.filter(newItem => 
+                    !this.depatmentsList.some(oldItem => oldItem.key === newItem.key)
+                  );
+                  if(newArray.length > 0){
+                    this.depatmentsList = [...this.depatmentsList, ...newArray]
+                  } else {
+                    if(!res?.data?.length) {
+                      this.toast.error("لا يوجد بيانات");
+                    }
+                  }
+
+                  
                   if(data != "") {
                     this.departmentIdClearData = true;
                   } else {

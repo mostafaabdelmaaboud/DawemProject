@@ -56,19 +56,12 @@
                 <!--End Custom Validators-->
               </div>
               <div class="sectionFive mb-3">
-                <label for="" class="label-input mb-2">الرسالة التحذيرية <span class="color-red">*</span></label>
+                <label for="" class="label-input mb-2">الرسالة التحذيرية</label>
                 <div class="content-password">
                   <input type="text" pInputText formControlName="warningMessage" placeholder="الرسالة التحذيرية"
                     class="w-100" />
                 </div>
-                <!--Start Custom Validators-->
-                <div class="container-alerts mt-2" *ngIf="getControl('warningMessage')?.errors">
-                  <div class="alert alert-danger"
-                    *ngIf="getControl('warningMessage')?.hasError('required') && getControl('warningMessage')?.dirty">
-                    الرسالة التحذيرية مطلوبة
-                  </div>
-                </div>
-                <!--End Custom Validators-->
+              
               </div>
   
             </div>

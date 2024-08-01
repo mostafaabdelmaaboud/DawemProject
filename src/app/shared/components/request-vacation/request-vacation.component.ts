@@ -406,6 +406,7 @@ export class RequestVacationComponent {
     }
   }
   request() {
+    this.dateTaskMultiple =false;
 
     if (this.addBranchGroupForm.value.dateTask != null) {
       if (this.addBranchGroupForm.value.dateTask[1] === null) {

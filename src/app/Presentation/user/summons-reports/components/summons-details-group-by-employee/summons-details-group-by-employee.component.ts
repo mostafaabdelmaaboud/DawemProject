@@ -29,8 +29,8 @@ export class SummonsDetailsGroupByEmployeeComponent {
     DepartmentIds:[''],
     JobTitleIds:[''],
     NotifiyWay:[''],
-    AllowedTimeWithMinutesFrom:[null, [this.allowedTimeWithMinutesFromValidator('AllowedTimeWithMinutesTo')]],
-    AllowedTimeWithMinutesTo:[null, [this.allowedTimeWithMinutesToValidator('AllowedTimeWithMinutesFrom')]],
+    AllowedTimeWithMinutesFrom:[null, [this.allowedTimeWithMinutesFromValidator('AllowedTimeWithMinutesTo'), Validators.min(0)]],
+    AllowedTimeWithMinutesTo:[null, [this.allowedTimeWithMinutesToValidator('AllowedTimeWithMinutesFrom'), Validators.min(0)]],
     DoneStatus:[0]
   });
   private employeesService = inject(EmployeesService);
@@ -298,12 +298,22 @@ export class SummonsDetailsGroupByEmployeeComponent {
             this.employeesService.GetForDropDownEmployee({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.employeesList = [];
+          
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-
                 res?.data?.forEach((jobTitle: any) => {
-                  this.employeesList.push({ name: jobTitle.name, key: jobTitle.id })
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.employeesList.some(oldItem => oldItem.key === newItem.key)
+                );
+                if(newArray.length > 0){
+                  this.employeesList = [...this.employeesList, ...newArray]
+                } else {
+                  if(!res?.data?.length) {
+                    this.toast.error("لا يوجد بيانات");
+                  }
+                }
                 if(data != "") {
                   this.employeeIDClearData = true;
                 } else {
@@ -322,12 +332,21 @@ export class SummonsDetailsGroupByEmployeeComponent {
               this.employeesService.GetForDropDownDepartment({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
                 debounceTime(300),
                 distinctUntilChanged()).subscribe((res: any) => {
-                  this.depatmentsList = [];
+                  let newArray:any[]= [];
                   this.lastSearchQuery = "";
-  
                   res?.data?.forEach((jobTitle: any) => {
-                    this.depatmentsList.push({ name: jobTitle.name, key: jobTitle.id })
+                    newArray.push({ name: jobTitle.name, key: jobTitle.id })
                   });
+                  newArray = newArray.filter(newItem => 
+                    !this.depatmentsList.some(oldItem => oldItem.key === newItem.key)
+                  );
+                  if(newArray.length > 0){
+                    this.depatmentsList = [...this.depatmentsList, ...newArray]
+                  } else {
+                    if(!res?.data?.length) {
+                      this.toast.error("لا يوجد بيانات");
+                    }
+                  }
                   if(data != "") {
                     this.departmentIdClearData = true;
                   } else {
@@ -346,12 +365,22 @@ export class SummonsDetailsGroupByEmployeeComponent {
                   this.employeesService.GetForDropDownJobTitle({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
                     debounceTime(300),
                     distinctUntilChanged()).subscribe((res: any) => {
-                      this.jobTitleList = [];
+               
+                      let newArray:any[]= [];
                       this.lastSearchQuery = "";
-      
                       res?.data?.forEach((jobTitle: any) => {
-                        this.jobTitleList.push({ name: jobTitle.name, key: jobTitle.id })
+                        newArray.push({ name: jobTitle.name, key: jobTitle.id })
                       });
+                      newArray = newArray.filter(newItem => 
+                        !this.jobTitleList.some(oldItem => oldItem.key === newItem.key)
+                      );
+                      if(newArray.length > 0){
+                        this.jobTitleList = [...this.jobTitleList, ...newArray]
+                      } else {
+                        if(!res?.data?.length) {
+                          this.toast.error("لا يوجد بيانات");
+                        }
+                      }
                       if(data != "") {
                         this.jobTitleIdData = true;
                       } else {

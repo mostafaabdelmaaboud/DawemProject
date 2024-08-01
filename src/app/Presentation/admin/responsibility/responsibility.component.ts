@@ -171,7 +171,7 @@ export class ResponsibilityComponent {
       decimalseparator: '.',
       showLabels: true, 
       showTitle: true,
-      title: 'المسميات الوظيفية',
+      title: 'المسئوليات',
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
@@ -341,12 +341,12 @@ export class ResponsibilityComponent {
     let reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
       width: "30vw",
       data: {
-        title: "هل متأكد من رفض المسؤولية؟",
+        title: "هل متاكد من تعطيل المسئولية؟",
         message: "برجاء توضيح السبب إن أمكن",
-        titleReasonOfRefuse:"سبب الرفض",
+        titleReasonOfRefuse:"سبب التعطيل",
         placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض",
         titleClose:"تراجع",
-        buttonSend: "رفض المسؤولية"
+        buttonSend: "تعطيل المسئولية"
       },
     });
 
@@ -411,7 +411,7 @@ export class ResponsibilityComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات المسؤوليات"
+                buttonSend: "المسئوليات"
 
               },
             });
@@ -480,7 +480,7 @@ export class ResponsibilityComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات المسؤوليات"
+                buttonSend: "المسئوليات"
 
               },
             });

@@ -62,7 +62,7 @@ export class EmployeesComponent {
 
   columns: any[] = [
     {
-      name: "رقم الموظف",
+      name: "الرقم الوظيفي",
       field: "orderNumber",
     },
     {
@@ -542,7 +542,7 @@ export class EmployeesComponent {
           titleNotes: data.vacationsBalance+" <span class='color-red'>*</span>",
           placeholdeNotes: data.vacationsBalance,
           validationtitleNotes: data.pleaseWriteYourVacationBalanceHere,
-          buttonSend: data.addEmployee,
+          buttonSend: "موافق",
           titleClose: data.toRetreat
         },
       });
@@ -635,7 +635,7 @@ export class EmployeesComponent {
        dialogRefAddCurrency = this.dialog.open(DialogAddAnEmployeeComponent, {
         width: "50vw",
         data: {
-          title: translate.employeeModification,
+          title: "تعديل الموظف",
           setAsNecessary:  translate.setAsActive,
           labelRadioButtonFirst: translate.performanceType,
           firstRadio: translate.fullTime,
@@ -688,15 +688,13 @@ export class EmployeesComponent {
           titleNotes: translate.vacationsBalance+" <span class='color-red'>*</span>",
           placeholdeNotes: translate.vacationsBalance,
           validationtitleNotes: translate.pleaseWriteYourVacationBalanceHere,
-          buttonSend:translate.employeeModification,
+          buttonSend:"موافق",
           titleClose: translate.toRetreat
         },
       });
     })
-
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editEmployee = true;
-
     dialogRefAddCurrency.componentInstance.id = data.id;
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData = new FormData();

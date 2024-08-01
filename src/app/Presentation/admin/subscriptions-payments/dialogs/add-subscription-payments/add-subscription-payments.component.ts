@@ -110,7 +110,7 @@ export class AddSubscriptionPaymentsComponent {
     SubscriptionId: ["", Validators.required],
     Amount: ['', Validators.required],
     Date: ['', Validators.required],
-    notes: ["", Validators.required],
+    notes: [""],
 
   });
   uploadedCommercialRegFiles: any[] = [];

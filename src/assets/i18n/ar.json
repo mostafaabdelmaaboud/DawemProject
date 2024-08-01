@@ -142,7 +142,7 @@
     "orderNumber":"رقم الطلب"
   },
   "employees":{
-    "employeesSummary":"ملخص الموظفين",
+    "employeesSummary":"الموظفين",
     "totalEmployees":"إجمالي الموظفين",
     "totalAttendance":"إجمالي الحضور",
     "totalAbsence":"إجمالي الغياب",
@@ -153,7 +153,7 @@
     "always":"الدوام",
     "section":"القسم",
     "addAnEmployee":"إضافة موظف",
-    "employeeNumber":"رقم الموظف",
+    "employeeNumber":"الرقم الوظيفي",
     "employeeName":"اسم الموظف",
     "joiningDate":"تاريخ الالتحاق",
     "vacationsBalance":"رصيد الاجازات",
@@ -206,7 +206,7 @@
     "size":"مقاس",
     "maximumFileSize":"الحد الأقصى لحجم الملف 2 ميجابايت",
     "yourRequestHasBeenSent":"تم ارسال طلبك",
-    "employeeRequests":"طلبات الموظفين",
+    "employeeRequests":"الموظفين",
     "employeeModification":"تعديل موظف",
     "employeeFile":"ملف الموظف",
     "employeeStatus": "حالة الموظف",

@@ -101,7 +101,7 @@ export class AddSanctionComponent {
     fieldDisabled: [""],
     type:["0"],
     name: ['', Validators.required],
-    warningMessage: ['', Validators.required],
+    warningMessage: [''],
   });
   uploadedCommercialRegFiles: any[] = [];
   requiredCommercialRegFiles = false;
