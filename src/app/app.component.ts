@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
 import { NotificationService } from './service/notification.service';
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { MessageService } from 'primeng/api';
+
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,22 @@ import { MessageService } from 'primeng/api';
 
 })
 export class AppComponent {
+  // @HostListener('window:beforeunload', ['$event'])
+  // unloadNotification($event: any): void {
+  //   this.clearLocalStorage();
+   
+  // }
+  // clearLocalStorage(): void {
+  //   localStorage.removeItem("user");
+  //   localStorage.removeItem("Admintoken");
+  //   localStorage.removeItem("usersMe");
+  //   localStorage.removeItem("adminPermissions");
+  //   localStorage.removeItem("adminMenuItems");
+  //   localStorage.removeItem("token");
+  //   localStorage.removeItem("permissions");
+  //   localStorage.removeItem("menuItems"); 
+  //   localStorage.clear();
+  // }
   currentLang = localStorage.getItem("lang");
   private messaging;
   mesaggeReceived:any = '';

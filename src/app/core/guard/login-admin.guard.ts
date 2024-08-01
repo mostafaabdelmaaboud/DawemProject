@@ -12,7 +12,12 @@ export class LoginAdminGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (localStorage.getItem("Admintoken")) {
-      this.router.navigateByUrl('/admin/responsibility');
+      let parseJson = JSON.parse(localStorage.getItem("adminPermissions") as string);
+      if (parseJson.isAdmin || parseJson.availablePermissions.length > 0) {
+          if(parseJson.availablePermissions?.[0]?.screenCode >=0) {
+            this.router.navigate([`${parseJson.availablePermissions?.[0]?.url}/${parseJson.availablePermissions?.[0]?.screenCode}`]);
+          }
+      } 
       return false;
     }
     return true;
