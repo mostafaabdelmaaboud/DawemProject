@@ -15,8 +15,9 @@ import { TaskTypeService } from './services/task-type.service';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { ActivatedRoute } from '@angular/router';
+import { saveAs } from 'file-saver';
+import * as ExcelJS from 'exceljs';
 
 @Component({
   selector: 'app-task-type',
@@ -162,6 +163,60 @@ export class TaskTypeComponent {
     this.filteration.PageNumber = 0;
     this.getTasks(this.filteration);
   }
+  async generateExcel(title,insideTitle,formatRows, columns) {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet(title);
+  
+    // إضافة العنوان في الصف الأول
+    const titleRow = worksheet.addRow([insideTitle]);
+    
+    // دمج الأعمدة لتوسيط العنوان
+    worksheet.mergeCells('A1:C1');
+      titleRow.getCell(1).font = { 
+      name: 'Arial', 
+      size: 16, 
+      bold: true, 
+      color: { argb: 'FF0000FF' } // اللون الأزرق
+    };
+    titleRow.getCell(1).alignment = { horizontal: 'center' };
+    let columnsFormat =columns.map(column =>column.name);
+    worksheet.columns = columns.fill({width:30});
+ 
+    // إضافة الهيدر (Header)
+    const headerRow = worksheet.addRow(columnsFormat);
+  
+    // تنسيق الهيدر
+    headerRow.font = { bold: true }; // جعل النص سميك (Bold)
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFCCCCCC' }, // خلفية رمادية
+      };
+      cell.border = { // إضافة حدود للخلية
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+    });
+  
+    // إضافة الجسم (Body)
+    const data = formatRows;
+    data.forEach(row => {
+      const rowValues = worksheet.addRow(row);
+      rowValues.eachCell((cell) => {
+        cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
+      });
+    });
+    data.forEach(row => {
+      worksheet.addRow(row);
+    });
+  
+    // حفظ الملف
+    const buffer = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buffer]), `${title}.xlsx`);
+  }
   exportTableToExcel() {
     let columns = [...this.columns];
     delete columns[3]
@@ -201,7 +256,8 @@ export class TaskTypeComponent {
               }
             })
             this.isLoading = false;
-            new ngxCsv(formatTable, "sheet", options);
+            let formatRows =formatTable.map(assignment => [assignment.code,assignment.name, assignment.isActive ]);
+            this.generateExcel('أنواع المهمات','أنواع المهمات',formatRows, columns);
           },
           error: err => {
             this.isLoading = false;

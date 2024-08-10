@@ -16,8 +16,9 @@ import { ToastrService } from 'ngx-toastr';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { ActivatedRoute } from '@angular/router';
+import { saveAs } from 'file-saver';
+import * as ExcelJS from 'exceljs';
 
 @Component({
   selector: 'app-assignments',
@@ -277,45 +278,65 @@ export class AssignmentsComponent {
 
     this.getAssignments(this.filteration);
   }
-  exportTableToExcel() {
-    let columns = [
-      {
-        name: "رقم الطلب",
-        field: "employeeCode",
-      },
-      {
-        name: "رقم الوظيفي",
-        field: "orderNumber",
-      },
-      {
-        name: "اسم الموظف",
-        field: "employeeName",
-      },
-      {
-        name: "نوع التكليف",
-        field: "assignmentTypeName"
-      },
+  async generateExcel(title,insideTitle,formatRows, columns) {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet(title);
+  
+    // إضافة العنوان في الصف الأول
+    const titleRow = worksheet.addRow([insideTitle]);
     
-      {
-        name: "تاريخ البداية",
-        field: "dateFrom"
-      },
-      {
-        name: "تاريخ النهاية",
-        field: "dateTo"
-      },
-      {
-        name: "حاله الطلب",
-        field: "statusName"
-      },
+    // دمج الأعمدة لتوسيط العنوان
+    worksheet.mergeCells('A1:G1');
+      titleRow.getCell(1).font = { 
+      name: 'Arial', 
+      size: 16, 
+      bold: true, 
+      color: { argb: 'FF0000FF' } // اللون الأزرق
+    };
+    titleRow.getCell(1).alignment = { horizontal: 'center' };
+    let columnsFormat =columns.map(column =>column.name);
+    worksheet.columns = columns.fill({width:30});
+ 
+    // إضافة الهيدر (Header)
+    const headerRow = worksheet.addRow(columnsFormat);
   
-      {
-        name: "الإجراء",
-        field: "actions"
-      }
+    // تنسيق الهيدر
+    headerRow.font = { bold: true }; // جعل النص سميك (Bold)
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFCCCCCC' }, // خلفية رمادية
+      };
+      cell.border = { // إضافة حدود للخلية
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+    });
   
-    ];
-    delete columns[8]
+    // إضافة الجسم (Body)
+    const data = formatRows;
+    data.forEach(row => {
+      const rowValues = worksheet.addRow(row);
+      rowValues.eachCell((cell) => {
+        cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
+      });
+    });
+    data.forEach(row => {
+      worksheet.addRow(row);
+    });
+  
+    // حفظ الملف
+    const buffer = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buffer]), `${title}.xlsx`);
+  }
+  exportTableToExcel() {
+    let columns = [...this.columns];
+
+
+    delete columns[7]
     var options = { 
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -365,8 +386,18 @@ export class AssignmentsComponent {
           }
         })
         this.isLoading = false;
-        new ngxCsv(formatTable, "sheet", options);
-  
+        let formatRows =formatTable.map(assignment => [
+          assignment.employeeCode,
+          assignment.orderNumber, 
+          assignment.employeeName, 
+          assignment.assignmentTypeName, 
+          assignment.dateFrom, 
+          assignment.dateTo, 
+          assignment.statusName, 
+
+        ]);
+        this.generateExcel('طلبات التكليفات','طلبات التكليفات',formatRows, columns);
+
   
       })
     }

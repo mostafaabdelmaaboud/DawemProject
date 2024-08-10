@@ -221,7 +221,12 @@ export class PermissionTypeComponent {
   
     // إضافة الجسم (Body)
     const data = formatRows;
-  
+    data.forEach(row => {
+      const rowValues = worksheet.addRow(row);
+      rowValues.eachCell((cell) => {
+        cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
+      });
+    });
     data.forEach(row => {
       worksheet.addRow(row);
     });
