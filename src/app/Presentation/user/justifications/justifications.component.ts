@@ -15,10 +15,11 @@ import * as moment from 'moment';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { ngxCsv } from 'ngx-csv/ngx-csv';
-import { DialogPermissionFileComponent } from 'src/app/shared/components/dialog-permission-file/dialog-permission-file.component';
 import { DialogJustificationFileComponent } from 'src/app/shared/components/dialog-justification-file/dialog-justification-file.component';
 import { ActivatedRoute } from '@angular/router';
+import { saveAs } from 'file-saver';
+import * as ExcelJS from 'exceljs';
+
 @Component({
   selector: 'app-justifications',
   templateUrl: './justifications.component.html',
@@ -38,6 +39,7 @@ export class JustificationsComponent {
     { name: "تسجيل انصراف خاطئ", key: "4" }
 
   ];
+  
   columns: any[] = [
     {
       name: "رقم الطلب",
@@ -262,43 +264,61 @@ export class JustificationsComponent {
     //Add 'implements OnInit' to the class.
 
   }
+  async generateExcel(title,insideTitle,formatRows, columns) {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet(title);
+  
+    // إضافة العنوان في الصف الأول
+    const titleRow = worksheet.addRow([insideTitle]);
+    
+    // دمج الأعمدة لتوسيط العنوان
+    worksheet.mergeCells('A1:G1');
+      titleRow.getCell(1).font = { 
+      name: 'Arial', 
+      size: 16, 
+      bold: true, 
+      color: { argb: 'FF0000FF' } // اللون الأزرق
+    };
+    titleRow.getCell(1).alignment = { horizontal: 'center' };
+    let columnsFormat =columns.map(column =>column.name);
+    worksheet.columns = columns.fill({width:30});
+ 
+    // إضافة الهيدر (Header)
+    const headerRow = worksheet.addRow(columnsFormat);
+  
+    // تنسيق الهيدر
+    headerRow.font = { bold: true }; // جعل النص سميك (Bold)
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFCCCCCC' }, // خلفية رمادية
+      };
+      cell.border = { // إضافة حدود للخلية
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+    });
+  
+    // إضافة الجسم (Body)
+    const data = formatRows;
+    data.forEach(row => {
+      const rowValues = worksheet.addRow(row);
+      rowValues.eachCell((cell) => {
+        cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
+      });
+    });
+   
+  
+    // حفظ الملف
+    const buffer = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buffer]), `${title}.xlsx`);
+  }
   exportTableToExcel() {
 
-    let columns = [
-      {
-        name: "رقم الطلب",
-        field: "orderNumber",
-      },
-      {
-        name: "الرقم الوظيفي",
-        field: "employeeCode",
-      },
-      {
-        name: "اسم الموظف",
-        field: "employeeName",
-      },
-      {
-        name: "نوع التبرير",
-        field: "typeOfJustification"
-      },
-      {
-        name: "حالة الطلب للتبرير",
-        field: "statusName"
-      },
-      {
-        name: "تاريخ ووقت البدايه",
-        field: "dateFrom"
-      },
-      {
-        name: "تاريخ ووقت النهاية",
-        field: "dateTo"
-      },
-      {
-        name: "الإجراء",
-        field: "actions"
-      }
-  
-    ];
+    let columns = [...this.columns];
     delete columns[7];
     var options = { 
       fieldSeparator: ',',
@@ -308,16 +328,15 @@ export class JustificationsComponent {
       showTitle: true,
       title: 'طلبات التبريرات',
       useBom: true,
-      header: 'th { font-weight: bold; }',
       headers: columns.map((column:any) => column.name)
     };
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.justificationsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
 
       this.justificationsService.listJustifications(filteration).subscribe(data => {
+        this.justificationsIsExport = [];
 
         data.data.forEach((employee: any) => {
           this.justificationsIsExport.push({
@@ -338,17 +357,29 @@ export class JustificationsComponent {
           })
         });
         let formatTable = this.justificationsIsExport.map(justification => {
-      
+          
           return {
             orderNumber: justification.orderNumber,
             employeeName: justification.employeeName.name,
+            statusName:justification.statusName,
+            employeeCode:justification.employeeCode,
             typeOfJustification: justification.typeOfJustification,
             dateFrom: justification.dateFrom,
             dateTo: justification.dateTo
           }
         })
         this.isLoading = false;
-        new ngxCsv(formatTable, "sheet", options);
+        let formatRows =formatTable.map(ustification => [
+          ustification.orderNumber,
+          ustification.employeeName, 
+          ustification.statusName, 
+          ustification.employeeCode, 
+          ustification.typeOfJustification, 
+          ustification.dateFrom, 
+          ustification.dateTo, 
+        ]);
+            this.generateExcel('طلبات التبريرات','طلبات التبريرات',formatRows, columns);
+
       })
     }
   }

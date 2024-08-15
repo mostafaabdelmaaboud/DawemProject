@@ -184,13 +184,13 @@ export class SubscriptionsComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.subscriptionsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
    
       this.subscriptionsService.getSubscriptions(filteration).subscribe(
         {
           next: data => {
-     
+            this.subscriptionsIsExport = [];
+
             data.data.forEach((subscription: any) => {
               this.subscriptionsIsExport.push({
                 id: subscription.id,

@@ -449,9 +449,10 @@ export class ReportsComponent {
     };
     if(!this.isLoading) {
       this.isLoading = true;
-      this.reportsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
       this.reportsService.listReports(filteration).subscribe(data => {
+        this.reportsIsExport = [];
+
         data.data.forEach((report: any) => {
           this.reportsIsExport.push({
             id: report.employeeId,

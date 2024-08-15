@@ -336,9 +336,10 @@ export class SummonsComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.summonsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
       this.summonsService.listSummons(filteration).subscribe(data => {
+        this.summonsIsExport = [];
+
         data.data.forEach((summon: any) => {
           this.summonsIsExport.push({
             id: summon.id,

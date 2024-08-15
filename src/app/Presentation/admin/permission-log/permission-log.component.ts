@@ -338,11 +338,11 @@ export class PermissionLogComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.permissionLogIsExport = [];
       let filteration = {...this.filteration, isExport:true};
   
       this.permissionLogService.listPermissionLog(filteration).subscribe(data => {
-  
+        this.permissionLogIsExport = [];
+
         data.data.forEach((permission: any) => {
           this.permissionLogIsExport.push({
             id: permission.id,

@@ -297,9 +297,7 @@ export class ShiftsComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
+
   
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
@@ -321,13 +319,13 @@ export class ShiftsComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.shiftsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
 
       this.shiftsService.listShifts(filteration).subscribe(
         {
           next: data => {
-  
+            this.shiftsIsExport = [];
+
             data?.data?.forEach((employee: any) => {
   
               this.shiftsIsExport.push({

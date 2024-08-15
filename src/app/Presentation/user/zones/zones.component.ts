@@ -296,9 +296,7 @@ export class ZonesComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
+
   
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
@@ -319,9 +317,10 @@ export class ZonesComponent {
     };
     if(!this.isLoading) {
       this.isLoading = true;
-      this.zonesIsExport = [];
       let filteration = {...this.filteration, isExport:true};
       this.zonesService.listZones(filteration).subscribe(data => {
+        this.zonesIsExport = [];
+
         data.data.forEach((zone: any) => {
           this.zonesIsExport.push({
             id: zone.id,

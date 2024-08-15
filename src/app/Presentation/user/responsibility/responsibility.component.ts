@@ -209,9 +209,7 @@ export class ResponsibilityComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
+
   
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
@@ -233,13 +231,13 @@ export class ResponsibilityComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.ResponsibilityIsExport = [];
       let filteration = {...this.filteration, isExport:true};
    
       this.responsibilityService.getResponsibility(filteration).subscribe(
         {
           next: data => {
-  
+            this.ResponsibilityIsExport = [];
+
             data.data.forEach((responsibility: any) => {
               this.ResponsibilityIsExport.push({
                 id: responsibility.id,

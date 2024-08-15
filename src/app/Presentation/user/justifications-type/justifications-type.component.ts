@@ -211,9 +211,7 @@ export class JustificationsTypeComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
+ 
   
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
@@ -235,13 +233,13 @@ export class JustificationsTypeComponent {
  
     if(!this.isLoading) {
       this.isLoading = true;
-      this.justificationsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
 
       this.justificationsTypeService.listJustification(filteration).subscribe(
         {
           next: data => {
-  
+            this.justificationsIsExport = [];
+
             data.data.forEach((vacation: any) => {
               this.justificationsIsExport.push({
                 id: vacation.id,

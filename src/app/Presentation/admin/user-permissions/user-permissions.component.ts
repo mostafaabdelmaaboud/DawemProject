@@ -293,10 +293,11 @@ export class UserPermissionsComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.permissionsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
 
       this.userPermissionsService.listPermissions(filteration).subscribe(data => {
+        this.permissionsIsExport = [];
+
         data.data.forEach((permission: any) => {
           this.permissionsIsExport.push({
             id: permission.id,

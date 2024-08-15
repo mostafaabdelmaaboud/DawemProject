@@ -212,9 +212,7 @@ export class AssignmentTypeComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
+
   
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
@@ -236,13 +234,13 @@ export class AssignmentTypeComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.assignmentsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
    
       this.assignmentTypeService.listAssignments(filteration).subscribe(
         {
           next: data => {
-  
+            this.assignmentsIsExport = [];
+
             data.data.forEach((vacation: any) => {
               this.assignmentsIsExport.push({
                 id: vacation.id,

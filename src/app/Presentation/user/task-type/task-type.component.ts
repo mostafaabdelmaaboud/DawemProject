@@ -209,9 +209,7 @@ export class TaskTypeComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
+
   
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
@@ -233,12 +231,13 @@ export class TaskTypeComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.tasksIsExport = [];
       let filteration = {...this.filteration, isExport:true};
  
       this.taskTypeService.listTasks(filteration).subscribe(
         {
           next: data => {
+            this.tasksIsExport = [];
+
             data.data.forEach((vacation: any) => {
               this.tasksIsExport.push({
                 id: vacation.id,

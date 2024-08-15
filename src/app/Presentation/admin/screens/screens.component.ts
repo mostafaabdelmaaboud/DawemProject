@@ -186,13 +186,13 @@ export class ScreensComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.screensIsExport = [];
       let filteration = {...this.filteration, isExport:true};
    
       this.screensService.getScreens(filteration).subscribe(
         {
           next: data => {
-   
+            this.screensIsExport = [];
+
             data.data.forEach((screen: any) => {
               this.screensIsExport.push({
                 id: screen.id,

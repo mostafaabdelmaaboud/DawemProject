@@ -269,9 +269,10 @@ export class ScheduleLogsComponent {
     };
     if(!this.isLoading) {
       this.isLoading = true;
-      this.schedulesIsExport = [];
       let filteration = {...this.filteration, isExport:true};
       this.scheduleLogsService.listSchedules(filteration).subscribe(data => {
+        this.schedulesIsExport = [];
+
         data.data.forEach((schedule: any) => {
           this.schedulesIsExport.push({
             id: schedule.id,

@@ -227,9 +227,7 @@ export class PermissionTypeComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
+
   
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
@@ -251,13 +249,13 @@ export class PermissionTypeComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.permissionssIsExport = [];
       let filteration = {...this.filteration, isExport:true};
      
       this.permissionTypeService.listPermission(filteration).subscribe(
         {
           next: data => {
-  
+            this.permissionssIsExport = [];
+
             data.data.forEach((vacation: any) => {
               this.permissionssIsExport.push({
                 id: vacation.id,

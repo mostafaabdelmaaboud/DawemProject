@@ -490,10 +490,11 @@ export class VacationBalanceComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.VacationsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
 
       this.vacationBalanceService.listVacations(filteration).subscribe(data => {
+        this.VacationsIsExport = [];
+
         data.data.forEach((vacation: any) => {
           this.VacationsIsExport.push({
             id: vacation.id,

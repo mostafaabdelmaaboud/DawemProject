@@ -354,11 +354,11 @@ export class SummonMissingLogsComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.summonsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
   
       this.summonMissingLogsService.listSummons(filteration).subscribe(data => {
-  
+        this.summonsIsExport = [];
+
         data.data.forEach((summon: any) => {
           this.summonsIsExport.push({
             id: summon.id,

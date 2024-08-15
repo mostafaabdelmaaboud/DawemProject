@@ -506,9 +506,7 @@ export class HolidaysComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
+ 
   
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
@@ -530,10 +528,11 @@ export class HolidaysComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.holidaysIsExport = [];
       let filteration = {...this.filteration, isExport:true};
 
       this.holidaysService.listHolidays(filteration).subscribe(data => {
+        this.holidaysIsExport = [];
+
         data.data.forEach((holiday: any) => {
           this.holidaysIsExport.push({
             id: holiday.id,

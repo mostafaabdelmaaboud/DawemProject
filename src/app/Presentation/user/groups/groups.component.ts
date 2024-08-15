@@ -215,9 +215,7 @@ export class GroupsComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
+   
   
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
@@ -239,10 +237,10 @@ export class GroupsComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.groupsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
 
       this.groupsService.listGroups(filteration).subscribe(data => {
+        this.groupsIsExport = [];
 
         data.data.forEach((group: any) => {
           this.groupsIsExport.push({

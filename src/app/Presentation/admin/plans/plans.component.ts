@@ -188,13 +188,13 @@ export class PlansComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.plansIsExport = [];
       let filteration = {...this.filteration, isExport:true};
    
       this.plansService.getPlans(filteration).subscribe(
         {
           next: data => {
- 
+            this.plansIsExport = [];
+
             data.data.forEach((plan: any) => {
               this.plansIsExport.push({
                 id: plan.id,

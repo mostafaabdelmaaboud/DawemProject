@@ -353,10 +353,11 @@ export class SanctionsComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.sanactionsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
    
       this.sanctionsService.listSanctions(filteration).subscribe(data => {
+        this.sanactionsIsExport = [];
+
         data.data.forEach((sanaction: any) => {
           this.sanactionsIsExport.push({
             id: sanaction.id,

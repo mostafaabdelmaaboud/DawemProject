@@ -324,9 +324,7 @@ export class AssignmentsComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
+ 
   
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
@@ -350,10 +348,11 @@ export class AssignmentsComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.assignmentsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
 
       this.assignmentsService.listAssignment(filteration).subscribe(data => {
+        this.assignmentsIsExport = [];
+
         data?.data?.forEach((assignment: any) => {
           this.assignmentsIsExport.push({
             id: assignment.id,

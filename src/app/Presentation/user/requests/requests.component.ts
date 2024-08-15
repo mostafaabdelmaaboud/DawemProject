@@ -330,9 +330,7 @@ export class RequestsComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
+
   
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
@@ -355,9 +353,10 @@ export class RequestsComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.requestIsExport = [];
       let filteration = {...this.filteration, isExport:true};
       this.requestsService.listRequests(filteration).subscribe(data => {
+        this.requestIsExport = [];
+
         data?.data?.forEach((request: any) => {
           this.requestIsExport.push({
             id: request.id,

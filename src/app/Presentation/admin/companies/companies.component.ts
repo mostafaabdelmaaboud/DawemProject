@@ -204,12 +204,13 @@ export class CompaniesComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.companiesIsExport = [];
       let filteration = {...this.filteration, isExport:true};
    
       this.companiesService.getCompanies(filteration).subscribe(
         {
           next: data => {
+            this.companiesIsExport = [];
+
             // this.companies.push({
             //   id: company.id,
             //   code: company.code,

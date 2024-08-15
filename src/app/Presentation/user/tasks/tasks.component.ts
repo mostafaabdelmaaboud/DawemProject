@@ -285,9 +285,10 @@ export class TasksComponent {
     };
     if(!this.isLoading) {
       this.isLoading = true;
-      this.tasksIsExport = [];
       let filteration = {...this.filteration, isExport:true};
       this.tasksService.listTasks(filteration).subscribe(data => {
+        this.tasksIsExport = [];
+
         data.data.forEach((employee: any) => {
           this.tasksIsExport.push({
             id: employee.id,

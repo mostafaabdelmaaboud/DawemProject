@@ -221,10 +221,11 @@ export class TablesComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.schedulesIsExport = [];
       let filteration = {...this.filteration, isExport:true};
 
       this.schedulesService.listSchedules(filteration).subscribe(data => {
+        this.schedulesIsExport = [];
+
         data.data.forEach((employee: any) => {
           this.schedulesIsExport.push({
             id: employee.id,

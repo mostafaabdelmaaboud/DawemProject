@@ -524,10 +524,10 @@ export class SchedualPlanComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.schedualPlanIsExport = [];
       let filteration = {...this.filteration, isExport:true};
    
       this.schedualPlanService.listSchedualPlan(filteration).subscribe(data => {
+        this.schedualPlanIsExport = [];
 
         data.data.forEach((schedualPlan: any) => {
   

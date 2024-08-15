@@ -268,10 +268,10 @@ export class UsersComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.usersIsExport = [];
       let filteration = {...this.filteration, isExport:true};
 
       this.usersService.listUsers(filteration).subscribe(data => {
+        this.usersIsExport = [];
 
         data?.data?.forEach((user: any) => {
           this.usersIsExport.push({

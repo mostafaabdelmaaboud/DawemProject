@@ -324,15 +324,7 @@ export class EmployeesComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-    data.forEach(row => {
-      const rowValues = worksheet.addRow(row);
-      rowValues.eachCell((cell) => {
-        cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
-      });
-    });
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
+
   
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
@@ -356,9 +348,10 @@ export class EmployeesComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.employeesIsExport = [];
       let filteration = {...this.filteration, isExport:true};
       this.employeesService.listEmployees(filteration).subscribe(data => {
+        this.employeesIsExport = [];
+
         data.data.forEach((employee: any) => {
           this.employeesIsExport.push({
             id: employee.id,

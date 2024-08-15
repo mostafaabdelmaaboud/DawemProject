@@ -211,10 +211,7 @@ export class JobTitlesComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
-  
+
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
     saveAs(new Blob([buffer]), `${title}.xlsx`);
@@ -235,13 +232,13 @@ export class JobTitlesComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.permissionsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
    
       this.jobTitlesService.listJobTitles(filteration).subscribe(
         {
           next: data => {
-  
+            this.permissionsIsExport = [];
+
             data.data.forEach((vacation: any) => {
               this.permissionsIsExport.push({
                 id: vacation.id,

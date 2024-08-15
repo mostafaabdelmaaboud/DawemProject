@@ -178,13 +178,13 @@ export class ResponsibilityComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.ResponsibilityIsExport = [];
       let filteration = {...this.filteration, isExport:true};
    
       this.responsibilityService.getResponsibility(filteration).subscribe(
         {
           next: data => {
-  
+            this.ResponsibilityIsExport = [];
+
             data.data.forEach((responsibility: any) => {
               this.ResponsibilityIsExport.push({
                 id: responsibility.id,

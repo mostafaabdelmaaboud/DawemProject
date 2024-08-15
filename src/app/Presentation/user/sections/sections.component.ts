@@ -262,9 +262,7 @@ export class SectionsComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
+
   
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
@@ -286,13 +284,13 @@ export class SectionsComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.sectionsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
   
       this.sectionsService.listSections(filteration).subscribe(
         {
           next: data => {
-  
+            this.sectionsIsExport = [];
+
             data.data.forEach((section: any) => {
   
               this.sectionsIsExport.push({

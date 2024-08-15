@@ -220,9 +220,7 @@ export class FingerPrintDevicesComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
+  
   
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
@@ -244,10 +242,11 @@ export class FingerPrintDevicesComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.fingerPrintDevicesIsExport = [];
       let filteration = {...this.filteration, isExport:true};
   
       this.fingerPrintDevicesService.listFingerprintDevices(filteration).subscribe(data => {
+        this.fingerPrintDevicesIsExport = [];
+
         data.data.forEach((fingerPrintDevice: any) => {
           this.fingerPrintDevicesIsExport.push({
             id: fingerPrintDevice.id,

@@ -295,9 +295,10 @@ export class DepartmentComponent {
     
     if(!this.isLoading) {
       this.isLoading = true;
-      this.departmentIsExport = [];
       let filteration = {...this.filteration, isExport:true};
       this.departmentService.listAttendance(filteration).subscribe(data => {
+        this.departmentIsExport = [];
+
         data.data.employeeAttendances.forEach((attendacne: any) => {
           this.departmentIsExport.push({
             id: attendacne.id,

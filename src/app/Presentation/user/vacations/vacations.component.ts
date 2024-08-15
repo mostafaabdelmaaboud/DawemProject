@@ -351,12 +351,13 @@ export class VacationsComponent {
 
     if(!this.isLoading) {
       this.isLoading = true;
-      this.vacationsIsExport = [];
       let filteration = {...this.filteration, isExport:true};
   
       this.vacationsService.listVacations(filteration).subscribe(
         {
           next: data => {
+            this.vacationsIsExport = [];
+
             data.data.forEach((vacation: any) => {
               this.vacationsIsExport.push({
                 id: vacation.id,
