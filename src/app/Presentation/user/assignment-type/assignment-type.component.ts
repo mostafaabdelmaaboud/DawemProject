@@ -212,8 +212,6 @@ export class AssignmentTypeComponent {
         cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
       });
     });
-
-  
     // حفظ الملف
     const buffer = await workbook.xlsx.writeBuffer();
     saveAs(new Blob([buffer]), `${title}.xlsx`);

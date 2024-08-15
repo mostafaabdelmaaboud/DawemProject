@@ -16,8 +16,9 @@ import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/d
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { ActivatedRoute } from '@angular/router';
+import { saveAs } from 'file-saver';
+import * as ExcelJS from 'exceljs';
 
 @Component({
   selector: 'app-vacation-balance',
@@ -474,6 +475,56 @@ export class VacationBalanceComponent {
     this.filteration.PageNumber = 0;
     this.getVacations(this.filteration);
   }
+  async generateExcel(title,insideTitle,formatRows, columns) {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet(title);
+  
+    // إضافة العنوان في الصف الأول
+    const titleRow = worksheet.addRow([insideTitle]);
+    
+    // دمج الأعمدة لتوسيط العنوان
+    worksheet.mergeCells('A1:F1');
+      titleRow.getCell(1).font = { 
+      name: 'Arial', 
+      size: 16, 
+      bold: true, 
+      color: { argb: 'FF0000FF' } // اللون الأزرق
+    };
+    titleRow.getCell(1).alignment = { horizontal: 'center' };
+    let columnsFormat =columns.map(column =>column.name);
+    worksheet.columns = columns.fill({width:30});
+ 
+    // إضافة الهيدر (Header)
+    const headerRow = worksheet.addRow(columnsFormat);
+  
+    // تنسيق الهيدر
+    headerRow.font = { bold: true }; // جعل النص سميك (Bold)
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFCCCCCC' }, // خلفية رمادية
+      };
+      cell.border = { // إضافة حدود للخلية
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+    });
+  
+    // إضافة الجسم (Body)
+    const data = formatRows;
+    data.forEach(row => {
+      const rowValues = worksheet.addRow(row);
+      rowValues.eachCell((cell) => {
+        cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
+      });
+    });
+    // حفظ الملف
+    const buffer = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buffer]), `${title}.xlsx`);
+  }
   exportTableToExcel() {
     let columns = [...this.columns];
     delete columns[6]
@@ -491,10 +542,8 @@ export class VacationBalanceComponent {
     if(!this.isLoading) {
       this.isLoading = true;
       let filteration = {...this.filteration, isExport:true};
-
       this.vacationBalanceService.listVacations(filteration).subscribe(data => {
         this.VacationsIsExport = [];
-
         data.data.forEach((vacation: any) => {
           this.VacationsIsExport.push({
             id: vacation.id,
@@ -508,7 +557,6 @@ export class VacationBalanceComponent {
           })
         });
         let formatTable = this.VacationsIsExport.map(Vacation => {
-      
           return {
             code: Vacation.code,
             employeeName: Vacation.employeeName,
@@ -519,7 +567,15 @@ export class VacationBalanceComponent {
           }
         })
         this.isLoading = false;
-        new ngxCsv(formatTable, "sheet", options);
+        let formatRows =formatTable.map(Vacation => [
+          Vacation.code,
+          Vacation.employeeName, 
+          Vacation.vacationTypeName,
+          Vacation.balance,
+          Vacation.remainingBalance,
+          Vacation.year
+        ]);
+        this.generateExcel('أرصدة الأجازات','أرصدة الأجازات',formatRows, columns);
       })
     }
   }

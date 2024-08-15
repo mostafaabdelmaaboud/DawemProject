@@ -5,20 +5,16 @@ import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import {FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
-import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { AddSummonComponent } from 'src/app/shared/components/add-summon/add-summon.component';
-import { DialogSummonMissingLogsComponent } from 'src/app/shared/components/dialog-summon-missing-logs/dialog-summon-missing-logs.component';
-import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { PermissionLogService } from './services/permission-log.service';
 import { DialogPermissionLogFileComponent } from 'src/app/shared/components/dialog-permission-log-file/dialog-permission-log-file.component';
 import { ActivatedRoute } from '@angular/router';
+import { saveAs } from 'file-saver';
+import * as ExcelJS from 'exceljs';
 
 @Component({
   selector: 'app-permission-log',
@@ -315,16 +311,66 @@ export class PermissionLogComponent {
     this.filteration.PageNumber = 0;
     this.getPermissionLog(this.filteration);
   }
+  async generateExcel(title,insideTitle,formatRows, columns) {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet(title);
+  
+    // إضافة العنوان في الصف الأول
+    const titleRow = worksheet.addRow([insideTitle]);
+    
+    // دمج الأعمدة لتوسيط العنوان
+    worksheet.mergeCells('A1:C1');
+      titleRow.getCell(1).font = { 
+      name: 'Arial', 
+      size: 16, 
+      bold: true, 
+      color: { argb: 'FF0000FF' } // اللون الأزرق
+    };
+    titleRow.getCell(1).alignment = { horizontal: 'center' };
+    let columnsFormat =columns.map(column =>column.name);
+    worksheet.columns = columns.fill({width:30});
+ 
+    // إضافة الهيدر (Header)
+    const headerRow = worksheet.addRow(columnsFormat);
+  
+    // تنسيق الهيدر
+    headerRow.font = { bold: true }; // جعل النص سميك (Bold)
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFCCCCCC' }, // خلفية رمادية
+      };
+      cell.border = { // إضافة حدود للخلية
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+    });
+  
+    // إضافة الجسم (Body)
+    const data = formatRows;
+    data.forEach(row => {
+      const rowValues = worksheet.addRow(row);
+      rowValues.eachCell((cell) => {
+        cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
+      });
+    });
+    // حفظ الملف
+    const buffer = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buffer]), `${title}.xlsx`);
+  }
   exportTableToExcel() {
     let columns = [...this.columns];
-    delete columns[5]
+    delete columns[3]
     var options = { 
       fieldSeparator: ',',
       quoteStrings: '"',
       decimalseparator: '.',
       showLabels: true, 
       showTitle: true,
-      title: 'سجلات التخلف عن الاستدعاء',
+      title: 'سجلات الصلاحيات',
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
@@ -344,6 +390,7 @@ export class PermissionLogComponent {
           actionName: permission.actionName
           })
         });
+      
         let formatTable = this.permissionLogIsExport.map(permission => {
           return {
             userName: permission.userName,
@@ -352,8 +399,13 @@ export class PermissionLogComponent {
           }
         })
         this.isLoading = false;
-        new ngxCsv(formatTable, "sheet", options);
-        
+        let formatRows =formatTable.map(permission => [
+          permission.userName,
+          permission.screenName, 
+          permission.actionName
+        ]);
+        this.generateExcel('سجلات الصلاحيات','سجلات الصلاحيات',formatRows, columns);
+    
   
       })
     }  }

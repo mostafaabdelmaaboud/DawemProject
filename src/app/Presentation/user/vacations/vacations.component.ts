@@ -16,8 +16,10 @@ import { ToastrService } from 'ngx-toastr';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas';
-import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { ActivatedRoute } from '@angular/router';
+
+import { saveAs } from 'file-saver';
+import * as ExcelJS from 'exceljs';
 
 @Component({
   selector: 'app-vacations',
@@ -328,12 +330,57 @@ export class VacationsComponent {
     this.filteration = { ...this.filteration, PageSize: data.value.code };
     this.getVacations(this.filteration)
   }
+
+  async generateExcel(title,insideTitle,formatRows, columns) {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet(title);
+  
+    // إضافة العنوان في الصف الأول
+    const titleRow = worksheet.addRow([insideTitle]);
+    
+    // دمج الأعمدة لتوسيط العنوان
+    worksheet.mergeCells('A1:H1');
+      titleRow.getCell(1).font = { 
+      name: 'Arial', 
+      size: 16, 
+      bold: true, 
+      color: { argb: 'FF0000FF' } // اللون الأزرق
+    };
+    titleRow.getCell(1).alignment = { horizontal: 'center' };
+    let columnsFormat =columns.map(column =>column.name);
+    worksheet.columns = columns.fill({width:30});
  
-  data = {
-    اسم: 'أحمد',
-    العمر: 25,
-    العنوان: 'العنوان هنا'
-  };
+    // إضافة الهيدر (Header)
+    const headerRow = worksheet.addRow(columnsFormat);
+  
+    // تنسيق الهيدر
+    headerRow.font = { bold: true }; // جعل النص سميك (Bold)
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFCCCCCC' }, // خلفية رمادية
+      };
+      cell.border = { // إضافة حدود للخلية
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+    });
+  
+    // إضافة الجسم (Body)
+    const data = formatRows;
+    data.forEach(row => {
+      const rowValues = worksheet.addRow(row);
+      rowValues.eachCell((cell) => {
+        cell.alignment = { horizontal: 'right' }; // محاذاة النص لليمين
+      });
+    });
+    // حفظ الملف
+    const buffer = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buffer]), `${title}.xlsx`);
+  }
   exportTableToExcel() {
   
     let columns = [...this.columns];
@@ -392,7 +439,17 @@ export class VacationsComponent {
               }
             })
             this.isLoading = false;
-            new ngxCsv(formatTable, "sheet", options);
+            let formatRows =formatTable.map(vacation => [
+              vacation.orderNumber,
+              vacation.employeeCode, 
+              vacation.employeeName, 
+              vacation.kindOfHoliday, 
+              vacation.beginning, 
+              vacation.final, 
+              vacation.reason, 
+              vacation.balanceAfterRequest, 
+            ]);
+            this.generateExcel('طلبات الأجازات','طلبات الأجازات',formatRows, columns);
           },
           error: err => {
             this.isLoading = false;
@@ -426,22 +483,8 @@ export class VacationsComponent {
     }
 
   }
-  createDataTable() {
-    const tableData = [
-      [{ text: 'العنوان', bold: true }, { text: 'القيمة', bold: true }],
-      ['اسم', this.data.اسم],
-      ['العمر', this.data.العمر],
-      ['العنوان', this.data.العنوان]
-    ];
+   
 
-    return {
-      table: {
-        widths: ['*', '*'],
-        body: tableData
-      },
-      layout: 'lightHorizontalLines'
-    };
-  }
   reasonOfRefuse(data: any) {
     const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
       width: "30vw",
