@@ -370,7 +370,7 @@ export class PermissionsComponent {
 
       this.permissionsService.listPermissions(filteration).subscribe(data => {
         this.permissionsIsExport = [];
-        debugger;
+        
         data.data.forEach((permission: any) => {
           this.permissionsIsExport.push({
             status: permission.status,
@@ -390,7 +390,7 @@ export class PermissionsComponent {
             dateTo: moment(new Date(permission.dateTo)).format("MM-DD-YYYY h:mm a"),
           })
         });
-        debugger;
+        
 
         let formatTable = this.permissionsIsExport.map(permission => {
           return {
@@ -405,7 +405,7 @@ export class PermissionsComponent {
 
           }
         })
-        debugger;
+        
 
         this.isLoading = false;
         let formatRows =formatTable.map(permission => [
@@ -418,7 +418,7 @@ export class PermissionsComponent {
           permission.dateTo,
           permission.period
         ]);
-        debugger;
+        
 
         this.generateExcel('طلبات الاستئذانات','طلبات الاستئذانات',formatRows, columns);
 
