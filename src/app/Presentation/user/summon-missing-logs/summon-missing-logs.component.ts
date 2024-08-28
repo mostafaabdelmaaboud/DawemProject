@@ -424,8 +424,9 @@ export class SummonMissingLogsComponent {
         });
         let formatTable = this.summonsIsExport.map(summon => {
           return {
-            employeeName: summon.employeeName,
             summonCode: summon.summonCode,
+
+            employeeName: summon.employeeName,
             summonDate: summon.summonDate,
             sanctionsCount: summon.sanctionsCount,
             summonStatusName: summon.summonStatusName,          
@@ -433,8 +434,8 @@ export class SummonMissingLogsComponent {
         })
         this.isLoading = false;
         let formatRows =formatTable.map(summon => [
-          summon.employeeName,
           summon.summonCode, 
+          summon.employeeName,
           summon.summonDate,
           summon.sanctionsCount,
           summon.summonStatusName,

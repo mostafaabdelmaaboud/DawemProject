@@ -348,7 +348,11 @@ export class UsersComponent {
           }
         })
         this.isLoading = false;
-        let formatRows =formatTable.map(assignment => [assignment.code,assignment.name,assignment.isActive, assignment.isActive ]);
+        let formatRows =formatTable.map(user => [
+          user.code,
+          user.name,
+          user.isAdmin, 
+          user.isActive ]);
         this.generateExcel('المستخدمين','المستخدمين',formatRows, columns);
 
   

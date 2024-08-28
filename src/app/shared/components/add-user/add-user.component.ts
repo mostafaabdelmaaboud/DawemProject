@@ -177,9 +177,9 @@ export class AddUserComponent {
           this.listRoles.push({ name: jobTitle.name, key: jobTitle.id })
         });
   
-        // data.employeeForDropDown?.data?.forEach((employee: any) => {
-        //   this.listEmployees.push({ name: employee.name, key: employee.id })
-        // });
+        data.employeeForDropDown?.data?.forEach((employee: any) => {
+          this.listEmployees.push({ name: employee.name, key: employee.id })
+        });
  
         if (this.editUser) {
   

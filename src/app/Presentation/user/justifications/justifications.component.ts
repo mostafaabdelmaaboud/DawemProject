@@ -356,14 +356,18 @@ export class JustificationsComponent {
 
           })
         });
+
         let formatTable = this.justificationsIsExport.map(justification => {
           
           return {
             orderNumber: justification.orderNumber,
+
             employeeName: justification.employeeName.name,
+            typeOfJustification: justification.typeOfJustification,
+
             statusName:justification.statusName,
             employeeCode:justification.employeeCode,
-            typeOfJustification: justification.typeOfJustification,
+
             dateFrom: justification.dateFrom,
             dateTo: justification.dateTo
           }
@@ -371,10 +375,10 @@ export class JustificationsComponent {
         this.isLoading = false;
         let formatRows =formatTable.map(ustification => [
           ustification.orderNumber,
-          ustification.employeeName, 
-          ustification.statusName, 
           ustification.employeeCode, 
+          ustification.employeeName, 
           ustification.typeOfJustification, 
+          ustification.statusName, 
           ustification.dateFrom, 
           ustification.dateTo, 
         ]);
