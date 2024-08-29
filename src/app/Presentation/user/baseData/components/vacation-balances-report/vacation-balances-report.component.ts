@@ -123,7 +123,7 @@ export class VacationBalancesReportComponent {
     .then(response => response.blob())
     .then(res => {
       
-      this.url =res;
+      this.url = window.URL.createObjectURL(res);
       this.submitted = true;
       this.loadingReport = false;
       this.show = true;
@@ -142,9 +142,9 @@ export class VacationBalancesReportComponent {
   }
  
   reset() {
-    this.reportForm.get("DateFrom")?.setValue("");
-    this.reportForm.get("DateTo")?.setValue("");
-    this.reportForm.get("EmployeeIds")?.setValue("");
+    this.reportForm.get("FreeText")?.setValue("");
+
+    this.reportForm.get("DepartmentIds")?.setValue("");
     this.loadDataDropdown();
     this.removeText = true;
     this.show = false;

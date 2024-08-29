@@ -142,7 +142,7 @@ export class SanctionsReportComponent {
     .then(response => response.blob())
     .then(res => {
       
-      this.url =res;
+      this.url = window.URL.createObjectURL(res);
       this.submitted = true;
       this.loadingReport = false;
       this.show = true;
@@ -161,6 +161,7 @@ export class SanctionsReportComponent {
   }
  
   reset() {
+    this.reportForm.get("FreeText")?.setValue("");
 
     this.loadDataDropdown();
     this.removeText = true;

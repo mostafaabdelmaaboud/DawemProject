@@ -139,17 +139,18 @@ export class DepartmentsReportComponent {
   getReport(filteration) {
     this.loadingReport = true;
     this.baseDataService.getDepartmentsReport(filteration)
-    .then(response => response.blob())
-    .then(res => {
-      
-      this.url =res;
+    .then(response => {
+      return   response.blob()
+    })
+    .then(res => {      
+      this.url = window.URL.createObjectURL(res);
       this.submitted = true;
       this.loadingReport = false;
       this.show = true;
       this.removeText = false;
     })
     .catch(error => {
-      
+
 
       this.submitted = true;
       this.loadingReport = false;
@@ -161,7 +162,7 @@ export class DepartmentsReportComponent {
   }
  
   reset() {
-
+    this.reportForm.get("FreeText")?.setValue("");
     this.loadDataDropdown();
     this.removeText = true;
     this.show = false;

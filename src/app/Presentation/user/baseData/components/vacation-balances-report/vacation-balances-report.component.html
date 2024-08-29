@@ -96,7 +96,7 @@
                 <span class="empty-table f-s-16">{{'requests.noData' | translate}}</span>
               </div>
               <div *ngIf="show && !loadingReport">
-                <iframe id="report" class="report-design" [src]="url"></iframe>
+                <iframe id="report" class="report-design" [src]="url  | safeUrl"></iframe>
 
               </div>
               <div class="spinner spinner-report d-flex justify-content-center align-items-center" *ngIf="loadingReport">

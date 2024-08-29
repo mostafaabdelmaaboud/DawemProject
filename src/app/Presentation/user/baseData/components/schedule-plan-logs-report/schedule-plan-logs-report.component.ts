@@ -196,6 +196,8 @@ export class SchedulePlanLogsReportComponent {
   }
  
   reset() {
+
+    this.reportForm.get("FreeText")?.setValue("");
     this.reportForm.get("DateFrom")?.setValue("");
     this.reportForm.get("DateTo")?.setValue("");
     this.reportForm.get("EmployeeIds")?.setValue("");

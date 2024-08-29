@@ -51,17 +51,14 @@ export class BaseDataService {
   
       });
     }
-    // return this.http.get()
-    // return this.http.get<any>(`${environment.baseUrl}AttendanceAndDepartureForEmployees/GetAttendanceAndDepartureForEmployeesReport`, { params: queryParams, responseType: 'blob' as 'json' })
-    fetch(`${environment.baseUrl}AttendanceAndDepartureForEmployees/GetAttendanceAndDepartureForEmployeesReport?${queryParams}`, {
+
+    return fetch(`${environment.baseUrl}AttendanceAndDepartureForEmployees/GetAttendanceAndDepartureForEmployeesReport?${queryParams}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`,
-        'lang':'ar'
+        'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
       }
     });
-    // return this.http.post(`${environment.baseUrl}EmployeeDailyAttendanceGroupByDay/GetEmployeeDailyAttendanceGroupByDay`,{}, { params: queryParams, responseType: 'blob' })
   }
   getDepartmentsReport(filter: any): any {
     let queryParams = new HttpParams();
@@ -86,6 +83,7 @@ export class BaseDataService {
   
       });
     }
+
     return fetch(`${environment.baseUrl}Departments/GetDepartmentsReport?${queryParams}`, {
       method: 'GET',
       headers: {
@@ -283,17 +281,13 @@ export class BaseDataService {
   
       });
     }
-    // return this.http.get()
-    // return this.http.get<any>(`${environment.baseUrl}AttendanceAndDepartureForEmployees/GetAttendanceAndDepartureForEmployeesReport`, { params: queryParams, responseType: 'blob' as 'json' })
-    fetch(`${environment.baseUrl}VacationBalances/GetVacationBalancesReport?${queryParams}`, {
+    return fetch(`${environment.baseUrl}VacationBalances/GetVacationBalancesReport?${queryParams}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`,
-        'lang':'ar'
       }
     });
-    // return this.http.post(`${environment.baseUrl}EmployeeDailyAttendanceGroupByDay/GetEmployeeDailyAttendanceGroupByDay`,{}, { params: queryParams, responseType: 'blob' })
   }
  
   getSummonsReport(filter: any):any {
