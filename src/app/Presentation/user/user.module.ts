@@ -324,49 +324,78 @@ const routes: Routes = [
       {
         path: "StatisticsReportOverAperiodGroupByMonth/:id",
         loadChildren: () => import('./statistics-reports/components/statistics-report-over-aperiod-group-by-month/statistics-report-over-aperiod-group-by-month.module').then((m) => m.StatisticsReportOverAperiodGroupByMonthModule),
-        // canActivate: [PermissionGuard]  
-
+        // canActivate: [PermissionGuard]
       },
-      
-      
-      
-      
-      // {
-      //   path: "basicDataReports/:id",
-      //   loadChildren: () => import('./basic-data-reports/basic-data-reports.module').then((m) => m.BasicDataReportsModule),
-      //   canActivate: [PermissionGuard]  
-
-      // },
-      // {
-      //   path: "delayReports/:id",
-      //   loadChildren: () => import('./delay-reports/delay-reports.module').then((m) => m.DelayReportsModule),
-      //   canActivate: [PermissionGuard]  
-
-      // },
-      // {
-      //   path: "absenceReports/:id",
-      //   loadChildren: () => import('./absence-reports/absence-reports.module').then((m) => m.AbsenceReportsModule),
-      //   canActivate: [PermissionGuard]  
-
-      // },
-      // {
-      //   path: "overtimeReports/:id",
-      //   loadChildren: () => import('./overtime-reports/overtime-reports.module').then((m) => m.OvertimeReportsModule),
-      //   canActivate: [PermissionGuard]  
-
-      // },
-      // {
-      //   path: "recallReports/:id",
-      //   loadChildren: () => import('./recall-reports/recall-reports.module').then((m) => m.RecallReportsModule),
-      //   canActivate: [PermissionGuard]  
-
-      // },
-      // {
-      //   path: "statisticsReports/:id",
-      //   loadChildren: () => import('./statistics-reports/statistics-reports.module').then((m) => m.StatisticsReportsModule),
-      //   canActivate: [PermissionGuard]  
-
-      // },
+      {
+        path: "AttendanceAndDepartureForEmployees/:id",
+        loadChildren: () => import('./baseData/components/attendance-and-departure-for-employees/attendance-and-departure-for-employees.module').then((m) => m.AttendanceAndDepartureForEmployeesModule),
+        // canActivate: [PermissionGuard]
+      },
+      {
+        path: "DepartmentsReport/:id",
+        loadChildren: () => import('./baseData/components/departments-report/departments-report.module').then((m) => m.DepartmentsReportModule),
+        // canActivate: [PermissionGuard]
+      },
+      {
+        path: "EmployeesReport/:id",
+        loadChildren: () => import('./baseData/components/employees-report/employees-report.module').then((m) => m.EmployeesReportModule),
+        // canActivate: [PermissionGuard]
+      },
+      {
+        path: "SummonsReport/:id",
+        loadChildren: () => import('./baseData/components/summons-report/summons-report.module').then((m) => m.SummonsReportModule),
+        // canActivate: [PermissionGuard]
+      },
+      {
+        path: "SummonLogsReport/:id",
+        loadChildren: () => import('./baseData/components/summon-logs-report/summon-logs-report.module').then((m) => m.SummonLogsReportModule),
+        // canActivate: [PermissionGuard]
+      },
+      {
+        path: "GroupsReport/:id",
+        loadChildren: () => import('./baseData/components/groups-report/groups-report.module').then((m) => m.GroupsReportModule),
+        // canActivate: [PermissionGuard]
+      },
+      {
+        path: "RequestsReport/:id",
+        loadChildren: () => import('./baseData/components/requests-report/requests-report.module').then((m) => m.RequestsReportModule),
+        // canActivate: [PermissionGuard]
+      },
+      {
+        path: "SchedulePlanLogsReport/:id",
+        loadChildren: () => import('./baseData/components/schedule-plan-logs-report/schedule-plan-logs-report.module').then((m) => m.SchedulePlanLogsReportModule),
+        // canActivate: [PermissionGuard]
+      },
+      {
+        path: "SchedulesReport/:id",
+        loadChildren: () => import('./baseData/components/schedules-report/schedules-report.module').then((m) => m.SchedulesReportModule),
+        // canActivate: [PermissionGuard]
+      },
+      {
+        path: "ShiftsReport/:id",
+        loadChildren: () => import('./baseData/components/shifts-report/shifts-report.module').then((m) => m.ShiftsReportModule),
+        // canActivate: [PermissionGuard]
+      },
+      {
+        path: "ZonesReport/:id",
+        loadChildren: () => import('./baseData/components/zones-report/zones-report.module').then((m) => m.ZonesReportModule),
+        // canActivate: [PermissionGuard]
+      },
+      {
+        path: "BalancesReport/:id",
+        loadChildren: () => import('./baseData/components/vacation-balances-report/vacation-balances-report.module').then((m) => m.VacationBalancesReportModule),
+        // canActivate: [PermissionGuard]
+      },
+      {
+        path: "SanctionsReport/:id",
+        loadChildren: () => import('./baseData/components/sanctions-report/sanctions-report.module').then((m) => m.SanctionsReportModule),
+        // canActivate: [PermissionGuard]
+      },
+      {
+        path: "SchedulePlansReport/:id",
+        loadChildren: () => import('./baseData/components/schedule-plans-report/schedule-plans-report.module').then((m) => m.SchedulePlansReportModule),
+        // canActivate: [PermissionGuard]
+      },
       
     ]
   }

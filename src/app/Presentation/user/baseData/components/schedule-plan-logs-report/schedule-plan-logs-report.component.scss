@@ -1,0 +1,116 @@
+@media (max-width:520px) {
+
+    :host ::ng-deep .table-basic #tableEmployees .p-datatable-tfoot>tr>td {
+      display: block !important;
+    }
+  }
+  
+  :host ::ng-deep .p-datatable .p-datatable-thead>tr>th:last-of-type {
+    width: 15%;
+  }
+  
+  #tableEmployeesHidden,
+  .title-table {
+    letter-spacing: normal !important;
+  
+  }
+  .logoTable {
+    img {
+      width: 180px;
+      height: 50px;
+      object-fit: scale-down
+    }
+  }
+  .hideTable {
+    overflow: hidden;
+    height: 0;
+    #tableEmployeesHidden {
+      position: relative;
+      left: -100%;
+    }
+  }
+  :host ::ng-deep  #tableEmployeesHidden .p-datatable .p-datatable-header {
+    background-color: white !important;
+  }
+  :host ::ng-deep p-calendar.ng-dirty.ng-invalid {
+    .p-button {
+      border-color: #e24c4c !important;
+    }
+  }
+  
+  :host ::ng-deep p-calendar.ng-dirty.ng-invalid>.p-calendar>.p-inputtext {
+    border-color: #e24c4c !important;
+  }
+  :host ::ng-deep .content-pCalendar-default {
+    .p-inputtext {
+      border-width: 1px 0px 1px 1px;
+      padding-right: 0;
+    }
+  
+    .p-button {
+      background-color: transparent;
+      color: rgba(48, 133, 254, 1) !important;
+      border-color: #ced4da !important;
+      border-width: 1px 1px 1px 0px !important;
+      padding-left: 0 !important;
+    }
+  }
+  :host ::ng-deep .p-calendar {
+    width: 100%;
+  }
+
+  :host ::ng-deep .p-dropdown,
+:host ::ng-deep .p-multiselect {
+  width: 100% !important;
+}
+.button-action {
+  padding: 10px 15px;
+  border: 0;
+  font-size: 16px;
+  margin-left: 10px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.button-action-two {
+  margin-right: 7px;
+  background-color: transparent;
+  border: 1px solid rgba(48, 133, 254, 1);
+  color: #3085FE;
+  border-radius: 10px !important;
+  -webkit-border-radius: 10px !important;
+  -moz-border-radius: 10px !important;
+  -ms-border-radius: 10px !important;
+  -o-border-radius: 10px !important;
+}
+.viewer-report {
+  padding: 0px;
+  margin-top: 25px;
+  border: 1px solid #d4d4d4;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+.report-design {
+  width: 100% !important;
+  height: 600px !important;
+
+}
+.container-empty-data,
+.viewer-report {
+  min-height: 400px;
+}
+
+.spinner-report {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+}
