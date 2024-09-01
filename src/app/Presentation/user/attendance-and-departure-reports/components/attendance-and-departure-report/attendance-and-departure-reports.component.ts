@@ -184,7 +184,8 @@ export class AttendanceAndDepartureReportsComponent {
   getReport(filteration) {
     this.loadingReport = true;
     this.reportService.GetEmployeeDailyAttendanceGroupByDayPath(filteration)
-    .then(response => response.blob())
+    .then(response => response.blob()
+    )
     .then(blob => {
       this.url = window.URL.createObjectURL(blob);
       this.submitted = true;
@@ -193,6 +194,7 @@ export class AttendanceAndDepartureReportsComponent {
       this.removeText = false;
     })
     .catch(error => {
+
       this.submitted = true;
       this.loadingReport = false;
       this.show = true;

@@ -193,6 +193,7 @@ export class AttendaceLeaveSummaryReportComponent {
       this.removeText = false;
     })
     .catch(error => {
+
       this.submitted = true;
       this.loadingReport = false;
       this.show = true;

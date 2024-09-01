@@ -53,7 +53,7 @@ export class BaseDataService {
     }
 
     return fetch(`${environment.baseUrl}AttendanceAndDepartureForEmployees/GetAttendanceAndDepartureForEmployeesReport?${queryParams}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
@@ -85,7 +85,7 @@ export class BaseDataService {
     }
 
     return fetch(`${environment.baseUrl}Departments/GetDepartmentsReport?${queryParams}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
@@ -116,7 +116,7 @@ export class BaseDataService {
       });
     }
     return fetch(`${environment.baseUrl}Employees/GetEmployeesReport?${queryParams}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
@@ -147,7 +147,7 @@ export class BaseDataService {
       });
     }
     return fetch(`${environment.baseUrl}Groups/GetGroupsReport?${queryParams}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
@@ -178,7 +178,7 @@ export class BaseDataService {
       });
     }
     return fetch(`${environment.baseUrl}Sanctions/GetSanctionsReport?${queryParams}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
@@ -209,7 +209,7 @@ export class BaseDataService {
       });
     }
     return fetch(`${environment.baseUrl}Shifts/GetShiftsReport?${queryParams}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
@@ -240,7 +240,7 @@ export class BaseDataService {
       });
     }
     return fetch(`${environment.baseUrl}Zones/GetZonesReport?${queryParams}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
@@ -282,7 +282,7 @@ export class BaseDataService {
       });
     }
     return fetch(`${environment.baseUrl}VacationBalances/GetVacationBalancesReport?${queryParams}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`,
@@ -352,7 +352,7 @@ export class BaseDataService {
       });
     }
     return fetch(`${environment.baseUrl}Summons/GetSummonsReport?${queryParams}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
@@ -422,7 +422,7 @@ export class BaseDataService {
       });
     }
     return fetch(`${environment.baseUrl}SummonLogs/GetSummonLogsReport?${queryParams}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
@@ -491,7 +491,7 @@ export class BaseDataService {
       });
     }
     return fetch(`${environment.baseUrl}Requests/GetRequestsReport?${queryParams}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
@@ -560,7 +560,7 @@ export class BaseDataService {
       });
     }
     return fetch(`${environment.baseUrl}SchedulePlanLogs/GetSchedulePlanLogsReport?${queryParams}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
@@ -629,7 +629,7 @@ export class BaseDataService {
       });
     }
     return fetch(`${environment.baseUrl}Schedules/GetSchedulesReport?${queryParams}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
@@ -698,7 +698,7 @@ export class BaseDataService {
       });
     }
     return fetch(`${environment.baseUrl}SchedulePlans/GetSchedulePlansReport?${queryParams}`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${JSON.parse(localStorage.getItem("token") as string)}`
