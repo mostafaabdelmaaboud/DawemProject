@@ -21,7 +21,7 @@ export class VacationBalancesReportComponent {
   loading = false;
   id:any;
   reportForm: FormGroup = this.fb.group({
-    FreeText: ['', Validators.required],
+    FreeText: [''],
   
     EmployeeIds:['']
   });
@@ -111,9 +111,6 @@ export class VacationBalancesReportComponent {
 
       // this.filteration.PageNumber = 0;
       this.getReport(this.reportForm?.value);
-    } else {
-
-      this.reportForm.get("FreeText")?.markAsDirty();
     }
   }
   removeText = true;

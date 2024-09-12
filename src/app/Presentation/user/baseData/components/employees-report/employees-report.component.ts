@@ -21,7 +21,7 @@ export class EmployeesReportComponent {
   loading = false;
   id:any;
   reportForm: FormGroup = this.fb.group({
-    FreeText: ['', Validators.required]
+    FreeText: ['']
   });
   private employeesService = inject(EmployeesService);
   private baseDataService = inject(BaseDataService);
@@ -159,7 +159,7 @@ export class EmployeesReportComponent {
   }
  
   reset() {
-    this.reportForm.get("FreeText")?.setValue("");
+    this.reportForm.get("FreeText")?.markAsDirty()
 
     this.loadDataDropdown();
     this.removeText = true;

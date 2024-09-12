@@ -21,7 +21,7 @@ export class ShiftsReportComponent {
   loading = false;
   id:any;
   reportForm: FormGroup = this.fb.group({
-    FreeText: ['', Validators.required]
+    FreeText: ['']
   });
   private employeesService = inject(EmployeesService);
   private baseDataService = inject(BaseDataService);
@@ -131,8 +131,6 @@ export class ShiftsReportComponent {
 
       // this.filteration.PageNumber = 0;
       this.getReport(this.reportForm?.value);
-    } else {
-      this.reportForm.get("FreeText")?.markAsDirty()
     }
   }
   removeText = true;
