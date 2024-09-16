@@ -315,7 +315,7 @@ export class BaseDataService {
               queryParams = queryParams.set(key, 0)
 
             }          }
-        } else if (key === "GroupsIds") {
+        } else if (key === "GroupIds") {
           if (value != "") {
             if(value?.length > 0) {
               value.forEach(report => {
@@ -385,7 +385,7 @@ export class BaseDataService {
               queryParams = queryParams.set(key, 0)
 
             }          }
-        } else if (key === "GroupsIds") {
+        } else if (key === "GroupIds") {
           if (value != "") {
             if(value?.length > 0) {
               value.forEach(report => {
@@ -454,7 +454,7 @@ export class BaseDataService {
               queryParams = queryParams.set(key, 0)
 
             }          }
-        } else if (key === "GroupsIds") {
+        } else if (key === "GroupIds") {
           if (value != "") {
             if(value?.length > 0) {
               value.forEach(report => {
@@ -523,7 +523,7 @@ export class BaseDataService {
               queryParams = queryParams.set(key, 0)
 
             }          }
-        } else if (key === "GroupsIds") {
+        } else if (key === "GroupIds") {
           if (value != "") {
             if(value?.length > 0) {
               value.forEach(report => {
@@ -592,7 +592,7 @@ export class BaseDataService {
               queryParams = queryParams.set(key, 0)
 
             }          }
-        } else if (key === "GroupsIds") {
+        } else if (key === "GroupIds") {
           if (value != "") {
             if(value?.length > 0) {
               value.forEach(report => {
@@ -661,7 +661,7 @@ export class BaseDataService {
               queryParams = queryParams.set(key, 0)
 
             }          }
-        } else if (key === "GroupsIds") {
+        } else if (key === "GroupIds") {
           if (value != "") {
             if(value?.length > 0) {
               value.forEach(report => {

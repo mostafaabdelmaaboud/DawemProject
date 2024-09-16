@@ -26,7 +26,7 @@ export class SummonLogsReportComponent {
     DateTo: ['', [Validators.required, this.dateToValidator("DateFrom")]],
     EmployeeIds:[''],
     DepartmentIds:[''],
-    GroupsIds:['']
+    GroupIds:['']
   });
   private employeesService = inject(EmployeesService);
   private baseDataService = inject(BaseDataService);
@@ -201,7 +201,7 @@ export class SummonLogsReportComponent {
     this.reportForm.get("DateTo")?.setValue("");
     this.reportForm.get("EmployeeIds")?.setValue("");
     this.reportForm.get("DepartmentIds")?.setValue("");
-    this.reportForm.get("GroupsIds")?.setValue("");
+    this.reportForm.get("GroupIds")?.setValue("");
     this.loadDataDropdown();
     this.removeText = true;
 
