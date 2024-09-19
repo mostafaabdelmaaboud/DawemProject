@@ -13,6 +13,7 @@ const routes: Routes = [
   { path: 'adminPanel', loadChildren: () => import('./core/auth-admin/auth.module').then((m) => m.AuthAdminModule), canActivate: [LoginAdminGuard] },
   { path: 'admin', loadChildren: () => import('./Presentation/admin/admin.module').then((m) => m.AdminModule), canActivate: [AuthAdminGuard] },
   { path: 'user', loadChildren: () => import('./Presentation/user/user.module').then(m => m.UserModule), canActivate: [AuthGuard] },
+  { path: 'privacyandpolicy', loadChildren: () => import('./core/privacy-and-policy/privacy-and-policy.module').then(m => m.PrivacyAndPolicyModule)},
   { path: "notPermission", component: NotPermissionComponent }
 
 ];
