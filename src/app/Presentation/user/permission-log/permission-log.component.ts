@@ -395,7 +395,7 @@ export class PermissionLogComponent {
           return {
             userName: permission.userName,
             screenName: permission.screenName,
-            actionName: permission.screenName
+            actionName: permission.actionName
           }
         })
         this.isLoading = false;

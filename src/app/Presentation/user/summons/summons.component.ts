@@ -415,8 +415,9 @@ export class SummonsComponent {
         this.isLoading = false;
         let formatRows =formatTable.map(summon => [
           summon.code,
-          summon.forTypeName, 
           summon.summonStatusName, 
+          summon.forTypeName, 
+ 
           summon.numberOfTargetedEmployees, 
           summon.LocalDateAndTime, 
 
