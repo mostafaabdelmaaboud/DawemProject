@@ -572,44 +572,7 @@ export class BaseDataService {
     if (filter) {
 
       Object.entries(filter).forEach(([key, value]: any) => {
-        if (key === "EmployeeIds") {
-          if (value != "") {
-            if(value?.length > 0) {
-              value.forEach(report => {
-                queryParams = queryParams.append(key, report.key)
-              });
-            } else {
-              queryParams = queryParams.set(key, 0)
-            }
-          }
-        } else if (key === "DepartmentIds") {
-          if (value != "") {
-            if(value?.length > 0) {
-              value.forEach(report => {
-                queryParams =  queryParams.append(key, report.key)
-              });
-            } else {
-              queryParams = queryParams.set(key, 0)
-
-            }          }
-        } else if (key === "GroupIds") {
-          if (value != "") {
-            if(value?.length > 0) {
-              value.forEach(report => {
-                queryParams =queryParams.append(key, report.key)
-              });
-            } else {
-              queryParams =queryParams.set(key, 0)
-
-            }          }
-        }else if (key === "DateFrom") {
-          if (value != "") {
-            queryParams = queryParams.set(key, moment(value).format("MM/DD/YYYY"))
-     }
-        }else if (key === "DateTo") {
-          queryParams = queryParams.set(key, moment(value).format("MM/DD/YYYY"))
-
-        }else {
+  
           if (typeof value  === 'string') {
             if(value != "") {
               queryParams = queryParams.set(key, value.trim())
@@ -624,7 +587,6 @@ export class BaseDataService {
             }
     
           }
-        }
   
       });
     }

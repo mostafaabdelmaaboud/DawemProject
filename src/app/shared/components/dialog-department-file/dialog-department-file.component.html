@@ -136,6 +136,8 @@
                 <span class="d-block">{{"department.theTime"|translate}} {{finger?.time ? finger?.time : "لا يوجد"}}</span>
                 <span class="d-block">{{"department.type"|translate}} {{finger?.type ? finger?.type : "لا يوجد"}}</span>
                 <span class="d-block">{{"department.fingerprintLocation"|translate}} {{finger?.zoneName ? finger?.zoneName : "لا يوجد"}}</span>
+                <span class="d-block">{{"department.fingerprintLocation"|translate}} {{finger?.FingerprintSource ? finger?.FingerprintSource : "لا يوجد"}}</span>
+
               </div>
         </ng-container>
         <ng-container *ngIf="info?.fingerprints?.length ===0">

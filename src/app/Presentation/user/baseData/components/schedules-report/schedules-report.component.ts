@@ -21,12 +21,7 @@ export class SchedulesReportComponent {
   loading = false;
   id:any;
   reportForm: FormGroup = this.fb.group({
-    FreeText: [''],
-    DateFrom: ['', [Validators.required, this.dateFromValidator("DateTo")]],
-    DateTo: ['', [Validators.required, this.dateToValidator("DateFrom")]],
-    EmployeeIds:[''],
-    DepartmentIds:[''],
-    GroupIds:['']
+    FreeText: ['']
   });
   private employeesService = inject(EmployeesService);
   private baseDataService = inject(BaseDataService);
@@ -73,87 +68,12 @@ export class SchedulesReportComponent {
 
     });
   }
-  dateFromValidator(conInput: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const value: any = control.value;
-      let checkMin = true;
-      
 
-      if (value != '') {
-        
-        if (this.reportForm?.get(conInput)?.dirty && !this.reportForm?.get(conInput)?.hasError('required')) {
-          
-
-          if (value > this.reportForm?.get(conInput)?.value) {
-            
-
-            checkMin = false;
-          }
-        }
-        if(this.reportForm?.get(conInput)?.invalid) {
-          this.reportForm?.get(conInput)?.setValue( this.reportForm?.get(conInput)?.value)
-        }
-      }
-      return checkMin ? null : { dateRangeError: true };
-    };
-  }
-  dateToValidator(conInput: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const value: any = control.value;
-      let checkMin = true;
-      if (value != null) {
-        if (this.reportForm?.get(conInput)?.dirty && !this.reportForm?.get(conInput)?.hasError('required')) {
-          if (value < this.reportForm?.get(conInput)?.value) {
-            checkMin = false;
-          }
-        }
-        if(this.reportForm?.get(conInput)?.invalid) {
-          this.reportForm?.get(conInput)?.setValue( this.reportForm?.get(conInput)?.value)
-        }
-      }
-      return checkMin ? null : { dateRangeError: true };
-    };
-  }
   submitted = true;
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') as string;
-  this.loadDataDropdown();
   }
-  loadDataDropdown() {
-    let employee = this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-    let department =  this.employeesService.GetForDropDownDepartment({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-    let groups =  this.baseDataService.groupsForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-    // let screenGetForDropDown = this.plansService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-    this.loading = true;
 
-    combineLatest({
-      employee,
-      department,
-      groups
-      
-    }).subscribe({
-      next:data => {
-
-        data?.employee?.data?.forEach((employee: any) => {
-          this.employeesList.push({ name: employee.name, key: employee.id })
-        });
-
-        data?.department?.data?.forEach((department: any) => {
-          this.depatmentsList.push({ name: department.name, key: department.id })
-        });
-        data?.groups?.data?.forEach((zone: any) => {
-          this.groupsList.push({ name: zone.name, key: zone.id })
-        });
-    
-        this.loading = false;
-
-      },
-      error:err => {
-        this.loading = false;
-
-      }
-    })
-  }
   getControl(controlName: string) {
     return this.reportForm?.get(controlName);
   }
@@ -163,14 +83,7 @@ export class SchedulesReportComponent {
   filter() {
     if(this.reportForm.valid && this.submitted) {
       this.submitted = false;
-
-      // this.filteration.PageNumber = 0;
       this.getReport(this.reportForm?.value);
-    } else {
-      this.reportForm.get("DateFrom")?.markAsDirty();
-      this.reportForm.get("DateTo")?.markAsDirty();
-
-
     }
   }
   removeText = true;
@@ -190,137 +103,14 @@ export class SchedulesReportComponent {
       this.loadingReport = false;
       this.show = true;
       this.removeText = false;
-
     });
-
   }
  
   reset() {
     this.reportForm.get("FreeText")?.setValue("");
-    this.reportForm.get("DateFrom")?.setValue("");
-    this.reportForm.get("DateTo")?.setValue("");
-    this.reportForm.get("EmployeeIds")?.setValue("");
-    this.reportForm.get("DepartmentIds")?.setValue("");
-    this.reportForm.get("GroupIds")?.setValue("");
-    this.loadDataDropdown();
     this.removeText = true;
-
-
     // this.filter();
     this.show = false;
-
   }
-  employeeIDClearData = false;
-  departmentIdClearData = false;
-  zoneIdClearData = false;
-  jobTitleIdData = false;
 
-  searchDropdown(data: any, type: string) {
-
-    switch (type) {
-      case 'EmployeeID':
-        if (data || data === "") {
-          if (data !== this.lastSearchQuery || data === "") {
-            this.lastSearchQuery = data;
-            this.employeesService.GetForDropDownEmployee({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
-              distinctUntilChanged()).subscribe((res: any) => {
-                let newArray:any[]= [];
-                this.lastSearchQuery = "";
-                res?.data?.forEach((jobTitle: any) => {
-                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
-                });
-                newArray = newArray.filter(newItem => 
-                  !this.employeesList.some(oldItem => oldItem.key === newItem.key)
-                );
-                if(newArray.length > 0){
-                  this.employeesList = [...this.employeesList, ...newArray]
-                } else {
-                  if(!res?.data?.length) {
-                    this.toast.error("لا يوجد بيانات");
-                  }
-                }
-
-                if(data != "") {
-                  this.employeeIDClearData = true;
-                } else {
-                  this.employeeIDClearData = false;
-    
-                }
-              });
-          }
-
-        }
-        break;
-        case 'DepartmentId':
-          if (data || data === "") {
-            if (data !== this.lastSearchQuery || data === "") {
-              this.lastSearchQuery = data;
-              this.employeesService.GetForDropDownDepartment({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-                debounceTime(300),
-                distinctUntilChanged()).subscribe((res: any) => {
-                  let newArray:any[]= [];
-                  this.lastSearchQuery = "";
-                  res?.data?.forEach((jobTitle: any) => {
-                    newArray.push({ name: jobTitle.name, key: jobTitle.id })
-                  });
-                  newArray = newArray.filter(newItem => 
-                    !this.depatmentsList.some(oldItem => oldItem.key === newItem.key)
-                  );
-                  if(newArray.length > 0){
-                    this.depatmentsList = [...this.depatmentsList, ...newArray]
-                  } else {
-                    if(!res?.data?.length) {
-                      this.toast.error("لا يوجد بيانات");
-                    }
-                  }
-                  if(data != "") {
-                    this.departmentIdClearData = true;
-                  } else {
-                    this.departmentIdClearData = false;
-      
-                  }
-                });
-            }
-  
-          }
-          break;
-          case 'GroupId':
-            if (data || data === "") {
-              if (data !== this.lastSearchQuery || data === "") {
-                this.lastSearchQuery = data;
-                this.baseDataService.groupsForDropdown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-                  debounceTime(300),
-                  distinctUntilChanged()).subscribe((res: any) => {
-                    let newArray:any[]= [];
-                    this.lastSearchQuery = "";
-                    res?.data?.forEach((jobTitle: any) => {
-                      newArray.push({ name: jobTitle.name, key: jobTitle.id })
-                    });
-                    newArray = newArray.filter(newItem => 
-                      !this.groupsList.some(oldItem => oldItem.key === newItem.key)
-                    );
-                    if(newArray.length > 0){
-                      this.groupsList = [...this.groupsList, ...newArray]
-                    } else {
-                      if(!res?.data?.length) {
-                        this.toast.error("لا يوجد بيانات");
-                      }
-                    }
-                    if(data != "") {
-                      this.zoneIdClearData = true;
-                    } else {
-                      this.zoneIdClearData = false;
-        
-                    }
-                  });
-              }
-            }
-            break;
-     
-      default:
-        
-        break;
-    }
-  }
 }

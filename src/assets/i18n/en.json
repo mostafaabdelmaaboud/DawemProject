@@ -228,7 +228,7 @@
     "fingerprint":"Fingerprint",
     "howToIdentify":"How to identify:",
     "theTime":"the time :",
-    "type":"Type :",
+    "type":"finger print type :",
     "fingerprintLocation":"Fingerprint location :",
     "nothing":"nothing",
     "employeeNumber":"Employee number",
@@ -238,6 +238,7 @@
     "timeToGoOut":"time to go out",
     "theCondition":"the condition",
     "theDifference":"the difference",
+    "fingerprintSource":"Fingerprint source",
     "action":"action"
   },
   "justifications": {

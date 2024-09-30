@@ -68,14 +68,10 @@ export class DialogDepartmentFileComponent {
     
 
     if (this.id) {
-      
-
-      this.departmentService.departmentGetInfo({ employeeAttendanceId: this.id }).subscribe(data => {
-        
+      this.departmentService.departmentGetInfo({ employeeAttendanceId: this.id }).subscribe(data => {        
         this.info = data;
         this.info.date = moment(new Date(this.info.date)).format("MM/DD/YYYY")
         this.loading = false;
-
       })
     }
   }
