@@ -1,30 +1,29 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
-import { registerLocaleData } from '@angular/common';
-import { PrimeNGConfig } from 'primeng/api';
-import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
+import { MatDialog } from '@angular/material/dialog';
+import { PaginationInstance } from 'ngx-pagination';
+import { Subscription } from 'rxjs';
+import { DefaultLookupsService } from '../services/default-lookups.service';
+import { PrimeNGConfig } from 'primeng/api';
 import { MediaMatcher } from '@angular/cdk/layout';
+import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
-import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
 import { PermissionsUserService } from 'src/app/shared/services/permissions-user.service';
+import { ActivatedRoute } from '@angular/router';
+import { ngxCsv } from 'ngx-csv';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { ngxCsv } from 'ngx-csv/ngx-csv';
-import { PlansService } from './services/plans.service';
-import { AddPlanComponent } from './dialogs/add-plan/add-plan.component';
-import { DialogPlanInfoComponent } from './dialogs/dialog-plan-info/dialog-plan-info.component';
-import { ActivatedRoute } from '@angular/router';
+import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
+import { DialogDeleteComponent } from 'src/app/shared/components/dialog-delete/dialog-delete.component';
+import { AddLookupComponent } from '../dialogs/add-lookup/add-lookup.component';
+import { LookupFileComponent } from '../dialogs/lookup-file/lookup-file.component';
 
 @Component({
-  selector: 'app-plans',
-  templateUrl: './plans.component.html',
-  styleUrls: ['./plans.component.scss']
+  selector: 'app-vacation-type-default',
+  templateUrl: './vacation-type-default.component.html',
+  styleUrls: ['./vacation-type-default.component.scss']
 })
-export class PlansComponent {
+export class VacationTypeDefaultComponent {
   date!: Date;
   arabic: any;
   subscription!: Subscription;
@@ -34,20 +33,12 @@ export class PlansComponent {
 
   columns: any[] = [
     {
-      name: "كود الخطه",
+      name: "كود الأجازة الأفتراضيه",
       field: "code",
     },
     {
-      name: "اسم الخطه",
+      name: "اسم الأجازة الأفتراضية",
       field: "name",
-    },
-    {
-      name: "تكلفه الموظف الواحد",
-      field: "employeeCost",
-    },
-    {
-      name:"فتره تجريبية",
-      field: "isTrial",
     },
     {
       name: "الحالة",
@@ -59,8 +50,8 @@ export class PlansComponent {
     }
 
   ];
-  plans: any = [];
-  plansIsExport: any = [];
+  lookups: any = [];
+  lookupsIsExport: any = [];
   isLoading = true;
 
   filteration: any = {
@@ -90,7 +81,7 @@ export class PlansComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
-  private plansService = inject(PlansService);
+  private defaultLookupsService = inject(DefaultLookupsService);
   list: any[] = [
     { name: "نسيان تسجيل حضور", key: "1" },
     { name: "نسيان تسجيل انصراف", key: "2" },
@@ -106,11 +97,11 @@ export class PlansComponent {
     this._mobileQueryListener = () => {
       if (this.mobileQuery.matches) {
         this.opened = true;
-        this.plans = this.plans;
+        this.lookups = this.lookups;
         changeDetectorRef.detectChanges();
       } else {
         this.opened = false;
-        this.plans = this.plans;
+        this.lookups = this.lookups;
         changeDetectorRef.detectChanges();
       }
     };
@@ -146,9 +137,8 @@ export class PlansComponent {
       { name: '5', code: 5 }
 
     ];
-    this.getInformation();
 
-    this.getPlans(this.filteration);
+    this.getLookups(this.filteration);
   }
   filter() {
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
@@ -165,7 +155,7 @@ export class PlansComponent {
       }
     });
     this.filteration.PageNumber = 0;
-    this.getPlans(this.filteration);
+    this.getLookups(this.filteration);
   }
   exportTableToExcel() {
     let columns = [...this.columns];
@@ -185,29 +175,26 @@ export class PlansComponent {
       this.isLoading = true;
       let filteration = {...this.filteration, isExport:true};
    
-      this.plansService.getPlans(filteration).subscribe(
+      this.defaultLookupsService.getVacationTypes(filteration).subscribe(
         {
           next: data => {
-            this.plansIsExport = [];
+            this.lookupsIsExport = [];
 
             data.data.forEach((plan: any) => {
-              this.plansIsExport.push({
+              this.lookupsIsExport.push({
                 id: plan.id,
                 code: plan.code,
                 name: plan.name,
-                employeeCost: plan.employeeCost,
-                isTrial: plan.isTrial,
+        
                 isActive: plan.isActive
   
               })
             });
-            let formatTable = this.plansIsExport.map(plan => {
+            let formatTable = this.lookupsIsExport.map(plan => {
       
               return {
                 code: plan.code,
                 name: plan.name,
-                employeeCost: plan.employeeCost,
-                isTrial: plan.isTrial,
                 isActive: plan.isActive ? 'نشط' : 'غير نشط'
               }
             })
@@ -253,40 +240,22 @@ export class PlansComponent {
       PageNumber: 0,
       PagingEnabled: true
     };
-    this.getPlans(this.filteration);
+    this.getLookups(this.filteration);
   }
-  getInformation() {
-    this.spinnerCards = true;
-    this.plansService.getInformation().subscribe({
-      next: data => {
-        
-        this.cards = {
-          ...data
-        };
-        this.spinnerCards = false;
 
-      },
-      error: err => {
-        this.spinnerCards = false;
-
-      }
-    })
-  }
-  getPlans(filteration: any) {
-    this.plans = [];
+  getLookups(filteration: any) {
+    this.lookups = [];
     this.isLoading = true;
-    this.plansService.getPlans(filteration).subscribe(
+    this.defaultLookupsService.getVacationTypes(filteration).subscribe(
       {
         next: data => {
-          data.data.forEach((plan: any) => {
+          data.data.forEach((lookup: any) => {
             
-            this.plans.push({
-              id: plan.id,
-              code: plan.code,
-              name: plan.name,
-              employeeCost: plan.employeeCost,
-              isTrial: plan.isTrial,
-              isActive: plan.isActive
+            this.lookups.push({
+              id: lookup.id,
+              code: lookup.code,
+              name: lookup.name,
+              isActive: lookup.isActive
 
             })
           });
@@ -314,14 +283,14 @@ export class PlansComponent {
   }
   numberOfRowsPerPage(data: any) {
     this.filteration = { ...this.filteration, PageSize: data.value.code };
-    this.getPlans(this.filteration)
+    this.getLookups(this.filteration)
   }
   sendRequest(data: any) {
 
-    this.plansService.accept({ responsibilityId: data.id }).subscribe(
+    this.defaultLookupsService.acceptVacationType({ vacationTypeId: data.id }).subscribe(
       {
         next: res => {
-          this.getPlans(this.filteration);
+          this.getLookups(this.filteration);
           const succressDialog = this.dialog.open(ToastSuccessComponent, {
             width: "30vw",
             data: {
@@ -352,7 +321,7 @@ export class PlansComponent {
     let reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
         width: "30vw",
         data: {
-          title: "هل متأكد من حذف الخطه؟",
+          title: "هل متأكد من حذف الأجازة الأفتراضية؟",
           message: "برجاء توضيح السبب إن أمكن",
           titleClose: "تراجع",
           buttonSend: "حذف"
@@ -363,12 +332,12 @@ export class PlansComponent {
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
-      this.plansService.deletePlan({ planid: data.id }).subscribe({
+      this.defaultLookupsService.deleteVacationType({ vacationTypeId: data.id }).subscribe({
         next: res => {
           this.toast.success(res.message);
           reasonOfRefuseDialog.componentInstance.submitted = true;
           reasonOfRefuseDialog.close();
-          this.getPlans(this.filteration);
+          this.getLookups(this.filteration);
         },
         error: err => {
           reasonOfRefuseDialog.componentInstance.submitted = true;
@@ -382,46 +351,40 @@ export class PlansComponent {
   }
 
 
-  requestPlan() {
-    const dialogRefAddCurrency = this.dialog.open(AddPlanComponent, {
+  requestLookup() {
+    const dialogRefAddCurrency = this.dialog.open(AddLookupComponent, {
       width: "50vw",
       data: {
-        title: "إضافة خطه",
+        title: "إضافة أجازة أفتراضية",
+        label:"إسم الاجازة",
         setAsNecessary: "تعيين كنشط",
         titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend:"إضافة خطه",
+        buttonSend:"إضافة",
         titleClose: "تراجع"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editPlane = false;
+    dialogRefAddCurrency.componentInstance.editLookup = false;
+
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
-      formData.AllScreensAvailable = result.AllScreensAvailable;
-      if(!formData.AllScreensAvailable) {
-        formData.ScreensIds = result.ScreensIds.map(screen => screen.id);
-      }
+ 
       formData.NameTranslations = result.NameTranslations.map(translate => {
         return {
           LanguageId: translate.LanguageId.id, 
           Name: translate.name
         }
       })
-      formData.MinNumberOfEmployees = result.MinNumberOfEmployees;
 
-      formData.MaxNumberOfEmployees = result.MaxNumberOfEmployees;
 
-      formData.IsActive = result.IsActive;
-      formData.IsTrial = result.IsTrial;
-      formData.EmployeeCost = result.EmployeeCost;
-      formData.Notes = result.Notes;
+      formData.isActive = result.IsActive;
 
       dialogRefAddCurrency.componentInstance.submitted = false;
 
-      this.plansService.createPlane(formData).subscribe(
+      this.defaultLookupsService.createVacationType(formData).subscribe(
         {
           next: (data: any) => {
 
@@ -435,11 +398,11 @@ export class PlansComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الخطط"
+                buttonSend: "طلبات الأجازات الأفتراضية"
 
               },
             });
-            this.getPlans(this.filteration);
+            this.getLookups(this.filteration);
 
             setTimeout(() => {
               succressDialog.close();
@@ -466,51 +429,42 @@ export class PlansComponent {
       }
     });
   }
-  editPlan(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddPlanComponent, {
+  editLookup(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(AddLookupComponent, {
       width: "50vw",
 
       data: {
-        title: "تعديل الخطة",
+        title: "تعديل الأجازة الأفتراضية",
+        label:"إسم الاجازة",
         setAsNecessary: "تعيين كنشط",
         titleVacationTypeId: "نوع الاستئذانات <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
         placeholdeName: "برجاء ادخال الأسم",
         validationtitleName: "الأسم مطلوب",
-        buttonSend:"تعديل خطه",
+        buttonSend:"تعديل",
       titleClose: "تراجع"
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editPlane = true;
+    dialogRefAddCurrency.componentInstance.editLookup = true;
+    dialogRefAddCurrency.componentInstance.typeGetById = 0;
     dialogRefAddCurrency.componentInstance.id = data.id;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
       
-      formData.Id = data.id;
-      formData.NameTranslations = result.NameTranslations.map(translate => {
+      formData.id = data.id;
+      formData.nameTranslations = result.NameTranslations.map(translate => {
         return {
           Id:translate.id,
           LanguageId: translate.LanguageId.id, 
           Name: translate.name
         }
       })
-      formData.MinNumberOfEmployees = result.MinNumberOfEmployees;
 
-      formData.MaxNumberOfEmployees = result.MaxNumberOfEmployees;
-
-      formData.IsActive = result.IsActive;
-      formData.IsTrial = result.IsTrial;
-      formData.EmployeeCost = result.EmployeeCost;
-      formData.Notes = result.Notes;
-
-
-
-
+      formData.isActive = result.IsActive;
       dialogRefAddCurrency.componentInstance.submitted = false;
-
-      this.plansService.updatePlane(formData).subscribe(
+      this.defaultLookupsService.updateVacationType(formData).subscribe(
         {
           next: (data: any) => {
 
@@ -524,11 +478,11 @@ export class PlansComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات المسؤوليات"
+                buttonSend: "طلبات الأجازات الأفتراضية"
 
               },
             });
-            this.getPlans(this.filteration);
+            this.getLookups(this.filteration);
 
             setTimeout(() => {
               succressDialog.close();
@@ -556,19 +510,24 @@ export class PlansComponent {
   }
 
 
-  dialogPlanFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogPlanInfoComponent, {
+  dialogLookupFile(data: any) {
+    const dialogRefAddCurrency = this.dialog.open(LookupFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف الخطة"
+        title: "ملف الأجازه الافتراضية",
+        codeLabel:"كود الأجازات الأفتراضية ",
+        translationsLabel:"أسماء الأجازات الأفتراضية",
+        nameLabel:"أسم الأجازة الأفتراضية "
       },
     });
-    dialogRefAddCurrency.componentInstance.id = data.id
+    dialogRefAddCurrency.componentInstance.id = data.id;
+    dialogRefAddCurrency.componentInstance.infoType =0;
+
 
   }
   onPageChange(event: any) {
     this.filteration = { ...this.filteration, PageNumber: event.page };
-    this.getPlans(this.filteration)
+    this.getLookups(this.filteration)
   }
   minimumValidator(conInput: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
@@ -608,7 +567,7 @@ export class PlansComponent {
 
     this.filteration.page = even;
     let filteration = { ...this.filteration, page: even - 1 };
-    this.getPlans(filteration)
+    this.getLookups(filteration)
 
   }
   changeLang(lang: string) {

@@ -9,7 +9,104 @@
       <nz-sider>
         <div class="list-content" *ngIf="menuItems?.length > 0">
             <ng-container *ngTemplateOutlet="recursiveTemplates; context: { $implicit: menuItems }"></ng-container>
+            <mat-expansion-panel class="mat-elevation-z0"
+            (opened)="isSidebarExpanded = true"
+                         (closed)="isSidebarExpanded = false">
+              <mat-expansion-panel-header>
+                <i class="pi pi-flag"></i>
+                <span class="label text-sidebar" [ngClass]="{ hidden: !isSidebarExpanded }">
+                  التعريفات الافتراضية
+                </span>
+              </mat-expansion-panel-header>
+              <mat-nav-list>
+                <ul nz-menu nzMode="inline">
+                  <mat-list-item  class="side-nav-item" routerLink="vacationTypesDefault/30">
+                    <ul nz-menu nzMode="inline">
+                      <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                        <span nz-icon></span>
+                        <i class="pi pi-flag"></i>
+                        <span class="text-sidebar">انواع الأجازات الأفتراضية</span>
+                      </li>  
+                    </ul>
+                  </mat-list-item>
+                  <!-- <mat-list-item  class="side-nav-item" routerLink="jobTitlesDefault/31">
+                    <ul nz-menu nzMode="inline">
+                      <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                        <span nz-icon></span>
+                        <i class="pi pi-flag"></i>
+                        <span class="text-sidebar">مسميات الوظيفية الأفتراضية</span>
+                      </li>  
+                    </ul>
+                  </mat-list-item>
+                  <mat-list-item  class="side-nav-item" routerLink="departmentsDefault/32">
+                    <ul nz-menu nzMode="inline">
+                      <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                        <span nz-icon></span>
+                        <i class="pi pi-flag"></i>
+                        <span class="text-sidebar">الأقسام الأفتراضية </span>
+                      </li>  
+                    </ul>
+                  </mat-list-item>
+                  <mat-list-item  class="side-nav-item" routerLink="officialHolidayDefault/33">
+                    <ul nz-menu nzMode="inline">
+                      <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                        <span nz-icon></span>
+                        <i class="pi pi-flag"></i>
+                        <span class="text-sidebar">الأجازات الرسمية الأفتراضية</span>
+                      </li>  
+                    </ul>
+                  </mat-list-item> -->
 
+
+<!--                   
+                  <mat-list-item  class="side-nav-item" routerLink="taskTypeDefault/34">
+                    <ul nz-menu nzMode="inline">
+                      <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                        <span nz-icon></span>
+                        <i class="pi pi-flag"></i>
+                        <span class="text-sidebar">انواع المهام الأفتراضية</span>
+                      </li>  
+                    </ul>
+                  </mat-list-item>
+                  <mat-list-item  class="side-nav-item" routerLink="permissionTypeDefault/35">
+                    <ul nz-menu nzMode="inline">
+                      <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                        <span nz-icon></span>
+                        <i class="pi pi-flag"></i>
+                        <span class="text-sidebar">انواع الاذونات الأفتراضية</span>
+                      </li>  
+                    </ul>
+                  </mat-list-item>
+                  <mat-list-item  class="side-nav-item" routerLink="justificationTypeDefault/36">
+                    <ul nz-menu nzMode="inline">
+                      <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                        <span nz-icon></span>
+                        <i class="pi pi-flag"></i>
+                        <span class="text-sidebar">انواع التبريرات الأفتراضية</span>
+                      </li>  
+                    </ul>
+                  </mat-list-item>
+                  <mat-list-item  class="side-nav-item" routerLink="shiftTypeDefault/37">
+                    <ul nz-menu nzMode="inline">
+                      <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                        <span nz-icon></span>
+                        <i class="pi pi-flag"></i>
+                        <span class="text-sidebar">انواع الورديات الأفتراضية</span>
+                      </li>  
+                    </ul>
+                  </mat-list-item>
+                  <mat-list-item  class="side-nav-item" routerLink="penaltiesDefault/37">
+                    <ul nz-menu nzMode="inline">
+                      <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                        <span nz-icon></span>
+                        <i class="pi pi-flag"></i>
+                        <span class="text-sidebar">انواع الجزيئات الأفتراضية</span>
+                      </li>  
+                    </ul>
+                  </mat-list-item> -->
+                  </ul>
+              </mat-nav-list>
+            </mat-expansion-panel>
         </div>
       </nz-sider>
 

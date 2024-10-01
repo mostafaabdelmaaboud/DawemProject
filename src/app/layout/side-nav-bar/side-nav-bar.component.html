@@ -10,6 +10,7 @@
         <nz-sider>
           <div class="list-content" *ngIf="menuItems?.length > 0">
               <ng-container *ngTemplateOutlet="recursiveTemplates; context: { $implicit: menuItems }"></ng-container>
+   
               <mat-expansion-panel class="mat-elevation-z0"
               (opened)="isSidebarExpanded = true"
                            (closed)="isSidebarExpanded = false">
@@ -23,15 +24,6 @@
                 </mat-expansion-panel-header>
                 <mat-nav-list>
                   <ul nz-menu nzMode="inline">
-                    <!-- <mat-list-item  class="side-nav-item" routerLink="basicDataReports/305">
-                      <ul nz-menu nzMode="inline">
-                        <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                          <span nz-icon></span>
-                          <i class="pi pi-flag"></i>
-                          <span class="text-sidebar">تقارير البيانات الأساسية</span>
-                        </li>  
-                      </ul>
-                    </mat-list-item> -->
                     <mat-expansion-panel class="mat-elevation-z0"
                     (opened)="isSidebarExpanded = true"
                                  (closed)="isSidebarExpanded = false">

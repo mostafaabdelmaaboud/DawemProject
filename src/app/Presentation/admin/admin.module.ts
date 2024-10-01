@@ -53,6 +53,7 @@ const routes: Routes = [
         loadChildren: () => import('./user-permissions/user-permissions.module').then((m) => m.UserPermissionsModule),
         canActivate: [PermissionAminGuard]
       },
+      
       {
         path: "plans/:id",
         loadChildren: () => import('./plans/plans.module').then((m) => m.PlansModule),
@@ -93,6 +94,26 @@ const routes: Routes = [
         path: "ScreenGroup/:id",
         loadChildren: () => import('./screen-groups/screen-groups.module').then((m) => m.ScreenGroupsModule),
         canActivate: [PermissionAminGuard]
+      },
+      {
+        path: "vacationTypesDefault/:id",
+        loadChildren: () => import('./defaultLookups/vacation-type-default/vacation-type-default.module').then((m) => m.VacationTypeDefaultModule),
+        // canActivate: [PermissionAminGuard]
+      },
+      {
+        path: "jobTitlesDefault/:id",
+        loadChildren: () => import('./defaultLookups/job-titles-default/job-titles-default.module').then((m) => m.JobTitlesDefaultModule),
+        // canActivate: [PermissionAminGuard]
+      },
+      {
+        path: "departmentsDefault/:id",
+        loadChildren: () => import('./defaultLookups/departments-default/departments-default.module').then((m) => m.DepartmentsDefaultModule),
+        // canActivate: [PermissionAminGuard]
+      },
+      {
+        path: "officialHolidayDefault/:id",
+        loadChildren: () => import('./defaultLookups/official-holiday-default/official-holiday-default.module').then((m) => m.OfficialHolidayDefaultModule),
+        // canActivate: [PermissionAminGuard]
       },
       
       
