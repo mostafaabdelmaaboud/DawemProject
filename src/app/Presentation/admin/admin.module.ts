@@ -125,8 +125,21 @@ const routes: Routes = [
         loadChildren: () => import('./defaultLookups/permission-type-default/permission-type-default.module').then((m) => m.PermissionTypeDefaultModule),
         // canActivate: [PermissionAminGuard]
       },
-      
-      
+      {
+        path: "justificationTypeDefault/:id",
+        loadChildren: () => import('./defaultLookups/justification-type-default/justification-type-default.module').then((m) => m.JustificationTypeDefaultModule),
+        // canActivate: [PermissionAminGuard]
+      },
+      {
+        path: "shiftTypeDefault/:id",
+        loadChildren: () => import('./defaultLookups/shift-type-default/shift-type-default.module').then((m) => m.ShiftTypeDefaultModule),
+        // canActivate: [PermissionAminGuard]
+      },  
+      {
+        path: "penaltiesDefault/:id",
+        loadChildren: () => import('./defaultLookups/penalties-default/penalties-default.module').then((m) => m.PenaltiesDefaultModule),
+        // canActivate: [PermissionAminGuard]
+      },
     ]
   }
 ];
