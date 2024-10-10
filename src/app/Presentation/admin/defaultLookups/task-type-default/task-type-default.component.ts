@@ -19,11 +19,11 @@ import { AddLookupComponent } from '../dialogs/add-lookup/add-lookup.component';
 import { LookupFileComponent } from '../dialogs/lookup-file/lookup-file.component';
 
 @Component({
-  selector: 'app-vacation-type-default',
-  templateUrl: './vacation-type-default.component.html',
-  styleUrls: ['./vacation-type-default.component.scss']
+  selector: 'app-task-type-default',
+  templateUrl: './task-type-default.component.html',
+  styleUrls: ['./task-type-default.component.scss']
 })
-export class VacationTypeDefaultComponent {
+export class TaskTypeDefaultComponent {
   date!: Date;
   arabic: any;
   subscription!: Subscription;
@@ -33,11 +33,11 @@ export class VacationTypeDefaultComponent {
 
   columns: any[] = [
     {
-      name: "كود الأجازة الأفتراضيه",
+      name: "كود المهام",
       field: "code",
     },
     {
-      name: "اسم الأجازة الأفتراضية",
+      name: "اسم المهام",
       field: "name",
     },
     {
@@ -166,7 +166,7 @@ export class VacationTypeDefaultComponent {
       decimalseparator: '.',
       showLabels: true, 
       showTitle: true,
-      title: 'انواع الأجازات الأفتراضية',
+      title: 'المهام الأفتراضية',
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
@@ -175,7 +175,7 @@ export class VacationTypeDefaultComponent {
       this.isLoading = true;
       let filteration = {...this.filteration, isExport:true};
    
-      this.defaultLookupsService.getVacationTypes(filteration).subscribe(
+      this.defaultLookupsService.getTaskType(filteration).subscribe(
         {
           next: data => {
             this.lookupsIsExport = [];
@@ -246,7 +246,7 @@ export class VacationTypeDefaultComponent {
   getLookups(filteration: any) {
     this.lookups = [];
     this.isLoading = true;
-    this.defaultLookupsService.getVacationTypes(filteration).subscribe(
+    this.defaultLookupsService.getTaskType(filteration).subscribe(
       {
         next: data => {
           data.data.forEach((lookup: any) => {
@@ -287,7 +287,7 @@ export class VacationTypeDefaultComponent {
   }
   sendRequest(data: any) {
 
-    this.defaultLookupsService.acceptVacationType({ vacationTypeId: data.id }).subscribe(
+    this.defaultLookupsService.acceptTaskType({ TaskTypeId: data.id }).subscribe(
       {
         next: res => {
           this.getLookups(this.filteration);
@@ -321,7 +321,7 @@ export class VacationTypeDefaultComponent {
     let reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
         width: "30vw",
         data: {
-          title: "هل متأكد من حذف الأجازة الأفتراضية؟",
+          title: "هل متأكد من حذف المهام؟",
           message: "برجاء توضيح السبب إن أمكن",
           titleClose: "تراجع",
           buttonSend: "حذف"
@@ -332,7 +332,7 @@ export class VacationTypeDefaultComponent {
     reasonOfRefuseDialog.componentInstance.submitted = true;
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
-      this.defaultLookupsService.deleteVacationType({ vacationTypeId: data.id }).subscribe({
+      this.defaultLookupsService.deleteTaskType({ TaskTypeId: data.id }).subscribe({
         next: res => {
           this.toast.success(res.message);
           reasonOfRefuseDialog.componentInstance.submitted = true;
@@ -355,8 +355,8 @@ export class VacationTypeDefaultComponent {
     const dialogRefAddCurrency = this.dialog.open(AddLookupComponent, {
       width: "50vw",
       data: {
-        title: "إضافة أجازة أفتراضية",
-        label:"إسم الاجازة",
+        title: "إضافة مهام",
+        label:"إسم المهام",
         setAsNecessary: "تعيين كنشط",
         titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
@@ -384,7 +384,7 @@ export class VacationTypeDefaultComponent {
 
       dialogRefAddCurrency.componentInstance.submitted = false;
 
-      this.defaultLookupsService.createVacationType(formData).subscribe(
+      this.defaultLookupsService.createTaskType(formData).subscribe(
         {
           next: (data: any) => {
 
@@ -398,7 +398,7 @@ export class VacationTypeDefaultComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الأجازات الأفتراضية"
+                buttonSend: "طلبات المهام"
 
               },
             });
@@ -432,10 +432,10 @@ export class VacationTypeDefaultComponent {
   editLookup(data: any) {
     const dialogRefAddCurrency = this.dialog.open(AddLookupComponent, {
       width: "50vw",
-
+     
       data: {
-        title: "تعديل الأجازة الأفتراضية",
-        label:"إسم الاجازة",
+        title: "تعديل المهام ",
+        label:"إسم المهام",
         setAsNecessary: "تعيين كنشط",
         titleVacationTypeId: "نوع الاستئذانات <span class='color-red'>*</span>",
         titleName: "الأسم<span class='color-red'>*</span>",
@@ -447,7 +447,7 @@ export class VacationTypeDefaultComponent {
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editLookup = true;
-    dialogRefAddCurrency.componentInstance.typeGetById = 0;
+    dialogRefAddCurrency.componentInstance.typeGetById = 4;
     dialogRefAddCurrency.componentInstance.id = data.id;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
@@ -464,7 +464,7 @@ export class VacationTypeDefaultComponent {
 
       formData.isActive = result.IsActive;
       dialogRefAddCurrency.componentInstance.submitted = false;
-      this.defaultLookupsService.updateVacationType(formData).subscribe(
+      this.defaultLookupsService.updateTaskType(formData).subscribe(
         {
           next: (data: any) => {
 
@@ -478,7 +478,7 @@ export class VacationTypeDefaultComponent {
               data: {
                 title: "تم ارسال طلبك",
                 message: data.message,
-                buttonSend: "طلبات الأجازات الأفتراضية"
+                buttonSend: "طلبات المهام"
 
               },
             });
@@ -514,14 +514,14 @@ export class VacationTypeDefaultComponent {
     const dialogRefAddCurrency = this.dialog.open(LookupFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف الأجازه الافتراضية",
-        codeLabel:"كود الأجازات الأفتراضية ",
-        translationsLabel:"أسماء الأجازات الأفتراضية",
-        nameLabel:"أسم الأجازة الأفتراضية "
+        title: "ملف المهام",
+        codeLabel:"كود المهام ",
+        translationsLabel:"أسماء المهام",
+        nameLabel:"أسم المهام "
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id;
-    dialogRefAddCurrency.componentInstance.infoType =0;
+    dialogRefAddCurrency.componentInstance.infoType =4;
 
 
   }

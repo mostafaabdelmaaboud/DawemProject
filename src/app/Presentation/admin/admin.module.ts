@@ -115,6 +115,16 @@ const routes: Routes = [
         loadChildren: () => import('./defaultLookups/official-holiday-default/official-holiday-default.module').then((m) => m.OfficialHolidayDefaultModule),
         // canActivate: [PermissionAminGuard]
       },
+      {
+        path: "taskTypeDefault/:id",
+        loadChildren: () => import('./defaultLookups/task-type-default/task-type-default.module').then((m) => m.TaskTypeDefaultModule),
+        // canActivate: [PermissionAminGuard]
+      },
+      {
+        path: "permissionTypeDefault/:id",
+        loadChildren: () => import('./defaultLookups/permission-type-default/permission-type-default.module').then((m) => m.PermissionTypeDefaultModule),
+        // canActivate: [PermissionAminGuard]
+      },
       
       
     ]

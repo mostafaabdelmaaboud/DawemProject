@@ -166,7 +166,7 @@ export class OfficialHolidayDefaultComponent {
       decimalseparator: '.',
       showLabels: true, 
       showTitle: true,
-      title: 'المسميات الوظيفية',
+      title: 'الأجازات الرسمية الأفتراضية',
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
