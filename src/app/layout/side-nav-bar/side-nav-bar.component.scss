@@ -15,12 +15,13 @@ mat-sidenav {
   overflow-x: hidden !important;
 }
 
+
 .text-sidebar {
   width: 88%;
   white-space: break-spaces;
 }
 :host ::ng-deep .mdc-list-item.mdc-list-item--with-one-line {
-  height: 45px !important;
+  height: initial !important;
 }
 :host ::ng-deep .mdc-list-item.mdc-list-item--with-one-line {
   cursor: pointer;
@@ -346,7 +347,9 @@ button:focus {
 .ant-menu-inline.ant-menu-root .ant-menu-item,
 .ant-menu-inline.ant-menu-root .ant-menu-submenu-title {
 
-  height: 3.5em;
+  height: initial;
+  padding-bottom: 5px;
+  padding-top: 5px;
 }
 
 .logo {

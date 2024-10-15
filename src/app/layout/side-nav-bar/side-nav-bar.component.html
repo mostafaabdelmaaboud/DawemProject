@@ -10,7 +10,7 @@
         <nz-sider>
           <div class="list-content" *ngIf="menuItems?.length > 0">
               <ng-container *ngTemplateOutlet="recursiveTemplates; context: { $implicit: menuItems }"></ng-container>
-   
+<!--    
               <mat-expansion-panel class="mat-elevation-z0"
               (opened)="isSidebarExpanded = true"
                            (closed)="isSidebarExpanded = false">
@@ -372,81 +372,11 @@
                         </ul>
                       </mat-nav-list>
                     </mat-expansion-panel>
-                    <!-- <mat-list-item  class="side-nav-item" routerLink="recallReports/301">
-                      <ul nz-menu nzMode="inline">
-                        <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                          <span nz-icon></span>
-                          <i class="pi pi-flag"></i>
-                          <span class="text-sidebar">تقارير الاستدعاءات</span>
-                        </li>  
-                      </ul>
-                    </mat-list-item>
-                    <mat-list-item  class="side-nav-item" routerLink="statisticsReports/300">
-                      <ul nz-menu nzMode="inline">
-                        <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                          <span nz-icon></span>
-                          <i class="pi pi-flag"></i>
-                          <span class="text-sidebar">تقارير الاحصائيات</span>
-                        </li>  
-                      </ul>
-                    </mat-list-item> -->
-                    <!-- <mat-list-item  class="side-nav-item" routerLink="delayReports/304">
-                      <ul nz-menu nzMode="inline">
-                        <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                          <span nz-icon></span>
-                          <i class="pi pi-flag"></i>
-                          <span class="text-sidebar">تقارير التأخير</span>
-                        </li>  
-                      </ul>
-                    </mat-list-item> -->
-                    <!-- <mat-list-item  class="side-nav-item"  routerLink="absenceReports/303">
-                      <ul nz-menu nzMode="inline">
-                        <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                          <span nz-icon></span>
-                          <i class="pi pi-flag"></i>
-                          <span class="text-sidebar">تقارير الغياب</span>
-                        </li>  
-                      </ul>
-                    </mat-list-item> -->
-                      <!-- <mat-expansion-panel class="mat-elevation-z0"
-                      (opened)="isSidebarExpanded = true"
-                                   (closed)="isSidebarExpanded = false">
-                        <mat-expansion-panel-header>
-                          <i class="pi pi-flag"></i>
-        
-                          <span class="label text-sidebar" [ngClass]="{ hidden: !isSidebarExpanded }">
-                          
-                            تقارير الغياب
-                          </span>
-                        </mat-expansion-panel-header>
-                        <mat-nav-list>
-                          <ul nz-menu nzMode="inline">
-                            <mat-list-item  class="side-nav-item"  routerLink="absenceReports/303">
-                              <ul nz-menu nzMode="inline">
-                                <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                  <span nz-icon></span>
-                                  <i class="pi pi-flag"></i>
-                                  <span class="text-sidebar"> الغياب</span>
-                                </li>  
-                              </ul>
-                            </mat-list-item>
-                          </ul>
-                        </mat-nav-list>
-                      </mat-expansion-panel> -->
-                  
-                    <!-- <mat-list-item  class="side-nav-item"  routerLink="overtimeReports/302">
-                      <ul nz-menu nzMode="inline">
-                        <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                          <span nz-icon></span>
-                          <i class="pi pi-flag"></i>
-                          <span class="text-sidebar">تقارير الوقت الإضافي</span>
-                        </li>  
-                      </ul>
-                    </mat-list-item> -->
+
                  
                     </ul>
                 </mat-nav-list>
-              </mat-expansion-panel>
+              </mat-expansion-panel> -->
           </div>
         </nz-sider>
 
