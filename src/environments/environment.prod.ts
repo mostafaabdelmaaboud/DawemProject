@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  baseUrl: "https://stageapi.dawem.app/api/",
+  baseUrl: "https://proapi.dawem.app/api/",
   firebase:{
     apiKey: "AIzaSyCNr7nAJOZJW0YDBTanTXnH_xVnlnMDAPI",
     authDomain: "dawem-5361a.firebaseapp.com",

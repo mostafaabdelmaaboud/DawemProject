@@ -396,7 +396,7 @@ export class SubscriptionsPaymentsComponent {
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
 
       let formData: any = {};
-      formData.IsActive = result.IsActive;
+      formData.IsActive = result.isActive;
       formData.SubscriptionId = result.SubscriptionId ? result.SubscriptionId.key : null;
       formData.Date = moment(new Date(result.Date)).format("YYYY-MM-DD");
       formData.Notes = result.notes;
@@ -466,7 +466,7 @@ export class SubscriptionsPaymentsComponent {
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
       formData.id = data.id;
-      formData.IsActive = result.IsActive;
+      formData.IsActive = result.isActive;
       formData.SubscriptionId = result.SubscriptionId ? result.SubscriptionId.key : null;
       formData.Date = moment(new Date(result.Date)).format("YYYY-MM-DD");
       formData.Notes = result.notes;

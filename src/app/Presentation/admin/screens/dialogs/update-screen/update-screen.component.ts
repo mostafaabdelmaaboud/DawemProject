@@ -344,6 +344,26 @@ export class UpdateScreenComponent {
           }
         }
         break
+        case 'ParentId':
+          if (data.value || data.value === "") {
+            if (data.value !== this.lastSearchQuery || data.value === "") {
+              this.lastSearchQuery = data.value;
+              this.screensService.screenGroupGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).subscribe({
+                next:data => {
+                  this.listParent = [];
+                  data.forEach((screen: any) => {
+                    this.listParent.push({ name: screen.name, id: screen.id });
+                  });
+                },
+                error:err => {
+        
+                }
+              })
+    
+            }
+          }
+          break
+        
       default:
         break;
     }

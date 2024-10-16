@@ -98,15 +98,17 @@ export class AddPlanComponent {
     this.loading = true;
     this.addBranchGroupForm.get("AllScreensAvailable")?.valueChanges.subscribe(data => {
       if(!data) {
-        this.addBranchGroupForm.addControl("ScreensIds", this.fb.control("", Validators.required))
-
+        this.addBranchGroupForm.addControl("ScreensIds", this.fb.control("", Validators.required));
+        this.plansService.screenGetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe(dataDropdown => {
+          this.listAllScreensAvailable = [];
+          dataDropdown?.forEach((list: any) => {
+            this.listAllScreensAvailable.push({ name: list.name, key: list.id });
+          });
+        });
         this.showAllScreensAvailable = true;
-
       } else {
-
         this.showAllScreensAvailable = false;
         this.addBranchGroupForm.removeControl("ScreensIds")
-
       }
     })
     if (this.editPlane) {

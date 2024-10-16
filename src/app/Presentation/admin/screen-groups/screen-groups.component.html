@@ -129,7 +129,7 @@
   
               <span>تصفية النتائج</span>
             </button>
-            <button (click)="exportTableToPDF()" class="btn btn-outline-green action-button-t d-flex align-items-center">
+            <!-- <button (click)="exportTableToPDF()" class="btn btn-outline-green action-button-t d-flex align-items-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-pdf"
                 viewBox="0 0 16 16">
                 <path
@@ -139,7 +139,7 @@
               </svg>
         
               <span class="me-1">PDF</span>
-            </button>
+            </button> -->
             <button (click)="exportTableToExcel()"
               class="btn btn-outline-green action-button-t d-flex align-items-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -163,13 +163,7 @@
                   </button>
                 </header>
                 <form [formGroup]="filterForm" class="formFilteration">
-                  <div class="sectionFive mb-3">
-                    <label for="" class="label-input mb-2">الكود</label>
-                    <div class="content-password">
-                      <input type="number" formControlName="code" pInputText placeholder="الكود" class="w-100" />
-                    </div>
-        
-                  </div>
+               
                   <div class="sectionFive mb-3">
                     <label for="" class="label-input mb-2">بحث</label>
                     <div class="content-password">
@@ -276,7 +270,7 @@
                 <button type="button" *ngIf="showActions({actionCode:3})"
                   class="btn btn-outline-secondary action-close color-blue" (click)="dialogScreenFile(rowData)"><i
                     class="bi bi-person-vcard"></i></button>
-                    <ng-container *ngIf="showActions({actionCode:4}) && !rowData.isActive">
+                    <ng-container *ngIf="showActions({actionCode:6}) && !rowData.isActive">
                         <button type="button" (click)="sendRequest(rowData)"
                           class="btn btn-outline-secondary action-accept color-green"><i
                             class="bi bi-check-circle"></i></button>

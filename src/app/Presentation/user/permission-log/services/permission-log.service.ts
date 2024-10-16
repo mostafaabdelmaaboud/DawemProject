@@ -74,7 +74,7 @@ export class PermissionLogService {
         }
       })
     }
-    return this.http.get<any>(`${environment.baseUrl}Permission/GetAllActions`)
+    return this.http.get<any>(`${environment.baseUrl}Permission/GetAllActions`, { params: queryParams })
   }
   GetForDropDown(params: any) {
     let queryParams = new HttpParams();

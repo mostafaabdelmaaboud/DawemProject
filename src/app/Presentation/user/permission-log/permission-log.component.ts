@@ -239,6 +239,7 @@ export class PermissionLogComponent {
         break;
       case 'ActionCode':
         if (data || data === "") {
+          debugger;
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.permissionLogService.actionCodeForDropdown({PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(

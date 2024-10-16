@@ -49,7 +49,7 @@ export class PlansService {
         queryParams = queryParams.set(key, value);
       })
     }
-    return this.http.put<any>(`${environment.baseUrl}adminpanel/Responsibility/enable`, {}, { params: queryParams })
+    return this.http.put<any>(`${environment.baseUrl}adminpanel/Plan/enable`, {}, { params: queryParams })
 
   }
   planeInfo(params: any) {

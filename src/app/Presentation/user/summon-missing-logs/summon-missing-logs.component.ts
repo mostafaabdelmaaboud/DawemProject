@@ -319,20 +319,25 @@ export class SummonMissingLogsComponent {
     //     }
     //   }
     // });
+ 
+    debugger;
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
      if (key === "SummonDate") {
-        if (value != "") {
+        if (value != "" && value !=  null) {
           this.filteration[key] = moment(value).format("MM-DD-YYYY")
         }
       } else {
         if (typeof value  === 'string') {
-          if(value != "") {
+          if(value != "" && value !=  null) {
             this.filteration[key] = value.trim();
           }
         } else {
-          if(value >=0) {
-            this.filteration[key] = value;
+          if(value !=  null) {
+            if(value >=0) {
+              this.filteration[key] = value;
+            }
           }
+      
         }
       }
     });

@@ -95,6 +95,7 @@ export class UpdateScreenGroupsComponent {
  
     this.addBranchGroupForm.get("AuthenticationType")?.valueChanges.subscribe(data => {
       if(data != null) {
+        if(!this.editScreen)
         this.screenGroupsService.screenGroupGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0, LocalAuthenticationType:data }).subscribe({
           next:data => {
             this.listParent = [];
@@ -169,7 +170,7 @@ export class UpdateScreenGroupsComponent {
 
           if(ScreenGetById.parentId != null) {
             this.screenGroupsService.screenGroupGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0,LocalAuthenticationType:ScreenGetById.authenticationType, id: ScreenGetById.parentId }).subscribe(dataDropdown => {
-              
+              debugger;
               this.listParent = [];
               dataDropdown?.forEach((screen: any) => {
                 this.listParent.push({ name: screen.name, key: screen.id });
@@ -184,7 +185,8 @@ export class UpdateScreenGroupsComponent {
 
           } else {
             this.screenGroupsService.screenGroupGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0,LocalAuthenticationType:ScreenGetById.authenticationType }).subscribe(dataDropdown => {
-              
+              debugger;
+
               this.listParent = [];
               dataDropdown?.forEach((screen: any) => {
                 this.listParent.push({ name: screen.name, key: screen.id });
@@ -349,6 +351,25 @@ export class UpdateScreenGroupsComponent {
           }
         }
         break
+        case 'ParentId':
+          if (data.value || data.value === "") {
+            if (data.value !== this.lastSearchQuery || data.value === "") {
+              this.lastSearchQuery = data.value;
+              this.screenGroupsService.screenGroupGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).subscribe({
+                next:data => {
+                  this.listParent = [];
+                  data.forEach((screen: any) => {
+                    this.listParent.push({ name: screen.name, id: screen.id });
+                  });
+                },
+                error:err => {
+        
+                }
+              })
+    
+            }
+          }
+          break
       default:
         break;
     }

@@ -139,9 +139,7 @@ export class ScreensComponent {
 
     }
     this.filterForm = this.fb.group({
-      FreeText: [""],
-      code: [""],
-
+      FreeText: [""]
     });
     this.categories.push({ name: "adasd", key: "adsas" });
     this.RowsPerPage = [
@@ -247,7 +245,6 @@ export class ScreensComponent {
   }
   resetFilteration() {
     this.filterForm.get("FreeText")?.setValue("");
-    this.filterForm.get("code")?.setValue("");
 
     this.filteration = {
       PageSize: 5,
