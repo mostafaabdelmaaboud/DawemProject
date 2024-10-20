@@ -396,6 +396,12 @@ const routes: Routes = [
         loadChildren: () => import('./baseData/components/schedule-plans-report/schedule-plans-report.module').then((m) => m.SchedulePlansReportModule),
         // canActivate: [PermissionGuard]
       },
+      {
+        path: "fingerprintDeviceManagement/:id",
+        loadChildren: () => import('./fingerprint-device-management/fingerprint-device-management.module').then((m) => m.FingerprintDeviceManagementModule),
+        // canActivate: [PermissionGuard]
+      },
+      
       
     ]
   }

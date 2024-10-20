@@ -170,7 +170,7 @@ export class UpdateScreenGroupsComponent {
 
           if(ScreenGetById.parentId != null) {
             this.screenGroupsService.screenGroupGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0,LocalAuthenticationType:ScreenGetById.authenticationType, id: ScreenGetById.parentId }).subscribe(dataDropdown => {
-              debugger;
+              
               this.listParent = [];
               dataDropdown?.forEach((screen: any) => {
                 this.listParent.push({ name: screen.name, key: screen.id });
@@ -185,7 +185,7 @@ export class UpdateScreenGroupsComponent {
 
           } else {
             this.screenGroupsService.screenGroupGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0,LocalAuthenticationType:ScreenGetById.authenticationType }).subscribe(dataDropdown => {
-              debugger;
+              
 
               this.listParent = [];
               dataDropdown?.forEach((screen: any) => {

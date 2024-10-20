@@ -1,0 +1,178 @@
+ <!-- Header Section -->
+ <header>
+    <h1>Fingerprint Device Management</h1>
+  </header>
+
+  <!-- Main Tab Navigation -->
+  <nav class="tabs">
+    <button class="tab-link active" (click)="openTab($event, 'DevicesOverview')">Devices Overview</button>
+    <button class="tab-link" (click)="openTab($event, 'DeviceDetails')">Device Details</button>
+    <button class="tab-link" (click)="openTab($event, 'Fingerprints')">Fingerprints</button>
+  </nav>
+
+  <!-- Main Tab Content -->
+
+  <!-- Devices Overview Section -->
+  <section id="DevicesOverview" class="tab-content" style="display: block;">
+    <!-- Sync Button -->
+    <div class="sync-section">
+      <button id="syncButton" class="btn btn-primary">Sync All Membership Fingerprint Users</button>
+    </div>
+
+    <!-- Filters Section -->
+    <section class="filters">
+      <input type="text" id="serialSearch" placeholder="Search by Serial Number">
+      <select id="statusFilter">
+        <option value="">All Statuses</option>
+        <option value="Active">Active</option>
+        <option value="New">New</option>
+      </select>
+      <select id="connectionFilter">
+        <option value="">All Connections</option>
+        <option value="Connected">Connected</option>
+        <option value="Disconnected">Disconnected</option>
+      </select>
+      <button id="applyFilters" class="btn">Apply Filters</button>
+      <button id="resetFilters" class="btn">Reset Filters</button>
+    </section>
+
+    <!-- Devices List Table -->
+    <table id="devicesTable">
+      <thead>
+        <tr>
+          <th>Serial Number</th>
+          <th>Branch</th>
+          <th>Timezone</th>
+          <th>Last Seen</th>
+          <th>Users</th>
+          <th>Status</th>
+          <th>Connection</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Device Rows will be generated dynamically -->
+      </tbody>
+    </table>
+
+    <!-- Devices Pagination -->
+    <div id="devicesPagination" class="pagination">
+      <!-- Pagination buttons will be generated dynamically -->
+    </div>
+  </section>
+
+  <!-- Device Details Section -->
+  <section id="DeviceDetails" class="tab-content">
+    <!-- Device Information Section -->
+    <section class="device-info">
+      <div class="device-details">
+        <div class="left-column">
+          <p><strong>Serial Number:</strong> <span id="detailSerialNumber"></span></p>
+          <p><strong>Branch:</strong> <span id="detailBranch"></span></p>
+          <p><strong>Firmware Version:</strong> 2.1.0</p>
+          <p><strong>Last Seen:</strong> <span id="detailLastSeen"></span></p>
+          <p><strong>Timezone:</strong> <span id="detailTimezone"></span></p>
+        </div>
+        <div class="right-column">
+          <p><strong>Users Count:</strong> <span id="detailUsersCount"></span></p>
+          <p><strong>Faces Count:</strong> 0</p>
+          <p><strong>Attendance Records:</strong> <span id="detailAttendanceRecords"></span></p>
+          <p><strong>Status:</strong> <span id="detailStatus"></span></p>
+          <p><strong>Connection:</strong> <span id="detailConnection"></span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Device Management Buttons -->
+    <section class="device-management">
+      <button class="btn" (click)="reloadSettings()">Reload Settings</button>
+      <button class="btn" (click)="unlockDoor()">Unlock Door</button>
+      <button class="btn" (click)="restartDevice()">Restart</button>
+    </section>
+
+    <!-- Users Section -->
+    <section class="users-section">
+      <!-- User Management Buttons -->
+      <div class="user-management">
+        <button class="btn" (click)="checkNewUsers()">Check New Users</button>
+        <button class="btn" (click)="downloadAllUsers()">Download All Users</button>
+        <button class="btn" (click)="uploadAllUsers()">Upload All Users</button>
+        <button class="btn" (click)="deleteAllUsers()">Delete All Users</button>
+      </div>
+
+      <!-- Employee Search -->
+      <div class="employee-search">
+        <input type="text" id="employeeSearch" placeholder="Search Employees">
+        <button id="searchEmployeesButton" class="btn">Search</button>
+        <button id="resetEmployeeSearchButton" class="btn">Reset</button>
+      </div>
+
+      <!-- Users Table -->
+      <table id="usersTable">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Employee</th>
+            <th>Name</th>
+            <th>Pri</th>
+            <th>Password</th>
+            <th>Fingerprints</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody">
+            <!-- Users will be populated dynamically -->
+        </tbody>
+      </table>
+
+      <!-- Users Pagination -->
+      <div id="usersPagination" class="pagination">
+        <!-- Pagination buttons will be generated dynamically -->
+      </div>
+    </section>
+
+  </section>
+
+  <!-- Fingerprints Section (Main Tab) -->
+  <section id="Fingerprints" class="tab-content">
+    <!-- Add Fingerprint Button -->
+    <div class="fingerprints-header">
+      <button class="btn btn-primary" (click)="addFingerprint()">Add Fingerprint</button>
+    </div>
+
+    <!-- Fingerprints Filter -->
+    <div class="fingerprints-filter">
+      <label for="startDate">Start Date:</label>
+      <input type="date" id="startDate">
+      <label for="endDate">End Date:</label>
+      <input type="date" id="endDate">
+      <button id="applyFingerprintFilters" class="btn">Apply Filters</button>
+      <button id="resetFingerprintFilters" class="btn">Reset Filters</button>
+    </div>
+
+    <!-- Fingerprints Table -->
+    <table id="fingerprintsTable">
+      <thead>
+        <tr>
+          <th>Fingerprint ID</th>
+          <th>Employee Code</th>
+          <th>Employee Name</th>
+          <th>Capture Date</th>
+          <th>Capture Time</th>
+          <th>Capture Device</th>
+          <th>Capture Building</th>
+          <th>Notes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="fingerprintsTableBody">
+        <!-- Fingerprints will be populated dynamically -->
+      </tbody>
+    </table>
+
+    <!-- Fingerprints Pagination -->
+    <div id="fingerprintsPagination" class="pagination">
+      <!-- Pagination buttons will be generated dynamically -->
+    </div>
+  </section>

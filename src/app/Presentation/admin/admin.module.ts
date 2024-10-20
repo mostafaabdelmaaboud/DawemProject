@@ -140,6 +140,11 @@ const routes: Routes = [
         loadChildren: () => import('./defaultLookups/penalties-default/penalties-default.module').then((m) => m.PenaltiesDefaultModule),
         // canActivate: [PermissionAminGuard]
       },
+      {
+        path: "fingerprintDeviceManagement/:id",
+        loadChildren: () => import('./fingerprint-device-management/fingerprint-device-management.module').then((m) => m.FingerprintDeviceManagementModule),
+        // canActivate: [PermissionGuard]
+      },
     ]
   }
 ];

@@ -491,7 +491,7 @@ export class TablesComponent {
       formData.name = result.tableName;
       formData.isActive = true;
       formData.scheduleDays = [];
-      debugger;
+      
       result?.weekDays?.forEach((day: any) => {
         if (day?.weekDayValue?.key != undefined) {
           formData.scheduleDays.push({ WeekDay: day?.weekDay, id:day?.id, ShiftId: day?.weekDayValue?.key })
@@ -502,7 +502,7 @@ export class TablesComponent {
       formData.id = data?.id;
       dialogRefAddCurrency.componentInstance.submitted = false;
       dialogRefAddCurrency.componentInstance.loading = true;
-      debugger;
+      
 
       this.schedulesService.updateSchedule(formData).subscribe(
         {

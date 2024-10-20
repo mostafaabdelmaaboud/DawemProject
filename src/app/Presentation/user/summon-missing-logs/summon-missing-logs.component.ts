@@ -320,7 +320,6 @@ export class SummonMissingLogsComponent {
     //   }
     // });
  
-    debugger;
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
      if (key === "SummonDate") {
         if (value != "" && value !=  null) {
