@@ -364,9 +364,9 @@ export class GroupsComponent {
         title: "اضافه مجموعة",
         setAsActive: "تعيين كنشط",
 
-        groupEmployees: "موظفي المجموعة",
-        placeholdeGroupEmployees: "موظفي المجموعة",
-        ValidationGroupEmployees: "موظفي المجموعة مطلوب",
+        groupEmployees: "موظفين المجموعة",
+        placeholdeGroupEmployees: "موظفين المجموعة",
+        ValidationGroupEmployees: "موظفين المجموعة مطلوب",
 
         groupManager: "مدير المجموعة",
         placeholdeGroupManager: "مدير المجموعة",
@@ -375,9 +375,9 @@ export class GroupsComponent {
         placeholderZone: "المناطق",
         validationtitleZone: "المناطق مطلوبه",
 
-        deputyDirector: "نواب المدير",
-        placeholdeDeputyDirector: "نواب المدير",
-        ValidationDeputyDirector: "نواب المدير مطلوب",
+        deputyDirector: "ونواب المدير",
+        placeholdeDeputyDirector: "ونواب المدير",
+        ValidationDeputyDirector: "ونواب المدير مطلوب",
 
         titleGroupName: "اسم المجموعة <span class='color-red'>*</span>",
         placeholdeGroupName: "اسم المجموعة",
@@ -486,24 +486,27 @@ export class GroupsComponent {
         setAsActive: "تعيين كنشط",
         titleFieldDisabled: "كود المجموعة",
         placeholdeieldDisabled: "كود المجموعة",
-        groupEmployees: "موظفي المجموعة",
-        placeholdeGroupEmployees: "موظفي المجموعة",
-        ValidationGroupEmployees: "موظفي المجموعة مطلوب",
+        groupEmployees: "موظفين المجموعة",
+        placeholdeGroupEmployees: "موظفين المجموعة",
+        ValidationGroupEmployees: "موظفين المجموعة مطلوب",
         groupManager: "مدير المجموعة",
         placeholdeGroupManager: "مدير المجموعة",
         ValidationGroupManager: "مدير المجموعة مطلوب",
         titleZone: "المناطق <span class='color-red'>*</span>",
         placeholderZone: "المناطق",
         validationtitleZone: "المناطق مطلوبه",
-        deputyDirector: "نواب المدير",
-        placeholdeDeputyDirector: "نواب المدير",
-        ValidationDeputyDirector: "نواب المدير مطلوب",
+        deputyDirector: "ونواب المدير",
+        placeholdeDeputyDirector: "ونواب المدير",
+        ValidationDeputyDirector: "ونواب المدير مطلوب",
         titleGroupName: "اسم المجموعة <span class='color-red'>*</span>",
         placeholdeGroupName: "اسم المجموعة",
         ValidationGroupName: "اسم المجموعة مطلوب",
         titleClose: "تراجع",
         buttonSend: "حفظ المجموعة"
       },
+
+
+
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editGroups = true;

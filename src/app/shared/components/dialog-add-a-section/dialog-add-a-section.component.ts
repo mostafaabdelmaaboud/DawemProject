@@ -99,7 +99,7 @@ export class DialogAddASectionComponent {
     searchTree: [""],
     fieldDisabled: [''],
     zoneIds: ['', Validators.required],
-    notes: ['', Validators.required],
+    notes: [''],
   });
   listManager: any[] = [];
   listManagerDelegator: any[] = [];
@@ -477,7 +477,6 @@ export class DialogAddASectionComponent {
       this.getControl("managerId")?.markAsDirty();
       this.getControl("managerDelegatorIds")?.markAsDirty();
       this.getControl("zoneIds")?.markAsDirty();
-      this.getControl("notes")?.markAsDirty();
     }
 
   }

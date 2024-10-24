@@ -198,9 +198,9 @@ export class SummonsComponent {
         placeholdeDepartmentId: "اسم القسم",
         ValidationDepartmentId: "اسم القسم مطلوب",
         labelRadioButton: "نوع الاستدعاء",
-        firstRadio: "لموظفين",
-        secondRadio: "لجروبات",
-        thirdRadio: "لاقسام",
+        firstRadio: "موظفين",
+        secondRadio: "مجموعات",
+        thirdRadio: "الاقسام",
         titleEmployeeId: "اسم الموظف",
         placeholdeEmployeeId: "اسم الموظف",
         ValidationEmployeeId: "اسم الموظف مطلوب",
@@ -210,9 +210,9 @@ export class SummonsComponent {
         titleCalendar: "التاريخ",
         placeholderCalendar: "اختار التاريخ",
         validationCalendar: "التاريخ مطلوب",
-        titleGroupId: "اسم الجروب",
-        placeholdeGroupId: "اسم الجروب",
-        ValidationGroupId: "اسم الجروب مطلوب",
+        titleGroupId: "اسم القسم",
+        placeholdeGroupId: "اسم القسم",
+        ValidationGroupId: "اسم القسم مطلوب",
         titleClose: "تراجع",
         buttonSend: "إضافة استدعاء"
       },
@@ -468,15 +468,15 @@ export class SummonsComponent {
       data: {
         title: "تعديل الاستدعاء",
         setAsActive: "تعيين كنشط",
-        titleDepartmentId: "نوع القسم",
+        titleDepartmentId: "اسم القسم",
         placeholdeDepartmentId: "اسم القسم",
         ValidationDepartmentId: "اسم القسم مطلوب",
         labelRadioButton: "نوع الاستدعاء",
-        firstRadio: "لموظفين",
+        firstRadio: "موظفين",
         titleFieldDisabled:"الكود",
-        secondRadio: "لجروبات",
-        thirdRadio: "لاقسام",
-        titleEmployeeId: "نوع الموظف",
+        secondRadio: "مجموعات",
+        thirdRadio: "الاقسام",
+        titleEmployeeId: "اسم الموظف",
         placeholdeEmployeeId: "اسم الموظف",
         ValidationEmployeeId: "اسم الموظف مطلوب",
         titleSanaction: "الجزاءات",
@@ -485,12 +485,15 @@ export class SummonsComponent {
         titleCalendar: "التاريخ",
         placeholderCalendar: "اختار التاريخ",
         validationCalendar: "التاريخ مطلوب",
-        titleGroupId: "نواب الجروب",
-        placeholdeGroupId: "اسم الجروب",
-        ValidationGroupId: "نواب الجروب مطلوب",
+        titleGroupId: "اسم القسم",
+        placeholdeGroupId: "اسم القسم",
+        ValidationGroupId: "اسم القسم مطلوب",
         titleClose: "تراجع",
         buttonSend: "حفظ الاستدعاء"
       },
+
+
+
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editSummon = true;

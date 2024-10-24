@@ -160,14 +160,7 @@
                 <input type="text" pInputText formControlName="notes" [placeholder]="data!['placeholdeNotes']|translate"
                   class="w-100" />
               </div>
-              <!--Start Custom Validators-->
-              <div class="container-alerts mt-2" *ngIf="getControl('notes')?.errors">
-                <div class="alert alert-danger"
-                  *ngIf="getControl('notes')?.hasError('required') && getControl('notes')?.dirty">
-                  {{data!['validationtitleNotes']|translate}}
-                </div>
-              </div>
-              <!--End Custom Validators-->
+    
             </div>
           </div>
           <div class="col-6">
