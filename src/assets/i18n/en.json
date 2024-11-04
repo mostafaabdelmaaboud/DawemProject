@@ -933,6 +933,33 @@
     "pleaseExplainTheReason":"Please explain the reason, if possible, so that it appears in the section when you try to log in.",
     "pleaseWriteTheReason":"Please write the reason for rejection so that it appears to the department.",
     "sectionComment":"Section comment"
-
+  },
+  "fingerprintDevices":{
+    "summaryOfFingerprintDevices":"Summary of fingerprint devices",
+    "numberOfFingerprintDevices":"Number of fingerprint devices",
+    "activeFingerprintDevices":"Active fingerprint devices",
+    "brokenFingerprintDevices":"Broken fingerprint devices",
+    "suspendedFingerprintDevices":"Suspended fingerprint devices",
+    "fingerprintDevices":"Fingerprint devices",
+    "addAFingerprintDevice":"Add a fingerprint device",
+    "deviceNumber":"Device number",
+    "deviceName":"Device name",
+    "IPAddress":"IP address",
+    "portNumber":"Port number",
+    "model":"Model",
+    "serialNumber":"serial number",
+    "deviceNameRequired":"Device name required",
+    "IPAddressRequired":"IP address required",
+    "portNumberRequired":"Port number required",
+    "selectModel":"Select model",
+    "modelRequired":"Model required",
+    "serialNumberRequired":"Serial number required",
+    "fingerprintDeviceRequests":"Fingerprint device requests",
+    "modifyFingerprintDevice":"Modify fingerprint device",
+    "fingerprintDeviceFile":"Fingerprint device file",
+    "areYouSureTheFingerprint":"Are you sure the fingerprint device is on?",
+    "pleaseExplainTheReason":"Please explain the reason if possible so that it appears to the group when trying to log in.",
+    "fingerprintComment":"Fingerprint comment"
   }
+
 }

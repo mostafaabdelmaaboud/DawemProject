@@ -928,5 +928,32 @@
     "pleaseExplainTheReason":"برجاء توضيح السبب إن أمكن ليظهر للقسم عند محاولة تسجيل الدخول",
     "pleaseWriteTheReason":"برجاء كتابة سبب الرفض ليظهر للقسم",
     "sectionComment":"Section comment"
+  },
+  "fingerprintDevices":{
+    "summaryOfFingerprintDevices":"ملخص أجهزة البصمة",
+    "numberOfFingerprintDevices":"عدد أجهزة البصمة",
+    "activeFingerprintDevices":"أجهزة البصمة النشطة",
+    "brokenFingerprintDevices":"أجهزة البصمة المعطلة",
+    "suspendedFingerprintDevices":"أجهزة البصمة المعلقة",
+    "fingerprintDevices":"أجهزة البصمة",
+    "addAFingerprintDevice":"إضافة جهاز بصمة",
+    "deviceNumber":"رقم الجهاز",
+    "deviceName":"اسم الجهاز",
+    "IPAddress":"عنوان ال IP",
+    "portNumber":"رقم البورت",
+    "model":"الموديل",
+    "serialNumber":"الرقم التسلسلي",
+    "deviceNameRequired":"اسم الجهاز مطلوب",
+    "IPAddressRequired":"عنوان ال IP مطلوب",
+    "portNumberRequired":"رقم البورت مطلوب",
+    "selectModel":"اختار الموديل",
+    "modelRequired":"الموديل مطلوب",
+    "serialNumberRequired":"الرقم التسلسلي مطلوب",
+    "fingerprintDeviceRequests":"طلبات اجهزة البصمة",
+    "modifyFingerprintDevice":"تعديل جهاز بصمة",
+    "fingerprintDeviceFile":"ملف جهاز البصمة",
+    "areYouSureTheFingerprint":"متأكد من تعليق جهاز البصمة؟",
+    "pleaseExplainTheReason":"برجاء توضيح السبب إن أمكن ليظهر للمجموعة عند محاولة تسجيل الدخول",
+    "fingerprintComment":"تعليق البصمة"
   }
 }
