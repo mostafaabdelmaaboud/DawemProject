@@ -232,9 +232,7 @@ export class EmployeesComponent {
       
         ];
       })
-      // this.subscription = this.translate.stream('primeng').subscribe(data => {
-      //   this.config.setTranslation(data);
-      // });  
+  
     })
     this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe(res => {
       res?.data?.forEach((jobTitle: any) => {

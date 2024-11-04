@@ -5,6 +5,7 @@ import { SectionsRoutingModule } from './sections-routing.module';
 import { SectionsComponent } from './sections.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     CommonModule,
     SectionsRoutingModule,
     MatDialogModule,
+    TranslateModule,
     SharedModule
   ]
 })

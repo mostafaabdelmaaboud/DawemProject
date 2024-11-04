@@ -10,72 +10,82 @@
   </header>
   <div class="body-dialog p-15 f-s-16">
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">تعيين كنشط</label>
+      <label class="title"> {{'employees.setAsActive' | translate}}</label>
       <div class="content-password">
-        <span class="d-clock">{{info?.isActive ? 'نشط' : 'غير نشط'}}</span>
+        <span class="d-clock">
+          <ng-container *ngIf="info?.isActive">{{'employees.active' | translate}}</ng-container>
+          <ng-container *ngIf="!info?.isActive">{{'employees.Inactive' | translate}}</ng-container>
+
+        </span>
 
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title"> كود القسم</label>
+      <label class="title">{{'sections.departmentCode' | translate}}</label>
       <div class="content-password">
-        {{info?.code ? info?.code : "لا يوجد"}}
-
-      </div>
-
-    </div>
-
-    <div class="sectionTwo mb-3 line-bellow">
-      <label class="title"> اسم القسم</label>
-      <div class="content-password">
-        {{info?.name ? info?.name : "لا يوجد"}}
+        <ng-container *ngIf="info?.code">{{info?.code}}</ng-container>
+        <ng-container *ngIf="!info?.code">{{'employees.Inactive' | translate}}</ng-container>
 
       </div>
 
     </div>
 
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">القسم التابع له</label>
+      <label class="title">{{'vacationBalance.departmentName' | translate}}</label>
       <div class="content-password">
-        {{info?.parentName ? info?.parentName : "لا يوجد"}}
+        <ng-container *ngIf="info?.name">{{info?.name}}</ng-container>
+        <ng-container *ngIf="!info?.name">{{'employees.Inactive' | translate}}</ng-container>
       </div>
 
     </div>
 
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">مدير القسم</label>
+      <label class="title">{{'sections.hisDepartment' | translate}}</label>
       <div class="content-password">
-        {{info?.manager ? info?.manager : "لا يوجد"}}
+        <ng-container *ngIf="info?.parentName">{{info?.parentName}}</ng-container>
+        <ng-container *ngIf="!info?.parentName">{{'employees.Inactive' | translate}}</ng-container>
+      </div>
 
+    </div>
+
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">{{'sections.departmentManager' | translate}}</label>
+      <div class="content-password">
+        <ng-container *ngIf="info?.manager">{{info?.manager}}</ng-container>
+        <ng-container *ngIf="!info?.manager">{{'employees.Inactive' | translate}}</ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">نواب رئيس القسم</label>
+      <label class="title">{{'sections.deputyHeadsOfDepartment' | translate}}</label>
       <div class="content-password">
         <ng-container *ngFor="let delegator of info?.managerDelegators">
           <span class="d-block mb-2">
-            {{delegator ? delegator : "لا يوجد"}}
+            {{info?.delegator}}
           </span>
         </ng-container>
-      </div>
-    </div>
-    <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">المناطق</label>
-      <div class="content-password">
-        <ng-container *ngFor="let zone of info?.zones">
-          <span class="d-block mb-2">
-            {{zone ? zone : "لا يوجد"}}
-          </span>
-        </ng-container>
+        <ng-container *ngIf="!info?.managerDelegators?.length">{{'employees.Inactive' | translate}}</ng-container>
 
       </div>
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">الملاحظات</label>
+      <label class="title">{{'sideNav.zones' | translate}}</label>
       <div class="content-password">
-        {{info?.notes ? info?.notes: "لا يوجد"}}
+        <ng-container *ngFor="let zone of info?.zones">
+          <span class="d-block mb-2">
+            {{info?.zone}}
+          </span>
+        </ng-container>
+        <ng-container *ngIf="!info?.zones?.length">{{'employees.Inactive' | translate}}</ng-container>
+
+      </div>
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">{{'justifications.notes' | translate}}</label>
+      <div class="content-password">
+        <ng-container *ngIf="info?.notes">{{info?.notes}}</ng-container>
+            <ng-container *ngIf="!info?.notes">{{'employees.Inactive' | translate}}</ng-container>
 
       </div>
     </div>
