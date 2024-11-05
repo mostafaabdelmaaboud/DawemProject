@@ -955,5 +955,28 @@
     "areYouSureTheFingerprint":"متأكد من تعليق جهاز البصمة؟",
     "pleaseExplainTheReason":"برجاء توضيح السبب إن أمكن ليظهر للمجموعة عند محاولة تسجيل الدخول",
     "fingerprintComment":"تعليق البصمة"
+  },
+  "groups":{
+    "summaryOfGroups":"ملخص المجموعات",
+    "numberOfGroups":"عدد المجموعات",
+    "activeGroups":"المجموعات النشطة",
+    "disabledGroups":"المجموعات المعطلة",
+    "pendingGroups":"المجموعات المعلقة",
+    "groupCode":"كود المجموعة",
+    "addAGroup":"إضافة مجموعة",
+    "addATheGroup":"إضافة المجموعة",
+    "groupManager":"مدير المجموعة",
+    "numberOfEmployeesInTheGroup":"عدد الموظفين بالمجموعة",
+    "groupEmployees":"موظفين المجموعة",
+    "groupEmployeesRequired":"موظفين المجموعة مطلوب",
+    "groupManagerWanted":"مدير المجموعة مطلوب",
+    "andDeputyDirectors":"ونواب المدير",
+    "deputyDirectorsAreRequired":"ونواب المدير مطلوب",
+    "groupRequests":"طلبات المجموعات",
+    "editGroup":"تعديل المجموعة",
+    "saveGroup":"حفظ المجموعة",
+    "groupFile":"ملف المجموعة",
+    "locationData":"بيانات الموقع",
+    "deputyDirector":"نواب المدير"
   }
 }

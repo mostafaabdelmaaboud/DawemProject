@@ -10,59 +10,71 @@
   </header>
   <div class="body-dialog p-15 f-s-16">
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">تعيين كنشط</label>
+      <label class="title">{{'employees.setAsActive' | translate}}</label>
       <div class="content-password">
-        {{info?.isActive ? 'نشط' : 'غير نشط'}}
+        <ng-container *ngIf="info?.isActive">{{'employees.active' | translate}}</ng-container>
+        <ng-container *ngIf="!info?.isActive">{{'employees.Inactive' | translate}}</ng-container>
+
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">اسم المجموعة</label>
+      <label class="title">{{'vacationBalance.GroupName' | translate}}</label>
       <div class="content-password">
-        {{info?.name ? info?.name : "لا يوجد"}}
+        <ng-container *ngIf="info?.name">{{info?.name}}</ng-container>
+        <ng-container *ngIf="!info?.name">{{'department.nothing' | translate}}</ng-container>
+
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">موظفي المجموعة</label>
+      <label class="title">{{'groups.groupEmployees' | translate}}</label>
       <div class="content-password">
         <ng-container *ngFor="let employee of info?.employees">
           <span class="d-block mb-2">
-            {{employee ? employee : "لا يوجد"}}
+            <ng-container *ngIf="employee">{{employee}}</ng-container>
+            <ng-container *ngIf="!employee">{{'department.nothing' | translate}}</ng-container>
           </span>
         </ng-container>
-
+        <ng-container *ngIf="!info?.employees?.length">{{'department.nothing' | translate}}</ng-container>
 
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">مدير المجموعة</label>
+      <label class="title">{{'groups.groupManager' | translate}}</label>
       <div class="content-password">
-        {{info?.managerName ? info?.managerName : "لا يوجد"}}
+        <ng-container *ngIf="info?.managerName">{{info?.managerName}}</ng-container>
+        <ng-container *ngIf="!info?.managerName">{{'department.nothing' | translate}}</ng-container>
       </div>
 
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">بيانات الموقع</label>
+      <label class="title">{{'groups.locationData' | translate}} </label>
       <div class="content-password">
         <ng-container *ngFor="let zone of info?.zones">
           <span class="d-block mb-2">
-            {{zone ? zone : "لا يوجد"}}
+            <ng-container *ngIf="zone">{{zone}}</ng-container>
+            <ng-container *ngIf="!zone">{{'department.nothing' | translate}}</ng-container>
           </span>
         </ng-container>
+        <ng-container *ngIf="!info?.zones?.length">{{'department.nothing' | translate}}</ng-container>
+
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">نواب المدير</label>
+      <label class="title">{{'groups.deputyDirector' | translate}}</label>
       <div class="content-password">
         <ng-container *ngFor="let manager of info?.managerDelegators">
           <span class="d-block mb-2">
-            {{manager ? manager : "لا يوجد"}}
+            <ng-container *ngIf="manager">{{manager}}</ng-container>
+            <ng-container *ngIf="!manager">{{'department.nothing' | translate}}</ng-container>
           </span>
         </ng-container>
+        <ng-container *ngIf="!info?.managerDelegators?.length">{{'department.nothing' | translate}}</ng-container>
+
       </div>
 
     </div>

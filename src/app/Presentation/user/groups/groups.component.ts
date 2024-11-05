@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
@@ -91,6 +91,8 @@ export class GroupsComponent {
   cards!: any;
   spinnerCards = false;
   private _mobileQueryListener: () => void;
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
@@ -145,12 +147,47 @@ export class GroupsComponent {
       { name: '25', code: 25 },
 
     ];
+    this.translateColumn();
+
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.translateColumn();
+
+    });
     this.getInformation();
 
     this.getGroups(this.filteration);
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
+  }
+  translateColumn() {
+    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(data => {
+      
+      this.columns = [
+        {
+          name: data.groups.groupCode,
+          field: "groupNumber",
+        },
+        {
+          name: data.vacationBalance.GroupName,
+          field: "groupName",
+        },
+        {
+          name: data.groups.groupManager,
+          field: "groupStaff"
+        },
+        {
+          name:  data.groups.numberOfEmployeesInTheGroup,
+          field: "numberOfEmployeesInTheGroup"
+        },
+    
+        {
+          name: data.requests.action,
+          field: "actions"
+        }
+    
+      ];
+    });
   }
   filter() {
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
@@ -222,60 +259,65 @@ export class GroupsComponent {
     saveAs(new Blob([buffer]), `${title}.xlsx`);
   }
   exportTableToExcel() {
-    let columns = [...this.columns];
-    delete columns[4]
-    var options = { 
-      fieldSeparator: ',',
-      quoteStrings: '"',
-      decimalseparator: '.',
-      showLabels: true, 
-      showTitle: true,
-      title: 'المجموعات',
-      useBom: true,
-      headers: columns.map((column:any) => column.name)
-    };
-
-    if(!this.isLoading) {
-      this.isLoading = true;
-      let filteration = {...this.filteration, isExport:true};
-
-      this.groupsService.listGroups(filteration).subscribe(data => {
-        this.groupsIsExport = [];
-
-        data.data.forEach((group: any) => {
-          this.groupsIsExport.push({
-            id: group.id,
-            groupNumber: group.code,
-            groupName: group.name,
-            isActive: group.isActive,
-            groupStaff: {
-              name: group.manager ? group.manager.managerName : "لا يوجد",
-              alt: group.manager ? group.manager.managerName : "",
-              img: group.manager ? group.manager.profileImagePath : "../../../../assets/img/5034901-200.png"
-            },
-            numberOfEmployeesInTheGroup: group.numberOfEmployees
+    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
+      let columns = [...this.columns];
+      delete columns[4]
+      var options = { 
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalseparator: '.',
+        showLabels: true, 
+        showTitle: true,
+        title: trans.sideNav.groups,
+        useBom: true,
+        headers: columns.map((column:any) => column.name)
+      };
   
+      if(!this.isLoading) {
+        this.isLoading = true;
+        let filteration = {...this.filteration, isExport:true};
   
-          })
-        });
-        let formatTable = this.groupsIsExport.map(group => {
-      
-          return {
-            groupNumber: group.groupNumber,
-            groupName: group.groupName,
-            groupStaff: group.groupStaff.name,
-            numberOfEmployeesInTheGroup: group.numberOfEmployeesInTheGroup
-          }
-        })
-        this.isLoading = false;
+        this.groupsService.listGroups(filteration).subscribe(data => {
+          this.groupsIsExport = [];
+  
+          data.data.forEach((group: any) => {
+            this.groupsIsExport.push({
+              id: group.id,
+              groupNumber: group.code,
+              groupName: group.name,
+              isActive: group.isActive,
+              groupStaff: {
+                name: group.manager ? group.manager.managerName : "لا يوجد",
+                alt: group.manager ? group.manager.managerName : "",
+                img: group.manager ? group.manager.profileImagePath : "../../../../assets/img/5034901-200.png"
+              },
+              numberOfEmployeesInTheGroup: group.numberOfEmployees
+    
+    
+            })
+          });
+          let formatTable = this.groupsIsExport.map(group => {
         
-        let formatRows =formatTable.map(group => [group.groupNumber,group.groupName, group.groupStaff, group.numberOfEmployeesInTheGroup ]);
-            this.generateExcel('المجموعات','المجموعات',formatRows, columns);
-
-        // new ngxCsv(formatTable, "sheet", options);
+            return {
+              groupNumber: group.groupNumber,
+              groupName: group.groupName,
+              groupStaff: group.groupStaff.name,
+              numberOfEmployeesInTheGroup: group.numberOfEmployeesInTheGroup
+            }
+          })
+          this.isLoading = false;
+          
+          let formatRows =formatTable.map(group => [group.groupNumber,group.groupName, group.groupStaff, group.numberOfEmployeesInTheGroup ]);
+              this.generateExcel(trans.sideNav.groups,trans.sideNav.groups,formatRows, columns);
   
-      })
-    }  }
+          // new ngxCsv(formatTable, "sheet", options);
+    
+        })
+      }  
+    });
+
+ 
+  }
   exportTableToPDF() {
 
     if(!this.isLoading) {
@@ -358,36 +400,37 @@ export class GroupsComponent {
     })
   }
   addgroup() {
-    const dialogRefAddCurrency = this.dialog.open(AddGroupComponent, {
-      width: "70vw",
-      data: {
-        title: "اضافه مجموعة",
-        setAsActive: "تعيين كنشط",
-
-        groupEmployees: "موظفين المجموعة",
-        placeholdeGroupEmployees: "موظفين المجموعة",
-        ValidationGroupEmployees: "موظفين المجموعة مطلوب",
-
-        groupManager: "مدير المجموعة",
-        placeholdeGroupManager: "مدير المجموعة",
-        ValidationGroupManager: "مدير المجموعة مطلوب",
-        titleZone: "المناطق <span class='color-red'>*</span>",
-        placeholderZone: "المناطق",
-        validationtitleZone: "المناطق مطلوبه",
-
-        deputyDirector: "ونواب المدير",
-        placeholdeDeputyDirector: "ونواب المدير",
-        ValidationDeputyDirector: "ونواب المدير مطلوب",
-
-        titleGroupName: "اسم المجموعة <span class='color-red'>*</span>",
-        placeholdeGroupName: "اسم المجموعة",
-        ValidationGroupName: "اسم المجموعة مطلوب",
-        titleClose: "تراجع",
-        buttonSend: "إضافة المجموعة"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<AddGroupComponent, any>;
+    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
+      dialogRefAddCurrency = this.dialog.open(AddGroupComponent, {
+        width: "70vw",
+        data: {
+          title: trans.groups.addAGroup,
+          setAsActive: trans.employees.setAsActive,
+          groupEmployees: trans.groups.groupEmployees,
+          placeholdeGroupEmployees: trans.groups.groupEmployees,
+          ValidationGroupEmployees: trans.groups.groupEmployeesRequired,
+          groupManager: trans.groups.groupManager,
+          placeholdeGroupManager: trans.groups.groupManager,
+          ValidationGroupManager: trans.groups.groupManagerWanted,
+          titleZone: trans.sideNav.zones+" <span class='color-red'>*</span>",
+          placeholderZone: trans.sideNav.zones,
+          validationtitleZone: trans.employees.zonesAreRequired,
+          deputyDirector: trans.groups.andDeputyDirectors,
+          placeholdeDeputyDirector: trans.groups.andDeputyDirectors,
+          ValidationDeputyDirector: trans.groups.deputyDirectorsAreRequired,
+          titleGroupName: trans.vacationBalance.GroupName+" <span class='color-red'>*</span>",
+          placeholdeGroupName: trans.vacationBalance.GroupName,
+          ValidationGroupName: trans.schedualPlan.groupNameRequired,
+          titleClose: trans.schedualPlan.toRetreat,
+          buttonSend:trans.groups.addATheGroup
+        },
+      });
+      dialogRefAddCurrency.componentInstance.submitted = true;
+      dialogRefAddCurrency.componentInstance.editGroups = false;
+  
     });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editGroups = false;
+
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
@@ -420,14 +463,19 @@ export class GroupsComponent {
 
             dialogRefAddCurrency.close();
 
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات المجموعات"
-              },
+       
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: trans.employees.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: trans.groups.groupRequests
+                },
+              });
             });
+        
             this.getGroups(this.filteration);
             setTimeout(() => {
               succressDialog.close();
@@ -455,20 +503,21 @@ export class GroupsComponent {
     });
   }
   dialogGroupFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogGroupFileComponent, {
-      width: "40vw",
-      data: {
-        title: "ملف المجموعة"
-      },
+    let dialogRefAddCurrency!:MatDialogRef<DialogGroupFileComponent, any>;
+    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
+      dialogRefAddCurrency =  this.dialog.open(DialogGroupFileComponent, {
+        width: "40vw",
+        data: {
+          title: trans.groups.groupFile
+        },
+      });
+      dialogRefAddCurrency.componentInstance.id = data.id;
     });
-    dialogRefAddCurrency.componentInstance.id = data.id
   }
   enabledRow(data: any) {
-
     this.groupsService.enabledEmployee({ groupId: data.id }).subscribe(
       {
         next: res => {
-
           this.toast.success(res.message);
           this.getGroups(this.filteration);
         },
@@ -479,38 +528,40 @@ export class GroupsComponent {
     )
   }
   editgroup(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddGroupComponent, {
-      width: "70vw",
-      data: {
-        title: "تعديل المجموعة",
-        setAsActive: "تعيين كنشط",
-        titleFieldDisabled: "كود المجموعة",
-        placeholdeieldDisabled: "كود المجموعة",
-        groupEmployees: "موظفين المجموعة",
-        placeholdeGroupEmployees: "موظفين المجموعة",
-        ValidationGroupEmployees: "موظفين المجموعة مطلوب",
-        groupManager: "مدير المجموعة",
-        placeholdeGroupManager: "مدير المجموعة",
-        ValidationGroupManager: "مدير المجموعة مطلوب",
-        titleZone: "المناطق <span class='color-red'>*</span>",
-        placeholderZone: "المناطق",
-        validationtitleZone: "المناطق مطلوبه",
-        deputyDirector: "ونواب المدير",
-        placeholdeDeputyDirector: "ونواب المدير",
-        ValidationDeputyDirector: "ونواب المدير مطلوب",
-        titleGroupName: "اسم المجموعة <span class='color-red'>*</span>",
-        placeholdeGroupName: "اسم المجموعة",
-        ValidationGroupName: "اسم المجموعة مطلوب",
-        titleClose: "تراجع",
-        buttonSend: "حفظ المجموعة"
-      },
-
-
-
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
+    let dialogRefAddCurrency!:MatDialogRef<AddGroupComponent, any>;
+    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
+      dialogRefAddCurrency = this.dialog.open(AddGroupComponent, {
+        width: "70vw",
+        data: {
+          title: trans.groups.editGroup,
+          setAsActive: trans.employees.setAsActive,
+          titleFieldDisabled: trans.groups.groupCode,
+          placeholdeieldDisabled: trans.groups.groupCode,
+          groupEmployees: trans.groups.groupEmployees,
+          placeholdeGroupEmployees: trans.groups.groupEmployees,
+          ValidationGroupEmployees: trans.groups.groupEmployeesRequired,
+          groupManager: trans.groups.groupManager,
+          placeholdeGroupManager: trans.groups.groupManager,
+          ValidationGroupManager: trans.groups.groupManagerWanted,
+          titleZone: trans.sideNav.zones+" <span class='color-red'>*</span>",
+          placeholderZone: trans.sideNav.zones,
+          validationtitleZone: trans.employees.zonesAreRequired,
+          deputyDirector: trans.groups.andDeputyDirectors,
+          placeholdeDeputyDirector: trans.groups.andDeputyDirectors,
+          ValidationDeputyDirector: trans.groups.deputyDirectorsAreRequired,
+          titleGroupName: trans.vacationBalance.GroupName+" <span class='color-red'>*</span>",
+          placeholdeGroupName: trans.vacationBalance.GroupName,
+          ValidationGroupName: trans.schedualPlan.groupNameRequired,
+          titleClose: trans.schedualPlan.toRetreat,
+          buttonSend:trans.groups.saveGroup
+        },
+      });
+      dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editGroups = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
+  
+    });
+ 
 
     // dialogRefAddCurrency.componentInstance.list = this.categories;
 
@@ -544,13 +595,16 @@ export class GroupsComponent {
 
             dialogRefAddCurrency.componentInstance.submitted = true;
             dialogRefAddCurrency.close();
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات المجموعات"
-              },
+            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
+            this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
+              succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: trans.employees.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: trans.groups.groupRequests
+                },
+              });
             });
             this.getGroups(this.filteration);
             setTimeout(() => {
@@ -589,18 +643,24 @@ export class GroupsComponent {
 
   deleteRow(data: any) {
 
-    const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
-      width: "30vw",
-      data: {
-        title: "متأكد من تعليق المجموعة؟",
-        message: "برجاء توضيح السبب إن أمكن ليظهر للمجموعة عند محاولة تسجيل الدخول",
-        titleReasonOfRefuse: "سبب التعليق",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض ليظهر للمجموعة",
-        titleClose: "تراجع",
-        buttonSend: "تعليق المجموعة"
-      },
+
+    let reasonOfRefuseDialog!:MatDialogRef<DialogCloseComponent, any>;
+    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
+      reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
+        width: "30vw",
+        data: {
+          title: trans.schedualPlan.areYouSureToHangTheGroup,
+          message: trans.fingerprintDevices.pleaseExplainTheReason,
+          titleReasonOfRefuse: trans.zones.reasonForComment,
+          placeholdeReasonOfRefuse: trans.schedualPlan.pleaseWriteTheReasonForRejection,
+          titleClose: trans.tables.toRetreat,
+          buttonSend: trans.schedualPlan.groupComment
+        },
+      });
+      reasonOfRefuseDialog.componentInstance.submitted = true;
+
     });
-    reasonOfRefuseDialog.componentInstance.submitted = true;
+
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
       this.groupsService.disabledGroup({ Id: data.id, DisableReason: result.notes }).subscribe(
@@ -677,5 +737,9 @@ export class GroupsComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

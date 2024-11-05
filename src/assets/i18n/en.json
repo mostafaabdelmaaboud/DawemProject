@@ -960,6 +960,34 @@
     "areYouSureTheFingerprint":"Are you sure the fingerprint device is on?",
     "pleaseExplainTheReason":"Please explain the reason if possible so that it appears to the group when trying to log in.",
     "fingerprintComment":"Fingerprint comment"
+  },
+  "groups":{
+    "summaryOfGroups":"Summary of groups",
+    "numberOfGroups":"Number of groups",
+    "activeGroups":"Active groups",
+    "disabledGroups":"Disabled groups",
+    "pendingGroups":"Pending groups",
+    "groupCode":"Group code",
+    "addAGroup":"Add a group",
+    "addATheGroup":"Add group",
+    "groupManager":"Group Manager",
+    "numberOfEmployeesInTheGroup":"Number of employees in the group",
+    "groupEmployees":"Group employees",
+    "groupEmployeesRequired":"Group employees required",
+    "groupManagerWanted":"Group Manager Wanted",
+    "andDeputyDirectors":"and deputy directors",
+    "deputyDirectorsAreRequired":"Deputy directors are required",
+    "groupRequests":"Group requests",
+    "editGroup":"Edit group",
+    "saveGroup":"Save group",
+    "groupFile":"Group file",
+    "locationData":"Location data",
+    "deputyDirector":"Deputy Director"
+
+
+
+
+
   }
 
 }
