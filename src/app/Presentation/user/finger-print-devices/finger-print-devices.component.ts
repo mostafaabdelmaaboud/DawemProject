@@ -97,6 +97,7 @@ export class FingerPrintDevicesComponent {
   cards!: any;
   spinnerCards = false;
   destroy$: Subject<boolean> = new Subject<boolean>();
+  trans!:any;
 
   private _mobileQueryListener: () => void;
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
@@ -153,9 +154,15 @@ export class FingerPrintDevicesComponent {
       { name: '25', code: 25 },
 
     ];
+    const translations = this.translate.translations[this.translate.currentLang || 'ar'];
+    if(!this.trans) {
+      this.trans = translations
+    }
     this.translateColumn();
 
     this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.trans = dataParent.translations;
+
       this.translateColumn();
 
     });
@@ -168,40 +175,38 @@ export class FingerPrintDevicesComponent {
 
   }
   translateColumn() {
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(data => {
       
       this.columns =  [
         {
-          name: data.fingerprintDevices.deviceNumber,
+          name: this.trans.fingerprintDevices.deviceNumber,
           field: "code",
         },
         {
-          name: data.fingerprintDevices.deviceName,
+          name: this.trans.fingerprintDevices.deviceName,
           field: "name",
         },
         {
-          name: data.fingerprintDevices.IPAddress,
+          name: this.trans.fingerprintDevices.IPAddress,
           field: "ipAddress",
         },
         {
-          name: data.fingerprintDevices.portNumber,
+          name: this.trans.fingerprintDevices.portNumber,
           field: "portNumber"
         },
         {
-          name: data.fingerprintDevices.model,
+          name: this.trans.fingerprintDevices.model,
           field: "model"
         },
         {
-          name: data.fingerprintDevices.serialNumber,
+          name: this.trans.fingerprintDevices.serialNumber,
           field: "serialNumber"
         },
         {
-          name: data.requests.action,
+          name: this.trans.requests.action,
           field: "actions"
         }
     
       ];
-    });
   }
   filter() {
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
@@ -272,7 +277,6 @@ export class FingerPrintDevicesComponent {
     saveAs(new Blob([buffer]), `${title}.xlsx`);
   }
   exportTableToExcel() {
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
       let columns = [...this.columns];
       delete columns[6]
       var options = { 
@@ -281,7 +285,7 @@ export class FingerPrintDevicesComponent {
         decimalseparator: '.',
         showLabels: true, 
         showTitle: true,
-        title: trans.fingerprintDevices.fingerprintDevices,
+        title: this.trans.fingerprintDevices.fingerprintDevices,
         useBom: true,
         headers: columns.map((column:any) => column.name)
       };
@@ -326,14 +330,13 @@ export class FingerPrintDevicesComponent {
             fingerPrintDevice.serialNumber,
   
           ]);
-              this.generateExcel(trans.fingerprintDevices.fingerprintDevices,trans.fingerprintDevices.fingerprintDevices,formatRows, columns);
+              this.generateExcel(this.trans.fingerprintDevices.fingerprintDevices,this.trans.fingerprintDevices.fingerprintDevices,formatRows, columns);
   
           // new ngxCsv(formatTable, "sheet", options);
     
         })
       }  
 
-    });
 
 
   }
@@ -412,40 +415,37 @@ export class FingerPrintDevicesComponent {
   }
   addFingerprintDevice() {
 
-    let dialogRefAddCurrency!:MatDialogRef<AddFingerPrintDeviceComponent, any>;
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
       
-      dialogRefAddCurrency =  this.dialog.open(AddFingerPrintDeviceComponent, {
+      let dialogRefAddCurrency =  this.dialog.open(AddFingerPrintDeviceComponent, {
         width: "70vw",
         data: {
-          title: trans.fingerprintDevices.addAFingerprintDevice,
-          setAsActive: trans.employees.setAsActive,
-          titleName: trans.fingerprintDevices.deviceName +" <span class= 'color-red' >* </span>",
-          placeholdeName: trans.fingerprintDevices.deviceName,
-          ValidationName: trans.fingerprintDevices.deviceNameRequired,
+          title: this.trans.fingerprintDevices.addAFingerprintDevice,
+          setAsActive: this.trans.employees.setAsActive,
+          titleName: this.trans.fingerprintDevices.deviceName +" <span class= 'color-red' >* </span>",
+          placeholdeName: this.trans.fingerprintDevices.deviceName,
+          ValidationName: this.trans.fingerprintDevices.deviceNameRequired,
 
-          titleIpAddress: trans.fingerprintDevices.IPAddress+" <span class='color-red'>*</span>",
-          placeholdeIpAddress: trans.fingerprintDevices.IPAddress,
-          ValidationIpAddress: trans.fingerprintDevices.IPAddressRequired,
+          titleIpAddress: this.trans.fingerprintDevices.IPAddress+" <span class='color-red'>*</span>",
+          placeholdeIpAddress: this.trans.fingerprintDevices.IPAddress,
+          ValidationIpAddress: this.trans.fingerprintDevices.IPAddressRequired,
 
-          titlePortNumber: trans.fingerprintDevices.portNumber+" <span class='color-red'>*</span>",
-          placeholdePortNumber: trans.fingerprintDevices.portNumbe,
-          ValidationPortNumber: trans.fingerprintDevices.portNumberRequired,
+          titlePortNumber: this.trans.fingerprintDevices.portNumber+" <span class='color-red'>*</span>",
+          placeholdePortNumber: this.trans.fingerprintDevices.portNumbe,
+          ValidationPortNumber: this.trans.fingerprintDevices.portNumberRequired,
   
-          titleModel: trans.fingerprintDevices.model+" <span class='color-red'>*</span>",
-          placeholderModel: trans.fingerprintDevices.selectModel,
-          validationModel: trans.fingerprintDevices.modelRequired,
-          titleSerialNumber: trans.fingerprintDevices.serialNumber+" <span class='color-red'>*</span>",
-          placeholdeSerialNumber: trans.fingerprintDevices.serialNumber,
-          ValidationSerialNumber: trans.fingerprintDevices.serialNumberRequired,
-          titleClose: trans.employees.toRetreat,
-          buttonSend: trans.fingerprintDevices.addAFingerprintDevice
+          titleModel: this.trans.fingerprintDevices.model+" <span class='color-red'>*</span>",
+          placeholderModel: this.trans.fingerprintDevices.selectModel,
+          validationModel: this.trans.fingerprintDevices.modelRequired,
+          titleSerialNumber: this.trans.fingerprintDevices.serialNumber+" <span class='color-red'>*</span>",
+          placeholdeSerialNumber: this.trans.fingerprintDevices.serialNumber,
+          ValidationSerialNumber: this.trans.fingerprintDevices.serialNumberRequired,
+          titleClose: this.trans.employees.toRetreat,
+          buttonSend: this.trans.fingerprintDevices.addAFingerprintDevice
         },
       });
       dialogRefAddCurrency.componentInstance.submitted = true;
       dialogRefAddCurrency.componentInstance.editFingerPrintDevice = false;
   
-    });
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
       formData.isActive = result.isActive;
@@ -464,27 +464,24 @@ export class FingerPrintDevicesComponent {
             dialogRefAddCurrency.close();
 
       
-            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
-            this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
               
-              succressDialog = this.dialog.open(ToastSuccessComponent, {
+              let succressDialog = this.dialog.open(ToastSuccessComponent, {
                 width: "30vw",
                 data: {
-                  title: trans.employees.yourRequestHasBeenSent,
+                  title: this.trans.employees.yourRequestHasBeenSent,
                   message: data.message,
-                  buttonSend: trans.fingerprintDevices.fingerprintDeviceRequests
+                  buttonSend: this.trans.fingerprintDevices.fingerprintDeviceRequests
                 },
               });
            
-          
-            });
+              succressDialog.componentInstance.submitted = true;
+
             this.getFingerprintDevices(this.filteration);
             setTimeout(() => {
               succressDialog.close();
 
             }, 2000);
 
-            succressDialog.componentInstance.submitted = true;
             succressDialog.componentInstance.submitClicked.subscribe(result => {
               succressDialog.close();
 
@@ -505,41 +502,37 @@ export class FingerPrintDevicesComponent {
     });
   }
   editFingerprintDevice(data: any) {
-
-    let dialogRefAddCurrency!:MatDialogRef<AddFingerPrintDeviceComponent, any>;
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
       
-      dialogRefAddCurrency =  this.dialog.open(AddFingerPrintDeviceComponent, {
+      let dialogRefAddCurrency =  this.dialog.open(AddFingerPrintDeviceComponent, {
         width: "70vw",
         data: {
-          title: trans.fingerprintDevices.modifyFingerprintDevice,
-          setAsActive: trans.employees.setAsActive,
-          titleName: trans.fingerprintDevices.deviceName +" <span class= 'color-red' >* </span>",
-          placeholdeName: trans.fingerprintDevices.deviceName,
-          ValidationName: trans.fingerprintDevices.deviceNameRequired,
+          title: this.trans.fingerprintDevices.modifyFingerprintDevice,
+          setAsActive: this.trans.employees.setAsActive,
+          titleName: this.trans.fingerprintDevices.deviceName +" <span class= 'color-red' >* </span>",
+          placeholdeName: this.trans.fingerprintDevices.deviceName,
+          ValidationName: this.trans.fingerprintDevices.deviceNameRequired,
 
-          titleIpAddress: trans.fingerprintDevices.IPAddress+" <span class='color-red'>*</span>",
-          placeholdeIpAddress: trans.fingerprintDevices.IPAddress,
-          ValidationIpAddress: trans.fingerprintDevices.IPAddressRequired,
+          titleIpAddress: this.trans.fingerprintDevices.IPAddress+" <span class='color-red'>*</span>",
+          placeholdeIpAddress: this.trans.fingerprintDevices.IPAddress,
+          ValidationIpAddress: this.trans.fingerprintDevices.IPAddressRequired,
 
-          titlePortNumber: trans.fingerprintDevices.portNumber+" <span class='color-red'>*</span>",
-          placeholdePortNumber: trans.fingerprintDevices.portNumbe,
-          ValidationPortNumber: trans.fingerprintDevices.portNumberRequired,
+          titlePortNumber: this.trans.fingerprintDevices.portNumber+" <span class='color-red'>*</span>",
+          placeholdePortNumber: this.trans.fingerprintDevices.portNumbe,
+          ValidationPortNumber: this.trans.fingerprintDevices.portNumberRequired,
   
-          titleModel: trans.fingerprintDevices.model+" <span class='color-red'>*</span>",
-          placeholderModel: trans.fingerprintDevices.selectModel,
-          validationModel: trans.fingerprintDevices.modelRequired,
-          titleSerialNumber: trans.fingerprintDevices.serialNumber+" <span class='color-red'>*</span>",
-          placeholdeSerialNumber: trans.fingerprintDevices.serialNumber,
-          ValidationSerialNumber: trans.fingerprintDevices.serialNumberRequired,
-          titleClose: trans.employees.toRetreat,
-          buttonSend: trans.fingerprintDevices.modifyFingerprintDevice
+          titleModel: this.trans.fingerprintDevices.model+" <span class='color-red'>*</span>",
+          placeholderModel: this.trans.fingerprintDevices.selectModel,
+          validationModel: this.trans.fingerprintDevices.modelRequired,
+          titleSerialNumber: this.trans.fingerprintDevices.serialNumber+" <span class='color-red'>*</span>",
+          placeholdeSerialNumber: this.trans.fingerprintDevices.serialNumber,
+          ValidationSerialNumber: this.trans.fingerprintDevices.serialNumberRequired,
+          titleClose: this.trans.employees.toRetreat,
+          buttonSend: this.trans.fingerprintDevices.modifyFingerprintDevice
         },
       });
       dialogRefAddCurrency.componentInstance.submitted = true;
       dialogRefAddCurrency.componentInstance.editFingerPrintDevice = true;
       dialogRefAddCurrency.componentInstance.id = data.id;
-    });
 
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editFingerPrintDevice = true;
@@ -563,20 +556,17 @@ export class FingerPrintDevicesComponent {
 
             dialogRefAddCurrency.close();
 
-            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
-            this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
               
-              succressDialog = this.dialog.open(ToastSuccessComponent, {
+              let succressDialog = this.dialog.open(ToastSuccessComponent, {
                 width: "30vw",
                 data: {
-                  title: trans.employees.yourRequestHasBeenSent,
+                  title: this.trans.employees.yourRequestHasBeenSent,
                   message: data.message,
-                  buttonSend: trans.fingerprintDevices.fingerprintDeviceRequests
+                  buttonSend: this.trans.fingerprintDevices.fingerprintDeviceRequests
                 },
               });
            
           
-            });
             this.getFingerprintDevices(this.filteration);
             setTimeout(() => {
               succressDialog.close();
@@ -604,17 +594,15 @@ export class FingerPrintDevicesComponent {
     });
   }
   dialogFingerPrintDeviceFile(data: any) {
-    let dialogRefAddCurrency!:MatDialogRef<DialogFingerPrintDeviceFileComponent, any>;
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
+ 
       
-      dialogRefAddCurrency = this.dialog.open(DialogFingerPrintDeviceFileComponent, {
+      let dialogRefAddCurrency = this.dialog.open(DialogFingerPrintDeviceFileComponent, {
         width: "40vw",
         data: {
-          title: trans.fingerprintDevices.fingerprintDeviceFile
+          title: this.trans.fingerprintDevices.fingerprintDeviceFile
         },
       });
       dialogRefAddCurrency.componentInstance.id = data.id
-    });
   }
   enabledRow(data: any) {
 
@@ -641,23 +629,21 @@ export class FingerPrintDevicesComponent {
   }
   deleteRow(data: any) {
  
-    let reasonOfRefuseDialog!:MatDialogRef<DialogCloseComponent, any>;
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
+
       
-      reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
+      let reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
         width: "30vw",
         data: {
-          title: trans.fingerprintDevices.areYouSureTheFingerprint,
-          message: trans.fingerprintDevices.pleaseExplainTheReason,
-          titleReasonOfRefuse: trans.zones.reasonForComment,
-          placeholdeReasonOfRefuse: trans.schedualPlan.pleaseWriteTheReasonForRejection,
-          titleClose: trans.schedualPlan.toRetreat,
-          buttonSend: trans.fingerprintDevices.fingerprintComment
+          title: this.trans.fingerprintDevices.areYouSureTheFingerprint,
+          message: this.trans.fingerprintDevices.pleaseExplainTheReason,
+          titleReasonOfRefuse: this.trans.zones.reasonForComment,
+          placeholdeReasonOfRefuse: this.trans.schedualPlan.pleaseWriteTheReasonForRejection,
+          titleClose: this.trans.schedualPlan.toRetreat,
+          buttonSend: this.trans.fingerprintDevices.fingerprintComment
         },
       });
       reasonOfRefuseDialog.componentInstance.submitted = true;
 
-    });
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
       this.fingerPrintDevicesService.disabledFingerprintDevice({ Id: data.id, DisableReason: result.notes }).subscribe(

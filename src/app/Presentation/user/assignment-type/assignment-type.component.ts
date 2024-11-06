@@ -94,6 +94,9 @@ export class AssignmentTypeComponent {
     { name: "تسجيل انصراف خاطئ", key: "4" }
 
   ];
+
+  trans!:any;
+
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
@@ -147,9 +150,15 @@ export class AssignmentTypeComponent {
       { name: '5', code: 5 }
 
     ];
+    const translations = this.translate.translations[this.translate.currentLang || 'ar'];
+    if(!this.trans) {
+      this.trans = translations
+    }
     this.translateColumn();
 
     this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      debugger;
+      this.trans = dataParent.translations;
       this.translateColumn();
 
     });
@@ -159,28 +168,27 @@ export class AssignmentTypeComponent {
     this.getAssignments(this.filteration);
   }
   translateColumn() {
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(data => {
-      
-      this.columns = [
-        {
-          name: data.assignments.assignmentNumber,
-          field: "code",
-        },
-        {
-          name: data.signup.name,
-          field: "name",
-        },
-        {
-          name: data.assignments.assignmentStatus,
-          field: "isActive"
-        },
-        {
-          name: data.assignments.action,
-          field: "actions"
-        }
-    
-      ];
-    });
+
+    this.columns = [
+      {
+        name: this.trans.assignments.assignmentNumber,
+        field: "code",
+      },
+      {
+        name: this.trans.signup.name,
+        field: "name",
+      },
+      {
+        name: this.trans.assignments.assignmentStatus,
+        field: "isActive"
+      },
+      {
+        name: this.trans.assignments.action,
+        field: "actions"
+      }
+  
+    ];
+
   }
   filter() {
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
@@ -250,7 +258,7 @@ export class AssignmentTypeComponent {
     saveAs(new Blob([buffer]), `${title}.xlsx`);
   }
   exportTableToExcel() {
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(data => {
+
     let columns = [...this.columns];
     delete columns[3]
     var options = { 
@@ -259,7 +267,7 @@ export class AssignmentTypeComponent {
       decimalseparator: '.',
       showLabels: true, 
       showTitle: true,
-      title: data.sideNav.typesOfAssignments,
+      title: this.trans.sideNav.typesOfAssignments,
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
@@ -283,12 +291,12 @@ export class AssignmentTypeComponent {
               return {
                 code: assignment.code,
                 name: assignment.name,
-                isActive: assignment.isActive ? data.employees.active : data.employees.Inactive
+                isActive: assignment.isActive ? this.trans.employees.active : this.trans.employees.Inactive
               }
             })
             this.isLoading = false;
             let formatRows =formatTable.map(assignment => [assignment.code,assignment.name, assignment.isActive ]);
-            this.generateExcel(data.sideNav.typesOfAssignments,data.sideNav.typesOfAssignments,formatRows, columns);
+            this.generateExcel(this.trans.sideNav.typesOfAssignments,this.trans.sideNav.typesOfAssignments,formatRows, columns);
             // new ngxCsv(formatTable, 'أنواع التكليفات', options);
           },
           error: err => {
@@ -298,7 +306,6 @@ export class AssignmentTypeComponent {
         }
       ) 
     }  
-    });
   
   }
   exportTableToPDF() {
@@ -388,210 +395,197 @@ export class AssignmentTypeComponent {
     this.getAssignments(this.filteration)
   }
   reasonOfRefuse(data: any) {
-    let reasonOfRefuseDialog!:MatDialogRef<DialogDeleteComponent, any>;
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
-      
-      reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
+      let reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
         width: "30vw",
         data: {
-          title: trans.assignments.areYouSureYouWantToDeleteTheAssignmentType,
-          titleClose: trans.schedualPlan.toRetreat,
-          buttonSend: trans.vacationBalance.delete
+          title: this.trans.assignments.areYouSureYouWantToDeleteTheAssignmentType,
+          titleClose: this.trans.schedualPlan.toRetreat,
+          buttonSend: this.trans.vacationBalance.delete
         },
       });
       reasonOfRefuseDialog.componentInstance.submitted = true;
-    });
-    reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
-      reasonOfRefuseDialog.componentInstance.submitted = false;
-      this.assignmentTypeService.deleteAssignment({ assignmentTypeId: data.id }).subscribe({
-        next: res => {
-          this.toast.success(res.message);
-          reasonOfRefuseDialog.componentInstance.submitted = true;
-          reasonOfRefuseDialog.close();
-          this.getAssignments(this.filteration);
-        },
-        error: err => {
-          reasonOfRefuseDialog.componentInstance.submitted = true;
-
-        }
+      reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
+        reasonOfRefuseDialog.componentInstance.submitted = false;
+        this.assignmentTypeService.deleteAssignment({ assignmentTypeId: data.id }).subscribe({
+          next: res => {
+            this.toast.success(res.message);
+            reasonOfRefuseDialog.componentInstance.submitted = true;
+            reasonOfRefuseDialog.close();
+            this.getAssignments(this.filteration);
+          },
+          error: err => {
+            reasonOfRefuseDialog.componentInstance.submitted = true;
+  
+          }
+        })
+  
+  
+  
       })
 
-
-
-    })
   }
   requestAssignment() {
  
-    let dialogRefAddCurrency!:MatDialogRef<RequestAssignmentTypeComponent, any>;
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(data => {
+
       
-      dialogRefAddCurrency = this.dialog.open(RequestAssignmentTypeComponent, {
+      let dialogRefAddCurrency = this.dialog.open(RequestAssignmentTypeComponent, {
         width: "50vw",
         data: {
-          title: data.assignments.assignmentType,
-          setAsNecessary: data.assignments.setAsEssential,
-          titleVacationTypeId: data.assignments.assignmentType +" <span class='color-red'>*</span>",
-          titleName: data.signup.name +" <span class='color-red'>*</span>",
-          placeholdeName: data.signup.enterTheName,
-          validationtitleName: data.signup.nameIsRequired,
-          buttonSend: data.justifications.sendRequest
+          title: this.trans.assignments.assignmentType,
+          setAsNecessary: this.trans.assignments.setAsEssential,
+          titleVacationTypeId: this.trans.assignments.assignmentType +" <span class='color-red'>*</span>",
+          titleName: this.trans.signup.name +" <span class='color-red'>*</span>",
+          placeholdeName: this.trans.signup.enterTheName,
+          validationtitleName: this.trans.signup.nameIsRequired,
+          buttonSend: this.trans.justifications.sendRequest
         },
       });
       dialogRefAddCurrency.componentInstance.submitted = true;
       dialogRefAddCurrency.componentInstance.editAssignment = false;
-    });
+      dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
 
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-
-      let formData: any = {};
-      formData.name = result.name;
-      formData.isActive = result.IsNecessary;
-
-      dialogRefAddCurrency.componentInstance.submitted = false;
-
-      this.assignmentTypeService.createAssignment(formData).subscribe(
-        {
-          next: (data: any) => {
-
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
-            dialogRefAddCurrency.close();
-
-            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
-            this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
-              
-              succressDialog = this.dialog.open(ToastSuccessComponent, {
-                width: "30vw",
-                data: {
-                  title: trans.justifications.yourRequestHasBeenSent,
-                  message: data.message,
-                  buttonSend: trans.assignments.typesOfAssignments
+        let formData: any = {};
+        formData.name = result.name;
+        formData.isActive = result.IsNecessary;
   
-                },
-              });
-            });
-            this.getAssignments(this.filteration);
+        dialogRefAddCurrency.componentInstance.submitted = false;
+  
+        this.assignmentTypeService.createAssignment(formData).subscribe(
+          {
+            next: (data: any) => {
+  
+  
+              dialogRefAddCurrency.componentInstance.submitted = true;
+  
+              dialogRefAddCurrency.close();
+  
+                
+              let succressDialog = this.dialog.open(ToastSuccessComponent, {
+                  width: "30vw",
+                  data: {
+                    title: this.trans.justifications.yourRequestHasBeenSent,
+                    message: data.message,
+                    buttonSend: this.trans.assignments.typesOfAssignments
+    
+                  },
+                });
+                succressDialog.componentInstance.submitted = true;
 
-            setTimeout(() => {
-              succressDialog.close();
 
-            }, 2000);
-            succressDialog.componentInstance.submitted = true;
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-              succressDialog.close();
-            })
-
-          },
-          error: (err: any) => {
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
+              this.getAssignments(this.filteration);
+  
+              setTimeout(() => {
+                succressDialog.close();
+  
+              }, 2000);
+              succressDialog.componentInstance.submitClicked.subscribe(result => {
+                succressDialog.close();
+              })
+  
+            },
+            error: (err: any) => {
+  
+              dialogRefAddCurrency.componentInstance.submitted = true;
+  
+            }
           }
+        )
+      });
+      dialogRefAddCurrency.afterClosed().subscribe(result => {
+        if (result) {
+  
         }
-      )
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
+      });
 
-      }
-    });
+  
   }
   editAssignment(data: any) {
-
-    let dialogRefAddCurrency!:MatDialogRef<RequestAssignmentTypeComponent, any>;
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
       
-      dialogRefAddCurrency = this.dialog.open(RequestAssignmentTypeComponent, {
+      let dialogRefAddCurrency = this.dialog.open(RequestAssignmentTypeComponent, {
         width: "50vw",
         data: {
-          title: trans.assignments.assignmentModification,
-          setAsNecessary: trans.assignments.setAsEssential,
-          titleVacationTypeId: trans.assignments.assignmentType +" <span class='color-red'>*</span>",
-          titleName: data.signup.name +" <span class='color-red'>*</span>",
-          placeholdeName: data.signup.enterTheName,
-          validationtitleName: data.signup.nameIsRequired,
-          buttonSend: data.justifications.sendRequest
+          title: this.trans.assignments.assignmentModification,
+          setAsNecessary: this.trans.assignments.setAsEssential,
+          titleVacationTypeId: this.trans.assignments.assignmentType +" <span class='color-red'>*</span>",
+          titleName: this.trans.signup.name +" <span class='color-red'>*</span>",
+          placeholdeName: this.trans.signup.enterTheName,
+          validationtitleName: this.trans.signup.nameIsRequired,
+          buttonSend: this.trans.justifications.sendRequest
         },
       });
       dialogRefAddCurrency.componentInstance.submitted = true;
       dialogRefAddCurrency.componentInstance.editAssignment = true;
       dialogRefAddCurrency.componentInstance.id = data.id;
-    });
-
-
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData: any = {};
-      formData.id = data.id;
-      formData.name = result.name;
-      formData.isActive = result.IsNecessary;
-
-      dialogRefAddCurrency.componentInstance.submitted = false;
-
-      this.assignmentTypeService.updateAssignment(formData).subscribe(
-        {
-          next: (data: any) => {
-
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
-            dialogRefAddCurrency.close();
-
-            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
-            this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
-              
-              succressDialog = this.dialog.open(ToastSuccessComponent, {
-                width: "30vw",
-                data: {
-                  title: trans.justifications.yourRequestHasBeenSent,
-                  message: data.message,
-                  buttonSend: trans.assignments.typesOfAssignments
+      dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+        let formData: any = {};
+        formData.id = data.id;
+        formData.name = result.name;
+        formData.isActive = result.IsNecessary;
   
-                },
-              });
-            });
-            this.getAssignments(this.filteration);
+        dialogRefAddCurrency.componentInstance.submitted = false;
+  
+        this.assignmentTypeService.updateAssignment(formData).subscribe(
+          {
+            next: (data: any) => {
+  
+  
+              dialogRefAddCurrency.componentInstance.submitted = true;
+  
+              dialogRefAddCurrency.close();
+  
+                
+                let succressDialog = this.dialog.open(ToastSuccessComponent, {
+                  width: "30vw",
+                  data: {
+                    title: this.trans.justifications.yourRequestHasBeenSent,
+                    message: data.message,
+                    buttonSend: this.trans.assignments.typesOfAssignments
+    
+                  },
+                });
+                succressDialog.componentInstance.submitted = true;
 
-            setTimeout(() => {
-              succressDialog.close();
-
-            }, 2000);
-            succressDialog.componentInstance.submitted = true;
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-              succressDialog.close();
-            })
-
-          },
-          error: (err: any) => {
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
+              this.getAssignments(this.filteration);
+  
+              setTimeout(() => {
+                succressDialog.close();
+  
+              }, 2000);
+              succressDialog.componentInstance.submitClicked.subscribe(result => {
+                succressDialog.close();
+              })
+  
+            },
+            error: (err: any) => {
+  
+              dialogRefAddCurrency.componentInstance.submitted = true;
+  
+            }
           }
+        )
+      });
+      dialogRefAddCurrency.afterClosed().subscribe(result => {
+        if (result) {
+  
         }
-      )
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
+      });
 
-      }
-    });
+
+   
   }
 
 
   dialogAssignmentFile(data: any) {
 
-    let dialogRefAddCurrency!:MatDialogRef<DialogAssignmentTypeFileComponent, any>;
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
       
-      dialogRefAddCurrency =  this.dialog.open(DialogAssignmentTypeFileComponent, {
+      let dialogRefAddCurrency =  this.dialog.open(DialogAssignmentTypeFileComponent, {
         width: "40vw",
         data: {
-          title: trans.assignments.assignmentFile
+          title: this.trans.assignments.assignmentFile
         },
       });
       dialogRefAddCurrency.componentInstance.id = data.id
 
-    });
 
   }
   onPageChange(event: any) {

@@ -92,6 +92,7 @@ export class GroupsComponent {
   spinnerCards = false;
   private _mobileQueryListener: () => void;
   destroy$: Subject<boolean> = new Subject<boolean>();
+  trans!:any;
 
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
@@ -145,11 +146,16 @@ export class GroupsComponent {
       { name: '5', code: 5 },
       { name: '10', code: 10 },
       { name: '25', code: 25 },
-
     ];
+    const translations = this.translate.translations[this.translate.currentLang || 'ar'];
+    if(!this.trans) {
+      this.trans = translations
+    }
     this.translateColumn();
 
     this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.trans = dataParent.translations;
+
       this.translateColumn();
 
     });
@@ -160,34 +166,31 @@ export class GroupsComponent {
     //Add 'implements OnInit' to the class.
 
   }
-  translateColumn() {
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(data => {
-      
+  translateColumn() {      
       this.columns = [
         {
-          name: data.groups.groupCode,
+          name: this.trans.groups.groupCode,
           field: "groupNumber",
         },
         {
-          name: data.vacationBalance.GroupName,
+          name: this.trans.vacationBalance.GroupName,
           field: "groupName",
         },
         {
-          name: data.groups.groupManager,
+          name: this.trans.groups.groupManager,
           field: "groupStaff"
         },
         {
-          name:  data.groups.numberOfEmployeesInTheGroup,
+          name:  this.trans.groups.numberOfEmployeesInTheGroup,
           field: "numberOfEmployeesInTheGroup"
         },
     
         {
-          name: data.requests.action,
+          name: this.trans.requests.action,
           field: "actions"
         }
     
       ];
-    });
   }
   filter() {
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
@@ -259,7 +262,6 @@ export class GroupsComponent {
     saveAs(new Blob([buffer]), `${title}.xlsx`);
   }
   exportTableToExcel() {
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
       let columns = [...this.columns];
       delete columns[4]
       var options = { 
@@ -268,7 +270,7 @@ export class GroupsComponent {
         decimalseparator: '.',
         showLabels: true, 
         showTitle: true,
-        title: trans.sideNav.groups,
+        title: this.trans.sideNav.groups,
         useBom: true,
         headers: columns.map((column:any) => column.name)
       };
@@ -308,13 +310,12 @@ export class GroupsComponent {
           this.isLoading = false;
           
           let formatRows =formatTable.map(group => [group.groupNumber,group.groupName, group.groupStaff, group.numberOfEmployeesInTheGroup ]);
-              this.generateExcel(trans.sideNav.groups,trans.sideNav.groups,formatRows, columns);
+              this.generateExcel(this.trans.sideNav.groups,this.trans.sideNav.groups,formatRows, columns);
   
           // new ngxCsv(formatTable, "sheet", options);
     
         })
       }  
-    });
 
  
   }
@@ -400,36 +401,33 @@ export class GroupsComponent {
     })
   }
   addgroup() {
-    let dialogRefAddCurrency!:MatDialogRef<AddGroupComponent, any>;
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
-      dialogRefAddCurrency = this.dialog.open(AddGroupComponent, {
+      let dialogRefAddCurrency = this.dialog.open(AddGroupComponent, {
         width: "70vw",
         data: {
-          title: trans.groups.addAGroup,
-          setAsActive: trans.employees.setAsActive,
-          groupEmployees: trans.groups.groupEmployees,
-          placeholdeGroupEmployees: trans.groups.groupEmployees,
-          ValidationGroupEmployees: trans.groups.groupEmployeesRequired,
-          groupManager: trans.groups.groupManager,
-          placeholdeGroupManager: trans.groups.groupManager,
-          ValidationGroupManager: trans.groups.groupManagerWanted,
-          titleZone: trans.sideNav.zones+" <span class='color-red'>*</span>",
-          placeholderZone: trans.sideNav.zones,
-          validationtitleZone: trans.employees.zonesAreRequired,
-          deputyDirector: trans.groups.andDeputyDirectors,
-          placeholdeDeputyDirector: trans.groups.andDeputyDirectors,
-          ValidationDeputyDirector: trans.groups.deputyDirectorsAreRequired,
-          titleGroupName: trans.vacationBalance.GroupName+" <span class='color-red'>*</span>",
-          placeholdeGroupName: trans.vacationBalance.GroupName,
-          ValidationGroupName: trans.schedualPlan.groupNameRequired,
-          titleClose: trans.schedualPlan.toRetreat,
-          buttonSend:trans.groups.addATheGroup
+          title: this.trans.groups.addAGroup,
+          setAsActive: this.trans.employees.setAsActive,
+          groupEmployees: this.trans.groups.groupEmployees,
+          placeholdeGroupEmployees: this.trans.groups.groupEmployees,
+          ValidationGroupEmployees: this.trans.groups.groupEmployeesRequired,
+          groupManager: this.trans.groups.groupManager,
+          placeholdeGroupManager: this.trans.groups.groupManager,
+          ValidationGroupManager: this.trans.groups.groupManagerWanted,
+          titleZone: this.trans.sideNav.zones+" <span class='color-red'>*</span>",
+          placeholderZone: this.trans.sideNav.zones,
+          validationtitleZone: this.trans.employees.zonesAreRequired,
+          deputyDirector: this.trans.groups.andDeputyDirectors,
+          placeholdeDeputyDirector: this.trans.groups.andDeputyDirectors,
+          ValidationDeputyDirector: this.trans.groups.deputyDirectorsAreRequired,
+          titleGroupName: this.trans.vacationBalance.GroupName+" <span class='color-red'>*</span>",
+          placeholdeGroupName: this.trans.vacationBalance.GroupName,
+          ValidationGroupName: this.trans.schedualPlan.groupNameRequired,
+          titleClose: this.trans.schedualPlan.toRetreat,
+          buttonSend:this.trans.groups.addATheGroup
         },
       });
       dialogRefAddCurrency.componentInstance.submitted = true;
       dialogRefAddCurrency.componentInstance.editGroups = false;
   
-    });
 
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
@@ -462,19 +460,15 @@ export class GroupsComponent {
             dialogRefAddCurrency.componentInstance.submitted = true;
 
             dialogRefAddCurrency.close();
-
        
-            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
-            this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
-              succressDialog = this.dialog.open(ToastSuccessComponent, {
+              let succressDialog = this.dialog.open(ToastSuccessComponent, {
                 width: "30vw",
                 data: {
-                  title: trans.employees.yourRequestHasBeenSent,
+                  title: this.trans.employees.yourRequestHasBeenSent,
                   message: data.message,
-                  buttonSend: trans.groups.groupRequests
+                  buttonSend: this.trans.groups.groupRequests
                 },
               });
-            });
         
             this.getGroups(this.filteration);
             setTimeout(() => {
@@ -503,16 +497,13 @@ export class GroupsComponent {
     });
   }
   dialogGroupFile(data: any) {
-    let dialogRefAddCurrency!:MatDialogRef<DialogGroupFileComponent, any>;
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
-      dialogRefAddCurrency =  this.dialog.open(DialogGroupFileComponent, {
+      let dialogRefAddCurrency =  this.dialog.open(DialogGroupFileComponent, {
         width: "40vw",
         data: {
-          title: trans.groups.groupFile
+          title: this.trans.groups.groupFile
         },
       });
       dialogRefAddCurrency.componentInstance.id = data.id;
-    });
   }
   enabledRow(data: any) {
     this.groupsService.enabledEmployee({ groupId: data.id }).subscribe(
@@ -528,39 +519,37 @@ export class GroupsComponent {
     )
   }
   editgroup(data: any) {
-    let dialogRefAddCurrency!:MatDialogRef<AddGroupComponent, any>;
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
-      dialogRefAddCurrency = this.dialog.open(AddGroupComponent, {
+
+      let dialogRefAddCurrency = this.dialog.open(AddGroupComponent, {
         width: "70vw",
         data: {
-          title: trans.groups.editGroup,
-          setAsActive: trans.employees.setAsActive,
-          titleFieldDisabled: trans.groups.groupCode,
-          placeholdeieldDisabled: trans.groups.groupCode,
-          groupEmployees: trans.groups.groupEmployees,
-          placeholdeGroupEmployees: trans.groups.groupEmployees,
-          ValidationGroupEmployees: trans.groups.groupEmployeesRequired,
-          groupManager: trans.groups.groupManager,
-          placeholdeGroupManager: trans.groups.groupManager,
-          ValidationGroupManager: trans.groups.groupManagerWanted,
-          titleZone: trans.sideNav.zones+" <span class='color-red'>*</span>",
-          placeholderZone: trans.sideNav.zones,
-          validationtitleZone: trans.employees.zonesAreRequired,
-          deputyDirector: trans.groups.andDeputyDirectors,
-          placeholdeDeputyDirector: trans.groups.andDeputyDirectors,
-          ValidationDeputyDirector: trans.groups.deputyDirectorsAreRequired,
-          titleGroupName: trans.vacationBalance.GroupName+" <span class='color-red'>*</span>",
-          placeholdeGroupName: trans.vacationBalance.GroupName,
-          ValidationGroupName: trans.schedualPlan.groupNameRequired,
-          titleClose: trans.schedualPlan.toRetreat,
-          buttonSend:trans.groups.saveGroup
+          title: this.trans.groups.editGroup,
+          setAsActive: this.trans.employees.setAsActive,
+          titleFieldDisabled: this.trans.groups.groupCode,
+          placeholdeieldDisabled: this.trans.groups.groupCode,
+          groupEmployees: this.trans.groups.groupEmployees,
+          placeholdeGroupEmployees: this.trans.groups.groupEmployees,
+          ValidationGroupEmployees: this.trans.groups.groupEmployeesRequired,
+          groupManager: this.trans.groups.groupManager,
+          placeholdeGroupManager: this.trans.groups.groupManager,
+          ValidationGroupManager: this.trans.groups.groupManagerWanted,
+          titleZone: this.trans.sideNav.zones+" <span class='color-red'>*</span>",
+          placeholderZone: this.trans.sideNav.zones,
+          validationtitleZone: this.trans.employees.zonesAreRequired,
+          deputyDirector: this.trans.groups.andDeputyDirectors,
+          placeholdeDeputyDirector: this.trans.groups.andDeputyDirectors,
+          ValidationDeputyDirector: this.trans.groups.deputyDirectorsAreRequired,
+          titleGroupName: this.trans.vacationBalance.GroupName+" <span class='color-red'>*</span>",
+          placeholdeGroupName: this.trans.vacationBalance.GroupName,
+          ValidationGroupName: this.trans.schedualPlan.groupNameRequired,
+          titleClose: this.trans.schedualPlan.toRetreat,
+          buttonSend:this.trans.groups.saveGroup
         },
       });
       dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editGroups = true;
     dialogRefAddCurrency.componentInstance.id = data.id;
   
-    });
  
 
     // dialogRefAddCurrency.componentInstance.list = this.categories;
@@ -595,17 +584,15 @@ export class GroupsComponent {
 
             dialogRefAddCurrency.componentInstance.submitted = true;
             dialogRefAddCurrency.close();
-            let succressDialog!:MatDialogRef<ToastSuccessComponent, any>;
-            this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
-              succressDialog = this.dialog.open(ToastSuccessComponent, {
+
+              let succressDialog = this.dialog.open(ToastSuccessComponent, {
                 width: "30vw",
                 data: {
-                  title: trans.employees.yourRequestHasBeenSent,
+                  title: this.trans.employees.yourRequestHasBeenSent,
                   message: data.message,
-                  buttonSend: trans.groups.groupRequests
+                  buttonSend: this.trans.groups.groupRequests
                 },
               });
-            });
             this.getGroups(this.filteration);
             setTimeout(() => {
               succressDialog.close();
@@ -643,23 +630,19 @@ export class GroupsComponent {
 
   deleteRow(data: any) {
 
-
-    let reasonOfRefuseDialog!:MatDialogRef<DialogCloseComponent, any>;
-    this.translate.getTranslation(this.translate.currentLang || 'en').subscribe(trans => {
-      reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
+      let reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
         width: "30vw",
         data: {
-          title: trans.schedualPlan.areYouSureToHangTheGroup,
-          message: trans.fingerprintDevices.pleaseExplainTheReason,
-          titleReasonOfRefuse: trans.zones.reasonForComment,
-          placeholdeReasonOfRefuse: trans.schedualPlan.pleaseWriteTheReasonForRejection,
-          titleClose: trans.tables.toRetreat,
-          buttonSend: trans.schedualPlan.groupComment
+          title: this.trans.schedualPlan.areYouSureToHangTheGroup,
+          message: this.trans.fingerprintDevices.pleaseExplainTheReason,
+          titleReasonOfRefuse: this.trans.zones.reasonForComment,
+          placeholdeReasonOfRefuse: this.trans.schedualPlan.pleaseWriteTheReasonForRejection,
+          titleClose: this.trans.tables.toRetreat,
+          buttonSend: this.trans.schedualPlan.groupComment
         },
       });
       reasonOfRefuseDialog.componentInstance.submitted = true;
 
-    });
 
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
