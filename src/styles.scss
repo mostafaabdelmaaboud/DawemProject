@@ -1458,7 +1458,7 @@ img.flag {
 
 }
 .mat-expansion-panel-header .mat-content span {
-  text-align: left;
+  text-align: left !important;
 
 }
 [lang="ar"] {
@@ -1472,7 +1472,7 @@ img.flag {
     -o-transform: translateY(-50%);
   }
   .mat-expansion-panel-header .mat-content span {
-    text-align: right;
+    text-align: right !important;
   }
 }
 
