@@ -5,7 +5,6 @@ import { GroupsRoutingModule } from './groups-routing.module';
 import { GroupsComponent } from './groups.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -16,7 +15,6 @@ import { TranslateModule } from '@ngx-translate/core';
     CommonModule,
     GroupsRoutingModule,
     MatDialogModule,
-    TranslateModule,
     SharedModule
   ]
 })
