@@ -22,6 +22,14 @@
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">السماح ببصمة الإصبع خارج المناطق المسموح بها</label>
+      <div class="content-password">
+        {{info?.allowFingerprintOutsideAllowedZones ? "نعم" : "لا"}}
+      </div>
+
+    </div>
+    
+    <div class="sectionTwo mb-3 line-bellow">
       <label class="title">{{'sections.departmentCode' | translate}}</label>
       <div class="content-password">
         <ng-container *ngIf="info?.code">{{info?.code}}</ng-container>

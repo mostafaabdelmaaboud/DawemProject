@@ -157,7 +157,6 @@ export class AssignmentTypeComponent {
     this.translateColumn();
 
     this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
-      debugger;
       this.trans = dataParent.translations;
       this.translateColumn();
 

@@ -15,6 +15,10 @@
 .code {
   height: 97%;
 }
+.dropdown-code {
+  top: 2%;
+  height: 92%;
+}
 :host ::ng-deep .p-dropdown,
 :host ::ng-deep .p-multiselect {
   width: 100% !important;

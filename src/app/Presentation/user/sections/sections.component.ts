@@ -477,6 +477,8 @@ export class SectionsComponent {
 
       formData.name = result.name;
       formData.isActive = result.isActive;
+      formData.allowFingerprintOutsideAllowedZones = result.AllowFingerprintOutsideAllowedZones;
+
       formData.parentId = result.parentId.key;
       formData.managerId = result.managerId.key;
 
@@ -693,6 +695,8 @@ export class SectionsComponent {
       });
       dialogRefAddCurrency.componentInstance.submitted = true;
       dialogRefAddCurrency.componentInstance.editSection = true;
+      dialogRefAddCurrency.componentInstance.id = data.id;
+
     // dialogRefAddCurrency.componentInstance.list = this.categories;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
@@ -701,6 +705,8 @@ export class SectionsComponent {
 
       formData.name = result.name;
       formData.isActive = result.isActive;
+      formData.allowFingerprintOutsideAllowedZones = result.AllowFingerprintOutsideAllowedZones;
+
       formData.parentId = result.parentId.key;
       formData.managerId = result.managerId.key;
 

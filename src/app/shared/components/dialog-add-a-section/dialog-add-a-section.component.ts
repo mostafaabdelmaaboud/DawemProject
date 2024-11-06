@@ -92,6 +92,8 @@ export class DialogAddASectionComponent {
   listZones: any[] = [];
   addBranchGroupForm: FormGroup = this.fb.group({
     isActive: [false],
+    AllowFingerprintOutsideAllowedZones:[false],
+
     name: ['', Validators.required],
     parentId: ['', Validators.required],
     managerId: ['', Validators.required],
@@ -184,6 +186,8 @@ export class DialogAddASectionComponent {
 
 
                   this.getControl("isActive")?.setValue(data.isActive);
+                  this.getControl("AllowFingerprintOutsideAllowedZones")?.setValue(data.allowFingerprintOutsideAllowedZones);
+
                   this.getControl("fieldDisabled")?.setValue(data.code);
 
                   this.getControl("name")?.setValue(data.name);

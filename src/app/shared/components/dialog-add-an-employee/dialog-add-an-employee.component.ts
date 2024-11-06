@@ -137,6 +137,7 @@ export class DialogAddAnEmployeeComponent {
     ScheduleId: [''],
     isActive: [false],
     AllowChangeFingerprintMobileCode:[false],
+    AllowFingerprintOutsideAllowedZones:[false],
     name: ["", [Validators.required, Validators.pattern(/^[^\d]*$/)]],
     employeeNumber: ['', [Validators.required, Validators.min(0)]],
     JobTitleId: ['', Validators.required],
@@ -289,6 +290,7 @@ export class DialogAddAnEmployeeComponent {
 
               this.addBranchGroupForm.get("isActive")?.setValue(data.isActive);
               this.addBranchGroupForm.get("AllowChangeFingerprintMobileCode")?.setValue(data.allowChangeFingerprintMobileCode);
+              this.addBranchGroupForm.get("AllowFingerprintOutsideAllowedZones")?.setValue(data.allowFingerprintOutsideAllowedZones);
 
               
 
