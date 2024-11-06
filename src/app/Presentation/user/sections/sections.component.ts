@@ -693,6 +693,8 @@ export class SectionsComponent {
       });
       dialogRefAddCurrency.componentInstance.submitted = true;
       dialogRefAddCurrency.componentInstance.editSection = true;
+      dialogRefAddCurrency.componentInstance.id = data.id;
+
     // dialogRefAddCurrency.componentInstance.list = this.categories;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
