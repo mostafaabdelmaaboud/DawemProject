@@ -3,18 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/core/auth/services/auth-service.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FileUploadModule } from 'primeng/fileupload';
-import { InputSwitchModule } from 'primeng/inputswitch';
-import { CalendarModule } from "primeng/calendar";
-import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { EmployeesService } from 'src/app/Presentation/user/employees/services/employees.service';
-import { EMPTY, Subject, combineLatest, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { SectionsService } from 'src/app/Presentation/user/sections/services/sections.service';
+
 import { ToastrService } from 'ngx-toastr';
 
 interface addBranchesInputsProps {
