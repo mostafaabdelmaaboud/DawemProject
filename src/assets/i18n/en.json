@@ -983,6 +983,20 @@
     "groupFile":"Group file",
     "locationData":"Location data",
     "deputyDirector":"Deputy Director"
+  },
+  "jobTitles": {
+    "summaryOfJobTitles":"Summary of job titles",
+    "totalJobTitles":"Total job titles",
+    "activeJobTitles":"Active job titles",
+    "pendingJobTitles":"Pending job titles",
+    "brokenJobTitles":"Broken job titles",
+    "addAJobTitle":"Add a job title",
+    "JobTitleCode":"Job title code",
+    "jobTitle":"Job title",
+    "areYouSureYouDeletedName":"Are you sure you deleted the name?",
+    "jobTitleRequests":"Job Title Requests",
+    "editJobTitle":"Edit job title",
+    "jobTitleFile":"Job title file"
 
 
 

@@ -978,5 +978,19 @@
     "groupFile":"ملف المجموعة",
     "locationData":"بيانات الموقع",
     "deputyDirector":"نواب المدير"
+  },
+  "jobTitles": {
+    "summaryOfJobTitles":"ملخص المسميات الوظيفية",
+    "totalJobTitles":"اجمالي المسميات الوظيفية",
+    "activeJobTitles":"المسميات الوظيفية النشطة",
+    "pendingJobTitles":"المسميات الوظيفية المعلقة",
+    "brokenJobTitles":"المسميات الوظيفية المعطلة",
+    "addAJobTitle":"إضافة مسمي وظيفي",
+    "JobTitleCode":"كود المسمى الوظيفى",
+    "jobTitle":"المسمى الوظيفى",
+    "areYouSureYouDeletedName":"هل متأكد من حذف الاسم؟",
+    "jobTitleRequests":"طلبات المسميات الوظيفية",
+    "editJobTitle":"تعديل المسمي الوظيفي",
+    "jobTitleFile":"ملف المسمي الوظيفي"
   }
 }
