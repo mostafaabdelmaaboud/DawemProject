@@ -997,10 +997,19 @@
     "jobTitleRequests":"Job Title Requests",
     "editJobTitle":"Edit job title",
     "jobTitleFile":"Job title file"
-
-
-
-
+  },
+  "typesOfJustifications":{
+    "summaryOfTypesOfJustifications":"Summary of types of justifications",
+    "totalTypesOfJustifications":"Total types of justifications",
+    "typesOfActiveJustifications":"Types of active justifications",
+    "typesOfOutstandingJustifications":"Types of outstanding justifications",
+    "typesOfBrokenJustifications":"Types of broken justifications",
+    "typesOfJustifications":"Types of justifications",
+    "justificationNumber":"Justification number",
+    "addJustificationType":"Add justification type",
+    "stateOfJustification":"state of justification",
+    "areYouSureYouWantToDelete":"Are you sure you want to delete the justification type?",
+    "justificationFile":"justification file"
 
   }
 

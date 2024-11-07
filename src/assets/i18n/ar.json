@@ -992,5 +992,18 @@
     "jobTitleRequests":"طلبات المسميات الوظيفية",
     "editJobTitle":"تعديل المسمي الوظيفي",
     "jobTitleFile":"ملف المسمي الوظيفي"
+  },
+  "typesOfJustifications":{
+    "summaryOfTypesOfJustifications":"ملخص انواع التبريرات",
+    "totalTypesOfJustifications":"اجمالي انواع التبريرات",
+    "typesOfActiveJustifications":"انواع التبريرات النشطة",
+    "typesOfOutstandingJustifications":"انواع التبريرات المعلقة",
+    "typesOfBrokenJustifications":"انواع التبريرات المعطلة",
+    "typesOfJustifications":"انواع التبريرات",
+    "justificationNumber":"رقم التبرير",
+    "addJustificationType":"إضافة نوع تبرير",
+    "stateOfJustification":"حاله التبرير",
+    "areYouSureYouWantToDelete":"هل متاكد من حذف نوع التبرير؟",
+    "justificationFile":"ملف التبرير"
   }
 }
