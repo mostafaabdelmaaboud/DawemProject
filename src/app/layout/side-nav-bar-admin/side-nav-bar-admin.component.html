@@ -9,7 +9,7 @@
       <nz-sider>
         <div class="list-content" *ngIf="menuItems?.length > 0">
             <ng-container *ngTemplateOutlet="recursiveTemplates; context: { $implicit: menuItems }"></ng-container>
-            <mat-expansion-panel class="mat-elevation-z0"
+            <!-- <mat-expansion-panel class="mat-elevation-z0"
             (opened)="isSidebarExpanded = true"
                          (closed)="isSidebarExpanded = false">
               <mat-expansion-panel-header>
@@ -105,7 +105,7 @@
                   </mat-list-item>
                   </ul>
               </mat-nav-list>
-            </mat-expansion-panel>
+            </mat-expansion-panel> -->
             <mat-list-item  class="side-nav-item" routerLink="fingerprintDeviceManagement/31">
               <ul nz-menu nzMode="inline">
                 <li nz-menu-item routerLinkActive="ant-menu-item-selected">
@@ -122,7 +122,7 @@
         <ng-container *ngFor="let node of nodes">
           <ng-container *ngIf="node?.groupOrScreenType === 0">
             <mat-expansion-panel class="mat-elevation-z0"
-            (opened)="isSidebarExpanded = true;setStep(node?.id)" [expanded]="step === node?.id"
+            (opened)="isSidebarExpanded = true;setStep(node?.id)"
                          (closed)="isSidebarExpanded = false">
               <mat-expansion-panel-header>
                 <ng-container *ngIf="node?.icon?.includes('pi-')">
