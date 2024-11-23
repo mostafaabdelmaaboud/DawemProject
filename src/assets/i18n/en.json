@@ -1011,6 +1011,24 @@
     "areYouSureYouWantToDelete":"Are you sure you want to delete the justification type?",
     "justificationFile":"justification file"
 
+  },
+  "typesOfPermissions":{
+    "summaryOfTypesOfPermissions":"Summary of types of permissions",
+    "totalTypesOfPermissions":"Total types of permissions",
+    "typesOfActivePermissions":"Types of active permissions",
+    "typesOfPendingPermissions":"Types of pending permissions",
+    "typesOfSuspendedPermissions":"Types of suspended permissions",
+    "typesOfPermissions":"Types of permissions",
+    "permissionNumber":"Permission number",
+    "addAPermissionType":"Add a permission type",
+    "statusOfPermission":"Status of permission",
+    "areYouSureYouWantToDeleteThePermissionType":"Are you sure you want to delete the permission type?",
+    "pleaseEnterName":"Please enter name",
+    "editAPermission":"edit a permission",
+    "permissionFile":"Permission file"
+
+
+
   }
 
 }

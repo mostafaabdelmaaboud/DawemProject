@@ -10,24 +10,27 @@
   </header>
   <div class="body-dialog p-15 f-s-16">
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">الرقم</label>
+      <label class="title">{{'zones.theNumber' | translate}}</label>
       <div class="content-password">
-        {{info?.code ? info?.code : "لا يوجد"}}
-      </div>
-
-    </div>
-    <div class="sectionTwo mb-3 line-bellow">
-      <label class="title"> تعيين كضرورية </label>
-      <div class="content-password">
-        {{info?.isActive ? "نشط" : "غير نشط"}}
+        <ng-container *ngIf="info?.code">{{info?.code}}</ng-container>
+        <ng-container *ngIf="!info?.code">{{'department.nothing' | translate}}</ng-container>
 
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title"> الاسم </label>
+      <label class="title">{{'zones.setAsNecessary' | translate}}</label>
       <div class="content-password">
-        {{info?.name ? info?.name : "لا يوجد"}}
+        <ng-container *ngIf="info?.isActive">{{'employees.active' | translate}}</ng-container>
+        <ng-container *ngIf="!info?.isActive">{{'employees.Inactive' | translate}}</ng-container>
+      </div>
+
+    </div>
+    <div class="sectionTwo mb-3 line-bellow">
+      <label class="title">{{'users.theName' | translate}}</label>
+      <div class="content-password">
+        <ng-container *ngIf="info?.name">{{info?.name}}</ng-container>
+        <ng-container *ngIf="!info?.name">{{'department.nothing' | translate}}</ng-container>
 
       </div>
 

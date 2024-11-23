@@ -674,7 +674,6 @@
     "assignmentStatus":"حاله التكليف",
     "areYouSureYouWantToDeleteTheAssignmentType":"هل متاكد من حذف نوع التكليف؟",
     "assignmentModification":"تعديل التكليف",
-
     "totalAssignments":"اجمالي التكليفات",
     "expectedAssignments":"التكليفات المنتظرة",
     "acceptedAssignments":"التكليفات المقبولة",
@@ -1005,5 +1004,20 @@
     "stateOfJustification":"حاله التبرير",
     "areYouSureYouWantToDelete":"هل متاكد من حذف نوع التبرير؟",
     "justificationFile":"ملف التبرير"
+  },
+  "typesOfPermissions":{
+    "summaryOfTypesOfPermissions":"ملخص انواع الاستئذانات",
+    "totalTypesOfPermissions":"اجمالي انواع الاستئذانات",
+    "typesOfActivePermissions":"انواع الاستئذانات النشطة",
+    "typesOfPendingPermissions":"انواع الاستئذانات المعلقة",
+    "typesOfSuspendedPermissions":"انواع الاستئذانات المعطلة",
+    "typesOfPermissions":"انواع الاستئذانات",
+    "permissionNumber":"رقم الاستئذان",
+    "addAPermissionType":"إضافة نوع استئذان",
+    "statusOfPermission":"حاله الاستئذان",
+    "areYouSureYouWantToDeleteThePermissionType":"هل متاكد من حذف نوع الاستئذان؟",
+    "pleaseEnterName":"برجاء ادخال الأسم",
+    "editAPermission":"تعديل الاستئذان",
+    "permissionFile":"ملف الاستئذان"
   }
 }
