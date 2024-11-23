@@ -1019,5 +1019,21 @@
     "pleaseEnterName":"برجاء ادخال الأسم",
     "editAPermission":"تعديل الاستئذان",
     "permissionFile":"ملف الاستئذان"
+  },
+  "responsibilities":{
+    "summaryOfResponsibilities":"ملخص المسؤوليات",
+    "totalResponsibilities":"اجمالي المسؤوليات",
+    "activeResponsibilities":"المسؤوليات النشطة",
+    "outstandingResponsibilities":"المسؤوليات المعلقة",
+    "disabledResponsibilities":"المسؤوليات المعطلة",
+    "addResponsibility":"إضافة مسؤولية",
+    "areYouSureYouRefuseResponsibility":"هل متأكد من رفض المسؤولية؟",
+    "responsibilityDenied":"رفض المسؤولية",
+    "requestsForResponsibilities":"طلبات المسؤوليات",
+    "toApplyToEmployees":"لتطبيق الموظفين ؟",
+    "adjustmentOfLiability":"تعديل المسؤولية",
+    "responsibilityFile":"ملف المسؤولية",
+    "yes":"نعم",
+    "no":"لا"
   }
 }

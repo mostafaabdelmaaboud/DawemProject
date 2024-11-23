@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -94,6 +94,10 @@ export class ResponsibilityComponent {
     { name: "تسجيل انصراف خاطئ", key: "4" }
   ];
   defaultRowPerPage = { name: '5', code: 5 };
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
+
+  trans!:any;
 
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
@@ -142,9 +146,42 @@ export class ResponsibilityComponent {
       { name: '5', code: 5 }
 
     ];
+    const translations = this.translate.translations[this.translate.currentLang || 'ar'];
+    if(!this.trans) {
+      this.trans = translations
+    }
+    this.translateColumn();
+
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.trans = dataParent.translations;
+      this.translateColumn();
+
+    });
     this.getInformation();
 
     this.getResponsibility(this.filteration);
+  }
+  translateColumn() {
+
+    this.columns = [
+      {
+        name: this.trans.schedualPlan.code,
+        field: "code",
+      },
+      {
+        name:this.trans.signup.name,
+        field: "name",
+      },
+      {
+        name: this.trans.department.theCondition,
+        field: "isActive"
+      },
+      {
+        name:this.trans.assignments.action,
+        field: "actions"
+      }
+  
+    ];
   }
   filter() {
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
@@ -224,7 +261,7 @@ export class ResponsibilityComponent {
       decimalseparator: '.',
       showLabels: true, 
       showTitle: true,
-      title: 'المسؤوليات',
+      title: this.trans.sideNav.responsibility,
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
@@ -252,12 +289,12 @@ export class ResponsibilityComponent {
               return {
                 code: permission.code,
                 name: permission.name,
-                isActive: permission.isActive ? 'نشط' : 'غير نشط'
+                isActive: permission.isActive ? this.trans.employees.active : this.trans.employees.Inactive
               }
             })
             this.isLoading = false;
             let formatRows =formatTable.map(assignment => [assignment.code,assignment.name, assignment.isActive ]);
-            this.generateExcel('المسؤوليات','المسؤوليات',formatRows, columns);
+            this.generateExcel(this.trans.sideNav.responsibility,this.trans.sideNav.responsibility,formatRows, columns);
 
             // new ngxCsv(formatTable, "sheet", options);
           },
@@ -365,9 +402,9 @@ export class ResponsibilityComponent {
           const succressDialog = this.dialog.open(ToastSuccessComponent, {
             width: "30vw",
             data: {
-              title: "تم قبول الطلب",
+              title: this.trans.justifications.TheRequestHasBeenAccepted,
               message: res.message,
-              buttonSend: "اغلاق"
+              buttonSend: this.trans.justifications.close
             },
           });
           setTimeout(() => {
@@ -392,12 +429,12 @@ export class ResponsibilityComponent {
     let reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
       width: "30vw",
       data: {
-        title: "هل متأكد من رفض المسؤولية؟",
-        message: "برجاء توضيح السبب إن أمكن",
-        titleReasonOfRefuse:"سبب الرفض",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض",
-        titleClose:"تراجع",
-        buttonSend: "رفض المسؤولية"
+        title: this.trans.responsibilities.areYouSureYouRefuseResponsibility,
+        message: this.trans.justifications.pleaseExplainWhyIfPossible,
+        titleReasonOfRefuse:this.trans.justifications.theReasonOfRefuse,
+        placeholdeReasonOfRefuse: this.trans.justifications.pleaseWriteTheReasonForRejection,
+        titleClose:this.trans.justifications.toRetreat,
+        buttonSend: this.trans.responsibilities.responsibilityDenied
       },
     });
 
@@ -429,13 +466,13 @@ export class ResponsibilityComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestResponsibilityComponent, {
       width: "50vw",
       data: {
-        title: "إضافة مسؤولية",
-        setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
-        titleName: "الأسم<span class='color-red'>*</span>",
-        placeholdeName: "برجاء ادخال الأسم",
-        validationtitleName: "الأسم مطلوب",
-        buttonSend: "موافق"
+        title: this.trans.responsibilities.addResponsibility,
+        setAsNecessary: this.trans.justifications.setAsEssential,
+        titleVacationTypeId: this.trans.assignments.typeOfPermission +" <span class='color-red'>*</span>",
+        titleName: this.trans.signup.name +" <span class='color-red'>*</span>",
+        placeholdeName: this.trans.typesOfPermissions.pleaseEnterName,
+        validationtitleName: this.trans.signup.nameIsRequired,
+        buttonSend: this.trans.justifications.sendRequest
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
@@ -462,9 +499,9 @@ export class ResponsibilityComponent {
             const succressDialog = this.dialog.open(ToastSuccessComponent, {
               width: "30vw",
               data: {
-                title: "تم ارسال طلبك",
+                title: this.trans.justifications.yourRequestHasBeenSent,
                 message: data.message,
-                buttonSend: "طلبات المسؤوليات"
+                buttonSend: this.trans.responsibilities.requestsForResponsibilities
 
               },
             });
@@ -498,13 +535,13 @@ export class ResponsibilityComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestResponsibilityComponent, {
       width: "50vw",
       data: {
-        title: "تعديل المسؤولية",
-        setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاستئذانات <span class='color-red'>*</span>",
-        titleName: "الأسم<span class='color-red'>*</span>",
-        placeholdeName: "برجاء ادخال الأسم",
-        validationtitleName: "الأسم مطلوب",
-        buttonSend: "موافق"
+        title: this.trans.responsibilities.adjustmentOfLiability,
+        setAsNecessary: this.trans.justifications.setAsEssential,
+        titleVacationTypeId: this.trans.assignments.typeOfPermission +" <span class='color-red'>*</span>",
+        titleName: this.trans.signup.name +" <span class='color-red'>*</span>",
+        placeholdeName: this.trans.typesOfPermissions.pleaseEnterName,
+        validationtitleName: this.trans.signup.nameIsRequired,
+        buttonSend: this.trans.justifications.sendRequest
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
@@ -530,12 +567,13 @@ export class ResponsibilityComponent {
 
             dialogRefAddCurrency.close();
 
+  
             const succressDialog = this.dialog.open(ToastSuccessComponent, {
               width: "30vw",
               data: {
-                title: "تم ارسال طلبك",
+                title: this.trans.justifications.yourRequestHasBeenSent,
                 message: data.message,
-                buttonSend: "طلبات المسؤوليات"
+                buttonSend: this.trans.responsibilities.requestsForResponsibilities
 
               },
             });
@@ -571,7 +609,7 @@ export class ResponsibilityComponent {
     const dialogRefAddCurrency = this.dialog.open(DialogResponsibilityFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف المسؤولية"
+        title: this.trans.responsibilities.responsibilityFile
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id
@@ -629,5 +667,9 @@ export class ResponsibilityComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

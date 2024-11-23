@@ -1026,7 +1026,22 @@
     "pleaseEnterName":"Please enter name",
     "editAPermission":"edit a permission",
     "permissionFile":"Permission file"
-
+  },
+  "responsibilities":{
+    "summaryOfResponsibilities":"Summary of responsibilities",
+    "totalResponsibilities":"Total responsibilities",
+    "activeResponsibilities":"Active responsibilities",
+    "outstandingResponsibilities":"Outstanding responsibilities",
+    "disabledResponsibilities":"Disabled responsibilities",
+    "addResponsibility":"Add responsibility",
+    "areYouSureYouRefuseResponsibility":"Are you sure you refuse responsibility?",
+    "responsibilityDenied":"Responsibility denied",
+    "requestsForResponsibilities":"Requests for responsibilities",
+    "toApplyToEmployees":"To apply to employees?",
+    "adjustmentOfLiability":"Adjustment of liability",
+    "responsibilityFile":"Responsibility file",
+    "yes":"Yes",
+    "no":"NO"
 
 
   }
