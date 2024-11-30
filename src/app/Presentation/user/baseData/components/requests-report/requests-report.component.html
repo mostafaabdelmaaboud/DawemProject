@@ -79,7 +79,7 @@
                           (click)="searchDropdown(searchEmployeeID.value, 'EmployeeID')"></i>
                           <i class="pi pi-times-circle ml-2" *ngIf="employeeIDClearData" (click)="searchDropdown('', 'EmployeeID')"></i>
 
-                        <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchEmployeeID />
+                        <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'EmployeeID')" pInputText #searchEmployeeID />
                       </span>
                     </ng-template>
                     <ng-template let-option pTemplate="item">
@@ -112,7 +112,7 @@
                           (click)="searchDropdown(searchDepartmentId.value, 'DepartmentId')"></i>
                           <i class="pi pi-times-circle ml-2" *ngIf="departmentIdClearData" (click)="searchDropdown('', 'DepartmentId')"></i>
 
-                        <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchDepartmentId />
+                        <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'DepartmentId')" pInputText #searchDepartmentId />
                       </span>
                     </ng-template>
                     <ng-template let-option pTemplate="item">
@@ -145,7 +145,7 @@
 
                         <i class="pi pi-times-circle ml-2" *ngIf="zoneIdClearData" (click)="searchDropdown('', 'GroupId')"></i>
 
-                        <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchZoneId />
+                        <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'GroupId')" pInputText #searchZoneId />
                       </span>
                     </ng-template>
                     <ng-template let-option pTemplate="item">

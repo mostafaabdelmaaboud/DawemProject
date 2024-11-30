@@ -218,17 +218,11 @@ export class AttendanceAndDepartureForEmployeesComponent {
     return array.sort((a, b) => {
       const aIndex = a.name.indexOf(searchTerm);
       const bIndex = b.name.indexOf(searchTerm);
-  
-      // إذا كان النص المدخل موجودًا في كلا الاسمين، قارن بناءً على موقعه (الأقرب يظهر أولاً)
       if (aIndex !== -1 && bIndex !== -1) {
         return aIndex - bIndex;
       }
-  
-      // إذا كان النص موجودًا في أحد الاسمين فقط، اجعل العنصر الذي يحتوي النص في المقدمة
       if (aIndex !== -1) return -1;
       if (bIndex !== -1) return 1;
-  
-      // إذا لم يكن النص موجودًا في أي منهما، لا تغير الترتيب
       return 0;
     });
   }
