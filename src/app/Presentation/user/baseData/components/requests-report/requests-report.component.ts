@@ -261,7 +261,7 @@ export class RequestsReportComponent {
                   newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
                 newArray = newArray.filter(newItem => 
-                  !this.employeesList.some(oldItem => oldItem.key === newItem.key)
+                  !this.employeesList.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
                 );
                 const searchTerm = data;
 
@@ -298,7 +298,7 @@ export class RequestsReportComponent {
                     newArray.push({ name: jobTitle.name, key: jobTitle.id })
                   });
                   newArray = newArray.filter(newItem => 
-                    !this.depatmentsList.some(oldItem => oldItem.key === newItem.key)
+                    !this.depatmentsList.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
                   );
                   const searchTerm = data;
                   if(res?.data?.length > 0 || searchInput){
@@ -333,7 +333,7 @@ export class RequestsReportComponent {
                       newArray.push({ name: jobTitle.name, key: jobTitle.id })
                     });
                     newArray = newArray.filter(newItem => 
-                      !this.groupsList.some(oldItem => oldItem.key === newItem.key)
+                      !this.groupsList.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
                     );
                     const searchTerm = data;
                     if(res?.data?.length > 0 || searchInput){
