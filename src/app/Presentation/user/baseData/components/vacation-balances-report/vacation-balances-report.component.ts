@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { PrimeNGConfig } from 'primeng/api';
-import { Subscription, combineLatest, debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { Subject, Subscription, combineLatest, debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { EmployeesService } from '../../../employees/services/employees.service';
 import { BaseDataService } from '../../services/base-data.service';
 
@@ -37,6 +37,7 @@ export class VacationBalancesReportComponent {
   jobTitleList:any[] = [];
   loadingReport = false;
   url!: any;
+  private searchSubject = new Subject<{ value: any; type: any }>();
 
   private _mobileQueryListener: () => void;
   constructor(
@@ -76,6 +77,15 @@ export class VacationBalancesReportComponent {
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') as string;
   this.loadDataDropdown();
+  this.searchSubject
+  .pipe(
+    debounceTime(500),
+    distinctUntilChanged((prev, curr) =>  prev.value === curr.value
+  ) 
+  )
+  .subscribe(({ value, type }) => {
+    this.searchDropdown(value, type, true);
+  });
   }
   loadDataDropdown() {
     let employee = this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
@@ -103,6 +113,12 @@ export class VacationBalancesReportComponent {
     return this.reportForm?.get(controlName);
   }
   filteration = {
+
+  }
+  searchList(target:any, type:any) {
+    let value = target.value;
+
+    this.searchSubject.next({ value, type }); 
 
   }
   filter() {
@@ -139,9 +155,9 @@ export class VacationBalancesReportComponent {
   }
  
   reset() {
-    this.reportForm.get("FreeText")?.setValue("");
+    this.reportForm.get("FreeText")?.reset();
 
-    this.reportForm.get("DepartmentIds")?.setValue("");
+    this.reportForm.get("DepartmentIds")?.reset();
     this.loadDataDropdown();
     this.removeText = true;
     this.show = false;
@@ -150,8 +166,22 @@ export class VacationBalancesReportComponent {
   departmentIdClearData = false;
   zoneIdClearData = false;
   jobTitleIdData = false;
-
-  searchDropdown(data: any, type: string) {
+  sortArrayBySearchTerm(
+    array: { name: string; key: number }[],
+    searchTerm: string
+  ): { name: string; key: number }[] {
+    return array.sort((a, b) => {
+      const aIndex = a.name.indexOf(searchTerm);
+      const bIndex = b.name.indexOf(searchTerm);
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return 0;
+    });
+  }
+  searchDropdown(data: any, type: string, searchInput?) {
 
     switch (type) {
       case 'EmployeeID':
@@ -167,10 +197,16 @@ export class VacationBalancesReportComponent {
                   newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
                 newArray = newArray.filter(newItem => 
-                  !this.employeesList.some(oldItem => oldItem.key === newItem.key)
+                  !this.employeesList.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
                 );
-                if(newArray.length > 0){
-                  this.employeesList = [...this.employeesList, ...newArray]
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.employeesList = [...this.employeesList, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.employeesList, searchTerm);
+                  this.employeesList = [...formatSearch];
                 } else {
                   if(!res?.data?.length) {
                     this.toast.error("لا يوجد بيانات");
