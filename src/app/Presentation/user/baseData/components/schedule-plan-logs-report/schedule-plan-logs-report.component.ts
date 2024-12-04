@@ -207,12 +207,12 @@ export class SchedulePlanLogsReportComponent {
  
   reset() {
 
-    this.reportForm.get("FreeText")?.setValue("");
-    this.reportForm.get("DateFrom")?.setValue("");
-    this.reportForm.get("DateTo")?.setValue("");
-    this.reportForm.get("EmployeeIds")?.setValue("");
-    this.reportForm.get("DepartmentIds")?.setValue("");
-    this.reportForm.get("GroupIds")?.setValue("");
+    this.reportForm.get("FreeText")?.reset();
+    this.reportForm.get("DateFrom")?.reset();
+    this.reportForm.get("DateTo")?.reset();
+    this.reportForm.get("EmployeeIds")?.reset();
+    this.reportForm.get("DepartmentIds")?.reset();
+    this.reportForm.get("GroupIds")?.reset();
     this.loadDataDropdown();
     this.removeText = true;
 
