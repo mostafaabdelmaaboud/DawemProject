@@ -18,6 +18,7 @@ import { GooglePlaceDirective, GooglePlaceModule } from 'ngx-google-places-autoc
 import { Address } from 'ngx-google-places-autocomplete-esb/lib/objects/address';
 import { ZonesService } from 'src/app/Presentation/user/zones/services/zones.service';
 import { AgmCircle, AgmCoreModule } from '@agm/core';
+import { ToastrService } from 'ngx-toastr';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -116,6 +117,7 @@ export class AddZoneComponent {
   // initial center position for the map of Nairobi city, kenya
   latitude: number = -1.2921;
   longitude: number = 36.8219;
+  private searchSubject = new Subject<{ value: any; type: any }>();
 
   onMarkerClickEvent(mapLabel: any, mapIndx: number) {
 
@@ -197,10 +199,9 @@ export class AddZoneComponent {
     public dialogRef: MatDialogRef<AddZoneComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     public translate: TranslateService,
+    private toast: ToastrService,
 
-    private authService: AuthService,
     private cd: ChangeDetectorRef,
-    private ngZone: NgZone,
     private fb: FormBuilder
   ) {
     this.dialogRef.disableClose = true;
@@ -292,8 +293,16 @@ export class AddZoneComponent {
         this.radius = data;
 
       }
-    })
-
+    });
+    this.searchSubject
+    .pipe(
+      debounceTime(500),
+      distinctUntilChanged((prev, curr) =>  prev.value === curr.value && prev.type === curr.type
+    ) 
+    )
+    .subscribe(({ value, type }) => {
+      this.searchDropdown(value, type, true);
+    });
   }
   
   private checkLocationPermission() {
@@ -385,8 +394,29 @@ export class AddZoneComponent {
       }
     );
   }
+  searchList(target:any, type:any) {
+    let value = target.value;
+
+    this.searchSubject.next({ value, type }); 
+
+  }
+  sortArrayBySearchTerm(
+    array: { name: string; key: number }[],
+    searchTerm: string
+  ): { name: string; key: number }[] {
+    return array.sort((a, b) => {
+      const aIndex = a.name.indexOf(searchTerm);
+      const bIndex = b.name.indexOf(searchTerm);
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return 0;
+    });
+  }
   lastSearchQuery = "";
-  searchDropdown(data: any, type: string) {
+  searchDropdown(data: any, type: string, searchInput?) {
 
     switch (type) {
       case 'companyBranches':
@@ -396,12 +426,29 @@ export class AddZoneComponent {
             this.zonesService.CompanyBranch({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.companyBranchesList = [];
+          
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-
                 res?.data?.forEach((jobTitle: any) => {
-                  this.companyBranchesList.push({ name: jobTitle.name, key: jobTitle.id })
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.companyBranchesList.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.companyBranchesList = [...this.companyBranchesList, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.companyBranchesList, searchTerm);
+                  this.companyBranchesList = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toast.error("لا يوجد بيانات");
+                  }
+                }
               });
           }
 
