@@ -913,6 +913,8 @@
     "departmentCode":"Department code",
     "addSection":"Add section",
     "departmentManager":"Department manager",
+    "headOfDepartment":"Head of Department",
+
     "numberOfEmployeesInTheDepartment":"Number of employees in the department",
     "sectionFile":"Section file",
     "hisDepartment":"His department",

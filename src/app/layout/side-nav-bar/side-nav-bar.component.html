@@ -463,10 +463,11 @@
             <button class="toggle-asidebar" mat-button (click)="opened=!opened"><mat-icon>menu</mat-icon></button>
           </div>
           <div style="color: #6C757D;" class="mt-0 content-search-component position-relative d-flex align-items-center">
-            <span class="p-input-icon-right inputSearch-header">
+            <!-- search navbar-->
+            <!-- <span class="p-input-icon-right inputSearch-header">
               <i class="pi pi-search"></i>
               <input type="text" [(ngModel)]="searchInput" (input)="search()" pInputText [placeholder]="'sideNav.searchDaum' | translate" />
-            </span>
+            </span> -->
         
             <ng-container *ngIf="showListSearch">
               <div class="list-components"  (click)="$event.stopPropagation()">

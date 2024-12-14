@@ -40,7 +40,7 @@ export class DepartmentComponent {
   ];
   columns: any[] = [
     {
-      name: "رقم الموظف",
+      name: "كود الحضور",
       field: "orderNumber",
     },
     {

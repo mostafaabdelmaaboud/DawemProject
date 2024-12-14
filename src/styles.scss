@@ -87,7 +87,9 @@ body,
   font-family: "Cairo", sans-serif !important;
 }
 }
-
+.p-datepicker .p-timepicker {
+  direction: ltr !important;
+}
 .mat-typography h2 {
   margin: 0;
 }

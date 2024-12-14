@@ -442,7 +442,7 @@ export class AddUserPermissionComponent {
           this.data!['title'] = translate.addPermission;
         });
         
-        this.toast.error(err.error.message);
+        // this.toast.error(err.error.message);
 
         this.editPermission = false;
         this.permissionScreens = [];

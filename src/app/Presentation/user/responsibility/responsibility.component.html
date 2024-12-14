@@ -285,7 +285,7 @@
                 <button type="button" *ngIf="showActions({actionCode:3})"
                   class="btn btn-outline-secondary action-close color-blue" (click)="dialogPermissionFile(rowData)"><i
                     class="bi bi-person-vcard"></i></button>
-                    <ng-container *ngIf="showActions({actionCode:4}) && !rowData.isActive">
+                    <ng-container *ngIf="showActions({actionCode:6}) && !rowData.isActive">
                         <button type="button" (click)="sendRequest(rowData)"
                           class="btn btn-outline-secondary action-accept color-green"><i
                             class="bi bi-check-circle"></i></button>

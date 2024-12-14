@@ -120,7 +120,7 @@ export class AddUserComponent {
   listRoles: any[] = [];
   @Input() editUser!: boolean;
   addBranchGroupForm: FormGroup = this.fb.group({
-    Roles: ["", Validators.required],
+    Roles: [""],
     EmployeeId: ["", Validators.required],
     IsAdmin: [false]
 
@@ -362,7 +362,6 @@ export class AddUserComponent {
 
       this.getControl("Password")?.markAsDirty();
       this.getControl("ConfirmPassword")?.markAsDirty();
-      this.getControl("Roles")?.markAsDirty();
       this.getControl("EmployeeId")?.markAsDirty();
     }
 

@@ -5,8 +5,7 @@
       {{'sections.sectionSummary' | translate}}
     </span>
     <div class="field-calendar-header">
-      <p-calendar [(ngModel)]="date" [showIcon]="true" dateFormat="yy MM"></p-calendar>
-  
+      <p-calendar [(ngModel)]="date" [showIcon]="true" dateFormat="dd/mm/yy" [inline]="false" [disabled]="true"></p-calendar>
     </div>
   </div>
   <div class="cards-dashboard position-relative">

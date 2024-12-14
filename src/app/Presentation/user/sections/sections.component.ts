@@ -194,7 +194,7 @@ export class SectionsComponent {
           field: "departmentName",
         },
         {
-          name: this.trans.sections.departmentManager,
+          name: this.trans.sections.headOfDepartment,
           field: "employeeName",
         },
         {
@@ -444,7 +444,7 @@ export class SectionsComponent {
         width: "80vw",
         data: {
           title: this.trans.sections.addSection,
-  
+
           titleShift: this.trans.vacationBalance.departmentName+" <span class='color-red'>*</span>",
           placeholdeShift: this.trans.vacationBalance.departmentName,
           validationtitleShift: this.trans.vacationBalance.departmentNameRequired,
@@ -452,8 +452,8 @@ export class SectionsComponent {
           titlePermanentType: this.trans.sections.hisDepartment+" <span class='color-red'>*</span>",
           placeholderPermanentType: this.trans.sections.chooseYourDepartment,
           validationtitlePermanentType: this.trans.sections.yourDepartmentIsRequired,
-          titleManagerId: this.trans.sections.departmentManager+" <span class='color-red'>*</span>",
-          placeholderManagerId: this.trans.sections.departmentManager,
+          titleManagerId: this.trans.sections.headOfDepartment+" <span class='color-red'>*</span>",
+          placeholderManagerId: this.trans.sections.headOfDepartment,
           validationtitleManagerId: this.trans.sections.DepartmentManagerWanted,
           managerDelegatorIds: this.trans.sections.deputyHeadsOfDepartment+" <span class='color-red'>*</span>",
           placeholdemanagerDelegatorIds: this.trans.sections.deputyHeadsOfDepartment,
@@ -677,8 +677,8 @@ export class SectionsComponent {
           titlePermanentType: this.trans.sections.hisDepartment+" <span class='color-red'>*</span>",
           placeholderPermanentType: this.trans.sections.chooseYourDepartment,
           validationtitlePermanentType: this.trans.sections.yourDepartmentIsRequired,
-          titleManagerId: this.trans.sections.departmentManager+" <span class='color-red'>*</span>",
-          placeholderManagerId: this.trans.sections.departmentManager,
+          titleManagerId: this.trans.sections.headOfDepartment+" <span class='color-red'>*</span>",
+          placeholderManagerId: this.trans.sections.headOfDepartment,
           validationtitleManagerId: this.trans.sections.DepartmentManagerWanted,
           managerDelegatorIds: this.trans.sections.deputyHeadsOfDepartment+" <span class='color-red'>*</span>",
           placeholdemanagerDelegatorIds: this.trans.sections.deputyHeadsOfDepartment,

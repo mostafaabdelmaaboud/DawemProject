@@ -72,7 +72,6 @@ export class AddShiftComponent {
   addBranchGroupForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
     fieldDisabled: [''],
-    timePeriod: ['0'],
     checkInTime: ['', Validators.required],
     checkOutTime: ['', Validators.required],
     allowedMinutes: ['', Validators.required]
@@ -102,7 +101,6 @@ export class AddShiftComponent {
 
             this.addBranchGroupForm.get("name")?.setValue(data.name);
 
-            this.addBranchGroupForm.get("timePeriod")?.setValue(data.timePeriod.toString());
             const timeString = data.checkInTime;
             const timeValueone = new Date(`1970-01-01T${timeString}`);
 

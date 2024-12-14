@@ -241,25 +241,25 @@ export class AttendanceAndDepartureForEmployeesComponent {
                 res?.data?.forEach((jobTitle: any) => {
                   newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
-                debugger;
+                
 
                 newArray = newArray.filter(newItem => 
                   !this.employeesList.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
                 );
-                debugger;
+                
 
                 const searchTerm = data;
 
                 if(res?.data?.length > 0 || searchInput){
-                  debugger;
+                  
                   if(newArray?.length >0) {
-                    debugger;
+                    
 
                     this.employeesList = [...newArray, ...this.employeesList];
-                    debugger;
+                    
 
                   }
-                  debugger;
+                  
 
                   let formatSearch = this.sortArrayBySearchTerm(this.employeesList, searchTerm);
                   this.employeesList = [...formatSearch];

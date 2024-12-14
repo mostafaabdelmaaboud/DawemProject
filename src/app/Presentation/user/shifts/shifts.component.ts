@@ -516,7 +516,7 @@ export class ShiftsComponent {
       let formData = result;
       formData.checkInTime = moment(result.checkInTime).format("HH:mm:ss");
       formData.checkOutTime = moment(result.checkOutTime).format("HH:mm:ss")
-      formData.timePeriod = Number(formData.timePeriod);
+      // formData.timePeriod = Number(formData.timePeriod);
       formData.isActive = true;
 
       this.shiftsService.createShift(formData).subscribe(
@@ -608,7 +608,6 @@ export class ShiftsComponent {
       let formData = result;
       formData.checkInTime = moment(result.checkInTime).format("HH:mm:ss");
       formData.checkOutTime = moment(result.checkOutTime).format("HH:mm:ss")
-      formData.timePeriod = Number(formData.timePeriod);
       formData.isActive = true;
       formData.id = data.id;
       this.shiftsService.updateShift(formData).subscribe(
