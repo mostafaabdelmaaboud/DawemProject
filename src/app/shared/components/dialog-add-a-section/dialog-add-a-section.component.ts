@@ -11,10 +11,11 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { CalendarModule } from "primeng/calendar";
 import { MatRadioModule } from '@angular/material/radio';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SectionsService } from 'src/app/Presentation/user/sections/services/sections.service';
 import { TreeModule } from 'primeng/tree';
+import { ToastrService } from 'ngx-toastr';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -109,11 +110,14 @@ export class DialogAddASectionComponent {
   requiredCommercialRegFiles = false;
 
   treeValue = "";
+  private searchSubject = new Subject<{ value: any; type: any }>();
+
   private sectionsService = inject(SectionsService);
   constructor(
     public dialogRef: MatDialogRef<DialogAddASectionComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     private authService: AuthService,
+    private toast: ToastrService,
     private fb: FormBuilder
   ) {
     this.dialogRef.disableClose = true;
@@ -283,7 +287,16 @@ export class DialogAddASectionComponent {
 
         }
       }
+    );
+    this.searchSubject
+    .pipe(
+      debounceTime(500),
+      distinctUntilChanged((prev, curr) =>  prev.value === curr.value && prev.type === curr.type
+    ) 
     )
+    .subscribe(({ value, type }) => {
+      this.searchDropdown(value, type, true);
+    });
   }
   searchTree() {
 
@@ -351,8 +364,28 @@ export class DialogAddASectionComponent {
   isPlusVisible(node: any): boolean {
     return node.hasChildren;
   }
+  searchList(target:any, type:any) {
+    let value = target.value;
 
-  searchDropdown(data: any, type: string) {
+    this.searchSubject.next({ value, type }); 
+
+  }
+  sortArrayBySearchTerm(
+    array: { name: string; key: number }[],
+    searchTerm: string
+  ): { name: string; key: number }[] {
+    return array.sort((a, b) => {
+      const aIndex = a.name.indexOf(searchTerm);
+      const bIndex = b.name.indexOf(searchTerm);
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return 0;
+    });
+  }
+  searchDropdown(data: any, type: string, searchInput?) {
 
     switch (type) {
       case 'parentId':
@@ -360,13 +393,31 @@ export class DialogAddASectionComponent {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.sectionsService.GetForDropDownDepartment({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listFirst = [];
+         
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res.data?.forEach((day: any) => {
-                  this.listFirst.push({ name: day.name, key: day.id });
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listFirst.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listFirst = [...this.listFirst, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listFirst, searchTerm);
+                  this.listFirst = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toast.error("لا يوجد بيانات");
+                  }
+                }
+
               });
           }
 
@@ -377,13 +428,30 @@ export class DialogAddASectionComponent {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.sectionsService.GetForDropDownEmployees({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listManager = [];
+         
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res.data?.forEach((day: any) => {
-                  this.listManager.push({ name: day.name, key: day.id });
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listManager.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listManager = [...this.listManager, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listManager, searchTerm);
+                  this.listManager = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toast.error("لا يوجد بيانات");
+                  }
+                }
               });
           }
 
@@ -394,13 +462,30 @@ export class DialogAddASectionComponent {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.sectionsService.GetForDropDownEmployees({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listManagerDelegator = [];
+    
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res.data?.forEach((day: any) => {
-                  this.listManagerDelegator.push({ name: day.name, key: day.id });
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listManagerDelegator.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listManagerDelegator = [...this.listManagerDelegator, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listManagerDelegator, searchTerm);
+                  this.listManagerDelegator = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toast.error("لا يوجد بيانات");
+                  }
+                }
               });
           }
 
@@ -411,13 +496,29 @@ export class DialogAddASectionComponent {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.sectionsService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listZones = [];
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res.data?.forEach((day: any) => {
-                  this.listZones.push({ name: day.name, key: day.id });
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listZones.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listZones = [...this.listZones, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listZones, searchTerm);
+                  this.listZones = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toast.error("لا يوجد بيانات");
+                  }
+                }
               });
           }
 

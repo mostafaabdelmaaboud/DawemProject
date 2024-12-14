@@ -55,7 +55,7 @@
 
                       <i class="pi pi-search"
                         (click)="searchDropdown(searchgroupEmployees.value, 'groupEmployees')"></i>
-                      <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchgroupEmployees />
+                      <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'groupEmployees')" pInputText #searchgroupEmployees />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">
@@ -83,7 +83,7 @@
                     <span class="p-input-icon-left input-search-dropdown">
 
                       <i class="pi pi-search" (click)="searchDropdown(searchgroupManager.value, 'groupManager')"></i>
-                      <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchgroupManager />
+                      <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'groupManager')" pInputText #searchgroupManager />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">
@@ -112,7 +112,7 @@
 
                       <i class="pi pi-search"
                         (click)="searchDropdown(searchdeputyDirectorr.value, 'deputyDirector')"></i>
-                      <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchdeputyDirectorr />
+                      <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'deputyDirector')" pInputText #searchdeputyDirectorr />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">
@@ -140,7 +140,7 @@
                     <span class="p-input-icon-left input-search-dropdown">
 
                       <i class="pi pi-search" (click)="searchDropdown(searchzoneIds.value, 'zoneIds')"></i>
-                      <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchzoneIds />
+                      <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'zoneIds')" pInputText #searchzoneIds />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">

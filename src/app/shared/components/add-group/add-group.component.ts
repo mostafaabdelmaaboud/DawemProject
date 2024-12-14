@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Inject, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from 'src/app/core/auth/services/auth-service.service';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
@@ -10,13 +9,13 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CalendarModule } from "primeng/calendar";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { SchedulesService } from 'src/app/Presentation/user/tables/services/schedules.service';
-import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { GroupsService } from 'src/app/Presentation/user/groups/services/groups.service';
 import { TreeModule } from 'primeng/tree';
 import { TreeNode } from 'primeng/api';
 import { SectionsService } from 'src/app/Presentation/user/sections/services/sections.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -90,6 +89,7 @@ export class AddGroupComponent {
   listGroupEmployees: any[] = [
   ];
   private sectionsService = inject(SectionsService);
+  private searchSubject = new Subject<{ value: any; type: any }>();
 
   weekDays: any[] = [];
   addBranchGroupForm: FormGroup = this.fb.group({
@@ -109,7 +109,8 @@ export class AddGroupComponent {
     public dialogRef: MatDialogRef<AddGroupComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     public translate: TranslateService,
-    private authService: AuthService,
+    private toast: ToastrService,
+
     private fb: FormBuilder
   ) {
     this.dialogRef.disableClose = true;
@@ -293,12 +294,42 @@ export class AddGroupComponent {
         }
       }
     )
+    this.searchSubject
+    .pipe(
+      debounceTime(500),
+      distinctUntilChanged((prev, curr) =>  prev.value === curr.value && prev.type === curr.type
+    ) 
+    )
+    .subscribe(({ value, type }) => {
+      this.searchDropdown(value, type, true);
+    });
   }
   nodeSelect(data: any) {
   }
+  searchList(target:any, type:any) {
+    let value = target.value;
+
+    this.searchSubject.next({ value, type }); 
+
+  }
+  sortArrayBySearchTerm(
+    array: { name: string; key: number }[],
+    searchTerm: string
+  ): { name: string; key: number }[] {
+    return array.sort((a, b) => {
+      const aIndex = a.name.indexOf(searchTerm);
+      const bIndex = b.name.indexOf(searchTerm);
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return 0;
+    });
+  }
   lastSearchQuery = "";
 
-  searchDropdown(data: any, type: string) {
+  searchDropdown(data: any, type: string, searchInput?) {
 
     switch (type) {
       case 'groupEmployees':
@@ -306,13 +337,31 @@ export class AddGroupComponent {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.groupsService.GetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listGroupEmployees = [];
+        
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res.data?.forEach((day: any) => {
-                  this.listGroupEmployees.push({ name: day.name, key: day.id });
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listGroupEmployees.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listGroupEmployees = [...this.listGroupEmployees, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listGroupEmployees, searchTerm);
+                  this.listGroupEmployees = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toast.error("لا يوجد بيانات");
+                  }
+                }
+
               });
           }
 
@@ -323,13 +372,30 @@ export class AddGroupComponent {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.groupsService.GetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listGroupManager = [];
+           
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res.data?.forEach((day: any) => {
-                  this.listGroupManager.push({ name: day.name, key: day.id });
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listGroupManager.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listGroupManager = [...this.listGroupManager, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listGroupManager, searchTerm);
+                  this.listGroupManager = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toast.error("لا يوجد بيانات");
+                  }
+                }
               });
           }
 
@@ -340,13 +406,30 @@ export class AddGroupComponent {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.groupsService.GetForDropDown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listDeputyDirector = [];
+      
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res.data?.forEach((day: any) => {
-                  this.listDeputyDirector.push({ name: day.name, key: day.id });
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listDeputyDirector.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listDeputyDirector = [...this.listDeputyDirector, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listDeputyDirector, searchTerm);
+                  this.listDeputyDirector = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toast.error("لا يوجد بيانات");
+                  }
+                }
               });
           }
 
@@ -357,13 +440,30 @@ export class AddGroupComponent {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.sectionsService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listZones = [];
+     
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res.data?.forEach((day: any) => {
-                  this.listZones.push({ name: day.name, key: day.id });
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listZones.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listZones = [...this.listZones, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listZones, searchTerm);
+                  this.listZones = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toast.error("لا يوجد بيانات");
+                  }
+                }
               });
           }
         }

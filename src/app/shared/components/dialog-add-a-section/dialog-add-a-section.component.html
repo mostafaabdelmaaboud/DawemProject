@@ -55,7 +55,7 @@
                     <span class="p-input-icon-left input-search-dropdown">
 
                       <i class="pi pi-search" (click)="searchDropdown(searchparentId.value, 'parentId')"></i>
-                      <input type="text" placeholder="بحث" pInputText #searchparentId />
+                      <input type="text" placeholder="بحث" pInputText (keyup)="searchList($event.target, 'parentId')" #searchparentId />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">
@@ -82,7 +82,7 @@
                     <span class="p-input-icon-left input-search-dropdown">
 
                       <i class="pi pi-search" (click)="searchDropdown(searchmanagerId.value, 'managerId')"></i>
-                      <input type="text" placeholder="بحث" pInputText #searchmanagerId />
+                      <input type="text" placeholder="بحث" pInputText (keyup)="searchList($event.target, 'managerId')" #searchmanagerId />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">
@@ -110,7 +110,7 @@
 
                       <i class="pi pi-search"
                         (click)="searchDropdown(searchmanagerDelegatorIds.value, 'managerDelegatorIds')"></i>
-                      <input type="text" placeholder="بحث" pInputText #searchmanagerDelegatorIds />
+                      <input type="text" placeholder="بحث" pInputText  (keyup)="searchList($event.target, 'managerDelegatorIds')" #searchmanagerDelegatorIds />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">
@@ -138,7 +138,7 @@
                     <span class="p-input-icon-left input-search-dropdown">
 
                       <i class="pi pi-search" (click)="searchDropdown(searchzoneIds.value, 'zoneIds')"></i>
-                      <input type="text" placeholder="بحث" pInputText #searchzoneIds />
+                      <input type="text" placeholder="بحث" pInputText (keyup)="searchList($event.target, 'zoneIds')"  #searchzoneIds />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">
