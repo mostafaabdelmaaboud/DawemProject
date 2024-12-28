@@ -20,22 +20,22 @@ export class SignUpComponent {
   private dialog = inject(MatDialog);
 
   FormGroup: FormGroup = this.fb.group({
-    name: ["", Validators.required],
+    // name: ["", Validators.required],
     companyName: ["", Validators.required],
     companyCountryId: ["", Validators.required],
-    companyAddress: ["", Validators.required],
+    // companyAddress: ["", Validators.required],
     companyEmail: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
     password: ["", [Validators.required, Validators.minLength(5)]],
     confirmPassword: ["", [Validators.required, Validators.minLength(5), , this.passwordMatchValidator()]],
-    numberOfEmployees: ["", Validators.required],
-    userEmail: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
+    // numberOfEmployees: ["", Validators.required],
+    // userEmail: ["", [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
     userMobileNumber: ["", [Validators.required]],
-    IsTrial: [false],
-    subscriptionDurationInMonths: ["", [Validators.required]],
+    // IsTrial: [false],
+    // subscriptionDurationInMonths: ["", [Validators.required]],
     agreed: [, Validators.required],
 
   });
-  subscription = true;
+  // subscription = true;
   code="+20";
   private authService = inject(AuthService);
   currentLang = localStorage.getItem("lang");
@@ -45,6 +45,8 @@ export class SignUpComponent {
   general: any[] = [];
   countriesPhone: any[] = [];
   isCurrentCountry;
+  isCurrentCountryGeneral;
+
   private router = inject(Router)
   selectedCountry: any = { name: 'عربي', code: 'AR' };
   constructor(private fb: FormBuilder, public translate: TranslateService, private toast: ToastrService) {
@@ -113,28 +115,35 @@ export class SignUpComponent {
       // }
     }
     this.getCountries();
-    this.getCountriesbyPhone();
-    this.FormGroup.get("IsTrial")?.valueChanges.subscribe(data => {
+    // this.FormGroup.get("IsTrial")?.valueChanges.subscribe(data => {
 
-      if (data) {
-        this.subscription = false;
+    //   if (data) {
+    //     this.subscription = false;
 
-        this.FormGroup.removeControl("subscriptionDurationInMonths");
-      } else {
-        this.FormGroup.addControl("subscriptionDurationInMonths", this.fb.control("", [Validators.required]));
+    //     this.FormGroup.removeControl("subscriptionDurationInMonths");
+    //   } else {
+    //     this.FormGroup.addControl("subscriptionDurationInMonths", this.fb.control("", [Validators.required]));
 
-        this.subscription = true;
+    //     this.subscription = true;
 
-      }
-    })
+    //   }
+    // })
   }
   getCountries() {
     this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
       next: data => {
-        
+        this.countriesPhone = [];
+
         this.general = [];
         data.forEach((country: any) => {
-          this.general.push({ name: country.name, id: country.id })
+          this.general.push({ name: country.name, id: country.id });
+          this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath });
+          if(country.isCurrentCountry) {
+            this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath };
+            this.isCurrentCountryGeneral = { name: country.name, id: country.id };
+
+            this.selectCountry();
+          }
         });
       },
       error: err => {
@@ -146,23 +155,7 @@ export class SignUpComponent {
     this.FormGroup.get("userMobileNumber")?.setValidators([Validators.required, Validators.pattern(pattern)])
     this.code= "+"+this.isCurrentCountry.phoneLength;
   }
-  getCountriesbyPhone() {
-    this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe({
-      next: data => {
-        this.countriesPhone = [];
-        data.forEach((country: any) => {
-          
-          this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath });
-          if(country.isCurrentCountry) {
-            this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath };
-            this.selectCountry();
-          }
-        });
-      },
-      error: err => {
-      }
-    });
-  }
+
   passwordMatchValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       const value: string = control.value;
@@ -190,7 +183,6 @@ export class SignUpComponent {
 
 
       this.getCountries();
-      this.getCountriesbyPhone();
 
     } else if (lang.value.code == "AR") {
       document.documentElement.setAttribute('lang', 'ar');
@@ -205,7 +197,6 @@ export class SignUpComponent {
       this.selectedCountry = this.countries[findIndexCountry];
 
       this.getCountries();
-      this.getCountriesbyPhone();
 
     } 
     // else if (lang.value.code == "IN") {
@@ -281,28 +272,30 @@ export class SignUpComponent {
     if (this.FormGroup.valid && this.loading && this.FormGroup.value.agreed) {
       this.loading = false;
       this.isLoading = true;
-
+      debugger;
       let formatObject:any = {
-        name: this.FormGroup.value.name,
+        // name: this.FormGroup.value.name,
         companyName: this.FormGroup.value.companyName,
         companyCountryId: this.FormGroup.value.companyCountryId.id,
-        companyAddress: this.FormGroup.value.companyAddress,
+        // companyAddress: this.FormGroup.value.companyAddress,
         companyEmail: this.FormGroup.value.companyEmail,
         password: this.FormGroup.value.password,
         confirmPassword: this.FormGroup.value.confirmPassword,
-        userEmail: this.FormGroup.value.userEmail,
+        // userEmail: this.FormGroup.value.userEmail,
         userMobileCountryId:this.isCurrentCountry.id,
         userMobileNumber:this.FormGroup.value.userMobileNumber,
-        numberOfEmployees:this.FormGroup.value.numberOfEmployees,
+        // numberOfEmployees:this.FormGroup.value.numberOfEmployees,
         agreed: this.FormGroup.value.agreed ? this.FormGroup.value.agreed : false,
-        IsTrial:this.FormGroup.value.IsTrial
+        // IsTrial:this.FormGroup.value.IsTrial
 
       };
-      if(this.subscription) {
-        formatObject.subscriptionDurationInMonths = this.FormGroup.value.subscriptionDurationInMonths;
-      } else {
-        formatObject.subscriptionDurationInMonths = null;
-      }
+      debugger;
+
+      // if(this.subscription) {
+      //   formatObject.subscriptionDurationInMonths = this.FormGroup.value.subscriptionDurationInMonths;
+      // } else {
+      //   formatObject.subscriptionDurationInMonths = null;
+      // }
 
       this.authService.signup(formatObject).subscribe(
         {
@@ -334,18 +327,18 @@ export class SignUpComponent {
 
       this.loading = true;
 
-      this.FormGroup.get("name")?.markAsDirty();
+      // this.FormGroup.get("name")?.markAsDirty();
       this.FormGroup.get("companyName")?.markAsDirty();
       this.FormGroup.get("companyCountryId")?.markAsDirty();
-      this.FormGroup.get("companyAddress")?.markAsDirty();
+      // this.FormGroup.get("companyAddress")?.markAsDirty();
       this.FormGroup.get("companyEmail")?.markAsDirty();
       this.FormGroup.get("password")?.markAsDirty();
-      this.FormGroup.get("numberOfEmployees")?.markAsDirty();
-      if(this.subscription) {
-        this.FormGroup.get("subscriptionDurationInMonths")?.markAsDirty();
-      }
+      // this.FormGroup.get("numberOfEmployees")?.markAsDirty();
+      // if(this.subscription) {
+      //   this.FormGroup.get("subscriptionDurationInMonths")?.markAsDirty();
+      // }
       this.FormGroup.get("confirmPassword")?.markAsDirty();
-      this.FormGroup.get("userEmail")?.markAsDirty();
+      // this.FormGroup.get("userEmail")?.markAsDirty();
       this.FormGroup.get("userMobileNumber")?.markAsDirty();
       this.FormGroup.get("agreed")?.markAsDirty();
       if(!this.FormGroup.value.agreed) {
