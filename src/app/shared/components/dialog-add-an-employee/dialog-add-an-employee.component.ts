@@ -130,6 +130,7 @@ export class DialogAddAnEmployeeComponent {
   listDirectManager: any[] = [];
   listZones: any[] = [];
 
+  private searchSubject = new Subject<{ value: any; type: any }>();
 
   addBranchGroupForm: FormGroup = this.fb.group({
     AttendanceType: ['0'],
@@ -390,12 +391,42 @@ export class DialogAddAnEmployeeComponent {
      
       }
 
-    })
+    });
+    this.searchSubject
+    .pipe(
+      debounceTime(500),
+      distinctUntilChanged((prev, curr) =>  prev.value === curr.value && prev.type === curr.type
+    ) 
+    )
+    .subscribe(({ value, type }) => {
+      this.searchDropdown(value, type, true);
+    });
     // this.getCountriesbyPhone();
   } 
-  lastSearchQuery = "";
+  searchList(target:any, type:any) {
+    let value = target.value;
 
-  searchDropdown(data: any, type: string) {
+    this.searchSubject.next({ value, type }); 
+
+  }
+
+  lastSearchQuery = "";
+  sortArrayBySearchTerm(
+    array: { name: string; key: number }[],
+    searchTerm: string
+  ): { name: string; key: number }[] {
+    return array.sort((a, b) => {
+      const aIndex = a.name.indexOf(searchTerm);
+      const bIndex = b.name.indexOf(searchTerm);
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return 0;
+    });
+  }
+  searchDropdown(data: any, type: string, searchInput?) {
 
     switch (type) {
       case 'JobTitleId':
@@ -403,14 +434,31 @@ export class DialogAddAnEmployeeComponent {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.employeesService.getJobTitles({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.jobTitleFirst = [];
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-
                 res?.data?.forEach((jobTitle: any) => {
-                  this.jobTitleFirst.push({ name: jobTitle.name, key: jobTitle.id })
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.jobTitleFirst.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.jobTitleFirst = [...this.jobTitleFirst, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.jobTitleFirst, searchTerm);
+                  this.jobTitleFirst = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toastr.error("لا يوجد بيانات");
+                  }
+                }
+
+
               });
           }
 
@@ -421,14 +469,31 @@ export class DialogAddAnEmployeeComponent {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listDirectManager = [];
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-
                 res?.data?.forEach((jobTitle: any) => {
-                  this.listDirectManager.push({ name: jobTitle.name, key: jobTitle.id })
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listDirectManager.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listDirectManager = [...this.listDirectManager, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listDirectManager, searchTerm);
+                  this.listDirectManager = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toastr.error("لا يوجد بيانات");
+                  }
+                }
+
+
               });
           }
 
@@ -443,14 +508,31 @@ export class DialogAddAnEmployeeComponent {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.employeesService.getDepartmentForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.sectionList = [];
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-
                 res?.data?.forEach((jobTitle: any) => {
-                  this.sectionList.push({ name: jobTitle.name, key: jobTitle.id })
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.sectionList.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.sectionList = [...this.sectionList, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.sectionList, searchTerm);
+                  this.sectionList = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toastr.error("لا يوجد بيانات");
+                  }
+                }
+
+
               });
           }
 
@@ -461,14 +543,31 @@ export class DialogAddAnEmployeeComponent {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.employeesService.getScheduleForDropDown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.workScheduleList = [];
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-
                 res?.data?.forEach((jobTitle: any) => {
-                  this.workScheduleList.push({ name: jobTitle.name, key: jobTitle.id })
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.workScheduleList.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.workScheduleList = [...this.workScheduleList, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.workScheduleList, searchTerm);
+                  this.workScheduleList = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toastr.error("لا يوجد بيانات");
+                  }
+                }
+
+
               });
           }
 
@@ -480,15 +579,29 @@ export class DialogAddAnEmployeeComponent {
             if (data !== this.lastSearchQuery || data === "") {
               this.lastSearchQuery = data;
               this.sectionsService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-                debounceTime(300),
                 distinctUntilChanged()).subscribe((res: any) => {
-                  this.listZones = [];
-                  this.lastSearchQuery = "";
-                  res.data?.forEach((day: any) => {
-                    this.listZones.push({ name: day.name, key: day.id });
-                  });
-  
-  
+                  let newArray:any[]= [];
+                this.lastSearchQuery = "";
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
+                });
+                newArray = newArray.filter(newItem => 
+                  !this.listZones.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listZones = [...this.listZones, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listZones, searchTerm);
+                  this.listZones = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toastr.error("لا يوجد بيانات");
+                  }
+                }
                 });
             }
   
@@ -499,30 +612,45 @@ export class DialogAddAnEmployeeComponent {
               if (data !== this.lastSearchQuery || data === "") {
                 this.lastSearchQuery = data;
 
-                // this.countriesPhone = [];
-                // data.forEach((country: any) => {
-                  
-                //   this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath  });
-                //   if(country.isCurrentCountry) {
-                //     this.isCurrentCountry = { name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath  };
-                //     this.selectCountry();
-                //   }
-                // });
                 this.authService.getCountries({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-                  debounceTime(300),
                   distinctUntilChanged()).subscribe((res: any) => {
-                    this.countriesPhone = [];
-                    this.lastSearchQuery = "";
-                    res?.forEach((country: any, i:number) => {
-                      this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath  });
-                      if(i === 0) {
-                        this.isCurrentCountry ={ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath  }
-                      }
-                    });
-                    if(res?.length > 0) {
-                    this.selectCountry();
+                    // this.countriesPhone = [];
+                    // this.lastSearchQuery = "";
+                    // res?.forEach((country: any, i:number) => {
+                    //   this.countriesPhone.push({ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath  });
+                    //   if(i === 0) {
+                    //     this.isCurrentCountry ={ name: country.name,dial:country.dial,phoneLength:country.phoneLength, id: country.id, flagPath:country.flagPath  }
+                    //   }
+                    // });
+                    // if(res?.length > 0) {
+                    // this.selectCountry();
 
+                    // }
+
+
+                    let newArray:any[]= [];
+                    this.lastSearchQuery = "";
+                    res?.data?.forEach((jobTitle: any) => {
+                      newArray.push({ name: jobTitle.name, key: jobTitle.id })
+                    });
+                    newArray = newArray.filter(newItem => 
+                      !this.countriesPhone.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                    );
+                    const searchTerm = data;
+    
+                    if(res?.data?.length > 0 || searchInput){
+                      if(newArray?.length >0) {
+                        this.countriesPhone = [...this.countriesPhone, ...newArray]
+                      }
+                      let formatSearch = this.sortArrayBySearchTerm(this.countriesPhone, searchTerm);
+                      this.countriesPhone = [...formatSearch];
+    
+                    } else {
+                      if(!res?.data?.length) {
+                        this.toastr.error("لا يوجد بيانات");
+                      }
                     }
+
     
     
                   });
