@@ -90,6 +90,9 @@ body,
 .p-datepicker .p-timepicker {
   direction: ltr !important;
 }
+.flex-direction-row-reverse {
+  flex-direction: row-reverse;
+}
 .mat-typography h2 {
   margin: 0;
 }

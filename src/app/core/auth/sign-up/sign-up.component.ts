@@ -32,7 +32,7 @@ export class SignUpComponent {
     userMobileNumber: ["", [Validators.required]],
     // IsTrial: [false],
     // subscriptionDurationInMonths: ["", [Validators.required]],
-    agreed: [, Validators.required],
+    // agreed: [, Validators.required],
 
   });
   // subscription = true;
@@ -269,10 +269,11 @@ export class SignUpComponent {
     }
   }
   submit() {
-    if (this.FormGroup.valid && this.loading && this.FormGroup.value.agreed) {
+    // if (this.FormGroup.valid && this.loading && this.FormGroup.value.agreed) 
+    if (this.FormGroup.valid && this.loading) 
+      {
       this.loading = false;
       this.isLoading = true;
-      debugger;
       let formatObject:any = {
         // name: this.FormGroup.value.name,
         companyName: this.FormGroup.value.companyName,
@@ -285,11 +286,12 @@ export class SignUpComponent {
         userMobileCountryId:this.isCurrentCountry.id,
         userMobileNumber:this.FormGroup.value.userMobileNumber,
         // numberOfEmployees:this.FormGroup.value.numberOfEmployees,
-        agreed: this.FormGroup.value.agreed ? this.FormGroup.value.agreed : false,
+        // agreed: this.FormGroup.value.agreed ? this.FormGroup.value.agreed : false,
+        agreed: true,
+
         // IsTrial:this.FormGroup.value.IsTrial
 
       };
-      debugger;
 
       // if(this.subscription) {
       //   formatObject.subscriptionDurationInMonths = this.FormGroup.value.subscriptionDurationInMonths;

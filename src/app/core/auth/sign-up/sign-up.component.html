@@ -125,11 +125,11 @@
                           <p-dropdown appendTo="body" [options]="countriesPhone" [(ngModel)]="isCurrentCountry"  [ngModelOptions]="{standalone: true}"
                             optionLabel="name" (onChange)="selectCountry()">
                           <ng-template let-option pTemplate="selectedItem">
-                            <div class="d-flex align-items-center gap-2" >
+                            <div class="d-flex align-items-center gap-2 flex-direction-row-reverse" >
                               <span class="image-country-mobilePhone select-country-image">
                                 <img [src]="option.flagPath" width="25" height="25" [alt]="option.countryISOCode">
                               </span>
-                                <div>{{ option.dial }}+</div>
+                                <div>{{ option.dial }}</div>
                             </div>
                         </ng-template>
                           <ng-template pTemplate="header">
@@ -352,9 +352,9 @@
                     <!-- <label for="sdad" class="mb-0 ml-15">{{'signup.iAgreeToTheTermsAndConditions' | translate}}
                       الشروط والاحكام
                     </label> -->
-                    <label for="sdad" class="mb-0 ml-15 TermsAndConditions" (click)="requestTermsAndConditions()">
+                    <!-- <label for="sdad" class="mb-0 ml-15 TermsAndConditions" (click)="requestTermsAndConditions()">
                       موافق علي الشروط والاحكام
-                    </label>
+                    </label> -->
                     <!-- <p-checkbox name="category" [value]="true" formControlName="agreed" inputId="sdad"></p-checkbox> -->
                     <div class="alert alert-danger mt-3"
                       *ngIf="getControl('agreed')?.hasError('required') && getControl('agreed')?.dirty">

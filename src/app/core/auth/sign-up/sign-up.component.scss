@@ -11,6 +11,29 @@
     min-height: 100%
   }
 }
+.dropdown-code {
+  left: 1px;
+    right: initial;
+}
+.content-phone-number {
+  direction: ltr;
+}
+.content-phone-number > input {
+  padding-left: 110px !important;
+  padding-right: 15px !important;
+}
+.image-country-mobilePhone  {
+  margin-right: 0;
+    margin-left: 5px;
+}
+
+:host ::ng-deep .content-phone-number .p-dropdown {
+  margin-top: 0 !important;
+  direction: rtl;
+}
+:host ::ng-deep .content-phone-number .p-dropdown .p-dropdown-trigger {
+  margin-left: 14px !important;
+}
 .TermsAndConditions {
   text-decoration: underline;
   color: blue;
