@@ -65,6 +65,12 @@ const routes: Routes = [
 
       },
       {
+        path: "overtimeType/:id",
+        loadChildren: () => import('./overtime-type/overtime-type.module').then((m) => m.OvertimeTypeModule),
+        // canActivate: [PermissionGuard]  
+
+      },
+      {
         path: "justifications/:id",
         loadChildren: () => import('./justifications/justifications.module').then((m) => m.JustificationsModule),
         canActivate: [PermissionGuard]  
