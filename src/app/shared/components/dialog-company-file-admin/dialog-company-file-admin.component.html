@@ -36,7 +36,7 @@
               
                   </div>
             </div>
-            <div class="col-lg-6 col-12">
+            <!-- <div class="col-lg-6 col-12">
                 <div class="sectionTwo mb-3 line-bellow">
                     <label class="title">اسم الدولة</label>
                     <div class="content-password">
@@ -48,7 +48,8 @@
                       </ng-container>
                     </div>
                   </div>
-            </div>
+            </div> -->
+            
             <div class="col-lg-6 col-12">
                 <div class="sectionTwo mb-3 line-bellow">
                     <label class="title">اسم اللغة المفضلة</label>
@@ -181,12 +182,12 @@
             </div>
             <div class="col-lg-6 col-12">
                 <div class="sectionTwo mb-3 line-bellow">
-                    <label class="title">عدد الموظفين</label>
+                    <label class="title">رقم موبايل المسئول</label>
                     <div class="content-password">
-                      <ng-container *ngIf="info?.numberOfEmployees">
-                        {{info?.numberOfEmployees}}
+                      <ng-container *ngIf="info?.responsibleMobileNumber">
+                        {{info?.responsibleMobileNumber}}
                       </ng-container>
-                      <ng-container *ngIf="!info?.numberOfEmployees">
+                      <ng-container *ngIf="!info?.responsibleMobileNumber">
                         {{"department.nothing"|translate}}
                       </ng-container>
                     </div>
