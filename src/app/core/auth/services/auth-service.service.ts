@@ -96,11 +96,10 @@ export class AuthService {
     return this.http.post(environment.baseUrl + "Authentication/SignIn", data)
   }
   requestResetPassword(data: any) {
-    return this.http.post(environment.baseUrl + "Authentication/SignIn", data)
+    return this.http.post(environment.baseUrl + "Authentication/RequestResetPassword", data)
 
   }
   signup(data: any) {
-    
     return this.http.post(environment.baseUrl + "Authentication/SignUp", data)
   }
   ResetPassword(data: any) {

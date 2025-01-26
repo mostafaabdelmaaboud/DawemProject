@@ -296,7 +296,7 @@ export class OvertimeTypeComponent {
             })
             this.isLoading = false;
             let formatRows =formatTable.map(assignment => [assignment.code,assignment.name, assignment.isActive ]);
-            this.generateExcel(this.trans.sideNav.typesOfJustifications,this.trans.sideNav.typesOfJustifications,formatRows, columns);
+            this.generateExcel(this.trans.typesOfJustifications.typesOfExtraTime,this.trans.typesOfJustifications.typesOfExtraTime,formatRows, columns);
 
             // new ngxCsv(formatTable, "sheet", options);
           },

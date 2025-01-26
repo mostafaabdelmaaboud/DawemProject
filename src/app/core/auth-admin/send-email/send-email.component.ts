@@ -124,8 +124,10 @@ export class SendEmailComponent {
     this.cd.detectChanges();
   }
   submit() {
-
+    
     if (this.FormGroup.valid && this.loading) {
+      
+
       this.loading = false;
       this.isLoading = true;
       this.authService.signup({
@@ -149,15 +151,19 @@ export class SendEmailComponent {
             // this.isLoading = false;
 
             // }
+            this.loading = true;
+            this.isLoading = false;
+            
+
             this.router.navigate([`/checkEmail`], { queryParams: { email: this.FormGroup.value.Email } })
 
             this.toast.success(res.message,"", {timeOut: 1000});
-            this.loading = false;
-            this.isLoading = false;
+          
 
 
           },
           error: err => {
+            
             this.toast.error(err.error.message);
             this.isLoading = false;
             this.loading = true;
@@ -166,7 +172,6 @@ export class SendEmailComponent {
       )
     } else {
       this.FormGroup.get("Email")?.markAsDirty();
-      this.FormGroup.get("password")?.markAsDirty();
     }
   }
   getControl(FormControl: string) {

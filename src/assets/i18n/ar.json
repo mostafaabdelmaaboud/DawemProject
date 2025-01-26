@@ -1000,6 +1000,8 @@
     "typesOfOutstandingJustifications":"انواع التبريرات المعلقة",
     "typesOfBrokenJustifications":"انواع التبريرات المعطلة",
     "typesOfJustifications":"انواع التبريرات",
+    "typesOfExtraTime":"انواع الوقت الاضافى",
+
     "justificationNumber":"رقم التبرير",
     "addJustificationType":"إضافة نوع تبرير",
     "stateOfJustification":"حاله التبرير",
@@ -1036,5 +1038,13 @@
     "responsibilityFile":"ملف المسؤولية",
     "yes":"نعم",
     "no":"لا"
+  },
+  "checkEmail":{
+    "resetAccountPassword":"إعادة تعيين كلمة مرور الحساب",
+    "checkEmailForResetLink":"تحقق من البريد الإلكتروني لرابط إعادة التعيين",
+    "anEmailHasBeenSentTo":"تم إرسال بريد إلكتروني إلى",
+    "theAdministrativeEmailAddressOnFile":"عنوان البريد الإلكتروني الإداري الموجود في الملف.",
+    "checkTheInboxOfTheAdministrator":"تحقق من صندوق الوارد الخاص بحساب البريد الإلكتروني الخاص بالمسؤول، وانقر فوق رابط إعادة التعيين المقدم.",
+    "resetLinkWillBecomeInvalidIn":"سيصبح رابط إعادة الضبط غير صالح في"
   }
 }

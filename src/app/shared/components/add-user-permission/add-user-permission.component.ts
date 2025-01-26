@@ -10,7 +10,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CalendarModule } from "primeng/calendar";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Subscription, combineLatest, debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { Subject, Subscription, combineLatest, debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { MultiSelectModule } from 'primeng/multiselect';
 
 import { MatRadioModule } from '@angular/material/radio';
@@ -170,6 +170,8 @@ export class AddUserPermissionComponent {
   totalItems: number = 0;
   permissionScreens = [];
   private _mobileQueryListener: () => void;
+    private searchSubject = new Subject<{ value: any; type: any }>();
+  
   constructor(public dialogRef: MatDialogRef<AddUserPermissionComponent>,
     private toast: ToastrService,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
@@ -373,7 +375,7 @@ export class AddUserPermissionComponent {
       }
 
 
-    })
+    });
 
 
 
@@ -382,6 +384,15 @@ export class AddUserPermissionComponent {
       { name: '5', code: 5 }
 
     ];
+    this.searchSubject
+    .pipe(
+      debounceTime(500),
+      distinctUntilChanged((prev, curr) =>  prev.value === curr.value && prev.type === curr.type
+    ) 
+    )
+    .subscribe(({ value, type }) => {
+      this.searchDropdown(value, type, true);
+    });
 
   }
   dropdownChangedUserId(userId: any) {
@@ -754,9 +765,28 @@ export class AddUserPermissionComponent {
     }
     )
   }
-  roleIdClearData = false;
+  searchList(target:any, type:any) {
+    let value = target.value;
+    this.searchSubject.next({ value, type }); 
+  }
 
-  searchDropdown(data: any, type: string) {
+  roleIdClearData = false;
+  sortArrayBySearchTerm(
+    array: { name: string; key: number }[],
+    searchTerm: string
+  ): { name: string; key: number }[] {
+    return array.sort((a, b) => {
+      const aIndex = a.name?.indexOf(searchTerm);
+      const bIndex = b.name?.indexOf(searchTerm);
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return 0;
+    });
+  }
+  searchDropdown(data: any, type: string, searchInput?) {
 
     switch (type) {
       case 'RoleId':
@@ -764,17 +794,30 @@ export class AddUserPermissionComponent {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.userPermissionsService.GetForDropDownRole({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listRoleId = [];
+
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-
-                res.data?.forEach((day: any) => {
-
-
-                  this.listRoleId.push({ name: day.name, key: day.id });
-
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listRoleId.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listRoleId = [...this.listRoleId, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listRoleId, searchTerm);
+                  this.listRoleId = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toast.error("لا يوجد بيانات");
+                  }
+                }
 
                 if(data != "") {
                   this.roleIdClearData = true;
@@ -792,14 +835,33 @@ export class AddUserPermissionComponent {
         if (data || data === "") {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
+            
             this.userPermissionsService.usersForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listUserId = [];
+        
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res.data?.forEach((day: any) => {
-                  this.listUserId.push({ name: day.name, key: day.id });
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listUserId.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listUserId = [...this.listUserId, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listUserId, searchTerm);
+                  this.listUserId = [...formatSearch];
+                  
+                } else {
+                  if(!res?.data?.length) {
+                    this.toast.error("لا يوجد بيانات");
+                  }
+                }
+
               });
           }
         }

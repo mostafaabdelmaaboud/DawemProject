@@ -134,7 +134,8 @@ export class HttpConfigInterceptor implements HttpInterceptor {
       if (
         request.url.includes("/SignIn") ||
         request.url.includes("/forgetPassword") ||
-        request.url.includes("setNewPassword")
+        request.url.includes("setNewPassword") ||
+        request.url.includes("RequestResetPassword")
       ) {
         if (!request.url.includes("assets/i18n")) {
           let translate = this.injector.get(TranslateService)
@@ -191,7 +192,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
 
         let translate = this.injector.get(TranslateService);
        
-        if( !this.router.url.includes("/signUp")) {
+        if(!this.router.url.includes("/signUp") && !this.router.url.includes("/RequestResetPassword")) {
           if (translate.currentLang == "ar") {
             request = request.clone({
               headers: request.headers
@@ -221,7 +222,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
       }
     }
    
-
+    
     return next.handle(request).pipe(
       catchError((error: any) => {
        
@@ -257,12 +258,15 @@ export class HttpConfigInterceptor implements HttpInterceptor {
               type: avilableTypes.Error,
             });
           } else {
+            
             if (error?.response?.data) {
               this.toastservice.show({
                 message: error.response.data.message,
                 type: avilableTypes.Error
               });
             } else {
+              
+
               if (error?.code == "ERR_NETWORK") {
                 localStorage.removeItem("token");
                 localStorage.removeItem("fingerPrint");

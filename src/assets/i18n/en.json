@@ -1007,6 +1007,8 @@
     "typesOfOutstandingJustifications":"Types of outstanding justifications",
     "typesOfBrokenJustifications":"Types of broken justifications",
     "typesOfJustifications":"Types of justifications",
+    "typesOfExtraTime":"Types of extra time",
+
     "justificationNumber":"Justification number",
     "addJustificationType":"Add justification type",
     "stateOfJustification":"state of justification",
@@ -1046,6 +1048,14 @@
     "no":"NO"
 
 
+  },
+  "checkEmail":{
+    "resetAccountPassword":"Reset Account Password",
+    "checkEmailForResetLink":"Check email for reset link",
+    "anEmailHasBeenSentTo":"An email has been sent to",
+    "theAdministrativeEmailAddressOnFile":"the administrative email address on file.",
+    "checkTheInboxOfTheAdministrator":"check the inbox of the administrator's email account, and click the reset link provided.",
+    "resetLinkWillBecomeInvalidIn":"Reset link will become invalid in"
   }
 
 }
