@@ -13,7 +13,7 @@ import { FormatDateService } from 'src/app/shared/services/format-date.service';
 import { Router } from '@angular/router';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { getMessaging, onMessage } from 'firebase/messaging';
 import { ToastrService } from 'ngx-toastr';
 interface MenuItem {
@@ -78,6 +78,8 @@ export class SideNavBarComponent {
   updateCompanyScreenCode = "";
   isSidebarExpanded: boolean = false;
   step:any = null;
+  private searchSubject = new Subject<{ value: any; type: any }>();
+
   setStep(index: number) {
     this.step = index;
   }
@@ -513,607 +515,9 @@ export class SideNavBarComponent {
       this.updateCompanyScreenCode = permission?.availablePermissions[findIndexRoute]?.screenCode;
       
     }
-//     this.menuItems = [
-//       {
-//         id: 2,
-//         parent:true,
-//         groupOrScreenType: 1,
-//         name: "لوحة التحكم",
-//         icon: "bi-1-circle",
-//         url: "/user/dashboard",
-//         availableActions: [
-//             0,
-//             1,
-//             2,
-//             3,
-//             6,
-//             7
-//         ],
-//         children: null
-//       },
-//       {
-//           id: 62,
-//           groupOrScreenType: 0,
-//           name: "الموظفين",
-//           icon: "bi-1-circle",
-//           url: "/user/employees",
-//           availableActions: [],
-//           children: [
-//               {
-//                   id: 2,
-//                   groupOrScreenType: 1,
-//                   name: "الموظفين",
-//                   icon: "bi-1-circle",
-//                   url: "/user/employees",
-//                   availableActions: [
-//                       0,
-//                       1,
-//                       2,
-//                       3,
-//                       6,
-//                       7
-//                   ],
-//                   children: null
-//               },
-//               {
-//                   id: 46,
-//                   groupOrScreenType: 1,
-//                   name: "المستخدمين",
-//                   icon: "bi-alarm",
-//                   url: "/user/users",
-//                   availableActions: [
-//                       3
-//                   ],
-//                   children: null
-//               },
-//               {
-//                   id: 9,
-//                   groupOrScreenType: 1,
-//                   name: "الحضور و الانصراف - للموظفين",
-//                   icon: "bi-alarm",
-//                   url: "/user/employment",
-//                   availableActions: [
-//                       1,
-//                       3
-//                   ],
-//                   children: null
-//               },
-//               {
-//                 id: 10,
-//                 groupOrScreenType: 1,
-//                 name: "سجلات خطط الجدولة",
-//                 icon: "bi-alarm",
-//                 url: "/user/scheduleLogs",
-//                 availableActions: [
-//                     1,
-//                     3
-//                 ],
-//                 children: null
-//             },
-//             {
-//                 id: 14,
-//                 groupOrScreenType: 1,
-//                 name: "أرصدة الأجازات",
-//                 icon: "bi-alarm",
-//                 url: "/user/vacationBalance",
-//                 availableActions: [
-//                     3
-//                 ],
-//                 children: null
-//             },
-//             {
-//               id: 16,
-//               groupOrScreenType: 1,
-//               name: "الجزاءات",
-//               icon: "bi-alarm",
-//               url: "/user/sanctions",
-//               availableActions: [
-//                   3
-//               ],
-//               children: null
-//             },            
-//           ]
-//       },
-//       {
-//           id: 63,
-//           groupOrScreenType: 0,
-//           name: "الطلبات",
-//           icon: "pi-check",
-//           url: "/user/requests",
-//           availableActions: [],
-//           children: [
-//               {
-//                   id: 1,
-//                   groupOrScreenType: 1,
-//                   name: "كل الطلبات",
-//                   icon: "pi-check",
-//                   url: "/user/requests",
-//                   availableActions: [
-//                       0,
-//                       1,
-//                       2,
-//                       3,
-//                       6,
-//                       7
-//                   ],
-//                   children: null
-//               },
-//               {
-//                   id: 40,
-//                   groupOrScreenType: 1,
-//                   name: "طلبات الأجازات",
-//                   icon: "pi-check",
-//                   url: "/user/vacations",
-//                   availableActions: [
-//                       0,
-//                       1,
-//                       2,
-//                       3,
-//                       6,
-//                       7
-//                   ],
-//                   children: null
-//               },
-//               {
-//                 id: 47,
-//                 groupOrScreenType: 1,
-//                 name: "طلبات التبريرات",
-//                 icon: "pi-check",
-//                 url: "/user/justifications",
-//                 availableActions: [
-//                     0,
-//                     1,
-//                     2,
-//                     3,
-//                     6,
-//                     7
-//                 ],
-//                 children: null
-//             },
-//             {
-//                 id: 48,
-//                 groupOrScreenType: 1,
-//                 name: "طلبات الأذونات",
-//                 icon: "pi-check",
-//                 url: "/user/permissions",
-//                 availableActions: [
-//                     0,
-//                     1,
-//                     2,
-//                     3,
-//                     6,
-//                     7
-//                 ],
-//                 children: null
-//             },      
-//             {
-//               id: 50,
-//               groupOrScreenType: 1,
-//               name: "طلبات المهمات",
-//               icon: "pi-check",
-//               url: "/user/tasks",
-//               availableActions: [
-//                   0,
-//                   1,
-//                   2,
-//                   3,
-//                   6,
-//                   7
-//               ],
-//               children: null
-//           },    
-//           {
-//             id: 50,
-//             groupOrScreenType: 1,
-//             name: "طلبات التكليفات",
-//             icon: "pi-check",
-//             url: "/user/assignments",
-//             availableActions: [
-//                 0,
-//                 1,
-//                 2,
-//                 3,
-//                 6,
-//                 7
-//             ],
-//             children: null
-//         },  
-//           ]
-//       },
-//       {
-//         id: 75,
-//         groupOrScreenType: 0,
-//         name: "الاستدعاءات",
-//         icon: "pi-check",
-//         url: "/user/summons",
-//         availableActions: [],
-//         children: [
-//             {
-//                 id: 76,
-//                 groupOrScreenType: 1,
-//                 name: "الإستدعاءات",
-//                 icon: "pi-check",
-//                 url: "/user/summons",
-//                 availableActions: [
-//                     0,
-//                     1,
-//                     2,
-//                     3,
-//                     6,
-//                     7
-//                 ],
-//                 children: null
-//             },
-//             {
-//                 id: 77,
-//                 groupOrScreenType: 1,
-//                 name: "سجلات الإستدعاءات",
-//                 icon: "pi-check",
-//                 url: "/user/summonMissingLogs",
-//                 availableActions: [
-//                     0,
-//                     1,
-//                     2,
-//                     3,
-//                     6,
-//                     7
-//                 ],
-//                 children: null
-//             },
-      
-//         ]
-//     },
-//       {
-//         id: 87,
-//         parent:true,
-//         groupOrScreenType: 1,
-//         name: "أجهزة البصمة",
-//         icon: "bi-1-circle",
-//         url: "/user/fingerPrintDevice",
-//         availableActions: [
-//             0,
-//             1,
-//             2,
-//             3,
-//             6,
-//             7
-//         ],
-//         children: null
-//       },
-//       {
-//         id: 80,
-//         groupOrScreenType: 0,
-//         name: "التعريفات",
-//         icon: "pi-check",
-//         url: "/user/summons",
-//         availableActions: [],
-//         children: [
-//             {
-//                 id: 81,
-//                 groupOrScreenType: 1,
-//                 name: "المسميات الوظيفية",
-//                 icon: "pi-check",
-//                 url: "/user/jobTitles",
-//                 availableActions: [
-//                     0,
-//                     1,
-//                     2,
-//                     3,
-//                     6,
-//                     7
-//                 ],
-//                 children: null
-//             },
-//             {
-//                 id: 82,
-//                 groupOrScreenType: 1,
-//                 name: "الأقسام",
-//                 icon: "pi-check",
-//                 url: "/user/sections",
-//                 availableActions: [
-//                     0,
-//                     1,
-//                     2,
-//                     3,
-//                     6,
-//                     7
-//                 ],
-//                 children: null
-//             },
-//             {
-//               id: 83,
-//               groupOrScreenType: 1,
-//               name: "المجموعات",
-//               icon: "pi-check",
-//               url: "/user/groups",
-//               availableActions: [
-//                   0,
-//                   1,
-//                   2,
-//                   3,
-//                   6,
-//                   7
-//               ],
-//               children: null
-//           },
-//           {
-//             id: 84,
-//             groupOrScreenType: 1,
-//             name: "المناطق",
-//             icon: "pi-check",
-//             url: "/user/zones",
-//             availableActions: [
-//                 0,
-//                 1,
-//                 2,
-//                 3,
-//                 6,
-//                 7
-//             ],
-//             children: null
-//         },
-//         {
-//           id: 85,
-//           groupOrScreenType: 1,
-//           name: "خطط الجدولة",
-//           icon: "pi-check",
-//           url: "/user/schedualPlan",
-//           availableActions: [
-//               0,
-//               1,
-//               2,
-//               3,
-//               6,
-//               7
-//           ],
-//           children: null
-//       },
-//       {
-//         id: 86,
-//         groupOrScreenType: 1,
-//         name: "الجدولة",
-//         icon: "pi-check",
-//         url: "/user/tables",
-//         availableActions: [
-//             0,
-//             1,
-//             2,
-//             3,
-//             6,
-//             7
-//         ],
-//         children: null
-//     },
-//     {
-//       id: 87,
-//       groupOrScreenType: 1,
-//       name: "الورديات",
-//       icon: "pi-check",
-//       url: "/user/shifts",
-//       availableActions: [
-//           0,
-//           1,
-//           2,
-//           3,
-//           6,
-//           7
-//       ],
-//       children: null
-//   },
-//   {
-//     id: 88,
-//     groupOrScreenType: 1,
-//     name: "انواع التكليفات",
-//     icon: "pi-check",
-//     url: "/user/assignmentType",
-//     availableActions: [
-//         0,
-//         1,
-//         2,
-//         3,
-//         6,
-//         7
-//     ],
-//     children: null
-// },
-// {
-//   id: 89,
-//   groupOrScreenType: 1,
-//   name: "انواع التبريرات",
-//   icon: "pi-check",
-//   url: "/user/justificationsType",
-//   availableActions: [
-//       0,
-//       1,
-//       2,
-//       3,
-//       6,
-//       7
-//   ],
-//   children: null
-// },
-// {
-//   id: 90,
-//   groupOrScreenType: 1,
-//   name: "انواع الاجازات",
-//   icon: "pi-check",
-//   url: "/user/vacationType",
-//   availableActions: [
-//       0,
-//       1,
-//       2,
-//       3,
-//       6,
-//       7
-//   ],
-//   children: null
-// },
-// {
-//   id: 91,
-//   groupOrScreenType: 1,
-//   name: "أنواع الأذونات",
-//   icon: "pi-check",
-//   url: "/user/permissionType",
-//   availableActions: [
-//       0,
-//       1,
-//       2,
-//       3,
-//       6,
-//       7
-//   ],
-//   children: null
-// },
-// {
-//   id: 92,
-//   groupOrScreenType: 1,
-//   name: "انواع المهمات",
-//   icon: "pi-check",
-//   url: "/user/taskType",
-//   availableActions: [
-//       0,
-//       1,
-//       2,
-//       3,
-//       6,
-//       7
-//   ],
-//   children: null
-// },
-// {
-//   id: 93,
-//   groupOrScreenType: 1,
-//   name: "العطلات الرسمية",
-//   icon: "pi-check",
-//   url: "/user/holidays",
-//   availableActions: [
-//       0,
-//       1,
-//       2,
-//       3,
-//       6,
-//       7
-//   ],
-//   children: null
-// },
-//         ]
-//     },
-//     {
-//       id: 100,
-//       groupOrScreenType: 0,
-//       name: "الأعدادات",
-//       icon: "pi-check",
-//       url: "/user/responsibility",
-//       availableActions: [],
-//       children: [
-//           {
-//               id: 101,
-//               groupOrScreenType: 1,
-//               name: "المسؤوليات",
-//               icon: "pi-check",
-//               url: "/user/responsibility",
-//               availableActions: [
-//                   0,
-//                   1,
-//                   2,
-//                   3,
-//                   6,
-//                   7
-//               ],
-//               children: null
-//           },
-//           {
-//             id: 102,
-//             groupOrScreenType: 1,
-//             name: "الصلاحيات",
-//             icon: "pi-check",
-//             url: "/user/userPermissions",
-//             availableActions: [
-//                 0,
-//                 1,
-//                 2,
-//                 3,
-//                 6,
-//                 7
-//             ],
-//             children: null
-//         },
-//         {
-//           id: 103,
-//           groupOrScreenType: 1,
-//           name: "سجلات الصلاحيات",
-//           icon: "pi-check",
-//           url: "/user/PermissionLog",
-//           availableActions: [
-//               0,
-//               1,
-//               2,
-//               3,
-//               6,
-//               7
-//           ],
-//           children: null
-//       },
-//       ]
-//   },
 
-//   ];
 this.menuItems = menuItems;
-    // let definitions = [
-    //   "/user/jobTitles", 
-    //   "/user/sections",
-    //   "/user/groups",
-    //   "/user/zones",
-    //   "/user/schedualPlan",
-    //   "/user/tables",
-    //   "/user/shifts",
-    //   "/user/assignmentType",
-    //   "/user/justificationsType",
-    //   "/user/vacationType",
-    //   "/user/permissionType",
-    //   "/user/taskType",
-    //   "/user/holidays"
-    // ];
-    // let employees = [
-    //   "/user/employees", 
-    //   "/user/users",
-    //   "/user/employment",
-    //   "/user/scheduleLogs",
-    //   "/user/vacationBalance",
-    //   "/user/sanctions"
-    // ];
-    // let requests = [
-    //   "/user/requests", 
-    //   "/user/vacations",
-    //   "/user/justifications",
-    //   "/user/permissions",
-    //   "/user/tasks",
-    //   "/user/assignments",
-    // ];
-    // let summons = [
-    //   "/user/summons", 
-    //   "/user/summonMissingLogs"
-    // ];
-    // let settings = [
-    //   "/user/responsibility", 
-    //   "/user/userPermissions",
-    //   "/user/PermissionLog"
-    // ];
-    // if(definitions.includes(this.router.url)) {
-    //   this.step = 0;
-    // }
-    // if(employees.includes(this.router.url)) {
-    //   this.step = 1;
-    // }
-    // if(requests.includes(this.router.url)) {
-    //   this.step = 2;
-    // }
-    // if(summons.includes(this.router.url)) {
-    //   this.step = 3;
-    // }
-    // if(settings.includes(this.router.url)) {
-    //   this.step = 4;
-    // }
+
 
     this.notificationService.getUnViewedNotificationCount().subscribe(data => {
       this.numNotification = data === 0 ? "": data;
@@ -1232,322 +636,19 @@ this.menuItems = menuItems;
         this.localization = true;
       }
     }
-    if(!this.isAdmin) {
-      this.listComponents = [
-        {
-          name: this.componentName({screenCode:1}),
-          routerLink:'/user/dashboard',
-          showComponent: this.showComponent({screenCode:1})
-        },
-        {
-          name: this.componentName({screenCode:22}),
-          routerLink:'/user/requests',
-          showComponent: this.showComponent({screenCode:22})
-        },
-        {
-          name: this.componentName({screenCode:3}),
-          routerLink:'/user/employees',
-          showComponent: this.showComponent({screenCode:3})
-        },
-        {
-          name: this.componentName({screenCode:4}),
-          routerLink:'/user/employment',
-          showComponent: this.showComponent({screenCode:4})
-        },
-        {
-          name: this.componentName({screenCode:24}),
-          routerLink:'/user/justifications',
-          showComponent: this.showComponent({screenCode:24})
-        },
-        {
-          name: this.componentName({screenCode:37}),
-          routerLink:'/user/zones',
-          showComponent: this.showComponent({screenCode:37})
-        },
-        {
-          name: this.componentName({screenCode:27}),
-          routerLink:'/user/vacations',
-          showComponent: this.showComponent({screenCode:27})
-        },
-        {
-          name: this.componentName({screenCode:34}),
-          routerLink:'/user/users',
-          showComponent: this.showComponent({screenCode:34})
-        },
-        {
-          name: this.componentName({screenCode:35}),
-          routerLink:'/user/vacationBalance',
-          showComponent: this.showComponent({screenCode:35})
-        },
-        {
-          name: this.componentName({screenCode:31}),
-          routerLink:'/user/scheduleLogs',
-          showComponent: this.showComponent({screenCode:31})
-        },
-        {
-          name: this.componentName({screenCode:25}),
-          routerLink:'/user/permissions',
-          showComponent: this.showComponent({screenCode:25})
-        },
-        {
-          name: this.componentName({screenCode:19}),
-          routerLink:'/user/userPermissions',
-          showComponent: this.showComponent({screenCode:19})
-        },
-        {
-          name: this.componentName({screenCode:26}),
-          routerLink:'/user/tasks',
-          showComponent: this.showComponent({screenCode:26})
-        },
-        {
-          name: this.componentName({screenCode:15}),
-          routerLink:'/user/holidays',
-          showComponent: this.showComponent({screenCode:15})
-        },
-        {
-          name: this.componentName({screenCode:23}),
-          routerLink:'/user/assignments',
-          showComponent: this.showComponent({screenCode:23})
-        },
-        {
-          name: this.componentName({screenCode:30}),
-          routerLink:'/user/schedualPlan',
-          showComponent: this.showComponent({screenCode:30})
-        },
-        {
-          name: this.componentName({screenCode:29}),
-          routerLink:'/user/tables',
-          showComponent: this.showComponent({screenCode:29})
-        },
-        {
-          name: this.componentName({screenCode:32}),
-          routerLink:'/user/shifts',
-          showComponent: this.showComponent({screenCode:32})
-        },
-        {
-          name: this.componentName({screenCode:2}),
-          routerLink:'/user/sections',
-          showComponent: this.showComponent({screenCode:2})
-        },
-        {
-          name: this.componentName({screenCode:14}),
-          routerLink:'/user/groups',
-          showComponent: this.showComponent({screenCode:14})
-        },
-        {
-          name: this.componentName({screenCode:17}),
-          routerLink:'/user/jobTitles',
-          showComponent: this.showComponent({screenCode:17})
-        },
-        {
-          name: this.componentName({screenCode:13}),
-          routerLink:'/user/fingerPrintDevice',
-          showComponent: this.showComponent({screenCode:13})
-        },
-        {
-          name: this.componentName({screenCode:0}),
-          routerLink:'/user/assignmentType',
-          showComponent: this.showComponent({screenCode:0})
-        },
-        {
-          name: this.componentName({screenCode:18}),
-          routerLink:'/user/justificationsType',
-          showComponent: this.showComponent({screenCode:18})
-        },
-        {
-          name: this.componentName({screenCode:36}),
-          routerLink:'/user/vacationType',
-          showComponent: this.showComponent({screenCode:36})
-        },
-        {
-          name: this.componentName({screenCode:21}),
-          routerLink:'/user/permissionType',
-          showComponent: this.showComponent({screenCode:21})
-        },
-        {
-          name: this.componentName({screenCode:33}),
-          routerLink:'/user/taskType',
-          showComponent: this.showComponent({screenCode:33})
-        },
-        {
-          name: this.componentName({screenCode:39}),
-          routerLink:'/user/summons',
-          showComponent: this.showComponent({screenCode:39})
-        },
-        {
-          name: this.componentName({screenCode:38}),
-          routerLink:'/user/sanctions',
-          showComponent: this.showComponent({screenCode:38})
-        },
-        {
-          name: this.componentName({screenCode:40}),
-          routerLink:'/user/summonMissingLogs',
-          showComponent: this.showComponent({screenCode:40})
-        },
-        
-      ]
-      this.cloneArrayComponents = [...this.listComponents];
-    } else {
-      this.listComponents = [
-        {
-          name: 'لوحة التحكم',
-          routerLink:'/user/dashboard',
-          showComponent: true
-        },
-        {
-          name: 'الطلبات',
-          routerLink:'/user/requests',
-          showComponent: true
-        },
-        {
-          name: 'الموظفين',
-          routerLink:'/user/employees',
-          showComponent: true
-        },
-        {
-          name: 'الحضور والانصراف',
-          routerLink:'/user/employment',
-          showComponent: true
-        },
-        {
-          name: 'طلبات التبريرات',
-          routerLink:'/user/justifications',
-          showComponent: true
-        },
-        {
-          name: 'المناطق',
-          routerLink:'/user/zones',
-          showComponent: true
-        },
-        {
-          name: 'طلبات الأجازات',
-          routerLink:'/user/vacations',
-          showComponent: true
-        },
-        {
-          name: 'المستخدمين',
-          routerLink:'/user/users',
-          showComponent: true
-        },
-        {
-          name: 'أرصدة الأجازات',
-          routerLink:'/user/vacationBalance',
-          showComponent: true
-        },
-        {
-          name: 'سجلات خطط الجدولة',
-          routerLink:'/user/scheduleLogs',
-          showComponent: true
-        },
-        {
-          name: 'طلبات الأزونات',
-          routerLink:'/user/permissions',
-          showComponent: true
-        },
-        {
-          name: 'الصلاحيات',
-          routerLink:'/user/userPermissions',
-          showComponent: true
-        },
-        {
-          name: 'طلبات المهمات',
-          routerLink:'/user/tasks',
-          showComponent: true
-        },
-        {
-          name: 'العطلات الرسمية',
-          routerLink:'/user/holidays',
-          showComponent: true
-        },
-        {
-          name: 'طلبات التكليفات',
-          routerLink:'/user/assignments',
-          showComponent: true
-        },
-        {
-          name: 'خطط الجدولة',
-          routerLink:'/user/schedualPlan',
-          showComponent: true
-        },
-        {
-          name: 'الجدولة',
-          routerLink:'/user/tables',
-          showComponent: true
-        },
-        {
-          name: 'الورديات',
-          routerLink:'/user/shifts',
-          showComponent: true
-        },
-        {
-          name: 'الأقسام',
-          routerLink:'/user/sections',
-          showComponent: true
-        },
-        {
-          name: 'المجموعات',
-          routerLink:'/user/groups',
-          showComponent: true
-        },
-        {
-          name: 'المسميات الوظيفية',
-          routerLink:'/user/jobTitles',
-          showComponent: true
-        },
-        {
-          name: "أجهزة البصمة",
-          routerLink:'/user/fingerPrintDevice',
-          showComponent: true
-        },
-      
-        {
-          name: 'أنواع التكليفات',
-          routerLink:'/user/assignmentType',
-          showComponent: true
-        },
-        {
-          name: 'أنواع التبريرات',
-          routerLink:'/user/justificationsType',
-          showComponent: true
-        },
-        {
-          name: 'أنواع الأجازات',
-          routerLink:'/user/vacationType',
-          showComponent: true
-        },
-        {
-          name: 'أنواع الأذونات',
-          routerLink:'/user/permissionType',
-          showComponent: true
-        },
-        {
-          name: 'أنواع المهمات',
-          routerLink:'/user/taskType',
-          showComponent: true
-        },
-          {
-          name: "الاستدعاءات",
-          routerLink:'/user/summons',
-          showComponent: true
-        },
-        {
-          name: "الجزاءات",
-          routerLink:'/user/sanctions',
-          showComponent: true
-        },
-        {
-          name: "سجلات التخلف عن الإستدعاء",
-          routerLink:'/user/summonMissingLogs',
-          showComponent: true
-        }
-        
-      ]
-      this.cloneArrayComponents = [...this.listComponents];
 
-    }
     this.dashboardService.getInformationProfile().subscribe(data => {
       this.profile = data;
-    })
+    });
+       this.searchSubject
+        .pipe(
+          debounceTime(500),
+          distinctUntilChanged((prev, curr) =>  prev.value === curr.value && prev.type === curr.type
+        ) 
+        )
+        .subscribe(({ value, type }) => {
+          this.searchDropdown(value, type, true);
+        });
   }
 
   getUnViewedNotificationCount() {
@@ -1557,31 +658,88 @@ this.menuItems = menuItems;
   }
   searchInput = "";
   showListSearch = false;
-  cloneArrayComponents:any = [];
-  search() {
-    
-    this.listComponents = [...this.cloneArrayComponents];
-    if(typeof this.searchInput === "string") {
-      if(this.searchInput.trim() === "") {
-        this.showListSearch = false;
+  lastSearchQuery = "";
+  searchList(target:any, type:any) {
+    let value = target.value;
 
-      } else {
-        const selectedItem = this.listComponents.find(item => item.name.includes(this.searchInput));
+    this.searchSubject.next({ value, type }); 
 
-        if (selectedItem) {
-          let filterComponents =this.listComponents.filter(component => component.name.includes(this.searchInput.trim()));
-          
-          this.listComponents = filterComponents;
-          this.showListSearch = true;
-    
-        } else {
-          this.showListSearch = false;
-    
-        }
+  }
+  sortArrayBySearchTerm(
+    array: { name: string; key: number }[],
+    searchTerm: string
+  ): { name: string; key: number }[] {
+    return array.sort((a, b) => {
+      const aIndex = a.name.indexOf(searchTerm);
+      const bIndex = b.name.indexOf(searchTerm);
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
       }
-   
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return 0;
+    });
+  }
+  navigateComponent(componrnt:any) {
+    this.showListSearch = false;
+    this.searchInput = '';
+    debugger;
+    this.router.navigate([componrnt.url+'/'+componrnt.screenCode])
+    debugger;
+
+  }
+  searchDropdown(data: any, type: string, searchInput?) {
+
+    switch (type) {
+      case 'searchComponent':
+        if (data) {
+          debugger;
+          if (data !== this.lastSearchQuery) {
+            debugger;
+
+            this.lastSearchQuery = data;
+            this.searchInput = data;
+            let permissions = JSON.parse(localStorage.getItem('permissions') as string);
+            debugger;
+
+            let availablePermissions:any[] =permissions?.availablePermissions;
+            this.listComponents = availablePermissions;
+            let newArray:any[]= [];
+            this.lastSearchQuery = "";
+            this.listComponents ?.forEach((dataCom: any) => {
+              newArray.push({ ...dataCom })
+            });
+            newArray = newArray.filter(newItem => 
+              !this.listComponents.some(oldItem => oldItem.url === newItem.url || oldItem.name === newItem.name)
+            );
+            const searchTerm = data;
+            if(this.listComponents?.length > 0 || searchInput){
+              if(newArray?.length >0) {
+                this.listComponents = [...this.listComponents, ...newArray]
+              }
+              let formatSearch = this.sortArrayBySearchTerm(this.listComponents, searchTerm);
+              this.listComponents = [...formatSearch];
+              this.showListSearch = true;
+            } else {
+              this.showListSearch = false;
+              if(!this.listComponents?.length) {
+                // this.toastr.error("لا يوجد بيانات");
+              }
+            }
+          }
+        } else {
+          this.listComponents = [];
+          this.showListSearch = false;
+
+          this.searchInput = "";
+
+        }
+        break;
+  
+      default:
+        
+        break;
     }
- 
   }
   closeMatMenu() {
 
