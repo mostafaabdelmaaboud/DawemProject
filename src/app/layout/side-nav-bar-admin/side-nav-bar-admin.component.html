@@ -187,28 +187,21 @@
             <button class="toggle-asidebar" mat-button (click)="opened=!opened"><mat-icon>menu</mat-icon></button>
           </div>
           <div style="color: #6C757D;" class="mt-0 content-search-component position-relative d-flex align-items-center">
+            <!-- search navbar-->
             <span class="p-input-icon-right inputSearch-header">
-              <i class="pi pi-search"></i>
-              <input type="text" [(ngModel)]="searchInput" (input)="search()" pInputText [placeholder]="'sideNav.searchDaum' | translate" />
+              <i class="pi pi-search" (click)="searchDropdown(searchComponent.value, 'searchComponent')"></i>
+              <input type="text" [(ngModel)]="searchInput" pInputText (keyup)="searchList($event.target, 'searchComponent')"  #searchComponent [placeholder]="'sideNav.searchDaum' | translate" />
             </span>
         
             <ng-container *ngIf="showListSearch">
               <div class="list-components"  (click)="$event.stopPropagation()">
                 <ul nz-menu nzMode="inline">
-                  <ng-container *ngIf="!isAdmin">
-                    <ng-container *ngFor="let componrnt of listComponents">
-                      <li *ngIf="componrnt.showComponent" [routerLink]="componrnt.routerLink" (click)="showListSearch = false;searchInput = ''">
-                        <span class="text-sidebar">{{componrnt.name}}</span>
+                    <ng-container *ngFor="let component of listComponents">
+                      <li  [routerLink]="component.url" (click)="navigateComponent(component)">
+                        <span class="text-sidebar">{{component.name}}</span>
                       </li>
                     </ng-container>
-                  </ng-container>
-                  <ng-container *ngIf="isAdmin">
-                    <ng-container *ngFor="let componrnt of listComponents">
-                      <li [routerLink]="componrnt.routerLink" (click)="showListSearch = false; searchInput = ''">
-                        <span class="text-sidebar">{{componrnt.name}}</span>
-                      </li>
-                    </ng-container>
-                  </ng-container>
+              
                   <li nz-menu-item class="users-sidebar">
       
                     <div class="users d-flex align-items-center">

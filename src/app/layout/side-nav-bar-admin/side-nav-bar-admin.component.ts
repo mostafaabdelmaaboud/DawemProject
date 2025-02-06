@@ -13,7 +13,7 @@ import { FormatDateService } from 'src/app/shared/services/format-date.service';
 import { Router } from '@angular/router';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 interface MenuItem {
   id: number;
   groupOrScreenType: number;
@@ -88,6 +88,8 @@ export class SideNavBarAdminComponent {
   ];
   isSidebarExpanded: boolean = false;
   step:any = null;
+  private searchSubject = new Subject<{ value: any; type: any }>();
+
   setStep(index: number) {
     this.step = index;
   }
@@ -284,7 +286,15 @@ export class SideNavBarAdminComponent {
     this.authService.getInformationProfile().subscribe(data => {
       this.profile = data;
     });
-
+    this.searchSubject
+    .pipe(
+      debounceTime(500),
+      distinctUntilChanged((prev, curr) =>  prev.value === curr.value && prev.type === curr.type
+    ) 
+    )
+    .subscribe(({ value, type }) => {
+      this.searchDropdown(value, type, true);
+    });
   }
 
 
@@ -318,6 +328,91 @@ export class SideNavBarAdminComponent {
   // }
   // onScrollUp() {
   // }
+  searchInput = "";
+  showListSearch = false;
+  lastSearchQuery = "";
+  searchList(target:any, type:any) {
+    let value = target.value;
+
+    this.searchSubject.next({ value, type }); 
+
+  }
+  sortArrayBySearchTerm(
+    array: { name: string; key: number }[],
+    searchTerm: string
+  ): { name: string; key: number }[] {
+    return array.sort((a, b) => {
+      const aIndex = a.name.indexOf(searchTerm);
+      const bIndex = b.name.indexOf(searchTerm);
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return 0;
+    });
+  }
+  navigateComponent(componrnt:any) {
+    this.showListSearch = false;
+    this.searchInput = '';
+    debugger;
+    this.router.navigate([componrnt.url+'/'+componrnt.screenCode])
+    debugger;
+
+  }
+  searchDropdown(data: any, type: string, searchInput?) {
+
+    switch (type) {
+      case 'searchComponent':
+        if (data) {
+          debugger;
+          if (data !== this.lastSearchQuery) {
+            debugger;
+
+            this.lastSearchQuery = data;
+            this.searchInput = data;
+            let permissions = JSON.parse(localStorage.getItem('permissions') as string);
+            debugger;
+
+            let availablePermissions:any[] =permissions?.availablePermissions;
+            this.listComponents = availablePermissions;
+            let newArray:any[]= [];
+            this.lastSearchQuery = "";
+            this.listComponents ?.forEach((dataCom: any) => {
+              newArray.push({ ...dataCom })
+            });
+            newArray = newArray.filter(newItem => 
+              !this.listComponents.some(oldItem => oldItem.url === newItem.url || oldItem.name === newItem.name)
+            );
+            const searchTerm = data;
+            if(this.listComponents?.length > 0 || searchInput){
+              if(newArray?.length >0) {
+                this.listComponents = [...this.listComponents, ...newArray]
+              }
+              let formatSearch = this.sortArrayBySearchTerm(this.listComponents, searchTerm);
+              this.listComponents = [...formatSearch];
+              this.showListSearch = true;
+            } else {
+              this.showListSearch = false;
+              if(!this.listComponents?.length) {
+                // this.toastr.error("لا يوجد بيانات");
+              }
+            }
+          }
+        } else {
+          this.listComponents = [];
+          this.showListSearch = false;
+
+          this.searchInput = "";
+
+        }
+        break;
+  
+      default:
+        
+        break;
+    }
+  }
   isToday(dateToCheck: any): boolean {
     const today = new Date();
 
@@ -601,34 +696,8 @@ export class SideNavBarAdminComponent {
       this.notificationService.setUnViewedNotificationCount(data.data);
     })
   }
-  searchInput = "";
-  showListSearch = false;
-  cloneArrayComponents:any = [];
-  search() {
-    
-    this.listComponents = [...this.cloneArrayComponents];
-    if(typeof this.searchInput === "string") {
-      if(this.searchInput.trim() === "") {
-        this.showListSearch = false;
 
-      } else {
-        const selectedItem = this.listComponents.find(item => item.name.includes(this.searchInput));
-
-        if (selectedItem) {
-          let filterComponents =this.listComponents.filter(component => component.name.includes(this.searchInput.trim()));
-          
-          this.listComponents = filterComponents;
-          this.showListSearch = true;
-    
-        } else {
-          this.showListSearch = false;
-    
-        }
-      }
-   
-    }
  
-  }
   closeMatMenu() {
 
   }
