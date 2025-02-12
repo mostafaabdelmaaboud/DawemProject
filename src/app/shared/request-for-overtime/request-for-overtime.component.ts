@@ -13,7 +13,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { EmployeesService } from 'src/app/Presentation/user/employees/services/employees.service';
-import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { OvertimeRequestService } from 'src/app/Presentation/user/overtime-request/servies/overtime-request.service';
 
@@ -109,6 +109,8 @@ export class RequestForOvertimeComponent {
   requiredCommercialRegFiles = false;
   toggleForEmployee = false;
   private overtimeRequestService = inject(OvertimeRequestService);
+      private searchSubject = new Subject<{ value: any; type: any }>();
+  
   constructor(
     public dialogRef: MatDialogRef<RequestForOvertimeComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
@@ -286,7 +288,16 @@ export class RequestForOvertimeComponent {
       }
 
 
-    })
+    });
+    this.searchSubject
+    .pipe(
+      debounceTime(500),
+      distinctUntilChanged((prev, curr) =>  prev.value === curr.value && prev.type === curr.type
+    ) 
+    )
+    .subscribe(({ value, type }) => {
+      this.searchDropdown(value, type, true);
+    });
   }
   getControl(controlName: string) {
     return this.addBranchGroupForm?.get(controlName);
@@ -305,9 +316,29 @@ export class RequestForOvertimeComponent {
 
     }  
   }
-  lastSearchQuery = "";
+  searchList(target:any, type:any) {
+    let value = target.value;
 
-  searchDropdown(data: any, type: string) {
+    this.searchSubject.next({ value, type }); 
+
+  }
+  lastSearchQuery = "";
+  sortArrayBySearchTerm(
+    array: { name: string; key: number }[],
+    searchTerm: string
+  ): { name: string; key: number }[] {
+    return array.sort((a, b) => {
+      const aIndex = a.name.indexOf(searchTerm);
+      const bIndex = b.name.indexOf(searchTerm);
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return 0;
+    });
+  }
+  searchDropdown(data: any, type: string, searchInput?) {
 
     switch (type) {
       case 'PermissionTypeId':
@@ -315,13 +346,30 @@ export class RequestForOvertimeComponent {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.overtimeRequestService.overtimeTypeDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.list = [];
+          
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res?.data?.forEach((item: any) => {
-                  this.list.push({ name: item.name, key: item.id })
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.list.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.list = [...this.list, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.list, searchTerm);
+                  this.list = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toastr.error("لا يوجد بيانات");
+                  }
+                }
               });
           }
 
@@ -333,13 +381,30 @@ export class RequestForOvertimeComponent {
           if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listEmployees = [];
+            
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
                 res?.data?.forEach((jobTitle: any) => {
-                  this.listEmployees.push({ name: jobTitle.name, key: jobTitle.id })
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listEmployees.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listEmployees = [...this.listEmployees, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listEmployees, searchTerm);
+                  this.listEmployees = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toastr.error("لا يوجد بيانات");
+                  }
+                }
               });
           }
 
