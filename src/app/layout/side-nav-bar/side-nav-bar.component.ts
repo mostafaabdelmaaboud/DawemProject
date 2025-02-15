@@ -257,6 +257,7 @@ export class SideNavBarComponent {
                         shortMessege:item.title,
                         fullMessege:item.body,
                         iconUrl:item.iconUrl,
+                        screenCode:item.screenCode,
                         id:item.id,
                         isRead:item.isRead,
                         notificationType:item.notificationType,
@@ -302,6 +303,8 @@ export class SideNavBarComponent {
                       fullMessege:item.body,
                       iconUrl:item.iconUrl,
                       id:item.id,
+                      screenCode:item.screenCode,
+
                       isRead:item.isRead,
                       notificationType:item.notificationType,
                       priority:item.priority,
@@ -352,6 +355,8 @@ export class SideNavBarComponent {
                         iconUrl:item.iconUrl,
                         id:item.id,
                         isRead:item.isRead,
+                        screenCode:item.screenCode,
+
                         notificationType:item.notificationType,
                         priority:item.priority,
                         date:this.formatDateService.formatDate(new Date(item.date)),
@@ -377,6 +382,8 @@ export class SideNavBarComponent {
                         iconUrl:item.iconUrl,
                         id:item.id,
                         isRead:item.isRead,
+                        screenCode:item.screenCode,
+
                         notificationType:item.notificationType,
                         priority:item.priority,
                         date:this.formatDateService.formatDate(new Date(item.date)),
@@ -411,6 +418,7 @@ export class SideNavBarComponent {
                   fullMessege:item.body,
                   iconUrl:item.iconUrl,
                   id:item.id,
+                  screenCode:item.screenCode,
                   isRead:item.isRead,
                   notificationType:item.notificationType,
                   priority:item.priority,
@@ -443,67 +451,29 @@ export class SideNavBarComponent {
             this.notificationList[findIndexIsRead].isRead = data.data;
           }
           this.loadingNotification = false;
-          this.notificationType(notification.notificationType);
+          
+
+          this.notificationType(notification.screenCode);
         },
         error: err => {
           this.loadingNotification = false;
         }
       })
     } else {
-      this.notificationType(notification.notificationType);
+      
+
+      this.notificationType(notification.screenCode);
 
     }
 
   }
-  notificationType(type:any) {
+  notificationType(screenCode:any) {
     let permissions = JSON.parse(localStorage.getItem("permissions") as string);
-
-    if(type >=0 && type <= 2) {
-      let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("vacations"));
-      if(findIndexRoute >= 0) {
-        this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`]);
-
-      }
-
-    } else if(type>=3  && type <= 5) {
-      let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("tasks"));
-      if(findIndexRoute >= 0) {
-        this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`]);
-  
-      }
-
-    } else if(type === 6) {
-      let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("justifications"));
-      if(findIndexRoute >= 0) {
-        this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`]);
-  
-      }
-
-    }else if(type === 7) {
-      let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("permissions"));
-      if(findIndexRoute >= 0) {
-        this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`]);
-  
-      }
-
-    }else if(type === 8) {
-      let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("sanctions"));
-      if(findIndexRoute >= 0) {
-        this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`]);
-  
-      }
-
-    }else if(type === 9) {
-      let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission?.url?.includes("summons"));
-      if(findIndexRoute >= 0) {
-        this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`]);
-  
-      }
-
+    let findIndexRoute = permissions?.availablePermissions?.findIndex((permission:any) => permission.screenCode === screenCode);
+    if(findIndexRoute >= 0) {
+      this.router.navigate([`${permissions?.availablePermissions[findIndexRoute]?.url}/${permissions?.availablePermissions[findIndexRoute]?.screenCode}`]);
+      this.trigger.closeMenu();
     }
-    this.trigger.closeMenu();
-
-
   }
   ngOnInit(): void {
     let permission = JSON.parse(localStorage.getItem('permissions') as string)
@@ -683,9 +653,9 @@ this.menuItems = menuItems;
   navigateComponent(componrnt:any) {
     this.showListSearch = false;
     this.searchInput = '';
-    debugger;
+    
     this.router.navigate([componrnt.url+'/'+componrnt.screenCode])
-    debugger;
+    
 
   }
   searchDropdown(data: any, type: string, searchInput?) {
@@ -693,14 +663,14 @@ this.menuItems = menuItems;
     switch (type) {
       case 'searchComponent':
         if (data) {
-          debugger;
+          
           if (data !== this.lastSearchQuery) {
-            debugger;
+            
 
             this.lastSearchQuery = data;
             this.searchInput = data;
             let permissions = JSON.parse(localStorage.getItem('permissions') as string);
-            debugger;
+            
 
             let availablePermissions:any[] =permissions?.availablePermissions;
             this.listComponents = availablePermissions;

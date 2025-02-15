@@ -355,9 +355,9 @@ export class SideNavBarAdminComponent {
   navigateComponent(componrnt:any) {
     this.showListSearch = false;
     this.searchInput = '';
-    debugger;
+    
     this.router.navigate([componrnt.url+'/'+componrnt.screenCode])
-    debugger;
+    
 
   }
   searchDropdown(data: any, type: string, searchInput?) {
@@ -365,14 +365,14 @@ export class SideNavBarAdminComponent {
     switch (type) {
       case 'searchComponent':
         if (data) {
-          debugger;
+          
           if (data !== this.lastSearchQuery) {
-            debugger;
+            
 
             this.lastSearchQuery = data;
             this.searchInput = data;
             let permissions = JSON.parse(localStorage.getItem('permissions') as string);
-            debugger;
+            
 
             let availablePermissions:any[] =permissions?.availablePermissions;
             this.listComponents = availablePermissions;
