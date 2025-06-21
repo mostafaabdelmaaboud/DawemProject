@@ -754,16 +754,6 @@ export class ReportService {
               queryParams = queryParams.set(key, 0)
 
             }          }
-        } else if (key === "ZoneIds") {
-          if (value != "") {
-            if(value?.length > 0) {
-              value.forEach(report => {
-                queryParams =queryParams.append(key, report.key)
-              });
-            } else {
-              queryParams =queryParams.set(key, 0)
-
-            }          }
         }else if (key === "JobTitleIds") {
           if (value != "") {
             if(value?.length > 0) {

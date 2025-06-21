@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Inject, Input, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { AuthService } from 'src/app/core/auth/services/auth-service.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
@@ -13,7 +12,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { EmployeesService } from 'src/app/Presentation/user/employees/services/employees.service';
-import { Observable, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Observable, Subject, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { AssignmentsService } from 'src/app/Presentation/user/assignments/services/assignments.service';
 import { CheckboxModule } from 'primeng/checkbox';
 import { UsersService } from 'src/app/Presentation/user/users/services/users.service';
@@ -112,6 +111,7 @@ export class AddUserComponent {
   errorUploadFileIdCopyIsRequired!: string;
   errorUploadFileIdCopy!: string;
   public viewImage: any[] = [];
+  private searchSubject = new Subject<{ value: any; type: any }>();
 
   listEmployees: any[] = [
   ];
@@ -120,7 +120,7 @@ export class AddUserComponent {
   listRoles: any[] = [];
   @Input() editUser!: boolean;
   addBranchGroupForm: FormGroup = this.fb.group({
-    Roles: ["", Validators.required],
+    Roles: [""],
     EmployeeId: ["", Validators.required],
     IsAdmin: [false]
 
@@ -136,8 +136,8 @@ export class AddUserComponent {
   constructor(
     public dialogRef: MatDialogRef<AddUserComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
-    private authService: AuthService,
-    private toastr: ToastrService,
+    private toast: ToastrService,
+
     private fb: FormBuilder,
     public translate: TranslateService,
 
@@ -279,7 +279,15 @@ export class AddUserComponent {
       }
     }
      )
-
+     this.searchSubject
+     .pipe(
+       debounceTime(500),
+       distinctUntilChanged((prev, curr) =>  prev.value === curr.value && prev.type === curr.type
+     ) 
+     )
+     .subscribe(({ value, type }) => {
+       this.searchDropdown(value, type, true);
+     });
   }
 
 
@@ -297,10 +305,30 @@ export class AddUserComponent {
   getControl(controlName: string) {
     return this.addBranchGroupForm?.get(controlName);
   }
+  searchList(target:any, type:any) {
+    let value = target.value;
 
+    this.searchSubject.next({ value, type }); 
+
+  }
+  sortArrayBySearchTerm(
+    array: { name: string; key: number }[],
+    searchTerm: string
+  ): { name: string; key: number }[] {
+    return array.sort((a, b) => {
+      const aIndex = a.name.indexOf(searchTerm);
+      const bIndex = b.name.indexOf(searchTerm);
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return 0;
+    });
+  }
   lastSearchQuery = "";
 
-  searchDropdown(data: any, type: string) {
+  searchDropdown(data: any, type: string, searchInput?) {
 
     switch (type) {
       case 'EmployeeId':
@@ -310,11 +338,28 @@ export class AddUserComponent {
             this.usersService.GetForDropDownEmployeeNotHaveUser({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listEmployees = [];
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res?.data?.forEach((item: any) => {
-                  this.listEmployees.push({ name: item.name, key: item.id })
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listEmployees.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listEmployees = [...this.listEmployees, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listEmployees, searchTerm);
+                  this.listEmployees = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toast.error("لا يوجد بيانات");
+                  }
+                }
               });
           }
 
@@ -328,12 +373,28 @@ export class AddUserComponent {
             this.usersService.getRolesDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listRoles = [];
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-
                 res?.data?.forEach((jobTitle: any) => {
-                  this.listRoles.push({ name: jobTitle.name, key: jobTitle.id })
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listRoles.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listRoles = [...this.listRoles, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listRoles, searchTerm);
+                  this.listRoles = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toast.error("لا يوجد بيانات");
+                  }
+                }
               });
           }
 
@@ -362,7 +423,6 @@ export class AddUserComponent {
 
       this.getControl("Password")?.markAsDirty();
       this.getControl("ConfirmPassword")?.markAsDirty();
-      this.getControl("Roles")?.markAsDirty();
       this.getControl("EmployeeId")?.markAsDirty();
     }
 

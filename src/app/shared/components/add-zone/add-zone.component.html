@@ -35,7 +35,7 @@
               <span class="p-input-icon-left input-search-dropdown">
 
                 <i class="pi pi-search" (click)="searchDropdown(searchCompanyBranches.value, 'companyBranches')"></i>
-                <input type="text" placeholder="بحث" pInputText #searchCompanyBranches />
+                <input type="text" placeholder="بحث" pInputText (keyup)="searchList($event.target, 'companyBranches')" #searchCompanyBranches />
               </span>
             </ng-template>
             <ng-template let-option pTemplate="item">

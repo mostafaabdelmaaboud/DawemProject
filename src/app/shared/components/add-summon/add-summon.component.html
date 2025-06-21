@@ -56,7 +56,7 @@
                         <span class="p-input-icon-left input-search-dropdown">
           
                           <i class="pi pi-search" (click)="searchDropdown(searchEmployeeId.value, 'Employees')"></i>
-                          <input type="text" placeholder="بحث" pInputText #searchEmployeeId />
+                          <input type="text" placeholder="بحث" pInputText (keyup)="searchList($event.target, 'Employees')" #searchEmployeeId />
                         </span>
                       </ng-template>
                       <ng-template let-option pTemplate="item">
@@ -83,7 +83,7 @@
                         <span class="p-input-icon-left input-search-dropdown">
           
                           <i class="pi pi-search" (click)="searchDropdown(searchGroupId.value, 'Groups')"></i>
-                          <input type="text" placeholder="بحث" pInputText #searchGroupId />
+                          <input type="text" placeholder="بحث" pInputText (keyup)="searchList($event.target, 'Groups')" #searchGroupId />
                         </span>
                       </ng-template>
                       <ng-template let-option pTemplate="item">
@@ -110,7 +110,7 @@
                         <span class="p-input-icon-left input-search-dropdown">
           
                           <i class="pi pi-search" (click)="searchDropdown(searchDepartmentId.value, 'Departments')"></i>
-                          <input type="text" placeholder="بحث" pInputText #searchDepartmentId />
+                          <input type="text" placeholder="بحث" pInputText (keyup)="searchList($event.target, 'Departments')" #searchDepartmentId />
                         </span>
                       </ng-template>
                       <ng-template let-option pTemplate="item">
@@ -153,7 +153,7 @@
                     <span class="p-input-icon-left input-search-dropdown">
       
                       <i class="pi pi-search" (click)="searchDropdown(searchSanctions.value, 'Sanctions')"></i>
-                      <input type="text" placeholder="بحث" pInputText #searchSanctions />
+                      <input type="text" placeholder="بحث" pInputText (keyup)="searchList($event.target, 'Sanctions')" #searchSanctions />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">
@@ -229,7 +229,7 @@
                                 <span class="p-input-icon-left input-search-dropdown">
             
                                     <i class="pi pi-search" (click)="searchDropdown(searchSanctions, 'Sanctions')"></i>
-                                    <input type="text" placeholder="بحث" pInputText #searchSanctions />
+                                    <input type="text" placeholder="بحث" pInputText (keyup)="searchList($event.target, 'Sanctions')" #searchSanctions />
                                 </span>
                                 </ng-template>
                                 <ng-template let-option pTemplate="item">

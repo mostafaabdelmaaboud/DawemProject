@@ -9,7 +9,7 @@
       <nz-sider>
         <div class="list-content" *ngIf="menuItems?.length > 0">
             <ng-container *ngTemplateOutlet="recursiveTemplates; context: { $implicit: menuItems }"></ng-container>
-            <mat-expansion-panel class="mat-elevation-z0"
+            <!-- <mat-expansion-panel class="mat-elevation-z0"
             (opened)="isSidebarExpanded = true"
                          (closed)="isSidebarExpanded = false">
               <mat-expansion-panel-header>
@@ -84,7 +84,7 @@
                       </li>  
                     </ul>
                   </mat-list-item>
-<!-- 
+
                   <mat-list-item  class="side-nav-item" routerLink="shiftTypeDefault/37">
                     <ul nz-menu nzMode="inline">
                       <li nz-menu-item routerLinkActive="ant-menu-item-selected">
@@ -102,11 +102,11 @@
                         <span class="text-sidebar">انواع الجزيئات الأفتراضية</span>
                       </li>  
                     </ul>
-                  </mat-list-item> -->
+                  </mat-list-item>
                   </ul>
               </mat-nav-list>
-            </mat-expansion-panel>
-            <mat-list-item  class="side-nav-item" routerLink="fingerprintDeviceManagement/31">
+            </mat-expansion-panel> -->
+            <!-- <mat-list-item  class="side-nav-item" routerLink="fingerprintDeviceManagement/31">
               <ul nz-menu nzMode="inline">
                 <li nz-menu-item routerLinkActive="ant-menu-item-selected">
                   <span nz-icon></span>
@@ -114,7 +114,7 @@
                   <span class="text-sidebar">إدارة الأجهزه</span>
                 </li>  
               </ul>
-            </mat-list-item>
+            </mat-list-item> -->
         </div>
       </nz-sider>
 
@@ -122,7 +122,7 @@
         <ng-container *ngFor="let node of nodes">
           <ng-container *ngIf="node?.groupOrScreenType === 0">
             <mat-expansion-panel class="mat-elevation-z0"
-            (opened)="isSidebarExpanded = true;setStep(node?.id)" [expanded]="step === node?.id"
+            (opened)="isSidebarExpanded = true;setStep(node?.id)"
                          (closed)="isSidebarExpanded = false">
               <mat-expansion-panel-header>
                 <ng-container *ngIf="node?.icon?.includes('pi-')">
@@ -187,28 +187,21 @@
             <button class="toggle-asidebar" mat-button (click)="opened=!opened"><mat-icon>menu</mat-icon></button>
           </div>
           <div style="color: #6C757D;" class="mt-0 content-search-component position-relative d-flex align-items-center">
+            <!-- search navbar-->
             <span class="p-input-icon-right inputSearch-header">
-              <i class="pi pi-search"></i>
-              <input type="text" [(ngModel)]="searchInput" (input)="search()" pInputText [placeholder]="'sideNav.searchDaum' | translate" />
+              <i class="pi pi-search" (click)="searchDropdown(searchComponent.value, 'searchComponent')"></i>
+              <input type="text" [(ngModel)]="searchInput" pInputText (keyup)="searchList($event.target, 'searchComponent')"  #searchComponent [placeholder]="'sideNav.searchDaum' | translate" />
             </span>
         
             <ng-container *ngIf="showListSearch">
               <div class="list-components"  (click)="$event.stopPropagation()">
                 <ul nz-menu nzMode="inline">
-                  <ng-container *ngIf="!isAdmin">
-                    <ng-container *ngFor="let componrnt of listComponents">
-                      <li *ngIf="componrnt.showComponent" [routerLink]="componrnt.routerLink" (click)="showListSearch = false;searchInput = ''">
-                        <span class="text-sidebar">{{componrnt.name}}</span>
+                    <ng-container *ngFor="let component of listComponents">
+                      <li  [routerLink]="component.url" (click)="navigateComponent(component)">
+                        <span class="text-sidebar">{{component.name}}</span>
                       </li>
                     </ng-container>
-                  </ng-container>
-                  <ng-container *ngIf="isAdmin">
-                    <ng-container *ngFor="let componrnt of listComponents">
-                      <li [routerLink]="componrnt.routerLink" (click)="showListSearch = false; searchInput = ''">
-                        <span class="text-sidebar">{{componrnt.name}}</span>
-                      </li>
-                    </ng-container>
-                  </ng-container>
+              
                   <li nz-menu-item class="users-sidebar">
       
                     <div class="users d-flex align-items-center">
@@ -247,20 +240,20 @@
           </div>
         </div>
         <div class="section-left-sidebar d-flex align-items-center">
-          <div class="localization">
+          <!-- <div class="localization">
             <p-dropdown [options]="countries" [(ngModel)]="selectedCountry" (onChange)="changeLanguage($event)"
             optionLabel="name">
             <ng-template pTemplate="selectedItem">
               <ng-container *ngIf="selectedCountry.code !='AR'">
                 <div class="d-flex align-items-center gap-2" *ngIf="selectedCountry">
-                  <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
-                    [class]="'flag flag-' + selectedCountry.code.toLowerCase()" style="width: 18px" /> -->
+                  <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                    [class]="'flag flag-' + selectedCountry.code.toLowerCase()" style="width: 18px" />
                   <div>{{ selectedCountry.name }}</div>
                 </div>
               </ng-container>
               <ng-container *ngIf="selectedCountry.code ==='AR'">
                 <div class="d-flex align-items-center gap-2" *ngIf="selectedCountry">
-                  <!-- <img src="assets/img/flag-400.png" style="width: 18px" /> -->
+                  <img src="assets/img/flag-400.png" style="width: 18px" />
                   <div>{{ selectedCountry.name }}</div>
                 </div>
               </ng-container>
@@ -269,20 +262,20 @@
             <ng-template let-country pTemplate="item">
               <ng-container *ngIf="country.code != 'AR'">
                 <div class="d-flex align-items-center gap-2">
-                  <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
-                    [class]="'flag flag-' + country.code.toLowerCase()" style="width: 18px" /> -->
+                  <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                    [class]="'flag flag-' + country.code.toLowerCase()" style="width: 18px" />
                   <div>{{ country.name }}</div>
                 </div>
               </ng-container>
               <ng-container *ngIf="country.code === 'AR'">
                 <div class="d-flex align-items-center gap-2">
-                  <!-- <img src="assets/img/flag-400.png" style="width: 18px" /> -->
+                  <img src="assets/img/flag-400.png" style="width: 18px" />
                   <div>{{ country.name }}</div>
                 </div>
               </ng-container>
             </ng-template>
           </p-dropdown>
-          </div>
+          </div> -->
           <!-- <div class="search-results"  infiniteScroll
           [infiniteScrollDistance]="2"
           [infiniteScrollThrottle]="50"

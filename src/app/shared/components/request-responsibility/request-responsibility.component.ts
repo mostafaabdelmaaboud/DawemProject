@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/core/auth/services/auth-service.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CalendarModule } from "primeng/calendar";
@@ -71,6 +71,7 @@ export class RequestResponsibilityComponent {
   constructor(
     public dialogRef: MatDialogRef<RequestResponsibilityComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
+    public translate: TranslateService,
     private authService: AuthService,
     private fb: FormBuilder
   ) {

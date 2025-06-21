@@ -31,6 +31,10 @@
         <label class="title">السماح بتعديل كود موبايل البصمة</label>
         <p-inputSwitch formControlName="AllowChangeFingerprintMobileCode"></p-inputSwitch>
       </div>
+      <div class="section1 mb-3">
+        <label class="title">السماح ببصمة الإصبع خارج المناطق المسموح بها</label>
+        <p-inputSwitch formControlName="AllowFingerprintOutsideAllowedZones"></p-inputSwitch>
+      </div>
       <ng-container *ngIf="editEmployee">
         <div class="field-disabled mb-3 readOnly">
           <label for="" class="label-input mb-2" [innerHTML]="data!['titleFieldDisabled']|translate"></label>
@@ -88,7 +92,7 @@
               <span class="p-input-icon-left input-search-dropdown">
 
                 <i class="pi pi-search" (click)="searchDropdown(searchJobTotle.value, 'JobTitleId')"></i>
-                <input type="text" placeholder="بحث" pInputText #searchJobTotle />
+                <input type="text" placeholder="بحث" pInputText (keyup)="searchList($event.target, 'JobTitleId')" #searchJobTotle />
               </span>
             </ng-template>
             <ng-template let-option pTemplate="item">
@@ -114,7 +118,7 @@
               <span class="p-input-icon-left input-search-dropdown">
 
                 <i class="pi pi-search" (click)="searchDropdown(searchdirectManager.value, 'directManager')"></i>
-                <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchdirectManager />
+                <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'directManager')" pInputText #searchdirectManager />
               </span>
             </ng-template>
             <ng-template let-option pTemplate="item">
@@ -184,7 +188,7 @@
               <span class="p-input-icon-left input-search-dropdown">
 
                 <i class="pi pi-search"  (click)="searchDropdown(searchcompanyCountryId.value, 'companyCountryId')"></i>
-                <input type="text" placeholder="بحث" (keyup.enter)="searchDropdown(searchcompanyCountryId.value, 'companyCountryId')" pInputText #searchcompanyCountryId />
+                <input type="text" placeholder="بحث" (keyup)="searchList($event.target, 'companyCountryId')"  pInputText #searchcompanyCountryId />
               </span>
             </ng-template>
             <ng-template let-option pTemplate="item">
@@ -237,7 +241,7 @@
               <span class="p-input-icon-left input-search-dropdown">
 
                 <i class="pi pi-search" (click)="searchDropdown(searchDepartmentId.value, 'DepartmentId')"></i>
-                <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchDepartmentId />
+                <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'DepartmentId')" pInputText #searchDepartmentId />
               </span>
             </ng-template>
             <ng-template let-option pTemplate="item">
@@ -288,7 +292,7 @@
               <span class="p-input-icon-left input-search-dropdown">
 
                 <i class="pi pi-search" (click)="searchDropdown(searchScheduleId.value, 'ScheduleId')"></i>
-                <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchScheduleId />
+                <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'ScheduleId')" pInputText #searchScheduleId />
               </span>
             </ng-template>
             <ng-template let-option pTemplate="item">
@@ -314,7 +318,7 @@
               <span class="p-input-icon-left input-search-dropdown">
 
                 <i class="pi pi-search" (click)="searchDropdown(searchzoneIds.value, 'zoneIds')"></i>
-                <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchzoneIds />
+                <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'zoneIds')" pInputText #searchzoneIds />
               </span>
             </ng-template>
             <ng-template let-option pTemplate="item">

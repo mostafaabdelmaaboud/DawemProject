@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { PrimeNGConfig } from 'primeng/api';
-import { Subscription, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, Subscription, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { EmployeesService } from '../../../employees/services/employees.service';
 import { BaseDataService } from '../../services/base-data.service';
 
@@ -39,6 +39,7 @@ export class RequestsReportComponent {
   groupsList:any[] = [];
   loadingReport = false;
   url!: string;
+  private searchSubject = new Subject<{ value: any; type: any }>();
 
   private _mobileQueryListener: () => void;
   constructor(
@@ -118,6 +119,15 @@ export class RequestsReportComponent {
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') as string;
   this.loadDataDropdown();
+  this.searchSubject
+  .pipe(
+    debounceTime(500),
+    distinctUntilChanged((prev, curr) =>  prev.value === curr.value && prev.type === curr.type
+  ) 
+  )
+  .subscribe(({ value, type }) => {
+    this.searchDropdown(value, type, true);
+  });
   }
   loadDataDropdown() {
     let employee = this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
@@ -197,12 +207,12 @@ export class RequestsReportComponent {
  
   reset() {
 
-    this.reportForm.get("FreeText")?.setValue("");
-    this.reportForm.get("DateFrom")?.setValue("");
-    this.reportForm.get("DateTo")?.setValue("");
-    this.reportForm.get("EmployeeIds")?.setValue("");
-    this.reportForm.get("DepartmentIds")?.setValue("");
-    this.reportForm.get("GroupIds")?.setValue("");
+    this.reportForm.get("FreeText")?.reset();
+    this.reportForm.get("DateFrom")?.reset();
+    this.reportForm.get("DateTo")?.reset();
+    this.reportForm.get("EmployeeIds")?.reset();
+    this.reportForm.get("DepartmentIds")?.reset();
+    this.reportForm.get("GroupIds")?.reset();
     this.loadDataDropdown();
     this.removeText = true;
 
@@ -211,20 +221,39 @@ export class RequestsReportComponent {
     this.show = false;
 
   }
+  searchList(target:any, type:any) {
+    let value = target.value;
+
+    this.searchSubject.next({ value, type }); 
+
+  }
   employeeIDClearData = false;
   departmentIdClearData = false;
   zoneIdClearData = false;
   jobTitleIdData = false;
 
-  searchDropdown(data: any, type: string) {
+  sortArrayBySearchTerm(
+    array: { name: string; key: number }[],
+    searchTerm: string
+  ): { name: string; key: number }[] {
+    return array.sort((a, b) => {
+      const aIndex = a.name.indexOf(searchTerm);
+      const bIndex = b.name.indexOf(searchTerm);
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return 0;
+    });
+  }
+  searchDropdown(data: any, type: string, searchInput?) {
 
     switch (type) {
       case 'EmployeeID':
         if (data || data === "") {
-          if (data !== this.lastSearchQuery || data === "") {
             this.lastSearchQuery = data;
             this.employeesService.GetForDropDownEmployee({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
                 let newArray:any[]= [];
                 this.lastSearchQuery = "";
@@ -232,10 +261,16 @@ export class RequestsReportComponent {
                   newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
                 newArray = newArray.filter(newItem => 
-                  !this.employeesList.some(oldItem => oldItem.key === newItem.key)
+                  !this.employeesList.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
                 );
-                if(newArray.length > 0){
-                  this.employeesList = [...this.employeesList, ...newArray]
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.employeesList = [...this.employeesList, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.employeesList, searchTerm);
+                  this.employeesList = [...formatSearch];
                 } else {
                   if(!res?.data?.length) {
                     this.toast.error("لا يوجد بيانات");
@@ -249,16 +284,13 @@ export class RequestsReportComponent {
     
                 }
               });
-          }
 
         }
         break;
         case 'DepartmentId':
           if (data || data === "") {
-            if (data !== this.lastSearchQuery || data === "") {
               this.lastSearchQuery = data;
               this.employeesService.GetForDropDownDepartment({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-                debounceTime(300),
                 distinctUntilChanged()).subscribe((res: any) => {
                   let newArray:any[]= [];
                   this.lastSearchQuery = "";
@@ -266,10 +298,15 @@ export class RequestsReportComponent {
                     newArray.push({ name: jobTitle.name, key: jobTitle.id })
                   });
                   newArray = newArray.filter(newItem => 
-                    !this.depatmentsList.some(oldItem => oldItem.key === newItem.key)
+                    !this.depatmentsList.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
                   );
-                  if(newArray.length > 0){
-                    this.depatmentsList = [...this.depatmentsList, ...newArray]
+                  const searchTerm = data;
+                  if(res?.data?.length > 0 || searchInput){
+                    if(newArray?.length >0) {
+                      this.depatmentsList = [...this.depatmentsList, ...newArray]
+                    }
+                    let formatSearch = this.sortArrayBySearchTerm(this.depatmentsList, searchTerm);
+                    this.depatmentsList = [...formatSearch];
                   } else {
                     if(!res?.data?.length) {
                       this.toast.error("لا يوجد بيانات");
@@ -282,16 +319,13 @@ export class RequestsReportComponent {
       
                   }
                 });
-            }
   
           }
           break;
           case 'GroupId':
             if (data || data === "") {
-              if (data !== this.lastSearchQuery || data === "") {
                 this.lastSearchQuery = data;
                 this.baseDataService.groupsForDropdown({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-                  debounceTime(300),
                   distinctUntilChanged()).subscribe((res: any) => {
                     let newArray:any[]= [];
                     this.lastSearchQuery = "";
@@ -299,10 +333,15 @@ export class RequestsReportComponent {
                       newArray.push({ name: jobTitle.name, key: jobTitle.id })
                     });
                     newArray = newArray.filter(newItem => 
-                      !this.groupsList.some(oldItem => oldItem.key === newItem.key)
+                      !this.groupsList.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
                     );
-                    if(newArray.length > 0){
-                      this.groupsList = [...this.groupsList, ...newArray]
+                    const searchTerm = data;
+                    if(res?.data?.length > 0 || searchInput){
+                      if(newArray?.length >0) {
+                        this.groupsList = [...this.groupsList, ...newArray]
+                      }
+                      let formatSearch = this.sortArrayBySearchTerm(this.groupsList, searchTerm);
+                      this.groupsList = [...formatSearch];
                     } else {
                       if(!res?.data?.length) {
                         this.toast.error("لا يوجد بيانات");
@@ -315,7 +354,6 @@ export class RequestsReportComponent {
         
                     }
                   });
-              }
             }
             break;
      

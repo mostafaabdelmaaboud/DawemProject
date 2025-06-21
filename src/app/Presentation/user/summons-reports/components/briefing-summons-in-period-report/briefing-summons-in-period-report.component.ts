@@ -26,7 +26,6 @@ export class BriefingSummonsInPeriodReportComponent {
     DateFrom: ['', [Validators.required, this.dateFromValidator("DateTo")]],
     DateTo: ['', [Validators.required, this.dateToValidator("DateFrom")]],
     DepartmentIds:[''],
-    JobTitleIds:[''],
     AllowedTimeWithMinutesFrom:[null, [this.allowedTimeWithMinutesFromValidator('AllowedTimeWithMinutesTo'), Validators.min(0)]],
     AllowedTimeWithMinutesTo:[null, [this.allowedTimeWithMinutesToValidator('AllowedTimeWithMinutesFrom'), Validators.min(0)]],
     NoOfRequiredEmployeeFrom:[null, [this.allowedTimeWithMinutesFromValidator('NoOfRequiredEmployeeTo'), Validators.min(0)]],
@@ -346,7 +345,6 @@ export class BriefingSummonsInPeriodReportComponent {
     this.reportForm.get("DateFrom")?.setValue("");
     this.reportForm.get("DateTo")?.setValue("");
     this.reportForm.get("DepartmentIds")?.setValue("");
-    this.reportForm.get("JobTitleIds")?.setValue("");
     this.loadDataDropdown();
     this.removeText = true;
 

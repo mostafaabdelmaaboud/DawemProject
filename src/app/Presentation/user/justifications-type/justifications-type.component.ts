@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -91,6 +91,10 @@ export class JustificationsTypeComponent {
     { name: "تسجيل انصراف خاطئ", key: "4" }
 
   ];
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
+  trans!:any;
+
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
@@ -144,9 +148,43 @@ export class JustificationsTypeComponent {
       { name: '5', code: 5 }
 
     ];
+    const translations = this.translate.translations[this.translate.currentLang || 'ar'];
+    if(!this.trans) {
+      this.trans = translations
+    }
+    this.translateColumn();
+
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.trans = dataParent.translations;
+      this.translateColumn();
+
+    });
     this.getInformation();
 
     this.getJustifications(this.filteration);
+  }
+  translateColumn() {
+
+    this.columns = [
+      {
+        name: this.trans.typesOfJustifications.justificationNumber,
+        field: "code",
+      },
+      {
+        name: this.trans.signup.name,
+        field: "name",
+      },
+      {
+        name: this.trans.typesOfJustifications.stateOfJustification,
+        field: "isActive"
+      },
+      {
+        name: this.trans.requests.action,
+        field: "actions"
+      }
+  
+    ];
+
   }
   filter() {
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
@@ -226,7 +264,7 @@ export class JustificationsTypeComponent {
       decimalseparator: '.',
       showLabels: true, 
       showTitle: true,
-      title: 'أنواع التبريرات',
+      title: this.trans.sideNav.typesOfJustifications,
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
@@ -253,12 +291,12 @@ export class JustificationsTypeComponent {
               return {
                 code: justification.code,
                 name: justification.name,
-                isActive: justification.isActive ? 'نشط' : 'غير نشط'
+                isActive: justification.isActive ?  this.trans.employees.active: this.trans.employees.Inactive
               }
             })
             this.isLoading = false;
             let formatRows =formatTable.map(assignment => [assignment.code,assignment.name, assignment.isActive ]);
-            this.generateExcel('أنواع التبريرات','أنواع التبريرات',formatRows, columns);
+            this.generateExcel(this.trans.sideNav.typesOfJustifications,this.trans.sideNav.typesOfJustifications,formatRows, columns);
 
             // new ngxCsv(formatTable, "sheet", options);
           },
@@ -359,9 +397,9 @@ export class JustificationsTypeComponent {
     const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
       width: "30vw",
       data: {
-        title: "هل متاكد من حذف نوع التبرير؟",
-        titleClose: "تراجع",
-        buttonSend: "حذف"
+        title: this.trans.typesOfJustifications.areYouSureYouWantToDelete,
+        titleClose: this.trans.employees.toRetreat,
+        buttonSend: this.trans.users.delete
       },
     });
 
@@ -389,13 +427,13 @@ export class JustificationsTypeComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestJustificationTypeComponent, {
       width: "50vw",
       data: {
-        title: "نوع التبرير",
-        setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع التبرير <span class='color-red'>*</span>",
-        titleName: "الأسم<span class='color-red'>*</span>",
-        placeholdeName: "برجاء ادخال الأسم",
-        validationtitleName: "الأسم مطلوب",
-        buttonSend: "موافق"
+        title: this.trans.justifications.typeOfJustification,
+        setAsNecessary: this.trans.justifications.setAsEssential,
+        titleVacationTypeId: this.trans.justifications.typeOfJustification +" <span class='color-red'>*</span>",
+        titleName: this.trans.signup.name +" <span class='color-red'>*</span>",
+        placeholdeName: this.trans.signup.enterTheName,
+        validationtitleName: this.trans.signup.nameIsRequired,
+        buttonSend: this.trans.justifications.sendRequest
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
@@ -420,9 +458,9 @@ export class JustificationsTypeComponent {
             const succressDialog = this.dialog.open(ToastSuccessComponent, {
               width: "30vw",
               data: {
-                title: "تم ارسال طلبك",
+                title: this.trans.justifications.yourRequestHasBeenSent,
                 message: data.message,
-                buttonSend: "انواع التبريرات"
+                buttonSend: this.trans.typesOfJustifications.typesOfJustifications
 
               },
             });
@@ -456,13 +494,13 @@ export class JustificationsTypeComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestJustificationTypeComponent, {
       width: "50vw",
       data: {
-        title: "تعديل التبرير",
-        setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع التبرير <span class='color-red'>*</span>",
-        titleName: "الأسم<span class='color-red'>*</span>",
-        placeholdeName: "برجاء ادخال الأسم",
-        validationtitleName: "الأسم مطلوب",
-        buttonSend: "موافق"
+        title: this.trans.justifications.modificationOfJustification,
+        setAsNecessary: this.trans.justifications.setAsEssential,
+        titleVacationTypeId: this.trans.justifications.typeOfJustification +" <span class='color-red'>*</span>",
+        titleName: this.trans.signup.name +" <span class='color-red'>*</span>",
+        placeholdeName: this.trans.signup.enterTheName,
+        validationtitleName: this.trans.signup.nameIsRequired,
+        buttonSend: this.trans.justifications.sendRequest
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
@@ -489,9 +527,10 @@ export class JustificationsTypeComponent {
             const succressDialog = this.dialog.open(ToastSuccessComponent, {
               width: "30vw",
               data: {
-                title: "تم ارسال طلبك",
+                title: this.trans.justifications.yourRequestHasBeenSent,
                 message: data.message,
-                buttonSend: "انواع التبريرات"
+                buttonSend: this.trans.typesOfJustifications.typesOfJustifications
+
               },
             });
             this.getJustifications(this.filteration);
@@ -526,7 +565,7 @@ export class JustificationsTypeComponent {
     const dialogRefAddCurrency = this.dialog.open(DialogJustificationTypeFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف التبرير"
+        title: this.trans.typesOfJustifications.justificationFile
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id
@@ -584,5 +623,9 @@ export class JustificationsTypeComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

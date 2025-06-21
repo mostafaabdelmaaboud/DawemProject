@@ -26,7 +26,6 @@ export class OverTimeInSelectedPeriodReportComponent {
     DateTo: ['', [Validators.required, this.dateToValidator("DateFrom")]],
     EmployeeIds:[''],
     DepartmentIds:[''],
-    ZoneIds:[''],
     JobTitleIds:[''],
   });
   private employeesService = inject(EmployeesService);
@@ -210,7 +209,6 @@ export class OverTimeInSelectedPeriodReportComponent {
     this.reportForm.get("DateTo")?.setValue("");
     this.reportForm.get("EmployeeIds")?.setValue("");
     this.reportForm.get("DepartmentIds")?.setValue("");
-    this.reportForm.get("ZoneIds")?.setValue("");
     this.reportForm.get("JobTitleIds")?.setValue("");
     this.loadDataDropdown();
     this.removeText = true;

@@ -81,7 +81,7 @@
                           (click)="searchDropdown(searchEmployeeID.value, 'EmployeeID')"></i>
                           <i class="pi pi-times-circle ml-2" *ngIf="employeeIDClearData" (click)="searchDropdown('', 'EmployeeID')"></i>
 
-                        <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchEmployeeID />
+                        <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'EmployeeID')" pInputText  #searchEmployeeID />
                       </span>
                     </ng-template>
                     <ng-template let-option pTemplate="item">

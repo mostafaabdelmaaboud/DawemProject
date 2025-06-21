@@ -10,382 +10,29 @@
         <nz-sider>
           <div class="list-content" *ngIf="menuItems?.length > 0">
               <ng-container *ngTemplateOutlet="recursiveTemplates; context: { $implicit: menuItems }"></ng-container>
-<!--    
-              <mat-expansion-panel class="mat-elevation-z0"
-              (opened)="isSidebarExpanded = true"
-                           (closed)="isSidebarExpanded = false">
-                <mat-expansion-panel-header>
-                  <i class="pi pi-flag"></i>
 
-                  <span class="label text-sidebar" [ngClass]="{ hidden: !isSidebarExpanded }">
-                  
-                    التقارير
-                  </span>
-                </mat-expansion-panel-header>
-                <mat-nav-list>
-                  <ul nz-menu nzMode="inline">
-                    <mat-expansion-panel class="mat-elevation-z0"
-                    (opened)="isSidebarExpanded = true"
-                                 (closed)="isSidebarExpanded = false">
-                      <mat-expansion-panel-header>
-                        <i class="pi pi-flag"></i>
-      
-                        <span class="label text-sidebar" [ngClass]="{ hidden: !isSidebarExpanded }">
-                        
-                          تقارير البيانات الأساسية
-                        </span>
-                      </mat-expansion-panel-header>
-                      <mat-nav-list>
-                        <ul nz-menu nzMode="inline">
-                          <mat-list-item  class="side-nav-item" routerLink="AttendanceAndDepartureForEmployees/30">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الحضور و الإنصراف للموظفين</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="DepartmentsReport/31">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الأقسام</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="EmployeesReport/32">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الموظفين</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="GroupsReport/35">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">المجموعات</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="ShiftsReport/38">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الورديات</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="ZonesReport/39">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">المناطق</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="BalancesReport/40">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">أرصدة الأجازات</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="SanctionsReport/41">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الجزاءات</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          
-                          <mat-list-item  class="side-nav-item" routerLink="SummonsReport/33">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الإستدعاءات</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="SummonLogsReport/34">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">سجلات الإستدعاءات</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="RequestsReport/35">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الطلبات</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="SchedulePlanLogsReport/35">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">سجلات خطط الجدولة</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="SchedulePlansReport/42">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">خطط الجدولة</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="SchedulesReport/36">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الجداول</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                         
-                          
-                          
-                        </ul>
-                      </mat-nav-list>
-                    </mat-expansion-panel>
-                    <mat-expansion-panel class="mat-elevation-z0"
-                    (opened)="isSidebarExpanded = true"
-                                 (closed)="isSidebarExpanded = false">
-                      <mat-expansion-panel-header>
-                        <i class="pi pi-flag"></i>
-                        <span class="label text-sidebar" [ngClass]="{ hidden: !isSidebarExpanded }">
-                          تقارير الحضور والانصراف
-                        </span>
-                      </mat-expansion-panel-header>
-                      <mat-nav-list>
-                        <ul nz-menu nzMode="inline">
-                          <mat-list-item  class="side-nav-item" routerLink="attendanceAndDepartureReports/25">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الحضور اليومي للموظفين</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="attendanceAndDepartureFromDepartmentReports/541">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الحضور والانصراف للقسم</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="SummaryOfAttendanceAndDepartureReports/542">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الحضور والانصراف المختصر</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="AttendanceAndDepartureDetailsReports/544">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">تفاصيل الحضور والانصراف</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="AttendaceLeaveSummary/548">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar"> ملخص الحضور والانصراف</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-
-
-           
-                          <mat-list-item  class="side-nav-item" routerLink="EmployeeAbsenseInPeriodGroupByEmployee/546">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">غياب الموظفين خلال فتره </span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="EmployeeAbsenseInPeriodGroupByDepartment/546">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">غياب الموظفين خلال فتره للقسم</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="EarlyAndLateAttendanceRepoers/543">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">التاخير والانصراف المبكر للقسم</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="LateEarlyArrivalGroupByEmployee/545">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">التاخير والانصراف المبكر للموظفين</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="OverTimeInSelectedPeriod/547">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الوقت الاضافى خلال فتره</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                
-                        </ul>
-                      </mat-nav-list>
-                    </mat-expansion-panel>
-                    <mat-expansion-panel class="mat-elevation-z0"
-                    (opened)="isSidebarExpanded = true"
-                                 (closed)="isSidebarExpanded = false">
-                      <mat-expansion-panel-header>
-                        <i class="pi pi-flag"></i>
-      
-                        <span class="label text-sidebar" [ngClass]="{ hidden: !isSidebarExpanded }">
-                          تقارير الاحصائيات
-                        </span>
-                      </mat-expansion-panel-header>
-                      <mat-nav-list>
-                        <ul nz-menu nzMode="inline">
-                          <mat-list-item  class="side-nav-item" routerLink="StatisticsOverAperiod/600">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الاحصائيات خلال فتره على مستوي الشركه</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                        </ul>
-                      </mat-nav-list>
-                      <mat-nav-list>
-                        <ul nz-menu nzMode="inline">
-                          <mat-list-item  class="side-nav-item" routerLink="StatisticsReportOverAperiodByDepartment/601">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الاحصائيات خلال فتره للقسم</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                        </ul>
-                      </mat-nav-list>
-                      <mat-nav-list>
-                        <ul nz-menu nzMode="inline">
-                          <mat-list-item  class="side-nav-item" routerLink="StatisticsReportOverAperiodGroupByMonth/602">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">الاحصائيات خلال فتره للشهر</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                        </ul>
-                      </mat-nav-list>
-                      
-                    </mat-expansion-panel>
-                    <mat-expansion-panel class="mat-elevation-z0"
-                    (opened)="isSidebarExpanded = true"
-                                 (closed)="isSidebarExpanded = false">
-                      <mat-expansion-panel-header>
-                        <i class="pi pi-flag"></i>
-      
-                        <span class="label text-sidebar" [ngClass]="{ hidden: !isSidebarExpanded }">
-                        
-                          تقارير الاستدعاءات
-                        </span>
-                      </mat-expansion-panel-header>
-                      <mat-nav-list>
-                        <ul nz-menu nzMode="inline">
-                          <mat-list-item  class="side-nav-item" routerLink="BriefingSummonsInPeriodReport/303">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">ملخص الاستدعاءات خلال فتره</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="SummonsDetailsGroupByEmployee/301">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">تفاصيل الاستدعاءات للموظف</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                          <mat-list-item  class="side-nav-item" routerLink="SummonsDetailsInPeriod/302">
-                            <ul nz-menu nzMode="inline">
-                              <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                                <span nz-icon></span>
-                                <i class="pi pi-flag"></i>
-                                <span class="text-sidebar">تفاصيل الاستدعاءات خلال فتره</span>
-                              </li>  
-                            </ul>
-                          </mat-list-item>
-                        </ul>
-                      </mat-nav-list>
-                    </mat-expansion-panel>
-
-                 
-                    </ul>
-                </mat-nav-list>
-              </mat-expansion-panel> -->
-              <mat-list-item  class="side-nav-item" routerLink="fingerprintDeviceManagement/31">
+              
+              <mat-list-item  class="side-nav-item" routerLink="overtimeType/36">
                 <ul nz-menu nzMode="inline">
                   <li nz-menu-item routerLinkActive="ant-menu-item-selected">
                     <span nz-icon></span>
                     <i class="pi pi-flag"></i>
-                    <span class="text-sidebar">إدارة الأجهزه</span>
+                    <span class="text-sidebar">أنواع الوقت الإضافي  
+                    </span>
                   </li>  
                 </ul>
               </mat-list-item>
+              <mat-list-item  class="side-nav-item" routerLink="overtimeRequest/37">
+                <ul nz-menu nzMode="inline">
+                  <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+                    <span nz-icon></span>
+                    <i class="pi pi-flag"></i>
+                    <span class="text-sidebar"> طلبات الوقت الإضافي  
+                    </span>
+                  </li>  
+                </ul>
+              </mat-list-item>
+              
           </div>
         </nz-sider>
 
@@ -463,28 +110,21 @@
             <button class="toggle-asidebar" mat-button (click)="opened=!opened"><mat-icon>menu</mat-icon></button>
           </div>
           <div style="color: #6C757D;" class="mt-0 content-search-component position-relative d-flex align-items-center">
+            <!-- search navbar-->
             <span class="p-input-icon-right inputSearch-header">
-              <i class="pi pi-search"></i>
-              <input type="text" [(ngModel)]="searchInput" (input)="search()" pInputText [placeholder]="'sideNav.searchDaum' | translate" />
+              <i class="pi pi-search" (click)="searchDropdown(searchComponent.value, 'searchComponent')"></i>
+              <input type="text"pInputText [(ngModel)]="searchInput" (keyup)="searchList($event.target, 'searchComponent')"  #searchComponent [placeholder]="'sideNav.searchDaum' | translate" />
             </span>
         
             <ng-container *ngIf="showListSearch">
               <div class="list-components"  (click)="$event.stopPropagation()">
                 <ul nz-menu nzMode="inline">
-                  <ng-container *ngIf="!isAdmin">
-                    <ng-container *ngFor="let componrnt of listComponents">
-                      <li *ngIf="componrnt.showComponent" [routerLink]="componrnt.routerLink" (click)="showListSearch = false;searchInput = ''">
-                        <span class="text-sidebar">{{componrnt.name}}</span>
+                    <ng-container *ngFor="let component of listComponents">
+                      <li  [routerLink]="component.url" (click)="navigateComponent(component)">
+                        <span class="text-sidebar">{{component.name}}</span>
                       </li>
                     </ng-container>
-                  </ng-container>
-                  <ng-container *ngIf="isAdmin">
-                    <ng-container *ngFor="let componrnt of listComponents">
-                      <li [routerLink]="componrnt.routerLink" (click)="showListSearch = false; searchInput = ''">
-                        <span class="text-sidebar">{{componrnt.name}}</span>
-                      </li>
-                    </ng-container>
-                  </ng-container>
+              
                   <li nz-menu-item class="users-sidebar">
       
                     <div class="users d-flex align-items-center">
@@ -523,20 +163,20 @@
           </div>
         </div>
         <div class="section-left-sidebar d-flex align-items-center">
-          <div class="localization">
+          <!-- <div class="localization">
             <p-dropdown [options]="countries" [(ngModel)]="selectedCountry" (onChange)="changeLanguage($event)"
             optionLabel="name">
             <ng-template pTemplate="selectedItem">
               <ng-container *ngIf="selectedCountry.code !='AR'">
                 <div class="d-flex align-items-center gap-2" *ngIf="selectedCountry">
-                  <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
-                    [class]="'flag flag-' + selectedCountry.code.toLowerCase()" style="width: 18px" /> -->
+                  <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                    [class]="'flag flag-' + selectedCountry.code.toLowerCase()" style="width: 18px" />
                   <div>{{ selectedCountry.name }}</div>
                 </div>
               </ng-container>
               <ng-container *ngIf="selectedCountry.code ==='AR'">
                 <div class="d-flex align-items-center gap-2" *ngIf="selectedCountry">
-                  <!-- <img src="assets/img/flag-400.png" style="width: 18px" /> -->
+                  <img src="assets/img/flag-400.png" style="width: 18px" />
                   <div>{{ selectedCountry.name }}</div>
                 </div>
               </ng-container>
@@ -545,20 +185,20 @@
             <ng-template let-country pTemplate="item">
               <ng-container *ngIf="country.code != 'AR'">
                 <div class="d-flex align-items-center gap-2">
-                  <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
-                    [class]="'flag flag-' + country.code.toLowerCase()" style="width: 18px" /> -->
+                  <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+                    [class]="'flag flag-' + country.code.toLowerCase()" style="width: 18px" />
                   <div>{{ country.name }}</div>
                 </div>
               </ng-container>
               <ng-container *ngIf="country.code === 'AR'">
                 <div class="d-flex align-items-center gap-2">
-                  <!-- <img src="assets/img/flag-400.png" style="width: 18px" /> -->
+                  <img src="assets/img/flag-400.png" style="width: 18px" />
                   <div>{{ country.name }}</div>
                 </div>
               </ng-container>
             </ng-template>
           </p-dropdown>
-          </div>
+          </div> -->
           <!-- <div class="search-results"  infiniteScroll
           [infiniteScrollDistance]="2"
           [infiniteScrollThrottle]="50"

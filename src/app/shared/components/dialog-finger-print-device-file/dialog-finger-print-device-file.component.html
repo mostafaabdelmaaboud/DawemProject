@@ -10,44 +10,51 @@
   </header>
   <div class="body-dialog p-15 f-s-16">
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">تعيين كنشط</label>
+      <label class="title"> {{'employees.setAsActive' | translate}}</label>
       <div class="content-password">
-        {{info?.isActive ? 'نشط' : 'غير نشط'}}
+        <ng-container *ngIf="info?.isActive">{{'employees.active' | translate}}</ng-container>
+        <ng-container *ngIf="!info?.isActive">{{'employees.Inactive' | translate}}</ng-container>
+
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">اسم الجهاز</label>
+      <label class="title">{{'fingerprintDevices.deviceName' | translate}}</label>
       <div class="content-password">
-        {{info?.name ? info?.name : "لا يوجد"}}
+        <ng-container *ngIf="info?.name">{{info?.name}}</ng-container>
+        <ng-container *ngIf="!info?.name">{{'department.nothing' | translate}}</ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">عنوان ال IP</label>
+      <label class="title">{{'fingerprintDevices.IPAddress' | translate}}</label>
       <div class="content-password">
-        {{info?.ipAddress ? info?.ipAddress : "لا يوجد"}}
+        <ng-container *ngIf="info?.ipAddress">{{info?.ipAddress}}</ng-container>
+        <ng-container *ngIf="!info?.ipAddress">{{'department.nothing' | translate}}</ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">رقم البورت</label>
+      <label class="title">{{'fingerprintDevices.portNumber' | translate}}</label>
       <div class="content-password">
-        {{info?.portNumber ? info?.portNumber : "لا يوجد"}}
+        <ng-container *ngIf="info?.portNumber">{{info?.portNumber}}</ng-container>
+        <ng-container *ngIf="!info?.portNumber">{{'department.nothing' | translate}}</ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">الموديل</label>
+      <label class="title">{{'fingerprintDevices.model' | translate}}</label>
       <div class="content-password">
-        {{info?.model ? info?.model : "لا يوجد"}}
+        <ng-container *ngIf="info?.model">{{info?.model}}</ng-container>
+        <ng-container *ngIf="!info?.model">{{'department.nothing' | translate}}</ng-container>
       </div>
 
     </div>
     <div class="sectionTwo mb-3 line-bellow">
-      <label class="title">الرقم التسلسلي</label>
+      <label class="title">{{'fingerprintDevices.serialNumber' | translate}}</label>
       <div class="content-password">
-        {{info?.serialNumber ? info?.serialNumber : "لا يوجد"}}
+        <ng-container *ngIf="info?.serialNumber">{{info?.serialNumber}}</ng-container>
+        <ng-container *ngIf="!info?.serialNumber">{{'department.nothing' | translate}}</ng-container>
       </div>
     </div>
   </div>

@@ -43,10 +43,7 @@ export class CompaniesComponent {
       name: "كود الشركة",
       field: "code",
     },
-    {
-      name: "اسم الدولة",
-      field: "countryName",
-    },
+
     {
       name:  "اسم الشركة",
       field: "countryNameWidthLogo"
@@ -56,8 +53,8 @@ export class CompaniesComponent {
       field: "subscriptionTypeName"
     },
     {
-      name: "عدد الموظفين",
-      field: "numberOfEmployees"
+      name: "رقم موبايل المسئول",
+      field: "responsibleMobileNumber"
     },
     {
       name: "الحالة",
@@ -228,10 +225,9 @@ export class CompaniesComponent {
             data.data.forEach((company: any) => {
               this.companiesIsExport.push({
               code: company.code,
-              countryName: company.countryName,
               countryNameWidthLogo: company?.name ? company?.name : "لا يوجد",
               subscriptionTypeName: company.subscriptionTypeName,
-              numberOfEmployees: company.numberOfEmployees,
+              responsibleMobileNumber: company.responsibleMobileNumber,
               isActive: company.isActive ? 'نشط' : 'غير نشط'
 
               })
@@ -240,10 +236,9 @@ export class CompaniesComponent {
       
               return {
                 code: company.code,
-                countryName: company.countryName,
                 countryNameWidthLogo: company.countryNameWidthLogo,
                 subscriptionTypeName: company.subscriptionTypeName,
-                numberOfEmployees: company.numberOfEmployees,
+                responsibleMobileNumber: company.responsibleMobileNumber,
                 isActive: company.isActive
               }
             })
@@ -374,14 +369,13 @@ export class CompaniesComponent {
             this.companies.push({
               id: company.id,
               code: company.code,
-              countryName: company.countryName,
               countryNameWidthLogo: {
                 name: company?.name ? company?.name : "لا يوجد",
                 alt: company?.name ? company?.name : "لا يوجد",
                 img: company?.logoImagePath ? company?.logoImagePath : "../../../../assets/img/5034901-200.png"
               },
               subscriptionTypeName: company.subscriptionTypeName,
-              numberOfEmployees: company.numberOfEmployees,
+              responsibleMobileNumber: company.responsibleMobileNumber,
               isActive: company.isActive ? 'نشط' : 'غير نشط'
 
             })

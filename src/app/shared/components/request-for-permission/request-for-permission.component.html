@@ -37,7 +37,7 @@
               <span class="p-input-icon-left input-search-dropdown">
 
                 <i class="pi pi-search" (click)="searchDropdown(searchEmployeeId.value, 'EmployeeId')"></i>
-                <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchEmployeeId />
+                <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'EmployeeId')" pInputText #searchEmployeeId />
               </span>
             </ng-template>
             <ng-template let-option pTemplate="item">
@@ -63,7 +63,7 @@
               <span class="p-input-icon-left input-search-dropdown">
 
                 <i class="pi pi-search" (click)="searchDropdown(searchPermissionTypeId.value, 'PermissionTypeId')"></i>
-                <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchPermissionTypeId />
+                <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'PermissionTypeId')"  pInputText #searchPermissionTypeId />
               </span>
             </ng-template>
             <ng-template let-option pTemplate="item">

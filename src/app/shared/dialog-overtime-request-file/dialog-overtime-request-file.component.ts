@@ -1,0 +1,159 @@
+import { Component, EventEmitter, Inject, Input, Output, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from 'src/app/core/auth/services/auth-service.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { TranslateModule } from '@ngx-translate/core';
+import { FileUploadModule } from 'primeng/fileupload';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { CalendarModule } from "primeng/calendar";
+import { MatRadioModule } from '@angular/material/radio';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import * as moment from 'moment';
+
+import { OvertimeRequestService } from 'src/app/Presentation/user/overtime-request/servies/overtime-request.service';
+
+interface addBranchesInputsProps {
+  LabelMessage: string;
+  inputType: string;
+  name: string;
+  message: string;
+}
+
+interface DataDialog {
+  message: string,
+  title: string;
+  type: string,
+  buttonSend: string,
+  buttonClose: string,
+  refrenceId?: string,
+  subTitle?: string
+}
+
+interface UploadEvent {
+  originalEvent: Event;
+  files: File[];
+}
+@Component({
+  selector: 'app-dialog-overtime-request-file',
+  standalone: true,
+  imports: [CommonModule, FormsModule, MatRadioModule, MatProgressSpinnerModule, ReactiveFormsModule, DropdownModule, CalendarModule, InputSwitchModule, InputTextModule, TranslateModule, FileUploadModule],
+  templateUrl: './dialog-overtime-request-file.component.html',
+  styleUrls: ['./dialog-overtime-request-file.component.scss']
+})
+export class DialogOvertimeRequestFileComponent {
+loading = false;
+  private overtimeRequestService = inject(OvertimeRequestService);
+
+  @Input() submitted!: boolean;
+  info!: any;
+  @Input() id!: any;
+  AttachmentsFiles: any[] = [];
+
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogOvertimeRequestFileComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
+    private authService: AuthService,
+    private fb: FormBuilder
+  ) {
+    this.dialogRef.disableClose = true;
+  }
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    this.loading = true;
+
+    if (this.id) {
+
+      this.overtimeRequestService.overtimeGetInfo({ requestId: this.id }).subscribe(
+        {
+
+          next: data => {
+
+            this.info = data;
+            if (this.info?.attachments.length) {
+              this.info?.attachments.forEach((attachment: any) => {
+                // this.employeesService.downloadImage(attachment.filePath).subscribe(response => {
+                //   const blob = new Blob([response]);
+                //   const file = new File([blob], attachment.fileName);
+                //   this.AttachmentsFiles.push({ imageSrc: attachment.filePath, fileUpload: file, detailsImage: true });
+                // });
+                var validExts = new Array(".xlsx", ".xls", ".pdf", ".png", ".jpeg",".gif", ".jpg", ".docx");
+                let fileExt = attachment.fileName.substring(attachment.fileName.lastIndexOf('.'));
+                if(validExts.indexOf(fileExt?.toLowerCase()) >= 0) {
+                  let file!:File;
+                  if(fileExt?.toLowerCase().includes("xlsx") || fileExt?.toLowerCase().includes("xls")) {
+                     file = new File([attachment.filePath], `excel-file${validExts}`, {
+                      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    });
+                    this.AttachmentsFiles.push({ imageSrc: "assets/img/excel.png", download:attachment.filePath, fileUpload: {
+                      lastModified:file.lastModified,
+                      size:file.size,
+                      type:file.type,
+                      name:attachment.fileName,
+                    }, detailsImage: true });
+
+                  }  else if(fileExt.toLowerCase().includes("docx") || fileExt.toLowerCase().includes("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
+                    file = new File([attachment.filePath],attachment.fileName, {
+                      type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    });
+             
+                    this.AttachmentsFiles.push({ imageSrc: "assets/img/word.png", download:attachment.filePath, fileUpload: {
+                      lastModified:file.lastModified,
+                      size:file.size,
+                      type:file.type,
+                      name:attachment.fileName,
+                    }, detailsImage: true });
+                    // this.viewImagesIdCopy.push("assets/img/word.png");    
+                  }else if(fileExt?.toLowerCase().includes("pdf")) {
+                     file = new File([attachment.filePath], `pdf-file${validExts}`, {
+                      type: 'application/pdf',
+                    });
+                    this.AttachmentsFiles.push({ imageSrc: "assets/img/pdf.png", download:attachment.filePath, fileUpload: {
+                      lastModified:file.lastModified,
+                      size:file.size,
+                      type:file.type,
+                      name:attachment.fileName,
+                    }, detailsImage: true });
+                  } else if(fileExt?.toLowerCase().includes("png") || fileExt?.toLowerCase().includes("jpeg") || fileExt?.toLowerCase().includes("jpg") || fileExt?.toLowerCase().includes("gif")) {
+                     file = new File([attachment.filePath],`img-file${validExts}`, {
+                      type: 'image/' +fileExt.slice(fileExt.indexOf('.') + 1, fileExt.length).toLowerCase(),
+                    });
+                    this.AttachmentsFiles.push({ imageSrc: attachment.filePath, download:attachment.filePath, fileUpload: {
+                      lastModified:file.lastModified,
+                      size:file.size,
+                      type:file.type,
+                      name:attachment.fileName,
+                    }, detailsImage: true });
+                  }
+
+                }
+              });
+            }
+            this.info.dateFrom = moment(new Date(this.info.dateFrom)).format("MMMM Do YYYY, h:mm:ss a");
+            this.info.dateTo = moment(new Date(this.info.dateTo)).format("MMMM Do YYYY, h:mm:ss a");
+            this.info.overtimeDate = moment(new Date(this.info.overtimeDate)).format("MMMM Do YYYY");
+
+            this.loading = false;
+
+          },
+          error: err => {
+            this.loading = false;
+
+          }
+        })
+
+    }
+  }
+  getMoment(date: any) {
+    return moment(new Date(date)).format("MM/DD/YYYY")
+  }
+
+
+  close(): void {
+    this.dialogRef.close(false);
+  }
+}

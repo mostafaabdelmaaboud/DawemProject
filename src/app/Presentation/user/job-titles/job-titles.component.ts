@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -91,6 +91,10 @@ export class JobTitlesComponent {
     { name: "تسجيل انصراف خاطئ", key: "4" }
 
   ];
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
+  trans!:any;
+
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
@@ -144,9 +148,43 @@ export class JobTitlesComponent {
       { name: '10', code: 10 },
       { name: '25', code: 25 },
     ];
+    const translations = this.translate.translations[this.translate.currentLang || 'ar'];
+    if(!this.trans) {
+      this.trans = translations
+    }
+    this.translateColumn();
+
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.trans = dataParent.translations;
+      this.translateColumn();
+
+    });
     this.getInformation();
 
     this.getPermissions(this.filteration);
+  }
+  translateColumn() {
+
+    this.columns =  [
+      {
+        name: this.trans.jobTitles.JobTitleCode,
+        field: "code",
+      },
+      {
+        name: this.trans.jobTitles.jobTitle,
+        field: "name",
+      },
+      {
+        name: this.trans.department.theCondition,
+        field: "isActive"
+      },
+      {
+        name: this.trans.scheduleLogs.actions,
+        field: "actions"
+      }
+  
+    ];
+
   }
   filter() {
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
@@ -225,7 +263,7 @@ export class JobTitlesComponent {
       decimalseparator: '.',
       showLabels: true, 
       showTitle: true,
-      title: 'المسميات الوظيفية',
+      title: this.trans.sideNav.jobTitles,
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
@@ -253,13 +291,13 @@ export class JobTitlesComponent {
               return {
                 code: permission.code,
                 name: permission.name,
-                isActive: permission.isActive ? 'نشط' : 'غير نشط'
+                isActive: permission.isActive ? this.trans.employees.active :  this.trans.employees.Inactive
               }
             })
             this.isLoading = false;
             // new ngxCsv(formatTable, "sheet", options);
             let formatRows =formatTable.map(assignment => [assignment.code,assignment.name, assignment.isActive ]);
-            this.generateExcel('المسميات الوظيفية','المسميات الوظيفية',formatRows, columns);
+            this.generateExcel(this.trans.sideNav.jobTitles,this.trans.sideNav.jobTitles,formatRows, columns);
 
           },
           error: err => {
@@ -360,11 +398,11 @@ export class JobTitlesComponent {
     const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
       width: "30vw",
       data: {
-        title: "هل متأكد من حذف الاسم؟",
-        message: "برجاء توضيح السبب إن أمكن",
+        title: this.trans.jobTitles.areYouSureYouDeletedName,
+        message: this.trans.justifications.pleaseExplainWhyIfPossible,
 
-        titleClose: "تراجع",
-        buttonSend: "حذف"
+        titleClose: this.trans.justifications.toRetreat,
+        buttonSend: this.trans.users.delete
       },
     });
 
@@ -392,13 +430,13 @@ export class JobTitlesComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestJobTitleComponent, {
       width: "50vw",
       data: {
-        title: "اضافه مسمى وظيفى",
-        setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
-        titleName: "الأسم<span class='color-red'>*</span>",
-        placeholdeName: "برجاء ادخال الأسم",
-        validationtitleName: "الأسم مطلوب",
-        buttonSend: "موافق"
+        title: this.trans.jobTitles.addAJobTitle,
+        setAsNecessary: this.trans.justifications.setAsEssential,
+        titleVacationTypeId: this.trans.permissions.permissionType+" <span class='color-red'>*</span>",
+        titleName: this.trans.signup.name+" <span class='color-red'>*</span>",
+        placeholdeName: this.trans.signup.enterTheName,
+        validationtitleName: this.trans.signup.nameIsRequired,
+        buttonSend: this.trans.justifications.sendRequest
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
@@ -423,9 +461,9 @@ export class JobTitlesComponent {
             const succressDialog = this.dialog.open(ToastSuccessComponent, {
               width: "30vw",
               data: {
-                title: "تم ارسال طلبك",
+                title: this.trans.justifications.yourRequestHasBeenSent,
                 message: data.message,
-                buttonSend: "طلبات المسميات الوظيفية"
+                buttonSend: this.trans.jobTitles.jobTitleRequests
 
               },
             });
@@ -456,16 +494,17 @@ export class JobTitlesComponent {
     });
   }
   editPermission(data: any) {
+
     const dialogRefAddCurrency = this.dialog.open(RequestJobTitleComponent, {
       width: "50vw",
       data: {
-        title: "تعديل المسمي الوظيفي",
-        setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاستئذانات <span class='color-red'>*</span>",
-        titleName: "الأسم<span class='color-red'>*</span>",
-        placeholdeName: "برجاء ادخال الأسم",
-        validationtitleName: "الأسم مطلوب",
-        buttonSend: "موافق"
+        title: this.trans.jobTitles.editJobTitle,
+        setAsNecessary: this.trans.justifications.setAsEssential,
+        titleVacationTypeId: this.trans.permissions.permissionType+" <span class='color-red'>*</span>",
+        titleName: this.trans.signup.name+" <span class='color-red'>*</span>",
+        placeholdeName: this.trans.signup.enterTheName,
+        validationtitleName: this.trans.signup.nameIsRequired,
+        buttonSend: this.trans.justifications.sendRequest
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
@@ -492,9 +531,9 @@ export class JobTitlesComponent {
             const succressDialog = this.dialog.open(ToastSuccessComponent, {
               width: "30vw",
               data: {
-                title: "تم ارسال طلبك",
+                title: this.trans.justifications.yourRequestHasBeenSent,
                 message: data.message,
-                buttonSend: "طلبات المسميات الوظيفية"
+                buttonSend: this.trans.jobTitles.jobTitleRequests
 
               },
             });
@@ -530,7 +569,7 @@ export class JobTitlesComponent {
     const dialogRefAddCurrency = this.dialog.open(DialogJobTitleFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف المسمي الوظيفي"
+        title: this.trans.jobTitles.jobTitleFile
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id
@@ -588,5 +627,9 @@ export class JobTitlesComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

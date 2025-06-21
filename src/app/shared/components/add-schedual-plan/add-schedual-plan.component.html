@@ -52,8 +52,8 @@
                   <ng-template pTemplate="header">
                     <span class="p-input-icon-left input-search-dropdown">
 
-                      <i class="pi pi-search" (click)="searchDropdown(searchEmployeeId, 'EmployeeId')"></i>
-                      <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchEmployeeId />
+                      <i class="pi pi-search" (click)="searchDropdown(searchEmployeeId.value, 'EmployeeId')"></i>
+                      <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'EmployeeId')" pInputText #searchEmployeeId />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">
@@ -79,8 +79,8 @@
                   <ng-template pTemplate="header">
                     <span class="p-input-icon-left input-search-dropdown">
 
-                      <i class="pi pi-search" (click)="searchDropdown(searchGroupId, 'GroupId')"></i>
-                      <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchGroupId />
+                      <i class="pi pi-search" (click)="searchDropdown(searchGroupId.value, 'GroupId')"></i>
+                      <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'GroupId')" pInputText #searchGroupId />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">
@@ -106,8 +106,8 @@
                   <ng-template pTemplate="header">
                     <span class="p-input-icon-left input-search-dropdown">
 
-                      <i class="pi pi-search" (click)="searchDropdown(searchDepartmentId, 'DepartmentId')"></i>
-                      <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchDepartmentId />
+                      <i class="pi pi-search" (click)="searchDropdown(searchDepartmentId.value, 'DepartmentId')"></i>
+                      <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'DepartmentId')" pInputText #searchDepartmentId />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">
@@ -134,8 +134,8 @@
                   <ng-template pTemplate="header">
                     <span class="p-input-icon-left input-search-dropdown">
 
-                      <i class="pi pi-search" (click)="searchDropdown(searchScheduleId, 'ScheduleId')"></i>
-                      <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchScheduleId />
+                      <i class="pi pi-search" (click)="searchDropdown(searchScheduleId.value, 'ScheduleId')"></i>
+                      <input type="text" [placeholder]="'requests.search' | translate" (keyup)="searchList($event.target, 'ScheduleId')"  pInputText #searchScheduleId />
                     </span>
                   </ng-template>
                   <ng-template let-option pTemplate="item">

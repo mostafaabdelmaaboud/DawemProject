@@ -13,6 +13,10 @@
   letter-spacing: normal !important;
 
 }
+:host ::ng-deep .p-disabled, 
+:host ::ng-deep .p-component:disabled {
+  opacity: 1 !important;
+}
 .logoTable {
   img {
     width: 180px;

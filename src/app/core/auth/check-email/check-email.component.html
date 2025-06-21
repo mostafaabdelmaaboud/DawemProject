@@ -3,7 +3,7 @@
       <div class="background-dawem col-lg-4 d-none d-md-none d-lg-block">
       </div>
       <div class="container-login d-flex justify-content-between align-items-center col-lg-8 col-12 position-relative">
-        <div class="card d-flex justify-content-center change-language">
+        <!-- <div class="card d-flex justify-content-center change-language">
             <p-dropdown [options]="countries" [(ngModel)]="selectedCountry" (onChange)="changeLanguage($event)"
             optionLabel="name">
             <ng-template pTemplate="selectedItem">
@@ -40,18 +40,18 @@
           </p-dropdown>
           
     
-        </div>
+        </div> -->
         <div class="content-login">
           <div class="header text-center">
             <!-- <h3 class="title">{{'login.welcomeAgain' | translate}}</h3> -->
-            <h3 class="title">Reset Account Password</h3>
+            <h3 class="title">{{'checkEmail.resetAccountPassword' | translate}}</h3>
 
             <!-- <p class="sub-text">{{'login.sendAFollowUpEmail' | translate}}</p> -->
           </div>
           <div class="body-text">
-            <h6 class="title-body">Check email for reset link</h6>
-            <p class="m-0 p-0 text-check-email">An email has been sent to <span class="text-bold">the administrative email address on file.</span> check the inbox of the administrator's email account, and click the reset link provided.</p>
-            <div class="color-green">Reset link will become invalid in 59:02</div>
+            <h6 class="title-body">{{'checkEmail.checkEmailForResetLink' | translate}}</h6>
+            <p class="m-0 p-0 text-check-email">{{'checkEmail.anEmailHasBeenSentTo' | translate}} <span class="text-bold">{{'checkEmail.theAdministrativeEmailAddressOnFile' | translate}}</span> {{'checkEmail.checkTheInboxOfTheAdministrator' | translate}}</p>
+            <div class="color-green">{{'checkEmail.resetLinkWillBecomeInvalidIn' | translate}} 59:02</div>
           </div>
       
         </div>

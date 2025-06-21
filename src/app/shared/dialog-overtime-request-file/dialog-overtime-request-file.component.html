@@ -1,0 +1,99 @@
+<div class="container-Dialog">
+    <header class="header-dialog d-flex justify-content-center align-items-center p-15 position-relative">
+      <h3 class="title-Dialog m-0">
+        {{data!['title']|translate}}
+      </h3>
+      <button class="icon-close iconCloseDialog" type="button" (click)="close()">
+        <!-- <i class="fa fa-times" aria-hidden="true"></i> -->
+        <i class="pi pi-times-circle"></i>
+      </button>
+    </header>
+    <div class="body-dialog p-15 f-s-16">
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">الرقم الوظيفى</label>
+        <div class="content-password">
+          {{info?.employee?.employeeNumber ? info?.employee?.employeeNumber : "لا يوجد"}}
+        </div>
+  
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title"> اسم الموظف</label>
+        <div class="content-password">
+          {{info?.employee?.name ? info?.employee?.name : "لا يوجد"}}
+  
+        </div>
+  
+      </div>
+  
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">نوع الوقت الإضافي </label>
+        <div class="content-password">
+          {{info?.overtimeTypeName ? info?.overtimeTypeName : "لا يوجد"}}
+        </div>
+  
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">تاريخ الوقت الإضافي </label>
+        <div class="content-password">
+          {{info?.overtimeDate ? info?.overtimeDate : "لا يوجد"}}
+        </div>
+  
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">الملفات</label>
+        <ul class="list-unstyled p-0" *ngIf="AttachmentsFiles.length > 0">
+          <li class="p-fileupload-row" *ngFor="let file of AttachmentsFiles; let i = index">
+            <div class="content-image">
+              <img [src]="file.imageSrc" width="200" height="200" alt="">
+  
+            </div>
+            <div class="p-fileupload-filename" [title]="file.fileUpload.name">
+              <span class="d-block">{{"employees.name"|translate}}:</span>
+              {{
+              file.fileUpload.name.length > 69 ? (file.fileUpload.name | slice:0:70) + '......' : file.fileUpload.name 
+              }}
+            </div>
+            <div>
+              <span class="d-block">{{"employees.size"|translate}}:</span>
+              {{
+              file.fileUpload.size }}
+            </div>
+            <div>
+              <a class="btn btn-success" [href]="file.download">Download</a>
+            </div>
+  
+          </li>
+        </ul>
+        <div *ngIf="AttachmentsFiles.length === 0">
+          {{"department.nothing"|translate}}
+        </div>
+  
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">تاريخ ووقت البدايه</label>
+        <div class="content-password">
+          {{info?.dateFrom ? info?.dateFrom : "لا يوجد"}}
+  
+        </div>
+  
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">تاريخ ووقت النهاية</label>
+        <div class="content-password">
+          {{info?.dateTo ? info?.dateTo : "لا يوجد"}}
+        </div>
+      </div>
+      <div class="sectionTwo mb-3 line-bellow">
+        <label class="title">حالة الطلب</label>
+        <div class="content-password">
+          {{info?.statusName ? info?.statusName : "لا يوجد"}}
+        </div>
+      </div>
+   
+  
+    </div>
+  
+    <div class="spinner-dialog d-flex justify-content-center align-items-center loading" *ngIf="loading">
+      <mat-spinner></mat-spinner>
+    </div>
+  

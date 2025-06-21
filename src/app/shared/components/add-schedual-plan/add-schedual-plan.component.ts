@@ -10,10 +10,11 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CalendarModule } from "primeng/calendar";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { MatRadioModule } from '@angular/material/radio';
 import { SchedualPlanService } from 'src/app/Presentation/user/schedual-plan/services/schedual-plan.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface addBranchesInputsProps {
   LabelMessage: string;
@@ -118,11 +119,15 @@ export class AddSchedualPlanComponent {
   });
   uploadedCommercialRegFiles: any[] = [];
   requiredCommercialRegFiles = false;
+      private searchSubject = new Subject<{ value: any; type: any }>();
+  
   constructor(
     public dialogRef: MatDialogRef<AddSchedualPlanComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DataDialog | null,
     public translate: TranslateService,
     private authService: AuthService,
+            private toastr: ToastrService,
+    
     private fb: FormBuilder
   ) {
     this.dialogRef.disableClose = true;
@@ -371,27 +376,75 @@ export class AddSchedualPlanComponent {
       }
 
 
-    })
+    });
+    this.searchSubject
+    .pipe(
+      debounceTime(500),
+      distinctUntilChanged((prev, curr) =>  prev.value === curr.value && prev.type === curr.type
+    ) 
+    )
+    .subscribe(({ value, type }) => {
+      this.searchDropdown(value, type, true);
+    });
   }
   nodeSelect(data: any) {
   }
-  lastSearchQuery = "";
+  searchList(target:any, type:any) {
+    let value = target.value;
 
-  searchDropdown(data: any, type: string) {
+    this.searchSubject.next({ value, type }); 
+
+  }
+  lastSearchQuery = "";
+  sortArrayBySearchTerm(
+    array: { name: string; key: number }[],
+    searchTerm: string
+  ): { name: string; key: number }[] {
+    return array.sort((a, b) => {
+      const aIndex = a.name.indexOf(searchTerm);
+      const bIndex = b.name.indexOf(searchTerm);
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return 0;
+    });
+  }
+
+  searchDropdown(data: any, type: string, searchInput?) {
 
     switch (type) {
       case 'EmployeeId':
-        if (data.value || data.value === "") {
-          if (data.value !== this.lastSearchQuery || data === "") {
-            this.lastSearchQuery = data.value;
-            this.schedualPlanService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).pipe(
-              debounceTime(300),
+        if (data || data === "") {
+          if (data !== this.lastSearchQuery || data === "") {
+            this.lastSearchQuery = data;
+            this.schedualPlanService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listEmployeeId = [];
+
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res.data?.forEach((day: any) => {
-                  this.listEmployeeId.push({ name: day.name, key: day.id });
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listEmployeeId.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listEmployeeId = [...this.listEmployeeId, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listEmployeeId, searchTerm);
+                  this.listEmployeeId = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toastr.error("لا يوجد بيانات");
+                  }
+                }
+
               });
           }
 
@@ -399,51 +452,102 @@ export class AddSchedualPlanComponent {
         break;
 
       case 'GroupId':
-        if (data.value || data.value === "") {
-          if (data.value !== this.lastSearchQuery || data === "") {
-            this.lastSearchQuery = data.value;
-            this.schedualPlanService.groupsForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).pipe(
-              debounceTime(300),
+        if (data || data === "") {
+          if (data !== this.lastSearchQuery || data === "") {
+            this.lastSearchQuery = data;
+            this.schedualPlanService.groupsForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listGroupId = [];
+     
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res.data?.forEach((day: any) => {
-                  this.listGroupId.push({ name: day.name, key: day.id });
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listGroupId.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listGroupId = [...this.listGroupId, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listGroupId, searchTerm);
+                  this.listGroupId = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toastr.error("لا يوجد بيانات");
+                  }
+                }
               });
           }
 
         }
         break;
       case 'DepartmentId':
-        if (data.value || data.value === "") {
+        if (data || data === "") {
           if (data !== this.lastSearchQuery || data === "") {
-            this.lastSearchQuery = data.value;
-            this.schedualPlanService.departmentForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).pipe(
-              debounceTime(300),
+            this.lastSearchQuery = data;
+            this.schedualPlanService.departmentForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listDepartmentId = [];
+       
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res.data?.forEach((day: any) => {
-                  this.listDepartmentId.push({ name: day.name, key: day.id });
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listDepartmentId.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listDepartmentId = [...this.listDepartmentId, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listDepartmentId, searchTerm);
+                  this.listDepartmentId = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toastr.error("لا يوجد بيانات");
+                  }
+                }
               });
           }
 
         }
         break;
       case 'ScheduleId':
-        if (data.value || data.value === "") {
+        if (data || data === "") {
           if (data !== this.lastSearchQuery || data === "") {
-            this.lastSearchQuery = data.value;
-            this.schedualPlanService.schedualForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data.value }).pipe(
-              debounceTime(300),
+            this.lastSearchQuery = data;
+            this.schedualPlanService.schedualForDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listScheduleId = [];
+       
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res.data?.forEach((day: any) => {
-                  this.listScheduleId.push({ name: day.name, key: day.id });
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listScheduleId.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listScheduleId = [...this.listScheduleId, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listScheduleId, searchTerm);
+                  this.listScheduleId = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toastr.error("لا يوجد بيانات");
+                  }
+                }
               });
           }
 

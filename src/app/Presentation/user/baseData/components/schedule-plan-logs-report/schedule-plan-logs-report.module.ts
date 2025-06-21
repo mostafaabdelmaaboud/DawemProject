@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { SchedulePlanLogsReportRoutingModule } from './schedule-plan-logs-report-routing.module';
-import { SchedulePlanLogsReportComponent } from './schedule-plan-logs-report.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
@@ -16,6 +14,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
 import { SafeUrlPipe } from './safeUrl.pipe';
+import { SchedulePlanLogsReportRoutingModule } from './schedule-plan-logs-report-routing.module';
+import { SchedulePlanLogsReportComponent } from './schedule-plan-logs-report.component';
 
 @NgModule({
   declarations: [

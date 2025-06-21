@@ -8,11 +8,9 @@
           </span>
           <div class="field-calendar-header">
             <p-calendar [(ngModel)]="date" [showIcon]="true" dateFormat="yy MM"></p-calendar>
-        
           </div>
         </div>
         <div class="col d-flex justify-content-end align-items-center">
-
           <ng-container *ngIf="isAdmin">
             <button routerLink="/user/reports" class="btn btn-outline-primary action-button-t d-flex align-items-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
@@ -30,15 +28,12 @@
                 <path d="M9 6.14502V9.14502L10.875 11.02" stroke="#334155" stroke-width="1.2" stroke-linecap="round"
                   stroke-linejoin="round" />
               </svg>
-  
               <span>{{componentName({screenCode:0})}}</span>
             </button>
           </ng-container>
-          
         </div>
       </div>
     </div>
-   
   </div>
   <div class="cards-dashboard position-relative">
     <div class="row" *ngIf="!spinnerCards">
@@ -94,7 +89,6 @@
           </div>
         </div>
       </div>
-  
       <div class="content-card cardHead col-xl-3 col-sm-6 col-12">
         <div class="custom-card-dashboard">
           <span class="title-card-dashboard Error-700">{{'department.totalAbsenceForTheDay' | translate}}</span>
@@ -137,21 +131,15 @@
           </div>
         </div>
       </div>
-  
-  
-  
-  
     </div>
     <div class="spinner spinner-cards d-flex justify-content-center align-items-center" *ngIf="spinnerCards">
       <mat-spinner></mat-spinner>
     </div>
-  
   </div>
   <div class="table-basic">
     <!-- <div class="header-table-basic">
       <span class="title-table-basic">سجل الطلبات</span>
       <div class="actions-table-basic">
-  
       </div>
     </div> -->
     <p-table #dt1 [value]="department" id="tableEmployment" [responsiveLayout]="opened ? 'stack' : 'scroll'"
@@ -177,17 +165,14 @@
             </span> -->
             <button  *ngIf="showActions({actionCode:0})" (click)="exportDraft()" class="btn btn-outline-primary action-button-t d-flex align-items-center">
               <i class="pi pi-download"></i>
-  
               <span>تحميل ملف الحضور والانصراف</span>
             </button>
-            <button  *ngIf="showActions({actionCode:0})" (click)="CreateImportDataFromExcel()" class="btn btn-outline-primary action-button-t d-flex align-items-center">
+            <!-- <button  *ngIf="showActions({actionCode:0})" (click)="CreateImportDataFromExcel()" class="btn btn-outline-primary action-button-t d-flex align-items-center">
               <i class="pi pi-upload"></i>
-  
               <span>رفع ملف الحضور والانصراف</span>
-            </button>
+            </button> -->
             <button (click)="op.toggle($event)" class="btn btn-outline-primary action-button-t d-flex align-items-center">
               <i class="pi pi-filter-fill"></i>
-  
               <span>{{'requests.filterResults' | translate}}</span>
             </button>
             <!-- <button (click)="exportTableToPDF()" class="btn btn-outline-green action-button-t d-flex align-items-center">
@@ -198,7 +183,6 @@
                 <path
                   d="M4.603 12.087a.8.8 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.7 7.7 0 0 1 1.482-.645 20 20 0 0 0 1.062-2.227 7.3 7.3 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.187-.012.395-.047.614-.084.51-.27 1.134-.52 1.794a11 11 0 0 0 .98 1.686 5.8 5.8 0 0 1 1.334.05c.364.065.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.86.86 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.7 5.7 0 0 1-.911-.95 11.6 11.6 0 0 0-1.997.406 11.3 11.3 0 0 1-1.021 1.51c-.29.35-.608.655-.926.787a.8.8 0 0 1-.58.029m1.379-1.901q-.25.115-.459.238c-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361q.016.032.026.044l.035-.012c.137-.056.355-.235.635-.572a8 8 0 0 0 .45-.606m1.64-1.33a13 13 0 0 1 1.01-.193 12 12 0 0 1-.51-.858 21 21 0 0 1-.5 1.05zm2.446.45q.226.244.435.41c.24.19.407.253.498.256a.1.1 0 0 0 .07-.015.3.3 0 0 0 .094-.125.44.44 0 0 0 .059-.2.1.1 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a4 4 0 0 0-.612-.053zM8.078 5.8a7 7 0 0 0 .2-.828q.046-.282.038-.465a.6.6 0 0 0-.032-.198.5.5 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822q.036.167.09.346z" />
               </svg>
-  
               <span class="me-1">PDF</span>
             </button> -->
             <button (click)="exportTableToExcel()"
@@ -208,7 +192,6 @@
                 <path fill-rule="evenodd"
                   d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM6.472 15.29a1.2 1.2 0 0 1-.111-.449h.765a.58.58 0 0 0 .254.384q.106.073.25.114.143.041.319.041.246 0 .413-.07a.56.56 0 0 0 .255-.193.5.5 0 0 0 .085-.29.39.39 0 0 0-.153-.326q-.152-.12-.462-.193l-.619-.143a1.7 1.7 0 0 1-.539-.214 1 1 0 0 1-.351-.367 1.1 1.1 0 0 1-.123-.524q0-.366.19-.639.19-.272.527-.422.338-.15.777-.149.457 0 .78.152.324.153.5.41.18.255.2.566h-.75a.56.56 0 0 0-.12-.258.6.6 0 0 0-.247-.181.9.9 0 0 0-.369-.068q-.325 0-.513.152a.47.47 0 0 0-.184.384q0 .18.143.3a1 1 0 0 0 .405.175l.62.143q.326.075.566.211a1 1 0 0 1 .375.358q.135.222.135.56 0 .37-.188.656a1.2 1.2 0 0 1-.539.439q-.351.158-.858.158-.381 0-.665-.09a1.4 1.4 0 0 1-.478-.252 1.1 1.1 0 0 1-.29-.375m-2.945-3.358h-.893L1.81 13.37h-.036l-.832-1.438h-.93l1.227 1.983L0 15.931h.861l.853-1.415h.035l.85 1.415h.908L2.253 13.94zm2.727 3.325H4.557v-3.325h-.79v4h2.487z" />
               </svg>
-  
               <span class="me-1">Excel</span>
             </button>
             <div class="container-filteration">
@@ -290,9 +273,9 @@
                 </header>
                 <form [formGroup]="filterForm" class="formFilteration">
                   <div class="sectionFive mb-3">
-                    <label for="" class="label-input mb-2">{{'requests.requestNumber' | translate}}</label>
+                    <label for="" class="label-input mb-2">كود الحضور</label>
                     <div class="content-password">
-                      <input type="number" formControlName="code" pInputText [placeholder]="'requests.requestNumber' | translate" class="w-100" />
+                      <input type="number" formControlName="code" pInputText placeholder="كود الحضور" class="w-100" />
                     </div>
   
                   </div>

@@ -5,6 +5,7 @@ import { FingerPrintDevicesRoutingModule } from './finger-print-devices-routing.
 import { MatDialogModule } from '@angular/material/dialog';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FingerPrintDevicesComponent } from './finger-print-devices.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { FingerPrintDevicesComponent } from './finger-print-devices.component';
     CommonModule,
     FingerPrintDevicesRoutingModule,
     MatDialogModule,
+    TranslateModule,
     SharedModule
   ]
 })

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -91,6 +91,10 @@ export class PermissionTypeComponent {
     { name: "تسجيل انصراف خاطئ", key: "4" }
 
   ];
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
+  trans!:any;
+
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
@@ -144,9 +148,43 @@ export class PermissionTypeComponent {
       { name: '5', code: 5 }
 
     ];
+    const translations = this.translate.translations[this.translate.currentLang || 'ar'];
+    if(!this.trans) {
+      this.trans = translations
+    }
+    this.translateColumn();
+
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.trans = dataParent.translations;
+      this.translateColumn();
+
+    });
     this.getInformation();
 
     this.getPermissions(this.filteration);
+  }
+  translateColumn() {
+
+    this.columns = [
+      {
+        name:this.trans.typesOfPermissions.permissionNumber,
+        field: "code",
+      },
+      {
+        name: this.trans.signup.name,
+        field: "name",
+      },
+      {
+        name: this.trans.typesOfPermissions.statusOfPermission,
+        field: "isActive"
+      },
+      {
+        name: this.trans.assignments.action,
+        field: "actions"
+      }
+  
+    ];
+
   }
   getInformation() {
     this.spinnerCards = true;
@@ -242,7 +280,7 @@ export class PermissionTypeComponent {
       decimalseparator: '.',
       showLabels: true, 
       showTitle: true,
-      title: 'أنواع الاستئذانات',
+      title: this.trans.typesOfPermissions.typesOfPermissions,
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
@@ -270,12 +308,12 @@ export class PermissionTypeComponent {
               return {
                 code: permission.code,
                 name: permission.name,
-                isActive: permission.isActive ? 'نشط' : 'غير نشط'
+                isActive: permission.isActive ? this.trans.employees.active : this.trans.employees.Inactive
               }
             })
             this.isLoading = false;
             let formatRows =formatTable.map(assignment => [assignment.code,assignment.name, assignment.isActive ]);
-            this.generateExcel('أنواع الاستئذانات','أنواع الاستئذانات',formatRows, columns);
+            this.generateExcel(this.trans.typesOfPermissions.typesOfPermissions,this.trans.typesOfPermissions.typesOfPermissions,formatRows, columns);
 
             // new ngxCsv(formatTable, "sheet", options);
           },
@@ -359,9 +397,9 @@ export class PermissionTypeComponent {
     const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
       width: "30vw",
       data: {
-        title: "هل متاكد من حذف نوع الاستئذان؟",
-        titleClose: "تراجع",
-        buttonSend: "حذف"
+        title: this.trans.typesOfPermissions.areYouSureYouWantToDeleteThePermissionType,
+        titleClose: this.trans.employees.toRetreat,
+        buttonSend: this.trans.users.delete
       },
     });
 
@@ -389,13 +427,13 @@ export class PermissionTypeComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestPermissionTypeComponent, {
       width: "50vw",
       data: {
-        title: "نوع الاستئذان",
-        setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاسنئذان <span class='color-red'>*</span>",
-        titleName: "الأسم<span class='color-red'>*</span>",
-        placeholdeName: "برجاء ادخال الأسم",
-        validationtitleName: "الأسم مطلوب",
-        buttonSend:"موافق"
+        title: this.trans.permissions.typeOfPermission,
+        setAsNecessary: this.trans.permissions.setAsEssential,
+        titleVacationTypeId: this.trans.assignments.typeOfPermission + " <span class='color-red'>*</span>",
+        titleName:this.trans.signup.name + " <span class='color-red'>*</span>",
+        placeholdeName: this.trans.typesOfPermissions.pleaseEnterName,
+        validationtitleName: this.trans.signup.nameIsRequired,
+        buttonSend:this.trans.justifications.sendRequest
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
@@ -420,9 +458,9 @@ export class PermissionTypeComponent {
             const succressDialog = this.dialog.open(ToastSuccessComponent, {
               width: "30vw",
               data: {
-                title: "تم ارسال طلبك",
+                title: this.trans.zones.yourRequestHasBeenSent,
                 message: data.message,
-                buttonSend: "انواع الاستئذانات"
+                buttonSend: this.trans.typesOfPermissions.typesOfPermissions
 
               },
             });
@@ -456,13 +494,13 @@ export class PermissionTypeComponent {
     const dialogRefAddCurrency = this.dialog.open(RequestPermissionTypeComponent, {
       width: "50vw",
       data: {
-        title: "تعديل الاستئذان",
-        setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع الاستئذانات <span class='color-red'>*</span>",
-        titleName: "الأسم<span class='color-red'>*</span>",
-        placeholdeName: "برجاء ادخال الأسم",
-        validationtitleName: "الأسم مطلوب",
-        buttonSend: "موافق"
+        title: this.trans.typesOfPermissions.editAPermission,
+        setAsNecessary: this.trans.permissions.setAsEssential,
+        titleVacationTypeId: this.trans.assignments.typeOfPermission + " <span class='color-red'>*</span>",
+        titleName:this.trans.signup.name + " <span class='color-red'>*</span>",
+        placeholdeName: this.trans.typesOfPermissions.pleaseEnterName,
+        validationtitleName: this.trans.signup.nameIsRequired,
+        buttonSend:this.trans.justifications.sendRequest
       },
     });
     dialogRefAddCurrency.componentInstance.submitted = true;
@@ -486,12 +524,13 @@ export class PermissionTypeComponent {
 
             dialogRefAddCurrency.close();
 
+
             const succressDialog = this.dialog.open(ToastSuccessComponent, {
               width: "30vw",
               data: {
-                title: "تم ارسال طلبك",
+                title: this.trans.zones.yourRequestHasBeenSent,
                 message: data.message,
-                buttonSend: "انواع الاستئذانات"
+                buttonSend: this.trans.typesOfPermissions.typesOfPermissions
 
               },
             });
@@ -527,7 +566,7 @@ export class PermissionTypeComponent {
     const dialogRefAddCurrency = this.dialog.open(DialogPermissionTypeFileComponent, {
       width: "40vw",
       data: {
-        title: "ملف الاستئذان"
+        title: this.trans.typesOfPermissions.permissionFile
       },
     });
     dialogRefAddCurrency.componentInstance.id = data.id
@@ -585,5 +624,9 @@ export class PermissionTypeComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

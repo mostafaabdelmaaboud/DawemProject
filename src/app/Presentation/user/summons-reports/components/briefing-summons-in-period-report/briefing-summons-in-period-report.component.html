@@ -89,68 +89,7 @@
                   <!--End Custom Validators-->
                 </div>
             </div>
-            <div class="col-lg-6 col-12">
-              <div class="sectionTwo mb-3">
-                  <label class="label-input mb-2">المسميات الوظيفية </label>
-                  <div class="content-password">
-                    <p-multiSelect [options]="jobTitleList" [filter]="false" appendTo="body"
-                    formControlName="JobTitleIds" placeholder="المسميات الوظيفية"
-                    optionLabel="name">
-                    <ng-template pTemplate="header">
-                      <span class="p-input-icon-left input-search-dropdown">
-                        <i class="pi pi-search" (click)="searchDropdown(searchJobTitleId.value, 'JobTitleId')"></i>
-                        <i class="pi pi-times-circle ml-2" *ngIf="jobTitleIdData" (click)="searchDropdown('', 'JobTitleId')"></i>
-                        <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchJobTitleId />
-                      </span>
-                    </ng-template>
-                    <ng-template let-option pTemplate="item">
-                      {{ option.name }}
-                    </ng-template>
-                  </p-multiSelect>
-                  </div>
-                  <!--Start Custom Validators-->
-                  <div class="container-alerts mt-2" *ngIf="getControl('JobTitleIds')?.errors">
-                    <div class="alert alert-danger"
-                      *ngIf="getControl('JobTitleIds')?.hasError('required') && getControl('JobTitleIds')?.dirty">
-                      المسميات الوظيفية مطلوبة
-                    </div>
-                  </div>
-                  <!--End Custom Validators-->
-                </div>
-            </div>
-            <div class="col-lg-6 col-12">
-              <div class="sectionTwo mb-3">
-                  <label class="label-input mb-2">المناطق </label>
-                  <div class="content-password">
-               
-                    <p-multiSelect [options]="zonesList" [filter]="false" appendTo="body"
-                    formControlName="ZoneIds" placeholder="المناطق"
-                    optionLabel="name">
-                    <ng-template pTemplate="header">
-                      <span class="p-input-icon-left input-search-dropdown">
-  
-                        <i class="pi pi-search" (click)="searchDropdown(searchZoneId.value, 'ZoneId')"></i>
-
-                        <i class="pi pi-times-circle ml-2" *ngIf="zoneIdClearData" (click)="searchDropdown('', 'ZoneId')"></i>
-
-                        <input type="text" [placeholder]="'requests.search' | translate" pInputText #searchZoneId />
-                      </span>
-                    </ng-template>
-                    <ng-template let-option pTemplate="item">
-                      {{ option.name }}
-                    </ng-template>
-                  </p-multiSelect>
-                  </div>
-                  <!--Start Custom Validators-->
-                  <div class="container-alerts mt-2" *ngIf="getControl('ZoneIds')?.errors">
-                    <div class="alert alert-danger"
-                      *ngIf="getControl('ZoneIds')?.hasError('required') && getControl('ZoneIds')?.dirty">
-                      المناطق مطلوبة
-                    </div>
-                  </div>
-                  <!--End Custom Validators-->
-                </div>
-              </div>
+     
        
               <div class="col-lg-4 col-12">
                 <div class="sectionTwo mb-3">

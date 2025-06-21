@@ -232,9 +232,7 @@ export class EmployeesComponent {
       
         ];
       })
-      // this.subscription = this.translate.stream('primeng').subscribe(data => {
-      //   this.config.setTranslation(data);
-      // });  
+  
     })
     this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 }).subscribe(res => {
       res?.data?.forEach((jobTitle: any) => {
@@ -621,6 +619,7 @@ export class EmployeesComponent {
       formData.append("CreateEmployeeModelString", JSON.stringify({
         IsActive: result.isActive,
         AllowChangeFingerprintMobileCode: result.AllowChangeFingerprintMobileCode,
+        AllowFingerprintOutsideAllowedZones:result.AllowFingerprintOutsideAllowedZones,
         AttendanceType: Number(result.AttendanceType),
         name: result.name,
         DirectManagerId: result.directManager.key,
@@ -767,6 +766,8 @@ export class EmployeesComponent {
         id: data.id,
         IsActive: result.isActive,
         AllowChangeFingerprintMobileCode: result.AllowChangeFingerprintMobileCode,
+        AllowFingerprintOutsideAllowedZones:result.AllowFingerprintOutsideAllowedZones,
+
         AttendanceType: Number(result.AttendanceType),
         name: result.name,
         DirectManagerId: result.directManager.key,

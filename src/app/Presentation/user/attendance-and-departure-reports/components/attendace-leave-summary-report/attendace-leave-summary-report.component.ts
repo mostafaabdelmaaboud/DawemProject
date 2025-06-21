@@ -26,7 +26,6 @@ export class AttendaceLeaveSummaryReportComponent {
     DateTo: ['', [Validators.required, this.dateToValidator("DateFrom")]],
     EmployeeIds:[''],
     DepartmentIds:[''],
-    ZoneIds:[''],
     JobTitleIds:[''],
   });
   private employeesService = inject(EmployeesService);
@@ -37,7 +36,6 @@ export class AttendaceLeaveSummaryReportComponent {
   opened = false;
   employeesList:any[] = [];
   depatmentsList:any[] = [];
-  zonesList:any[] = [];
   jobTitleList:any[] = [];
   loadingReport = false;
   url!: string;
@@ -126,7 +124,6 @@ export class AttendaceLeaveSummaryReportComponent {
   loadDataDropdown() {
     let employee = this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let department =  this.employeesService.GetForDropDownDepartment({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
-    let zones =  this.employeesService.GetForDropDownZones({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
     let jobTitle =  this.employeesService.GetForDropDownJobTitle({ PagingEnabled: true, PageSize: 5, PageNumber: 0 });
 
     // let screenGetForDropDown = this.plansService.screenGetForDropDown({PagingEnabled: true, PageSize: 5, PageNumber: 0 });
@@ -135,7 +132,6 @@ export class AttendaceLeaveSummaryReportComponent {
     combineLatest({
       employee,
       department,
-      zones,
       jobTitle
     }).subscribe({
       next:data => {
@@ -147,9 +143,7 @@ export class AttendaceLeaveSummaryReportComponent {
         data?.department?.data?.forEach((department: any) => {
           this.depatmentsList.push({ name: department.name, key: department.id })
         });
-        data?.zones?.data?.forEach((zone: any) => {
-          this.zonesList.push({ name: zone.name, key: zone.id })
-        });
+
         data?.jobTitle?.data?.forEach((zone: any) => {
           this.jobTitleList.push({ name: zone.name, key: zone.id })
         });
@@ -211,7 +205,6 @@ export class AttendaceLeaveSummaryReportComponent {
     this.reportForm.get("DateTo")?.setValue("");
     this.reportForm.get("EmployeeIds")?.setValue("");
     this.reportForm.get("DepartmentIds")?.setValue("");
-    this.reportForm.get("ZoneIds")?.setValue("");
     this.reportForm.get("JobTitleIds")?.setValue("");
     this.loadDataDropdown();
     this.removeText = true;
@@ -296,38 +289,7 @@ export class AttendaceLeaveSummaryReportComponent {
   
           }
           break;
-          case 'ZoneId':
-            if (data || data === "") {
-              if (data !== this.lastSearchQuery || data === "") {
-                this.lastSearchQuery = data;
-                this.employeesService.GetForDropDownZones({ employeesService: true, PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-                  debounceTime(300),
-                  distinctUntilChanged()).subscribe((res: any) => {
-                    let newArray:any[]= [];
-                    this.lastSearchQuery = "";
-                    res?.data?.forEach((jobTitle: any) => {
-                      newArray.push({ name: jobTitle.name, key: jobTitle.id })
-                    });
-                    newArray = newArray.filter(newItem => 
-                      !this.zonesList.some(oldItem => oldItem.key === newItem.key)
-                    );
-                    if(newArray.length > 0){
-                      this.zonesList = [...this.zonesList, ...newArray]
-                    } else {
-                      if(!res?.data?.length) {
-                        this.toast.error("لا يوجد بيانات");
-                      }
-                    }
-                    if(data != "") {
-                      this.zoneIdClearData = true;
-                    } else {
-                      this.zoneIdClearData = false;
-        
-                    }
-                  });
-              }
-            }
-            break;
+
             case 'JobTitleId':
               if (data || data === "") {
                 if (data !== this.lastSearchQuery || data === "") {

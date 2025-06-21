@@ -14,7 +14,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { EmployeesService } from 'src/app/Presentation/user/employees/services/employees.service';
 import { PermissionsService } from 'src/app/Presentation/user/permissions/services/permissions.service';
-import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { AssignmentsService } from 'src/app/Presentation/user/assignments/services/assignments.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -111,6 +111,7 @@ export class AssignmentRequestComponent {
   errorUploadFileIdCopyIsRequired!: string;
   errorUploadFileIdCopy!: string;
   public viewImage: any[] = [];
+  private searchSubject = new Subject<{ value: any; type: any }>();
 
   private assignmentsService = inject(AssignmentsService);
   constructor(
@@ -281,7 +282,16 @@ export class AssignmentRequestComponent {
       }
 
 
-    })
+    });
+    this.searchSubject
+    .pipe(
+      debounceTime(500),
+      distinctUntilChanged((prev, curr) =>  prev.value === curr.value && prev.type === curr.type
+    ) 
+    )
+    .subscribe(({ value, type }) => {
+      this.searchDropdown(value, type, true);
+    });
   }
   getControl(controlName: string) {
     return this.addBranchGroupForm?.get(controlName);
@@ -300,9 +310,30 @@ export class AssignmentRequestComponent {
 
     }  
   }
+  searchList(target:any, type:any) {
+    let value = target.value;
+
+    this.searchSubject.next({ value, type }); 
+
+  }
+  sortArrayBySearchTerm(
+    array: { name: string; key: number }[],
+    searchTerm: string
+  ): { name: string; key: number }[] {
+    return array.sort((a, b) => {
+      const aIndex = a.name.indexOf(searchTerm);
+      const bIndex = b.name.indexOf(searchTerm);
+      if (aIndex !== -1 && bIndex !== -1) {
+        return aIndex - bIndex;
+      }
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return 0;
+    });
+  }
   lastSearchQuery = "";
 
-  searchDropdown(data: any, type: string) {
+  searchDropdown(data: any, type: string, searchInput?) {
 
     switch (type) {
       case 'AssignmentTypeId':
@@ -310,13 +341,33 @@ export class AssignmentRequestComponent {
           if (data !== this.lastSearchQuery|| data === "") {
             this.lastSearchQuery = data;
             this.assignmentsService.assignmentTypeDropdown({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.list = [];
+            
+
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
-                res?.data?.forEach((item: any) => {
-                  this.list.push({ name: item.name, key: item.id })
+                res?.data?.forEach((jobTitle: any) => {
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.list.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.list = [...this.list, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.list, searchTerm);
+                  this.list = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toastr.error("لا يوجد بيانات");
+                  }
+                }
+
+
               });
           }
 
@@ -328,13 +379,30 @@ export class AssignmentRequestComponent {
           if (data !== this.lastSearchQuery|| data === "") {
             this.lastSearchQuery = data;
             this.employeesService.GetForDropDownEmployee({ PagingEnabled: true, PageSize: 5, PageNumber: 0, FreeText: data }).pipe(
-              debounceTime(300),
               distinctUntilChanged()).subscribe((res: any) => {
-                this.listEmployees = [];
+          
+                let newArray:any[]= [];
                 this.lastSearchQuery = "";
                 res?.data?.forEach((jobTitle: any) => {
-                  this.listEmployees.push({ name: jobTitle.name, key: jobTitle.id })
+                  newArray.push({ name: jobTitle.name, key: jobTitle.id })
                 });
+                newArray = newArray.filter(newItem => 
+                  !this.listEmployees.some(oldItem => oldItem.key === newItem.key || oldItem.name === newItem.name)
+                );
+                const searchTerm = data;
+
+                if(res?.data?.length > 0 || searchInput){
+                  if(newArray?.length >0) {
+                    this.listEmployees = [...this.listEmployees, ...newArray]
+                  }
+                  let formatSearch = this.sortArrayBySearchTerm(this.listEmployees, searchTerm);
+                  this.listEmployees = [...formatSearch];
+
+                } else {
+                  if(!res?.data?.length) {
+                    this.toastr.error("لا يوجد بيانات");
+                  }
+                }
               });
           }
 

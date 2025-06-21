@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DialogCloseComponent } from 'src/app/shared/components/dialog-close/dialog-close.component';
@@ -96,6 +96,9 @@ export class FingerPrintDevicesComponent {
   opened = false;
   cards!: any;
   spinnerCards = false;
+  destroy$: Subject<boolean> = new Subject<boolean>();
+  trans!:any;
+
   private _mobileQueryListener: () => void;
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
@@ -151,12 +154,59 @@ export class FingerPrintDevicesComponent {
       { name: '25', code: 25 },
 
     ];
+    const translations = this.translate.translations[this.translate.currentLang || 'ar'];
+    if(!this.trans) {
+      this.trans = translations
+    }
+    this.translateColumn();
+
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.trans = dataParent.translations;
+
+      this.translateColumn();
+
+    });
+
     this.getInformation();
 
     this.getFingerprintDevices(this.filteration);
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
+  }
+  translateColumn() {
+      
+      this.columns =  [
+        {
+          name: this.trans.fingerprintDevices.deviceNumber,
+          field: "code",
+        },
+        {
+          name: this.trans.fingerprintDevices.deviceName,
+          field: "name",
+        },
+        {
+          name: this.trans.fingerprintDevices.IPAddress,
+          field: "ipAddress",
+        },
+        {
+          name: this.trans.fingerprintDevices.portNumber,
+          field: "portNumber"
+        },
+        {
+          name: this.trans.fingerprintDevices.model,
+          field: "model"
+        },
+        {
+          name: this.trans.fingerprintDevices.serialNumber,
+          field: "serialNumber"
+        },
+        {
+          name: this.trans.requests.action,
+          field: "actions"
+        }
+    
+      ];
   }
   filter() {
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
@@ -227,65 +277,69 @@ export class FingerPrintDevicesComponent {
     saveAs(new Blob([buffer]), `${title}.xlsx`);
   }
   exportTableToExcel() {
-    let columns = [...this.columns];
-    delete columns[6]
-    var options = { 
-      fieldSeparator: ',',
-      quoteStrings: '"',
-      decimalseparator: '.',
-      showLabels: true, 
-      showTitle: true,
-      title: 'أجهزة البصمة',
-      useBom: true,
-      headers: columns.map((column:any) => column.name)
-    };
-
-    if(!this.isLoading) {
-      this.isLoading = true;
-      let filteration = {...this.filteration, isExport:true};
+      let columns = [...this.columns];
+      delete columns[6]
+      var options = { 
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalseparator: '.',
+        showLabels: true, 
+        showTitle: true,
+        title: this.trans.fingerprintDevices.fingerprintDevices,
+        useBom: true,
+        headers: columns.map((column:any) => column.name)
+      };
   
-      this.fingerPrintDevicesService.listFingerprintDevices(filteration).subscribe(data => {
-        this.fingerPrintDevicesIsExport = [];
-
-        data.data.forEach((fingerPrintDevice: any) => {
-          this.fingerPrintDevicesIsExport.push({
-            id: fingerPrintDevice.id,
-            code: fingerPrintDevice.code,
-            name: fingerPrintDevice.name,
-            ipAddress: fingerPrintDevice.ipAddress,
-            portNumber: fingerPrintDevice.portNumber,
-            model: fingerPrintDevice.model,
-            serialNumber: fingerPrintDevice.serialNumber,
-            isActive: fingerPrintDevice.isActive
+      if(!this.isLoading) {
+        this.isLoading = true;
+        let filteration = {...this.filteration, isExport:true};
+    
+        this.fingerPrintDevicesService.listFingerprintDevices(filteration).subscribe(data => {
+          this.fingerPrintDevicesIsExport = [];
+  
+          data.data.forEach((fingerPrintDevice: any) => {
+            this.fingerPrintDevicesIsExport.push({
+              id: fingerPrintDevice.id,
+              code: fingerPrintDevice.code,
+              name: fingerPrintDevice.name,
+              ipAddress: fingerPrintDevice.ipAddress,
+              portNumber: fingerPrintDevice.portNumber,
+              model: fingerPrintDevice.model,
+              serialNumber: fingerPrintDevice.serialNumber,
+              isActive: fingerPrintDevice.isActive
+            })
+          });
+          let formatTable = this.fingerPrintDevicesIsExport.map(fingerPrintDevice => {
+        
+            return {
+              code: fingerPrintDevice.code,
+              name: fingerPrintDevice.name,
+              ipAddress: fingerPrintDevice.ipAddress,
+              portNumber: fingerPrintDevice.portNumber,
+              model: fingerPrintDevice.model,
+              serialNumber: fingerPrintDevice.serialNumber
+            }
           })
-        });
-        let formatTable = this.fingerPrintDevicesIsExport.map(fingerPrintDevice => {
-      
-          return {
-            code: fingerPrintDevice.code,
-            name: fingerPrintDevice.name,
-            ipAddress: fingerPrintDevice.ipAddress,
-            portNumber: fingerPrintDevice.portNumber,
-            model: fingerPrintDevice.model,
-            serialNumber: fingerPrintDevice.serialNumber
-          }
-        })
-        this.isLoading = false;
-        let formatRows =formatTable.map(fingerPrintDevice => [
-          fingerPrintDevice.code,
-          fingerPrintDevice.name, 
-          fingerPrintDevice.ipAddress,
-          fingerPrintDevice.portNumber,
-          fingerPrintDevice.model,
-          fingerPrintDevice.serialNumber,
-
-        ]);
-            this.generateExcel('أجهزة البصمة','أجهزة البصمة',formatRows, columns);
-
-        // new ngxCsv(formatTable, "sheet", options);
+          this.isLoading = false;
+          let formatRows =formatTable.map(fingerPrintDevice => [
+            fingerPrintDevice.code,
+            fingerPrintDevice.name, 
+            fingerPrintDevice.ipAddress,
+            fingerPrintDevice.portNumber,
+            fingerPrintDevice.model,
+            fingerPrintDevice.serialNumber,
   
-      })
-    }  }
+          ]);
+              this.generateExcel(this.trans.fingerprintDevices.fingerprintDevices,this.trans.fingerprintDevices.fingerprintDevices,formatRows, columns);
+  
+          // new ngxCsv(formatTable, "sheet", options);
+    
+        })
+      }  
+
+
+
+  }
   exportTableToPDF() {
     if(!this.isLoading) {
       this.isLoading = true;
@@ -360,40 +414,38 @@ export class FingerPrintDevicesComponent {
     })
   }
   addFingerprintDevice() {
-    const dialogRefAddCurrency = this.dialog.open(AddFingerPrintDeviceComponent, {
-      width: "70vw",
-      data: {
-        title: "اضافه جهاز بصمة",
-        setAsActive: "تعيين كنشط",
 
-        titleName: "اسم الجهاز <span class= 'color-red' >* </span>",
-        placeholdeName: "اسم الجهاز",
-        ValidationName: "اسم الجهاز مطلوب",
+      
+      let dialogRefAddCurrency =  this.dialog.open(AddFingerPrintDeviceComponent, {
+        width: "70vw",
+        data: {
+          title: this.trans.fingerprintDevices.addAFingerprintDevice,
+          setAsActive: this.trans.employees.setAsActive,
+          titleName: this.trans.fingerprintDevices.deviceName +" <span class= 'color-red' >* </span>",
+          placeholdeName: this.trans.fingerprintDevices.deviceName,
+          ValidationName: this.trans.fingerprintDevices.deviceNameRequired,
 
+          titleIpAddress: this.trans.fingerprintDevices.IPAddress+" <span class='color-red'>*</span>",
+          placeholdeIpAddress: this.trans.fingerprintDevices.IPAddress,
+          ValidationIpAddress: this.trans.fingerprintDevices.IPAddressRequired,
 
-        titleIpAddress: "عنوان ال IP <span class='color-red'>*</span>",
-        placeholdeIpAddress: "عنوان ال IP",
-        ValidationIpAddress: "عنوان ال IP مطلوب",
-
-
-        titlePortNumber: "رقم البورت <span class='color-red'>*</span>",
-        placeholdePortNumber: "رقم البورت",
-        ValidationPortNumber: "رقم البورت مطلوب",
-
-        titleModel: "الموديل <span class='color-red'>*</span>",
-        placeholderModel: "اختار الموديل",
-        validationModel: "الموديل مطلوب",
-
-        titleSerialNumber: "الرقم التسلسلي <span class='color-red'>*</span>",
-        placeholdeSerialNumber: "الرقم التسلسلي",
-        ValidationSerialNumber: "الرقم التسلسلي مطلوب",
-        titleClose: "تراجع",
-        buttonSend: "إضافة جهاز بصمة"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editFingerPrintDevice = false;
-
+          titlePortNumber: this.trans.fingerprintDevices.portNumber+" <span class='color-red'>*</span>",
+          placeholdePortNumber: this.trans.fingerprintDevices.portNumbe,
+          ValidationPortNumber: this.trans.fingerprintDevices.portNumberRequired,
+  
+          titleModel: this.trans.fingerprintDevices.model+" <span class='color-red'>*</span>",
+          placeholderModel: this.trans.fingerprintDevices.selectModel,
+          validationModel: this.trans.fingerprintDevices.modelRequired,
+          titleSerialNumber: this.trans.fingerprintDevices.serialNumber+" <span class='color-red'>*</span>",
+          placeholdeSerialNumber: this.trans.fingerprintDevices.serialNumber,
+          ValidationSerialNumber: this.trans.fingerprintDevices.serialNumberRequired,
+          titleClose: this.trans.employees.toRetreat,
+          buttonSend: this.trans.fingerprintDevices.addAFingerprintDevice
+        },
+      });
+      dialogRefAddCurrency.componentInstance.submitted = true;
+      dialogRefAddCurrency.componentInstance.editFingerPrintDevice = false;
+  
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
       let formData: any = {};
       formData.isActive = result.isActive;
@@ -411,21 +463,25 @@ export class FingerPrintDevicesComponent {
 
             dialogRefAddCurrency.close();
 
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات اجهزة البصمة"
-              },
-            });
+      
+              
+              let succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: this.trans.employees.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: this.trans.fingerprintDevices.fingerprintDeviceRequests
+                },
+              });
+           
+              succressDialog.componentInstance.submitted = true;
+
             this.getFingerprintDevices(this.filteration);
             setTimeout(() => {
               succressDialog.close();
 
             }, 2000);
 
-            succressDialog.componentInstance.submitted = true;
             succressDialog.componentInstance.submitClicked.subscribe(result => {
               succressDialog.close();
 
@@ -446,37 +502,38 @@ export class FingerPrintDevicesComponent {
     });
   }
   editFingerprintDevice(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(AddFingerPrintDeviceComponent, {
-      width: "70vw",
-      data: {
-        title: "تعديل جهاز بصمة",
-        setAsActive: "تعيين كنشط",
+      
+      let dialogRefAddCurrency =  this.dialog.open(AddFingerPrintDeviceComponent, {
+        width: "70vw",
+        data: {
+          title: this.trans.fingerprintDevices.modifyFingerprintDevice,
+          setAsActive: this.trans.employees.setAsActive,
+          titleName: this.trans.fingerprintDevices.deviceName +" <span class= 'color-red' >* </span>",
+          placeholdeName: this.trans.fingerprintDevices.deviceName,
+          ValidationName: this.trans.fingerprintDevices.deviceNameRequired,
 
-        titleName: "اسم الجهاز <span class= 'color-red' >* </span>",
-        placeholdeName: "اسم الجهاز",
-        ValidationName: "اسم الجهاز مطلوب",
+          titleIpAddress: this.trans.fingerprintDevices.IPAddress+" <span class='color-red'>*</span>",
+          placeholdeIpAddress: this.trans.fingerprintDevices.IPAddress,
+          ValidationIpAddress: this.trans.fingerprintDevices.IPAddressRequired,
 
+          titlePortNumber: this.trans.fingerprintDevices.portNumber+" <span class='color-red'>*</span>",
+          placeholdePortNumber: this.trans.fingerprintDevices.portNumbe,
+          ValidationPortNumber: this.trans.fingerprintDevices.portNumberRequired,
+  
+          titleModel: this.trans.fingerprintDevices.model+" <span class='color-red'>*</span>",
+          placeholderModel: this.trans.fingerprintDevices.selectModel,
+          validationModel: this.trans.fingerprintDevices.modelRequired,
+          titleSerialNumber: this.trans.fingerprintDevices.serialNumber+" <span class='color-red'>*</span>",
+          placeholdeSerialNumber: this.trans.fingerprintDevices.serialNumber,
+          ValidationSerialNumber: this.trans.fingerprintDevices.serialNumberRequired,
+          titleClose: this.trans.employees.toRetreat,
+          buttonSend: this.trans.fingerprintDevices.modifyFingerprintDevice
+        },
+      });
+      dialogRefAddCurrency.componentInstance.submitted = true;
+      dialogRefAddCurrency.componentInstance.editFingerPrintDevice = true;
+      dialogRefAddCurrency.componentInstance.id = data.id;
 
-        titleIpAddress: "عنوان ال IP <span class='color-red'>*</span>",
-        placeholdeIpAddress: "عنوان ال IP",
-        ValidationIpAddress: "عنوان ال IP مطلوب",
-
-
-        titlePortNumber: "رقم البورت <span class='color-red'>*</span>",
-        placeholdePortNumber: "رقم البورت",
-        ValidationPortNumber: "رقم البورت مطلوب",
-
-        titleModel: "الموديل <span class='color-red'>*</span>",
-        placeholderModel: "اختار الموديل",
-        validationModel: "الموديل مطلوب",
-
-        titleSerialNumber: "الرقم التسلسلي <span class='color-red'>*</span>",
-        placeholdeSerialNumber: "الرقم التسلسلي",
-        ValidationSerialNumber: "الرقم التسلسلي مطلوب",
-        titleClose: "تراجع",
-        buttonSend: "تعديل جهاز بصمة"
-      },
-    });
     dialogRefAddCurrency.componentInstance.submitted = true;
     dialogRefAddCurrency.componentInstance.editFingerPrintDevice = true;
 
@@ -499,14 +556,17 @@ export class FingerPrintDevicesComponent {
 
             dialogRefAddCurrency.close();
 
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات اجهزة البصمة"
-              },
-            });
+              
+              let succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: this.trans.employees.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend: this.trans.fingerprintDevices.fingerprintDeviceRequests
+                },
+              });
+           
+          
             this.getFingerprintDevices(this.filteration);
             setTimeout(() => {
               succressDialog.close();
@@ -534,13 +594,15 @@ export class FingerPrintDevicesComponent {
     });
   }
   dialogFingerPrintDeviceFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogFingerPrintDeviceFileComponent, {
-      width: "40vw",
-      data: {
-        title: "ملف جهاز البصمة"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.id = data.id
+ 
+      
+      let dialogRefAddCurrency = this.dialog.open(DialogFingerPrintDeviceFileComponent, {
+        width: "40vw",
+        data: {
+          title: this.trans.fingerprintDevices.fingerprintDeviceFile
+        },
+      });
+      dialogRefAddCurrency.componentInstance.id = data.id
   }
   enabledRow(data: any) {
 
@@ -566,18 +628,22 @@ export class FingerPrintDevicesComponent {
     this.getFingerprintDevices(this.filteration)
   }
   deleteRow(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
-      width: "30vw",
-      data: {
-        title: "متأكد من تعليق جهاز البصمة؟",
-        message: "برجاء توضيح السبب إن أمكن ليظهر للمجموعة عند محاولة تسجيل الدخول",
-        titleReasonOfRefuse: "سبب التعليق",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض ليظهر للمجموعة",
-        titleClose: "تراجع",
-        buttonSend: "تعليق المجموعة"
-      },
-    });
-    reasonOfRefuseDialog.componentInstance.submitted = true;
+ 
+
+      
+      let reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
+        width: "30vw",
+        data: {
+          title: this.trans.fingerprintDevices.areYouSureTheFingerprint,
+          message: this.trans.fingerprintDevices.pleaseExplainTheReason,
+          titleReasonOfRefuse: this.trans.zones.reasonForComment,
+          placeholdeReasonOfRefuse: this.trans.schedualPlan.pleaseWriteTheReasonForRejection,
+          titleClose: this.trans.schedualPlan.toRetreat,
+          buttonSend: this.trans.fingerprintDevices.fingerprintComment
+        },
+      });
+      reasonOfRefuseDialog.componentInstance.submitted = true;
+
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
       this.fingerPrintDevicesService.disabledFingerprintDevice({ Id: data.id, DisableReason: result.notes }).subscribe(
@@ -653,5 +719,9 @@ export class FingerPrintDevicesComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component,  inject } from '@angular/core';
 import { PrimeNGConfig } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { ToastrService } from 'ngx-toastr';
@@ -75,6 +75,8 @@ export class AssignmentTypeComponent {
     itemsPerPage: 10,
     currentPage: 1,
   };
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
   totalItems: number = 0;
   first: number = 0;
   rows: number = 10;
@@ -92,6 +94,9 @@ export class AssignmentTypeComponent {
     { name: "تسجيل انصراف خاطئ", key: "4" }
 
   ];
+
+  trans!:any;
+
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
     this.date = new Date();
@@ -145,9 +150,44 @@ export class AssignmentTypeComponent {
       { name: '5', code: 5 }
 
     ];
+    const translations = this.translate.translations[this.translate.currentLang || 'ar'];
+    if(!this.trans) {
+      this.trans = translations
+    }
+    this.translateColumn();
+
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.trans = dataParent.translations;
+      this.translateColumn();
+
+    });
+
     this.getInformation();
 
     this.getAssignments(this.filteration);
+  }
+  translateColumn() {
+
+    this.columns = [
+      {
+        name: this.trans.assignments.assignmentNumber,
+        field: "code",
+      },
+      {
+        name: this.trans.signup.name,
+        field: "name",
+      },
+      {
+        name: this.trans.assignments.assignmentStatus,
+        field: "isActive"
+      },
+      {
+        name: this.trans.assignments.action,
+        field: "actions"
+      }
+  
+    ];
+
   }
   filter() {
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
@@ -217,6 +257,7 @@ export class AssignmentTypeComponent {
     saveAs(new Blob([buffer]), `${title}.xlsx`);
   }
   exportTableToExcel() {
+
     let columns = [...this.columns];
     delete columns[3]
     var options = { 
@@ -225,15 +266,13 @@ export class AssignmentTypeComponent {
       decimalseparator: '.',
       showLabels: true, 
       showTitle: true,
-      title: 'أنواع التكليفات',
+      title: this.trans.sideNav.typesOfAssignments,
       useBom: true,
       headers: columns.map((column:any) => column.name)
     };
-
     if(!this.isLoading) {
       this.isLoading = true;
       let filteration = {...this.filteration, isExport:true};
-   
       this.assignmentTypeService.listAssignments(filteration).subscribe(
         {
           next: data => {
@@ -251,12 +290,12 @@ export class AssignmentTypeComponent {
               return {
                 code: assignment.code,
                 name: assignment.name,
-                isActive: assignment.isActive ? 'نشط' : 'غير نشط'
+                isActive: assignment.isActive ? this.trans.employees.active : this.trans.employees.Inactive
               }
             })
             this.isLoading = false;
             let formatRows =formatTable.map(assignment => [assignment.code,assignment.name, assignment.isActive ]);
-            this.generateExcel('أنواع التكليفات','أنواع التكليفات',formatRows, columns);
+            this.generateExcel(this.trans.sideNav.typesOfAssignments,this.trans.sideNav.typesOfAssignments,formatRows, columns);
             // new ngxCsv(formatTable, 'أنواع التكليفات', options);
           },
           error: err => {
@@ -265,7 +304,9 @@ export class AssignmentTypeComponent {
           }
         }
       ) 
-    }  }
+    }  
+  
+  }
   exportTableToPDF() {
 
     if(!this.isLoading) {
@@ -353,181 +394,197 @@ export class AssignmentTypeComponent {
     this.getAssignments(this.filteration)
   }
   reasonOfRefuse(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
-      width: "30vw",
-      data: {
-        title: "هل متاكد من حذف نوع التكليف؟",
-        titleClose: "تراجع",
-        buttonSend: "حذف"
-      },
-    });
-
-    reasonOfRefuseDialog.componentInstance.submitted = true;
-    reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
-      reasonOfRefuseDialog.componentInstance.submitted = false;
-      this.assignmentTypeService.deleteAssignment({ assignmentTypeId: data.id }).subscribe({
-        next: res => {
-          this.toast.success(res.message);
-          reasonOfRefuseDialog.componentInstance.submitted = true;
-          reasonOfRefuseDialog.close();
-          this.getAssignments(this.filteration);
+      let reasonOfRefuseDialog = this.dialog.open(DialogDeleteComponent, {
+        width: "30vw",
+        data: {
+          title: this.trans.assignments.areYouSureYouWantToDeleteTheAssignmentType,
+          titleClose: this.trans.schedualPlan.toRetreat,
+          buttonSend: this.trans.vacationBalance.delete
         },
-        error: err => {
-          reasonOfRefuseDialog.componentInstance.submitted = true;
-
-        }
+      });
+      reasonOfRefuseDialog.componentInstance.submitted = true;
+      reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
+        reasonOfRefuseDialog.componentInstance.submitted = false;
+        this.assignmentTypeService.deleteAssignment({ assignmentTypeId: data.id }).subscribe({
+          next: res => {
+            this.toast.success(res.message);
+            reasonOfRefuseDialog.componentInstance.submitted = true;
+            reasonOfRefuseDialog.close();
+            this.getAssignments(this.filteration);
+          },
+          error: err => {
+            reasonOfRefuseDialog.componentInstance.submitted = true;
+  
+          }
+        })
+  
+  
+  
       })
 
-
-
-    })
   }
   requestAssignment() {
-    const dialogRefAddCurrency = this.dialog.open(RequestAssignmentTypeComponent, {
-      width: "50vw",
-      data: {
-        title: " نوع التكليف",
-        setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع التكليف <span class='color-red'>*</span>",
-        titleName: "الأسم<span class='color-red'>*</span>",
-        placeholdeName: "برجاء ادخال الأسم",
-        validationtitleName: "الأسم مطلوب",
-        buttonSend: "موافق"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editAssignment = false;
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+ 
 
-      let formData: any = {};
-      formData.name = result.name;
-      formData.isActive = result.IsNecessary;
+      
+      let dialogRefAddCurrency = this.dialog.open(RequestAssignmentTypeComponent, {
+        width: "50vw",
+        data: {
+          title: this.trans.assignments.assignmentType,
+          setAsNecessary: this.trans.assignments.setAsEssential,
+          titleVacationTypeId: this.trans.assignments.assignmentType +" <span class='color-red'>*</span>",
+          titleName: this.trans.signup.name +" <span class='color-red'>*</span>",
+          placeholdeName: this.trans.signup.enterTheName,
+          validationtitleName: this.trans.signup.nameIsRequired,
+          buttonSend: this.trans.justifications.sendRequest
+        },
+      });
+      dialogRefAddCurrency.componentInstance.submitted = true;
+      dialogRefAddCurrency.componentInstance.editAssignment = false;
+      dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
 
-      dialogRefAddCurrency.componentInstance.submitted = false;
+        let formData: any = {};
+        formData.name = result.name;
+        formData.isActive = result.IsNecessary;
+  
+        dialogRefAddCurrency.componentInstance.submitted = false;
+  
+        this.assignmentTypeService.createAssignment(formData).subscribe(
+          {
+            next: (data: any) => {
+  
+  
+              dialogRefAddCurrency.componentInstance.submitted = true;
+  
+              dialogRefAddCurrency.close();
+  
+                
+              let succressDialog = this.dialog.open(ToastSuccessComponent, {
+                  width: "30vw",
+                  data: {
+                    title: this.trans.justifications.yourRequestHasBeenSent,
+                    message: data.message,
+                    buttonSend: this.trans.assignments.typesOfAssignments
+    
+                  },
+                });
+                succressDialog.componentInstance.submitted = true;
 
-      this.assignmentTypeService.createAssignment(formData).subscribe(
-        {
-          next: (data: any) => {
 
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
-            dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "انواع التكليفات"
-
-              },
-            });
-            this.getAssignments(this.filteration);
-
-            setTimeout(() => {
-              succressDialog.close();
-
-            }, 2000);
-            succressDialog.componentInstance.submitted = true;
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-              succressDialog.close();
-            })
-
-          },
-          error: (err: any) => {
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
+              this.getAssignments(this.filteration);
+  
+              setTimeout(() => {
+                succressDialog.close();
+  
+              }, 2000);
+              succressDialog.componentInstance.submitClicked.subscribe(result => {
+                succressDialog.close();
+              })
+  
+            },
+            error: (err: any) => {
+  
+              dialogRefAddCurrency.componentInstance.submitted = true;
+  
+            }
           }
+        )
+      });
+      dialogRefAddCurrency.afterClosed().subscribe(result => {
+        if (result) {
+  
         }
-      )
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
+      });
 
-      }
-    });
+  
   }
   editAssignment(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(RequestAssignmentTypeComponent, {
-      width: "50vw",
-      data: {
-        title: "تعديل التكليف",
-        setAsNecessary: "تعيين كضرورية",
-        titleVacationTypeId: "نوع التكليف <span class='color-red'>*</span>",
-        titleName: "الأسم<span class='color-red'>*</span>",
-        placeholdeName: "برجاء ادخال الأسم",
-        validationtitleName: "الأسم مطلوب",
-        buttonSend: "موافق"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editAssignment = true;
-    dialogRefAddCurrency.componentInstance.id = data.id;
+      
+      let dialogRefAddCurrency = this.dialog.open(RequestAssignmentTypeComponent, {
+        width: "50vw",
+        data: {
+          title: this.trans.assignments.assignmentModification,
+          setAsNecessary: this.trans.assignments.setAsEssential,
+          titleVacationTypeId: this.trans.assignments.assignmentType +" <span class='color-red'>*</span>",
+          titleName: this.trans.signup.name +" <span class='color-red'>*</span>",
+          placeholdeName: this.trans.signup.enterTheName,
+          validationtitleName: this.trans.signup.nameIsRequired,
+          buttonSend: this.trans.justifications.sendRequest
+        },
+      });
+      dialogRefAddCurrency.componentInstance.submitted = true;
+      dialogRefAddCurrency.componentInstance.editAssignment = true;
+      dialogRefAddCurrency.componentInstance.id = data.id;
+      dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
+        let formData: any = {};
+        formData.id = data.id;
+        formData.name = result.name;
+        formData.isActive = result.IsNecessary;
+  
+        dialogRefAddCurrency.componentInstance.submitted = false;
+  
+        this.assignmentTypeService.updateAssignment(formData).subscribe(
+          {
+            next: (data: any) => {
+  
+  
+              dialogRefAddCurrency.componentInstance.submitted = true;
+  
+              dialogRefAddCurrency.close();
+  
+                
+                let succressDialog = this.dialog.open(ToastSuccessComponent, {
+                  width: "30vw",
+                  data: {
+                    title: this.trans.justifications.yourRequestHasBeenSent,
+                    message: data.message,
+                    buttonSend: this.trans.assignments.typesOfAssignments
+    
+                  },
+                });
+                succressDialog.componentInstance.submitted = true;
 
-    dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
-      let formData: any = {};
-      formData.id = data.id;
-      formData.name = result.name;
-      formData.isActive = result.IsNecessary;
-
-      dialogRefAddCurrency.componentInstance.submitted = false;
-
-      this.assignmentTypeService.updateAssignment(formData).subscribe(
-        {
-          next: (data: any) => {
-
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
-            dialogRefAddCurrency.close();
-
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "انواع التكليفات"
-
-              },
-            });
-            this.getAssignments(this.filteration);
-
-            setTimeout(() => {
-              succressDialog.close();
-
-            }, 2000);
-            succressDialog.componentInstance.submitted = true;
-            succressDialog.componentInstance.submitClicked.subscribe(result => {
-              succressDialog.close();
-            })
-
-          },
-          error: (err: any) => {
-
-            dialogRefAddCurrency.componentInstance.submitted = true;
-
+              this.getAssignments(this.filteration);
+  
+              setTimeout(() => {
+                succressDialog.close();
+  
+              }, 2000);
+              succressDialog.componentInstance.submitClicked.subscribe(result => {
+                succressDialog.close();
+              })
+  
+            },
+            error: (err: any) => {
+  
+              dialogRefAddCurrency.componentInstance.submitted = true;
+  
+            }
           }
+        )
+      });
+      dialogRefAddCurrency.afterClosed().subscribe(result => {
+        if (result) {
+  
         }
-      )
-    });
-    dialogRefAddCurrency.afterClosed().subscribe(result => {
-      if (result) {
+      });
 
-      }
-    });
+
+   
   }
 
 
   dialogAssignmentFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogAssignmentTypeFileComponent, {
-      width: "40vw",
-      data: {
-        title: "ملف التكليف"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.id = data.id
+
+      
+      let dialogRefAddCurrency =  this.dialog.open(DialogAssignmentTypeFileComponent, {
+        width: "40vw",
+        data: {
+          title: this.trans.assignments.assignmentFile
+        },
+      });
+      dialogRefAddCurrency.componentInstance.id = data.id
+
 
   }
   onPageChange(event: any) {
@@ -582,5 +639,9 @@ export class AssignmentTypeComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }

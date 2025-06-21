@@ -5,7 +5,7 @@ import { Subject, Subscription, takeUntil } from 'rxjs';
 import { PaginationInstance } from 'ngx-pagination';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastSuccessComponent } from 'src/app/shared/components/toast-success/toast-success.component';
 import { DialogAddASectionComponent } from 'src/app/shared/components/dialog-add-a-section/dialog-add-a-section.component';
 import { DeleteShiftComponent } from 'src/app/shared/components/delete-shift/delete-shift.component';
@@ -57,8 +57,6 @@ export class SectionsComponent {
       name: "عدد الموظفين بالقسم",
       field: "numberOfEmployeesInDepartment"
     },
-
-
     {
       name: "الإجراء",
       field: "actions"
@@ -106,6 +104,9 @@ export class SectionsComponent {
   opened = false;
   cards!: any;
   spinnerCards = false;
+  destroy$: Subject<boolean> = new Subject<boolean>();
+  trans!:any;
+
   private _mobileQueryListener: () => void;
   constructor(private config: PrimeNGConfig, private changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public translate: TranslateService, private fb: FormBuilder, private toast: ToastrService,
     private permissionsUserService: PermissionsUserService) {
@@ -162,12 +163,50 @@ export class SectionsComponent {
 
     this.sections = [
     ];
+    const translations = this.translate.translations[this.translate.currentLang || 'ar'];
+    if(!this.trans) {
+      this.trans = translations
+    }
+    this.translateColumn();
+
+    this.translate.onLangChange.pipe(takeUntil(this.destroy$)).subscribe(dataParent => {
+      this.trans = dataParent.translations;
+
+      this.translateColumn();
+
+    });
     this.getInformation();
 
     this.getSection(this.filteration)
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
 
+  }
+  translateColumn() {
+      
+      this.columns = [
+        {
+          name: this.trans.sections.departmentCode,
+          field: "orderNumber",
+        },
+        {
+          name: this.trans.vacationBalance.sectionType,
+          field: "departmentName",
+        },
+        {
+          name: this.trans.sections.headOfDepartment,
+          field: "employeeName",
+        },
+        {
+          name: this.trans.sections.numberOfEmployeesInTheDepartment,
+          field: "numberOfEmployeesInDepartment"
+        },
+        {
+          name: this.trans.assignments.action,
+          field: "actions"
+        }
+    
+      ];
   }
   getInformation() {
     this.spinnerCards = true;
@@ -190,14 +229,13 @@ export class SectionsComponent {
     return this.permissionsUserService.checkPermission({ type: "actions", screenCode: Number(this.id), actionCode: data.actionCode })
   }
   dialogSectionFile(data: any) {
-    const dialogRefAddCurrency = this.dialog.open(DialogSectionFileComponent, {
-      width: "40vw",
-      data: {
-        title: "ملف القسم"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.id = data.id
-
+      let dialogRefAddCurrency = this.dialog.open(DialogSectionFileComponent, {
+        width: "40vw",
+        data: {
+          title: this.trans.sections.sectionFile
+        },
+      });
+      dialogRefAddCurrency.componentInstance.id = data.id
   }
   filter() {
     Object.entries(this.filterForm?.value).forEach(([key, value]: any) => {
@@ -269,64 +307,66 @@ export class SectionsComponent {
     saveAs(new Blob([buffer]), `${title}.xlsx`);
   }
   exportTableToExcel() {
-    let columns = [...this.columns];
-    delete columns[4]
-    var options = { 
-      fieldSeparator: ',',
-      quoteStrings: '"',
-      decimalseparator: '.',
-      showLabels: true, 
-      showTitle: true,
-      title: 'الأقسام',
-      useBom: true,
-      headers: columns.map((column:any) => column.name)
-    };
-
-    if(!this.isLoading) {
-      this.isLoading = true;
-      let filteration = {...this.filteration, isExport:true};
+      let columns = [...this.columns];
+      delete columns[4]
+      var options = { 
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalseparator: '.',
+        showLabels: true, 
+        showTitle: true,
+        title: this.trans.sideNav.sections,
+        useBom: true,
+        headers: columns.map((column:any) => column.name)
+      };
   
-      this.sectionsService.listSections(filteration).subscribe(
-        {
-          next: data => {
-            this.sectionsIsExport = [];
-
-            data.data.forEach((section: any) => {
+      if(!this.isLoading) {
+        this.isLoading = true;
+        let filteration = {...this.filteration, isExport:true};
+    
+        this.sectionsService.listSections(filteration).subscribe(
+          {
+            next: data => {
+              this.sectionsIsExport = [];
   
-              this.sectionsIsExport.push({
-                id: section.id,
-                isActive: section.isActive,
-                orderNumber: section?.code ? section?.code : "لا يوجد",
-                departmentName: section?.name ? section?.name : "لا يوجد",
-                employeeName: {
-                  name: section?.manager?.managerName ? section?.manager?.managerName : "لا يوجد",
-                  alt: section?.manager?.managerName ? section?.manager?.managerName : "لا",
-                  img: section?.manager?.profileImagePath ? section?.manager?.profileImagePath : "../../../../assets/img/5034901-200.png"
-                },
-                numberOfEmployeesInDepartment: section?.numberOfEmployees ? section?.numberOfEmployees : "0"
+              data.data.forEach((section: any) => {
+    
+                this.sectionsIsExport.push({
+                  id: section.id,
+                  isActive: section.isActive,
+                  orderNumber: section?.code ? section?.code : this.trans.department.nothing,
+                  departmentName: section?.name ? section?.name : this.trans.department.nothing,
+                  employeeName: {
+                    name: section?.manager?.managerName ? section?.manager?.managerName : this.trans.department.nothing,
+                    alt: section?.manager?.managerName ? section?.manager?.managerName : "لا",
+                    img: section?.manager?.profileImagePath ? section?.manager?.profileImagePath : "../../../../assets/img/5034901-200.png"
+                  },
+                  numberOfEmployeesInDepartment: section?.numberOfEmployees ? section?.numberOfEmployees : "0"
+                })
+              });
+              let formatTable = this.sectionsIsExport.map(section => {
+        
+                return {
+                  orderNumber: section.orderNumber,
+                  departmentName: section.departmentName,
+                  employeeName: section.employeeName.name,
+                  numberOfEmployeesInDepartment: section.numberOfEmployeesInDepartment
+                }
               })
-            });
-            let formatTable = this.sectionsIsExport.map(section => {
-      
-              return {
-                orderNumber: section.orderNumber,
-                departmentName: section.departmentName,
-                employeeName: section.employeeName.name,
-                numberOfEmployeesInDepartment: section.numberOfEmployeesInDepartment
-              }
-            })
-            this.isLoading = false;
-            let formatRows =formatTable.map(assignment => [assignment.orderNumber,assignment.departmentName, assignment.employeeName, assignment.numberOfEmployeesInDepartment ]);
-            this.generateExcel('الأقسام','الأقسام',formatRows, columns);
-
-            // new ngxCsv(formatTable, "sheet", options);
-          },
-          error: err => {
-            this.isLoading = false;
+              this.isLoading = false;
+              let formatRows =formatTable.map(assignment => [assignment.orderNumber,assignment.departmentName, assignment.employeeName, assignment.numberOfEmployeesInDepartment ]);
+              this.generateExcel(this.trans.sideNav.sections,this.trans.sideNav.sections,formatRows, columns);
+  
+              // new ngxCsv(formatTable, "sheet", options);
+            },
+            error: err => {
+              this.isLoading = false;
+            }
           }
-        }
-      )
-    }
+        )
+      }
+
+
   }
   exportTableToPDF() {
 
@@ -399,37 +439,37 @@ export class SectionsComponent {
     return Math.ceil(data)
   }
   addSection() {
-    const dialogRefAddCurrency = this.dialog.open(DialogAddASectionComponent, {
-      width: "80vw",
-      data: {
-        title: "إضافة قسم",
+      
+      let dialogRefAddCurrency = this.dialog.open(DialogAddASectionComponent, {
+        width: "80vw",
+        data: {
+          title: this.trans.sections.addSection,
 
-        titleShift: "اسم القسم <span class='color-red'>*</span>",
-        placeholdeShift: "اسم القسم",
-        validationtitleShift: "اسم القسم مطلوب",
-        setAsNecessary: "تعيين كنشط",
-        titlePermanentType: "القسم التابع له <span class='color-red'>*</span>",
-        placeholderPermanentType: " اختار القسم التابع له",
-        validationtitlePermanentType: "القسم التابع له مطلوب",
-        titleManagerId: "مدير القسم <span class='color-red'>*</span>",
-        placeholderManagerId: "مدير القسم",
-        validationtitleManagerId: "مدير القسم مطلوب",
-        managerDelegatorIds: "نواب رئيس القسم <span class='color-red'>*</span>",
-        placeholdemanagerDelegatorIds: "نواب رئيس القسم",
-        ValidationManagerDelegatorIds: "نواب رئيس القسم مطلوب",
-        titleZone: "المناطق <span class='color-red'>*</span>",
-        placeholderZone: "المناطق",
-        titleNotes: "الملاحظات",
-        placeholdeNotes: "الملاحظات",
-        validationtitleNotes: "الملاحظات مطلوبه",
-        validationtitleZone: "المناطق مطلوبه",
-        titleClose: "تراجع",
-        buttonSend: "إضافة قسم"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editSection = false;
-
+          titleShift: this.trans.vacationBalance.departmentName+" <span class='color-red'>*</span>",
+          placeholdeShift: this.trans.vacationBalance.departmentName,
+          validationtitleShift: this.trans.vacationBalance.departmentNameRequired,
+          setAsNecessary: this.trans.vacationBalance.setAsActive,
+          titlePermanentType: this.trans.sections.hisDepartment+" <span class='color-red'>*</span>",
+          placeholderPermanentType: this.trans.sections.chooseYourDepartment,
+          validationtitlePermanentType: this.trans.sections.yourDepartmentIsRequired,
+          titleManagerId: this.trans.sections.headOfDepartment+" <span class='color-red'>*</span>",
+          placeholderManagerId: this.trans.sections.headOfDepartment,
+          validationtitleManagerId: this.trans.sections.DepartmentManagerWanted,
+          managerDelegatorIds: this.trans.sections.deputyHeadsOfDepartment+" <span class='color-red'>*</span>",
+          placeholdemanagerDelegatorIds: this.trans.sections.deputyHeadsOfDepartment,
+          ValidationManagerDelegatorIds: this.trans.sections.deputyHeadsofDepartmentWanted,
+          titleZone: this.trans.sideNav.zones+" <span class='color-red'>*</span>",
+          placeholderZone: this.trans.sideNav.zones,
+          titleNotes: this.trans.justifications.notes,
+          placeholdeNotes: this.trans.justifications.notes,
+          validationtitleNotes: this.trans.justifications.notesRequired,
+          validationtitleZone: this.trans.employees.zonesAreRequired,
+          titleClose: this.trans.employees.toRetreat,
+          buttonSend: this.trans.sections.addSection
+        },
+      });
+      dialogRefAddCurrency.componentInstance.submitted = true;
+      dialogRefAddCurrency.componentInstance.editSection = false;
     // dialogRefAddCurrency.componentInstance.list = this.categories;
 
     dialogRefAddCurrency.componentInstance.submitClicked.subscribe(result => {
@@ -437,6 +477,8 @@ export class SectionsComponent {
 
       formData.name = result.name;
       formData.isActive = result.isActive;
+      formData.allowFingerprintOutsideAllowedZones = result.AllowFingerprintOutsideAllowedZones;
+
       formData.parentId = result.parentId.key;
       formData.managerId = result.managerId.key;
 
@@ -467,14 +509,15 @@ export class SectionsComponent {
 
             dialogRefAddCurrency.close();
 
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات الاقسام"
-              },
-            });
+              let succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: this.trans.employees.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend:this.trans.sections.departmentalRequests
+                },
+              });
+
             this.getSection(this.filteration);
             setTimeout(() => {
               succressDialog.close();
@@ -510,18 +553,21 @@ export class SectionsComponent {
   }
   CreateImportDataFromExcel() {
     // this.employeesService.importDataFromExcel()
-    this.dialogRefUploadFiles = this.dialog.open(DialogUploadFileComponent, {
-      width: "50vw",
-      data: {
-        title: "رفع الملف",
-        uploadFile: "ارفاق الملف",
-        chooseLabel: "اختار الملف ليتم رفعه",
-        buttonSend:"رفع",
-        titleClose:"اغلاق"
-      },
-    });
 
-    this.dialogRefUploadFiles.componentInstance.submitted = true;
+      
+      this.dialogRefUploadFiles = this.dialog.open(DialogUploadFileComponent, {
+        width: "50vw",
+        data: {
+          title: this.trans.sections.uploadFile,
+          uploadFile: this.trans.sections.attachFile,
+          chooseLabel: this.trans.employees.selectTheFileToUpload,
+          buttonSend:this.trans.employees.selectTheFileToUpload,
+          titleClose:this.trans.justifications.close
+        },
+      });
+      this.dialogRefUploadFiles.componentInstance.submitted = true;
+
+
     // dialogRefAddCurrency.componentInstance.list = this.categories;
     this.dialogRefUploadFiles.componentInstance.submitClicked.subscribe(result => {
       let formData = new FormData();
@@ -555,10 +601,11 @@ export class SectionsComponent {
                 this.isDialogProgressBarOpen = true;
         
               }
-              this.dialogRefUploadFilesProgressBar.componentInstance.barWithText = "يتم تحميل المف..." + this.barWith + "%";
-              this.dialogRefUploadFilesProgressBar.componentInstance.barWidth = this.barWith;
+                this.dialogRefUploadFilesProgressBar.componentInstance.barWithText = this.trans.sections.theFileIsLoading + this.barWith + "%";
+                this.dialogRefUploadFilesProgressBar.componentInstance.barWidth = this.barWith;
+           
             } else if (data.type === HttpEventType.Response) {
-              this.dialogRefUploadFilesProgressBar.componentInstance.barWithText = "تم تحميل الملف بنجاح";
+                this.dialogRefUploadFilesProgressBar.componentInstance.barWithText = this.trans.sections.theFileWasUploadedSuccessfully;
               this.isUploading = false;
               this.isDialogProgressBarOpen = false;
               this.dialogRefUploadFiles.componentInstance.submitted = true;
@@ -616,39 +663,39 @@ export class SectionsComponent {
       );
   }
   editSection(data: any) {
-
-    const dialogRefAddCurrency = this.dialog.open(DialogAddASectionComponent, {
-      width: "80vw",
-      data: {
-        title: "تعديل القسم",
-        titleFieldDisabled: "كود القسم",
-        code: data.orderNumber,
-        titleShift: "اسم القسم <span class='color-red'>*</span>",
-        placeholdeShift: "اسم القسم",
-        validationtitleShift: "اسم القسم مطلوب",
-        setAsNecessary: "تعيين كنشط",
-        titlePermanentType: "القسم التابع له <span class='color-red'>*</span>",
-        placeholderPermanentType: " اختار القسم التابع له",
-        validationtitlePermanentType: "القسم التابع له مطلوب",
-        titleManagerId: "مدير القسم <span class='color-red'>*</span>",
-        placeholderManagerId: "مدير القسم",
-        validationtitleManagerId: "مدير القسم مطلوب",
-        managerDelegatorIds: "نواب رئيس القسم <span class='color-red'>*</span>",
-        placeholdemanagerDelegatorIds: "نواب رئيس القسم",
-        ValidationManagerDelegatorIds: "نواب رئيس القسم مطلوب",
-        titleZone: "المناطق <span class='color-red'>*</span>",
-        placeholderZone: "المناطق",
-        titleNotes: "الملاحظات",
-        placeholdeNotes: "الملاحظات",
-        validationtitleNotes: "الملاحظات مطلوبه",
-        validationtitleZone: "المناطق مطلوبه",
-        titleClose: "تراجع",
-        buttonSend: "حفظ القسم"
-      },
-    });
-    dialogRefAddCurrency.componentInstance.submitted = true;
-    dialogRefAddCurrency.componentInstance.editSection = true;
-    dialogRefAddCurrency.componentInstance.id = data.id;
+      
+      let dialogRefAddCurrency = this.dialog.open(DialogAddASectionComponent, {
+        width: "80vw",
+        data: {
+          title: this.trans.sections.editSection,
+          titleFieldDisabled: this.trans.sections.departmentCode,
+          code: data.orderNumber,
+          titleShift: this.trans.vacationBalance.departmentName+" <span class='color-red'>*</span>",
+          placeholdeShift: this.trans.vacationBalance.departmentName,
+          validationtitleShift: this.trans.vacationBalance.departmentNameRequired,
+          setAsNecessary: this.trans.vacationBalance.setAsActive,
+          titlePermanentType: this.trans.sections.hisDepartment+" <span class='color-red'>*</span>",
+          placeholderPermanentType: this.trans.sections.chooseYourDepartment,
+          validationtitlePermanentType: this.trans.sections.yourDepartmentIsRequired,
+          titleManagerId: this.trans.sections.headOfDepartment+" <span class='color-red'>*</span>",
+          placeholderManagerId: this.trans.sections.headOfDepartment,
+          validationtitleManagerId: this.trans.sections.DepartmentManagerWanted,
+          managerDelegatorIds: this.trans.sections.deputyHeadsOfDepartment+" <span class='color-red'>*</span>",
+          placeholdemanagerDelegatorIds: this.trans.sections.deputyHeadsOfDepartment,
+          ValidationManagerDelegatorIds: this.trans.sections.deputyHeadsofDepartmentWanted,
+          titleZone: this.trans.sideNav.zones+" <span class='color-red'>*</span>",
+          placeholderZone: this.trans.sideNav.zones,
+          titleNotes: this.trans.justifications.notes,
+          placeholdeNotes: this.trans.justifications.notes,
+          validationtitleNotes: this.trans.justifications.notesRequired,
+          validationtitleZone: this.trans.employees.zonesAreRequired,
+          titleClose: this.trans.employees.toRetreat,
+          buttonSend: this.trans.sections.saveSection
+        },
+      });
+      dialogRefAddCurrency.componentInstance.submitted = true;
+      dialogRefAddCurrency.componentInstance.editSection = true;
+      dialogRefAddCurrency.componentInstance.id = data.id;
 
     // dialogRefAddCurrency.componentInstance.list = this.categories;
 
@@ -658,6 +705,8 @@ export class SectionsComponent {
 
       formData.name = result.name;
       formData.isActive = result.isActive;
+      formData.allowFingerprintOutsideAllowedZones = result.AllowFingerprintOutsideAllowedZones;
+
       formData.parentId = result.parentId.key;
       formData.managerId = result.managerId.key;
 
@@ -686,14 +735,14 @@ export class SectionsComponent {
 
             dialogRefAddCurrency.close();
 
-            const succressDialog = this.dialog.open(ToastSuccessComponent, {
-              width: "30vw",
-              data: {
-                title: "تم ارسال طلبك",
-                message: data.message,
-                buttonSend: "طلبات الاقسام"
-              },
-            });
+              let succressDialog = this.dialog.open(ToastSuccessComponent, {
+                width: "30vw",
+                data: {
+                  title: this.trans.employees.yourRequestHasBeenSent,
+                  message: data.message,
+                  buttonSend:this.trans.sections.departmentalRequests
+                },
+              });
             this.getSection(this.filteration);
             setTimeout(() => {
               succressDialog.close();
@@ -721,18 +770,20 @@ export class SectionsComponent {
     });
   }
   reasonOfRefuse(data: any) {
-    const reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
-      width: "30vw",
-      data: {
-        title: "متأكد من تعليق حساب القسم",
-        message: "برجاء توضيح السبب إن أمكن ليظهر للقسم عند محاولة تسجيل الدخول",
-        titleReasonOfRefuse: "سبب التعليق",
-        placeholdeReasonOfRefuse: "برجاء كتابة سبب الرفض ليظهر للقسم",
-        titleClose: "تراجع",
-        buttonSend: "تعليق القسم"
-      },
-    });
-    reasonOfRefuseDialog.componentInstance.submitted = true;
+
+      let reasonOfRefuseDialog = this.dialog.open(DialogCloseComponent, {
+        width: "30vw",
+        data: {
+          title: this.trans.sections.areYouSureTheDepartmentsAccountHasBeenSuspended,
+          message: this.trans.sections.pleaseExplainTheReason,
+          titleReasonOfRefuse: this.trans.schedualPlan.reasonForComment,
+          placeholdeReasonOfRefuse: this.trans.sections.pleaseWriteTheReason,
+          titleClose: this.trans.employees.toRetreat,
+          buttonSend: this.trans.sections.sectionComment
+        },
+      });
+      reasonOfRefuseDialog.componentInstance.submitted = true;
+
     reasonOfRefuseDialog.componentInstance.submitClicked.subscribe(result => {
       reasonOfRefuseDialog.componentInstance.submitted = false;
       this.sectionsService.disabledSection({ id: data.id, DisableReason: result.notes }).subscribe(
@@ -843,5 +894,9 @@ export class SectionsComponent {
 
     // this.filteration.searchKey = val;
     // this.FLS(this.filteration);
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.subscription.unsubscribe();
   }
 }
